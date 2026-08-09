@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Local OCR Text Extractor — extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
+  <meta name="keywords" content="OCR, text extraction, image to text, Tesseract.js, offline OCR, browser OCR, Indonesian OCR, English OCR, local OCR, Bayhaqy" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Local OCR Text Extractor — Image to Text Offline" />
+  <meta property="og:description" content="Extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/ocr-extractor/" />
+  <meta property="og:site_name" content="OCR Extractor" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Local OCR Text Extractor — Image to Text Offline" />
+  <meta name="twitter:description" content="Extract text from images directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/ocr-extractor/" />
+  <title>Local OCR Text Extractor — Image to Text Offline (Indonesian &amp; English)</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EOE%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Local OCR Text Extractor",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/ocr-extractor/",
+    "description": "Extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "100% client-side OCR via Tesseract.js (WASM)",
+      "Indonesian & English language support",
+      "Multi-image batch processing queue",
+      "Word-level confidence scores with low-confidence highlighting",
+      "Plain text / bounding boxes / hOCR output modes",
+      "Download all results as a .zip archive"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1080px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:680px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Main card */
+    .merge-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+
+    /* Settings panel */
+    .settings-panel{
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:1.1rem 1.2rem;margin-bottom:1.25rem;
+    }
+    .settings-title{
+      display:flex;align-items:center;gap:.5rem;
+      font-size:.95rem;font-weight:700;margin-bottom:.9rem;color:var(--fg);
+    }
+    .settings-title svg{width:16px;height:16px;color:var(--accent)}
+    .settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .setting-field{display:flex;flex-direction:column;gap:.35rem}
+    .setting-field label{font-size:.82rem;font-weight:600;color:var(--fg)}
+    .setting-field .hint{font-size:.76rem;color:var(--muted);line-height:1.45}
+    .lang-chips{display:flex;flex-direction:column;gap:.4rem}
+    .lang-chip{
+      display:flex;align-items:center;gap:.5rem;cursor:pointer;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.5rem .75rem;border-radius:8px;font-size:.88rem;font-weight:500;
+      transition:border-color .15s,background .15s;
+    }
+    .lang-chip:hover{border-color:var(--card-border-hover)}
+    .lang-chip input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+    .lang-chip.checked{border-color:var(--accent);background:rgba(220,38,38,0.05)}
+    .lang-chip small{color:var(--muted);font-weight:400;margin-left:auto;font-size:.78rem}
+    .seg-control{display:inline-flex;background:var(--chip-bg);border-radius:8px;padding:3px;gap:2px}
+    .seg-control button{
+      border:none;background:transparent;color:var(--muted);
+      padding:.4rem .7rem;font-size:.82rem;font-weight:500;border-radius:6px;cursor:pointer;
+      font-family:inherit;transition:background .15s,color .15s;
+    }
+    .seg-control button.active{background:var(--card-bg);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    .slider-wrap{display:flex;align-items:center;gap:.75rem}
+    .slider-wrap input[type=range]{
+      flex:1;accent-color:var(--accent);height:6px;cursor:pointer;
+    }
+    .slider-val{
+      min-width:48px;text-align:center;font-weight:700;font-size:.9rem;color:var(--accent);
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.2rem .5rem;border-radius:6px;
+    }
+
+    /* Dropzone */
+    .dropzone{
+      border:2px dashed var(--card-border-hover);border-radius:var(--radius-sm);
+      padding:2.5rem 1.5rem;text-align:center;cursor:pointer;
+      transition:border-color .2s,background .2s,transform .2s;
+      background:var(--bg-2);
+    }
+    .dropzone:hover,.dropzone.dragover{
+      border-color:var(--accent);background:rgba(220,38,38,0.04);
+    }
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{
+      width:54px;height:54px;margin:0 auto .85rem;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45);
+    }
+    .dropzone-icon svg{width:26px;height:26px}
+    .dropzone h3{font-size:1.1rem;margin-bottom:.35rem}
+    .dropzone p{color:var(--muted);font-size:.9rem}
+    .dropzone .browse-link{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+    .dropzone input[type=file]{display:none}
+
+    /* Image queue */
+    .queue-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:1.25rem;margin-bottom:.6rem;
+    }
+    .queue-head h4{font-size:.95rem;font-weight:600}
+    .queue-head .count{font-size:.82rem;color:var(--muted)}
+    .queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.7rem}
+    .queue:empty{display:none}
+    .queue-item{
+      position:relative;background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;
+      transition:border-color .15s,transform .15s,box-shadow .15s;
+    }
+    .queue-item:hover{border-color:var(--card-border-hover);transform:translateY(-2px);box-shadow:var(--shadow)}
+    .queue-item.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.1)}
+    .queue-item.processing{border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(245,158,11,0.15)}
+    .queue-item.done{border-color:var(--green)}
+    .queue-item.error{border-color:var(--accent);background:rgba(220,38,38,0.04)}
+    .queue-thumb{
+      width:100%;aspect-ratio:4/3;background:var(--bg-3);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+    .queue-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .queue-thumb .ph{color:var(--muted);font-size:1.2rem}
+    .queue-meta{padding:.45rem .55rem;min-width:0}
+    .queue-name{
+      font-size:.76rem;font-weight:600;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .queue-status{font-size:.7rem;color:var(--muted);margin-top:.1rem;display:flex;align-items:center;gap:.3rem}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    .queue-item.pending .status-dot{background:var(--muted)}
+    .queue-item.processing .status-dot{background:var(--accent-2);animation:pulse 1.2s infinite}
+    .queue-item.done .status-dot{background:var(--green)}
+    .queue-item.error .status-dot{background:var(--accent)}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .queue-remove{
+      position:absolute;top:5px;right:5px;
+      width:24px;height:24px;border-radius:6px;border:none;
+      background:rgba(15,23,42,0.7);color:white;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .15s,background .15s;
+    }
+    .queue-item:hover .queue-remove{opacity:1}
+    .queue-remove:hover{background:var(--accent)}
+    .queue-remove svg{width:13px;height:13px}
+
+    /* Action bar */
+    .action-bar{
+      display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .action-info{font-size:.88rem;color:var(--muted)}
+    .action-info strong{color:var(--fg);font-weight:600}
+    .action-buttons{display:flex;gap:.6rem;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.25rem;border-radius:10px;border:1px solid transparent;
+      font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px}
+
+    /* Progress */
+    .progress-wrap{
+      margin-top:1rem;padding:1rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+      display:none;
+    }
+    .progress-wrap.active{display:block}
+    .progress-label{font-size:.88rem;font-weight:500;margin-bottom:.5rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .progress-label .cur{color:var(--accent);font-weight:600}
+    .progress-bar{height:8px;background:var(--chip-bg);border-radius:999px;overflow:hidden;margin-bottom:.5rem}
+    .progress-fill{
+      height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      width:0%;transition:width .25s ease;border-radius:999px;
+    }
+    .progress-overall{height:6px;background:var(--chip-bg);border-radius:999px;overflow:hidden}
+    .progress-overall-fill{
+      height:100%;background:linear-gradient(90deg,var(--green),#059669);
+      width:0%;transition:width .25s ease;border-radius:999px;
+    }
+    .progress-label .overall-label{font-size:.78rem;color:var(--muted);font-weight:500}
+
+    /* Results */
+    .results-section{margin-top:2rem}
+    .results-section:empty{display:none}
+    .results-head{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      flex-wrap:wrap;margin-bottom:1rem;
+    }
+    .results-head h3{font-size:1.1rem;font-weight:700}
+    .results-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+    .result-card-ocr{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow);
+    }
+    .ocr-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+    .ocr-thumb{
+      width:60px;height:60px;border-radius:8px;overflow:hidden;
+      background:var(--bg-3);flex-shrink:0;border:1px solid var(--card-border);
+    }
+    .ocr-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .ocr-title{flex:1;min-width:0}
+    .ocr-title .name{font-weight:700;font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ocr-title .stats{font-size:.78rem;color:var(--muted);margin-top:.1rem}
+    .ocr-body{display:grid;grid-template-columns:200px 1fr;gap:1rem;align-items:start}
+    .ocr-preview{
+      border:1px solid var(--card-border);border-radius:var(--radius-sm);
+      overflow:hidden;background:var(--bg-2);cursor:zoom-in;position:relative;
+    }
+    .ocr-preview img{width:100%;height:auto;display:block}
+    .ocr-preview .zoom-hint{
+      position:absolute;bottom:6px;right:6px;
+      background:rgba(15,23,42,0.75);color:white;font-size:.7rem;
+      padding:.15rem .4rem;border-radius:4px;
+    }
+    .ocr-text-col{min-width:0}
+    .ocr-text{
+      font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+      font-size:.86rem;line-height:1.6;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.85rem 1rem;
+      white-space:pre-wrap;word-break:break-word;max-height:340px;overflow-y:auto;
+    }
+    .ocr-text:empty::before{content:"(no text extracted)";color:var(--muted);font-style:italic}
+    .low-conf{color:var(--accent-2);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;background:rgba(245,158,11,0.08);border-radius:2px;padding:0 1px}
+    .ocr-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+    .btn-sm{padding:.45rem .85rem;font-size:.82rem;border-radius:8px}
+    .conf-toggle{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--card-border);
+      padding:.45rem .75rem;border-radius:8px;font-size:.82rem;font-weight:500;
+      cursor:pointer;color:var(--fg);font-family:inherit;
+    }
+    .conf-toggle:hover{background:var(--card-border-hover)}
+    .conf-toggle svg{width:14px;height:14px;transition:transform .2s}
+    .conf-toggle.open svg{transform:rotate(180deg)}
+    .conf-table-wrap{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      margin-top:0;
+    }
+    .conf-table-wrap.open{max-height:400px;margin-top:.7rem}
+    .conf-table{
+      width:100%;border-collapse:collapse;font-size:.8rem;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);overflow:hidden;
+    }
+    .conf-table th,.conf-table td{padding:.4rem .6rem;text-align:left;border-bottom:1px solid var(--card-border)}
+    .conf-table th{background:var(--bg-3);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+    .conf-table tr:last-child td{border-bottom:none}
+    .conf-table td.word{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:500}
+    .conf-bar{display:inline-block;width:42px;height:6px;background:var(--chip-bg);border-radius:3px;overflow:hidden;vertical-align:middle;margin-right:.4rem}
+    .conf-bar-fill{height:100%;border-radius:3px}
+    .conf-low{color:var(--accent-2)}
+    .conf-mid{color:var(--accent)}
+    .conf-high{color:var(--green)}
+
+    /* Image modal */
+    .modal{
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;
+      display:none;align-items:center;justify-content:center;padding:2rem;
+      cursor:zoom-out;
+    }
+    .modal.open{display:flex;animation:fadeIn .15s ease}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+    .modal-close{
+      position:absolute;top:1rem;right:1.5rem;
+      background:rgba(255,255,255,0.15);color:white;border:none;
+      width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.4rem;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .modal-close:hover{background:rgba(255,255,255,0.3)}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:400px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:300;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:760px){
+      .ocr-body{grid-template-columns:1fr}
+      .ocr-preview{max-width:280px}
+    }
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .merge-card{padding:1.1rem}
+      .dropzone{padding:1.75rem 1rem}
+      .settings-grid{grid-template-columns:1fr}
+      .action-bar{flex-direction:column;align-items:stretch}
+      .action-buttons{justify-content:stretch}
+      .action-buttons .btn{flex:1;justify-content:center}
+      .header-links a:not(.back-link):not(.theme-toggle){display:none}
+      .queue{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('ocrextractor-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/ocr-extractor/" class="brand">
+        <span class="brand-logo">OE</span>
+        <span>OCR Extractor</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · Tesseract.js</span>
+        <h1>Extract text from images <span class="accent">in your browser</span></h1>
+        <p class="sub">OCR Extractor reads text from receipts, book pages, notes, and screenshots using Tesseract.js — running fully on your device. No uploads, no API keys, no server.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Indonesian + English</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Multi-image</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Word-level confidence</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="merge-card">
+        <!-- Settings -->
+        <div class="settings-panel">
+          <div class="settings-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            OCR Settings
+          </div>
+          <div class="settings-grid">
+            <div class="setting-field">
+              <label>Languages</label>
+              <div class="lang-chips">
+                <label class="lang-chip" id="langEng"><input type="checkbox" checked /> English (eng) <small>~15 MB</small></label>
+                <label class="lang-chip" id="langInd"><input type="checkbox" checked /> Indonesian (ind) <small>~10 MB</small></label>
+              </div>
+              <div class="hint">First use of each language downloads trained data once; cached afterwards by your browser.</div>
+            </div>
+            <div class="setting-field">
+              <label>Output mode</label>
+              <div class="seg-control" id="outputMode">
+                <button type="button" data-mode="text" class="active">Plain text</button>
+                <button type="button" data-mode="bbox">Bounding boxes</button>
+                <button type="button" data-mode="hocr">hOCR</button>
+              </div>
+              <div class="hint">Plain text reads naturally. Bounding boxes show coordinates per word. hOCR is an HTML standard for OCR results.</div>
+            </div>
+            <div class="setting-field">
+              <label>Confidence threshold</label>
+              <div class="slider-wrap">
+                <input type="range" id="confThreshold" min="0" max="100" value="60" />
+                <span class="slider-val" id="confVal">60</span>
+              </div>
+              <div class="hint">Words below this confidence are highlighted in amber and underlined in the extracted text.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropzone -->
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3>Drop images here</h3>
+          <p>or <span class="browse-link">browse from your device</span> · JPG, PNG, WebP, BMP, GIF — multiple allowed</p>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/bmp,image/gif,.jpg,.jpeg,.png,.webp,.bmp,.gif" multiple />
+        </label>
+
+        <!-- Queue -->
+        <div class="queue-head" id="queueHead" style="display:none">
+          <h4>Image queue</h4>
+          <span class="count" id="queueCount"></span>
+        </div>
+        <div class="queue" id="queue"></div>
+
+        <!-- Progress -->
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-label">
+            <span><span class="cur" id="progressCur">Preparing…</span></span>
+            <span class="overall-label">Overall <strong id="overallPct">0%</strong></span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-overall"><div class="progress-overall-fill" id="progressOverallFill"></div></div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-section" id="resultsSection">
+          <div class="results-head" id="resultsHead" style="display:none">
+            <h3>Extracted text</h3>
+            <div class="results-actions">
+              <button class="btn btn-ghost btn-sm" id="copyAllBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy all text
+              </button>
+              <button class="btn btn-ghost btn-sm" id="downloadZipBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download all as .zip
+              </button>
+            </div>
+          </div>
+          <div id="resultsList"></div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <div class="action-info" id="actionInfo">No images added yet.</div>
+          <div class="action-buttons">
+            <button class="btn btn-ghost" id="clearBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              Clear all
+            </button>
+            <button class="btn btn-primary" id="extractBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5z"/><path d="M9 13l2 2 4-4"/></svg>
+              Extract text
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use OCR Extractor</h2>
+        <p>Four simple steps — your images are processed locally in your browser and never uploaded anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Add images</h4>
+            <p>Drag-and-drop or browse to add one or more images: JPG, PNG, WebP, BMP, or GIF. Receipts, scanned pages, notes, and screenshots all work.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Choose settings</h4>
+            <p>Pick languages (Indonesian, English, or both), select plain text / bounding boxes / hOCR output, and set a confidence threshold for low-confidence highlighting.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Click "Extract text"</h4>
+            <p>OCR Extractor runs Tesseract.js on each image sequentially. The first run downloads language data (~10–15 MB per language); subsequent runs are cached.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Review &amp; download</h4>
+            <p>Copy text per image, download individual .txt files, copy all text together, or download a .zip with every result. Low-confidence words are underlined in amber.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Images are processed entirely in your browser via Tesseract.js (WASM). They are never uploaded to a server, never stored, never logged.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 8l2 2"/><path d="M14 4l2 2"/><path d="M12 22l8-8-4-4-8 8z"/></svg></div>
+            <h4>Indonesian &amp; English</h4>
+            <p>Both languages are supported out of the box. Run them together ("eng+ind") for mixed-language documents like Indonesian receipts with English brand names.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div>
+            <h4>Word-level confidence</h4>
+            <p>Every word gets a confidence score from 0–100. Set a threshold and ambiguous words are highlighted so you know what to proofread.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Batch processing</h4>
+            <p>Queue up many images at once. OCR Extractor runs them sequentially with a per-image and overall progress bar, so you can step away while it works.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            <h4>Flexible export</h4>
+            <p>Copy text per image, download a single .txt, copy all text concatenated, or download a .zip with every result and a combined file. Your choice.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></div>
+            <h4>Open &amp; transparent</h4>
+            <p>Built on the open-source Tesseract.js (Apache 2.0) and JSZip (MIT). The full source is on GitHub — you can audit it, fork it, or self-host it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Are my images uploaded to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. OCR Extractor runs entirely in your browser using Tesseract.js (WebAssembly). Your images are read into memory on your own device, processed locally, and the result is offered as text — they never touch any server. You can verify this by opening your browser's DevTools → Network tab and watching that no image data is sent anywhere while OCR runs.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does it work without internet? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>After the first run. On first use of each language, Tesseract downloads the trained language data (~10–15 MB per language) from its CDN; your browser then caches this data. On subsequent runs — even offline — the cached data is used and no network is required. The Tesseract.js library itself is loaded from a CDN on first page load, so save the page (Ctrl+S → "Webpage, Complete") if you need guaranteed offline use.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Why is the first run slow? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The first OCR run with a language has to fetch the trained data (eng ~15 MB, ind ~10 MB) and initialise the WASM engine. Subsequent images use the same engine instance and cached data, so they're much faster — typically 1–4 seconds per image on a modern laptop.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How accurate is Tesseract OCR? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Tesseract is excellent with clean, high-contrast printed text (book pages, receipts, scanned documents) — usually 95%+ accuracy. It struggles with handwriting, very small fonts, low-contrast photos, skewed text, and decorative typefaces. For best results, use well-lit, straight, in-focus images. The confidence highlighting helps you spot which words to double-check.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What's the difference between plain text, bounding boxes, and hOCR? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p><strong>Plain text</strong> gives you the extracted text as a normal readable paragraph. <strong>Bounding boxes</strong> adds each word's pixel coordinates (x0, y0, x1, y1) — useful if you want to overlay text on the image or build a search index. <strong>hOCR</strong> is an open HTML-based standard for OCR output that embeds text plus geometry in a structured document, suitable for ingestion by other OCR tools.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What does the confidence threshold do? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Every word Tesseract returns has a confidence score (0–100). Words below the threshold you set are highlighted in amber and underlined in the extracted text, and shown in red in the per-word confidence table. This makes it easy to spot which words to proofread manually. The default is 60; lower it to see fewer highlights, raise it to be more strict.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is there a file size or image limit? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>There is no artificial limit. The constraint is your device's memory — Tesseract.js loads each image into a WASM buffer. Large images (over ~4000px) are automatically downscaled to a max of 2000px on the longest side before OCR, which keeps memory reasonable and improves speed. For very large batches, OCR Extractor processes images sequentially to avoid exhausting RAM.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any modern browser with WebAssembly support: Chrome 57+, Firefox 53+, Safari 11+, Edge 79+, and equivalent mobile browsers. WASM is required. For best performance on large images, a device with at least 2 GB of free RAM is recommended. Internet Explorer is not supported.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        Powered by <a href="https://tesseract.projectnaptha.com/" target="_blank" rel="noopener">Tesseract.js</a> &amp; <a href="https://stuk.github.io/jszip/" target="_blank" rel="noopener">JSZip</a> ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Image preview modal -->
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <img id="modalImg" alt="" />
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Tesseract.js (WebAssembly OCR engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js" crossorigin="anonymous"></script>
+  <!-- JSZip (zip archive generation) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
+  <script>
+    (function(){
+      'use strict';
+      var doc = document;
+
+      // ----- State -----
+      var images = []; // { id, file, name, url, thumbUrl, status, result, error, width, height }
+      var nextId = 1;
+      var activeId = null;
+      var isProcessing = false;
+      var settings = {
+        langs: ['eng','ind'],
+        outputMode: 'text',
+        confThreshold: 60
+      };
+
+      // ----- DOM refs -----
+      var dropzone = doc.getElementById('dropzone');
+      var fileInput = doc.getElementById('fileInput');
+      var queueEl = doc.getElementById('queue');
+      var queueHead = doc.getElementById('queueHead');
+      var queueCount = doc.getElementById('queueCount');
+      var actionInfo = doc.getElementById('actionInfo');
+      var clearBtn = doc.getElementById('clearBtn');
+      var extractBtn = doc.getElementById('extractBtn');
+      var progressWrap = doc.getElementById('progressWrap');
+      var progressCur = doc.getElementById('progressCur');
+      var progressFill = doc.getElementById('progressFill');
+      var progressOverallFill = doc.getElementById('progressOverallFill');
+      var overallPct = doc.getElementById('overallPct');
+      var resultsSection = doc.getElementById('resultsSection');
+      var resultsList = doc.getElementById('resultsList');
+      var resultsHead = doc.getElementById('resultsHead');
+      var copyAllBtn = doc.getElementById('copyAllBtn');
+      var downloadZipBtn = doc.getElementById('downloadZipBtn');
+      var toast = doc.getElementById('toast');
+      var modal = doc.getElementById('modal');
+      var modalImg = doc.getElementById('modalImg');
+      var modalClose = doc.getElementById('modalClose');
+
+      // ----- Theme toggle -----
+      var themeToggle = doc.getElementById('themeToggle');
+      themeToggle.addEventListener('click', function(){
+        var current = doc.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ocrextractor-theme', next);
+      });
+
+      // ----- Toast -----
+      var toastTimer = null;
+      function showToast(msg, isError){
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){
+          toast.className = 'toast' + (isError ? ' error' : '');
+        }, 3200);
+      }
+
+      // ----- Helpers -----
+      function formatBytes(b){
+        if (b < 1024) return b + ' B';
+        if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+        return (b/1024/1024).toFixed(2) + ' MB';
+      }
+      function stripExt(name){
+        var i = name.lastIndexOf('.');
+        return i > 0 ? name.substring(0, i) : name;
+      }
+      function escapeHtml(s){
+        return String(s).replace(/[&<>"']/g, function(c){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+      }
+      function escapeAttr(s){
+        return String(s).replace(/"/g,'&quot;');
+      }
+
+      // ----- Settings UI wiring -----
+      var langEng = doc.getElementById('langEng');
+      var langInd = doc.getElementById('langInd');
+      function syncLangChips(){
+        langEng.classList.toggle('checked', langEng.querySelector('input').checked);
+        langInd.classList.toggle('checked', langInd.querySelector('input').checked);
+      }
+      langEng.querySelector('input').addEventListener('change', function(){
+        syncLangChips();
+        updateLangs();
+      });
+      langInd.querySelector('input').addEventListener('change', function(){
+        syncLangChips();
+        updateLangs();
+      });
+      function updateLangs(){
+        var arr = [];
+        if (langEng.querySelector('input').checked) arr.push('eng');
+        if (langInd.querySelector('input').checked) arr.push('ind');
+        if (!arr.length){
+          // Force at least one
+          langEng.querySelector('input').checked = true;
+          arr.push('eng');
+          syncLangChips();
+          showToast('At least one language required — English kept', true);
+        }
+        settings.langs = arr;
+      }
+      syncLangChips();
+
+      var outputModeEl = doc.getElementById('outputMode');
+      outputModeEl.querySelectorAll('button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          outputModeEl.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          settings.outputMode = btn.getAttribute('data-mode');
+          // Re-render existing result cards so the text reflects the new output mode
+          images.forEach(function(item){
+            if (item.status === 'done' && item.result){
+              renderResult(item);
+            }
+          });
+        });
+      });
+
+      var confThreshold = doc.getElementById('confThreshold');
+      var confVal = doc.getElementById('confVal');
+      confThreshold.addEventListener('input', function(){
+        var v = parseInt(confThreshold.value, 10);
+        settings.confThreshold = v;
+        confVal.textContent = v;
+        // Re-render existing result cards so highlighting & stats reflect the new threshold
+        images.forEach(function(item){
+          if (item.status === 'done' && item.result){
+            renderResult(item);
+          }
+        });
+      });
+
+      // ----- Add images -----
+      var ACCEPTED = /image\/(jpeg|png|webp|bmp|gif)|\.(jpe?g|png|webp|bmp|gif)$/i;
+      function addFiles(fileArr){
+        var added = 0;
+        var skipped = 0;
+        for (var i=0; i<fileArr.length; i++){
+          var f = fileArr[i];
+          if (!ACCEPTED.test(f.type) && !ACCEPTED.test(f.name)){
+            skipped++;
+            continue;
+          }
+          var item = {
+            id: nextId++,
+            file: f,
+            name: f.name,
+            url: URL.createObjectURL(f),
+            thumbUrl: null,
+            status: 'pending',
+            result: null,
+            error: null,
+            width: 0,
+            height: 0
+          };
+          images.push(item);
+          added++;
+          // Generate thumbnail
+          (function(it){
+            var img = new Image();
+            img.onload = function(){
+              it.width = img.naturalWidth;
+              it.height = img.naturalHeight;
+              it.thumbUrl = makeThumb(img, 200);
+              renderQueueItemMeta(it);
+            };
+            img.onerror = function(){ /* ignore */ };
+            img.src = it.url;
+          })(item);
+        }
+        if (added) {
+          if (!activeId && images.length) activeId = images[0].id;
+          renderQueue();
+          showToast(added + ' image' + (added>1?'s':'') + ' added' + (skipped ? ' ('+skipped+' non-image skipped)' : ''));
+        } else if (skipped) {
+          showToast('Only image files are supported (JPG, PNG, WebP, BMP, GIF)', true);
+        }
+      }
+
+      function makeThumb(img, max){
+        var canvas = doc.createElement('canvas');
+        var w = img.naturalWidth, h = img.naturalHeight;
+        var scale = Math.min(max/w, max/h, 1);
+        canvas.width = Math.max(1, Math.round(w*scale));
+        canvas.height = Math.max(1, Math.round(h*scale));
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        try { return canvas.toDataURL('image/jpeg', 0.7); }
+        catch(e){ return img.src; }
+      }
+
+      // ----- Render queue -----
+      function renderQueue(){
+        queueEl.innerHTML = '';
+        if (!images.length){
+          queueHead.style.display = 'none';
+          actionInfo.textContent = 'No images added yet.';
+          clearBtn.disabled = true;
+          extractBtn.disabled = true;
+          resultsHead.style.display = 'none';
+          return;
+        }
+        queueHead.style.display = 'flex';
+        queueCount.textContent = images.length + ' image' + (images.length>1?'s':'');
+        clearBtn.disabled = isProcessing;
+        extractBtn.disabled = isProcessing;
+        var doneCount = images.filter(function(i){ return i.status === 'done'; }).length;
+        actionInfo.innerHTML = '<strong>' + images.length + '</strong> image' + (images.length>1?'s':'') + ' queued' +
+          (doneCount ? ' · <strong>' + doneCount + '</strong> processed' : '');
+
+        images.forEach(function(item){
+          queueEl.appendChild(buildQueueItem(item));
+        });
+      }
+
+      function buildQueueItem(item){
+        var el = doc.createElement('div');
+        el.className = 'queue-item ' + item.status + (item.id === activeId ? ' active' : '');
+        el.dataset.id = item.id;
+        el.innerHTML =
+          '<div class="queue-thumb">' + (item.thumbUrl ? '<img src="'+escapeAttr(item.thumbUrl)+'" alt="">' : '<span class="ph">…</span>') + '</div>' +
+          '<div class="queue-meta">' +
+            '<div class="queue-name"></div>' +
+            '<div class="queue-status"><span class="status-dot"></span><span class="status-text"></span></div>' +
+          '</div>' +
+          '<button class="queue-remove" title="Remove" aria-label="Remove image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+        el.querySelector('.queue-name').textContent = item.name;
+        el.querySelector('.status-text').textContent = statusLabel(item.status);
+        el.addEventListener('click', function(e){
+          if (e.target.closest('.queue-remove')) return;
+          activeId = item.id;
+          // scroll to its result if present
+          var resultEl = resultsList.querySelector('[data-rid="'+item.id+'"]');
+          if (resultEl) resultEl.scrollIntoView({behavior:'smooth', block:'center'});
+          renderQueue();
+        });
+        el.querySelector('.queue-remove').addEventListener('click', function(e){
+          e.stopPropagation();
+          removeItem(item.id);
+        });
+        return el;
+      }
+
+      function renderQueueItemMeta(item){
+        var el = queueEl.querySelector('.queue-item[data-id="'+item.id+'"]');
+        if (!el) return;
+        if (item.thumbUrl){
+          var thumb = el.querySelector('.queue-thumb');
+          thumb.innerHTML = '<img src="'+escapeAttr(item.thumbUrl)+'" alt="">';
+        }
+      }
+
+      function setQueueStatus(item, status){
+        item.status = status;
+        var el = queueEl.querySelector('.queue-item[data-id="'+item.id+'"]');
+        if (el){
+          el.className = 'queue-item ' + status + (item.id === activeId ? ' active' : '');
+          var st = el.querySelector('.status-text');
+          if (st) st.textContent = statusLabel(status);
+        }
+      }
+
+      function statusLabel(s){
+        switch(s){
+          case 'pending': return 'Pending';
+          case 'processing': return 'Processing…';
+          case 'done': return 'Done';
+          case 'error': return 'Error';
+          default: return s;
+        }
+      }
+
+      function removeItem(id){
+        var idx = images.findIndex(function(i){ return i.id === id; });
+        if (idx < 0) return;
+        var item = images[idx];
+        if (item.url) URL.revokeObjectURL(item.url);
+        images.splice(idx, 1);
+        if (activeId === id) activeId = images.length ? images[0].id : null;
+        // remove its result card
+        var r = resultsList.querySelector('[data-rid="'+id+'"]');
+        if (r) r.remove();
+        if (!resultsList.children.length) resultsHead.style.display = 'none';
+        renderQueue();
+      }
+
+      // ----- File input + dropzone events -----
+      fileInput.addEventListener('change', function(){
+        addFiles(Array.prototype.slice.call(fileInput.files));
+        fileInput.value = '';
+      });
+      dropzone.addEventListener('dragover', function(e){
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', function(){
+        dropzone.classList.remove('dragover');
+      });
+      dropzone.addEventListener('drop', function(e){
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+          addFiles(Array.prototype.slice.call(e.dataTransfer.files));
+        }
+      });
+
+      // ----- Clear all -----
+      clearBtn.addEventListener('click', function(){
+        if (!images.length || isProcessing) return;
+        images.forEach(function(i){ if (i.url) URL.revokeObjectURL(i.url); });
+        images = [];
+        activeId = null;
+        resultsList.innerHTML = '';
+        resultsHead.style.display = 'none';
+        renderQueue();
+        showToast('Cleared all images');
+      });
+
+      // ----- Downscale image before OCR -----
+      function downscaleForOcr(img, maxDim){
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (w <= maxDim && h <= maxDim){
+          // Return original as canvas
+          var c = doc.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0);
+          return c;
+        }
+        var scale = Math.min(maxDim/w, maxDim/h);
+        var cw = Math.round(w*scale), ch = Math.round(h*scale);
+        var canvas = doc.createElement('canvas');
+        canvas.width = cw; canvas.height = ch;
+        var ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, cw, ch);
+        return canvas;
+      }
+
+      function loadImage(url){
+        return new Promise(function(resolve, reject){
+          var img = new Image();
+          img.onload = function(){ resolve(img); };
+          img.onerror = function(){ reject(new Error('Failed to load image')); };
+          img.src = url;
+        });
+      }
+
+      // ----- Progress helpers -----
+      function showProgress(curLabel, pct, overallPctVal){
+        progressWrap.classList.add('active');
+        progressCur.textContent = curLabel;
+        progressFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+        progressOverallFill.style.width = Math.max(0, Math.min(100, overallPctVal)) + '%';
+        overallPct.textContent = Math.round(overallPctVal) + '%';
+      }
+      function hideProgress(){
+        progressWrap.classList.remove('active');
+        progressFill.style.width = '0%';
+        progressOverallFill.style.width = '0%';
+      }
+
+      // ----- Build text output from result based on mode -----
+      function buildOutput(item){
+        var r = item.result;
+        if (!r) return '';
+        if (settings.outputMode === 'text'){
+          return r.text || '';
+        }
+        if (settings.outputMode === 'bbox'){
+          if (!r.words || !r.words.length) return r.text || '';
+          var lines = [];
+          for (var i=0; i<r.words.length; i++){
+            var w = r.words[i];
+            var b = w.bbox || {x0:0,y0:0,x1:0,y1:0};
+            lines.push(
+              (w.text||'') + '\t' +
+              'conf=' + (w.confidence!=null?w.confidence.toFixed(1):'-') + '\t' +
+              'bbox=' + b.x0 + ',' + b.y0 + ',' + b.x1 + ',' + b.y1
+            );
+          }
+          return lines.join('\n');
+        }
+        if (settings.outputMode === 'hocr'){
+          return r.hocr || r.text || '';
+        }
+        return r.text || '';
+      }
+
+      // ----- Build highlighted text HTML (for plain text mode) -----
+      function buildHighlightedHtml(item){
+        var r = item.result;
+        if (!r || !r.text) return '';
+        if (settings.outputMode !== 'text'){
+          // For bbox/hOCR, just escape and show as preformatted
+          return escapeHtml(buildOutput(item));
+        }
+        // Plain text: try to highlight low-confidence words by aligning with words array
+        if (!r.words || !r.words.length){
+          return escapeHtml(r.text);
+        }
+        // Build a flat text with placeholders; simplest approach: split text by whitespace
+        // and tag each token with confidence in order.
+        var tokens = r.text.split(/(\s+)/);
+        var wordIdx = 0;
+        var html = '';
+        for (var i=0; i<tokens.length; i++){
+          var tok = tokens[i];
+          if (/^\s+$/.test(tok) || tok === ''){
+            html += escapeHtml(tok);
+            continue;
+          }
+          // Find next word with non-empty text
+          var conf = null;
+          while (wordIdx < r.words.length){
+            var w = r.words[wordIdx];
+            wordIdx++;
+            if (w.text && w.text.trim()){
+              conf = w.confidence;
+              break;
+            }
+          }
+          if (conf != null && conf < settings.confThreshold){
+            html += '<span class="low-conf" title="confidence '+conf.toFixed(0)+'%">' + escapeHtml(tok) + '</span>';
+          } else {
+            html += escapeHtml(tok);
+          }
+        }
+        return html;
+      }
+
+      // ----- Render a result card -----
+      function renderResult(item){
+        var existing = resultsList.querySelector('[data-rid="'+item.id+'"]');
+        var card = existing || doc.createElement('div');
+        card.className = 'result-card-ocr';
+        card.dataset.rid = item.id;
+        var thumbSrc = item.thumbUrl || item.url;
+        var statsParts = [];
+        if (item.width && item.height) statsParts.push(item.width + '×' + item.height);
+        if (item.result && item.result.words){
+          var confs = item.result.words.map(function(w){ return w.confidence; }).filter(function(c){ return c!=null; });
+          if (confs.length){
+            var avg = confs.reduce(function(a,b){return a+b;},0) / confs.length;
+            statsParts.push('avg conf ' + avg.toFixed(0) + '%');
+            var low = confs.filter(function(c){ return c < settings.confThreshold; }).length;
+            statsParts.push(low + ' low-conf word' + (low===1?'':'s'));
+          }
+        }
+        if (item.result && item.result.text){
+          statsParts.push(item.result.text.length + ' chars');
+        }
+        var modeLabel = settings.outputMode === 'text' ? 'Plain text' : (settings.outputMode === 'bbox' ? 'Bounding boxes' : 'hOCR');
+
+        card.innerHTML =
+          '<div class="ocr-head">' +
+            '<div class="ocr-thumb"><img src="'+escapeAttr(thumbSrc)+'" alt=""></div>' +
+            '<div class="ocr-title">' +
+              '<div class="name"></div>' +
+              '<div class="stats"></div>' +
+            '</div>' +
+            '<button class="conf-toggle" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> Word confidence</button>' +
+          '</div>' +
+          '<div class="ocr-body">' +
+            '<div class="ocr-preview"><img src="'+escapeAttr(item.url)+'" alt=""><span class="zoom-hint">Click to zoom</span></div>' +
+            '<div class="ocr-text-col">' +
+              '<div class="ocr-text"></div>' +
+              '<div class="ocr-actions">' +
+                '<button class="btn btn-ghost btn-sm" data-act="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy text</button>' +
+                '<button class="btn btn-ghost btn-sm" data-act="download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt</button>' +
+              '</div>' +
+              '<div class="conf-table-wrap"><table class="conf-table"><thead><tr><th>#</th><th>Word</th><th>Confidence</th></tr></thead><tbody></tbody></table></div>' +
+            '</div>' +
+          '</div>';
+        card.querySelector('.name').textContent = item.name;
+        card.querySelector('.stats').textContent = statsParts.join(' · ');
+        card.querySelector('.ocr-text').innerHTML = buildHighlightedHtml(item);
+        // Confidence table
+        var tbody = card.querySelector('.conf-table tbody');
+        if (item.result && item.result.words && item.result.words.length){
+          var words = item.result.words.filter(function(w){ return w.text && w.text.trim(); });
+          // cap to first 300 for performance
+          var cap = words.slice(0, 300);
+          var rows = '';
+          for (var i=0; i<cap.length; i++){
+            var w = cap[i];
+            var c = w.confidence != null ? w.confidence : 0;
+            var cls = c < 40 ? 'conf-low' : (c < settings.confThreshold ? 'conf-low' : (c < 80 ? 'conf-mid' : 'conf-high'));
+            var barColor = c < settings.confThreshold ? 'var(--accent-2)' : (c < 80 ? 'var(--accent)' : 'var(--green)');
+            rows += '<tr><td>'+(i+1)+'</td><td class="word">'+escapeHtml(w.text)+'</td><td class="'+cls+'"><span class="conf-bar"><span class="conf-bar-fill" style="width:'+Math.max(2,Math.min(100,c))+'%;background:'+barColor+'"></span></span>'+c.toFixed(0)+'%</td></tr>';
+          }
+          if (words.length > 300){
+            rows += '<tr><td colspan="3" style="text-align:center;color:var(--muted);font-style:italic">… '+(words.length-300)+' more words not shown</td></tr>';
+          }
+          tbody.innerHTML = rows;
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--muted)">No word data available</td></tr>';
+        }
+
+        // Wire actions
+        card.querySelector('[data-act="copy"]').addEventListener('click', function(){
+          copyText(buildOutput(item), 'Text copied');
+        });
+        card.querySelector('[data-act="download"]').addEventListener('click', function(){
+          downloadText(buildOutput(item), stripExt(item.name) + '.txt');
+        });
+        var confToggle = card.querySelector('.conf-toggle');
+        confToggle.addEventListener('click', function(){
+          confToggle.classList.toggle('open');
+          card.querySelector('.conf-table-wrap').classList.toggle('open');
+        });
+        // Preview click → modal
+        card.querySelector('.ocr-preview').addEventListener('click', function(){
+          openModal(item.url);
+        });
+
+        if (!existing) resultsList.appendChild(card);
+        resultsHead.style.display = 'flex';
+      }
+
+      // ----- Modal -----
+      function openModal(url){
+        modalImg.src = url;
+        modal.classList.add('open');
+      }
+      function closeModal(){
+        modal.classList.remove('open');
+        modalImg.src = '';
+      }
+      modal.addEventListener('click', closeModal);
+      modalClose.addEventListener('click', closeModal);
+      doc.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      // ----- Copy / download helpers -----
+      function copyText(text, successMsg){
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){
+            showToast(successMsg || 'Copied');
+          }).catch(function(){
+            fallbackCopy(text, successMsg);
+          });
+        } else {
+          fallbackCopy(text, successMsg);
+        }
+      }
+      function fallbackCopy(text, successMsg){
+        var ta = doc.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        doc.body.appendChild(ta);
+        ta.select();
+        try { doc.execCommand('copy'); showToast(successMsg || 'Copied'); }
+        catch(e){ showToast('Copy failed', true); }
+        doc.body.removeChild(ta);
+      }
+      function downloadText(text, filename){
+        var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = doc.createElement('a');
+        a.href = url;
+        a.download = filename;
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+        showToast('Downloaded ' + filename);
+      }
+      function timestamp(){
+        var d = new Date();
+        var p = function(n){ return String(n).padStart(2,'0'); };
+        return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes());
+      }
+
+      // ----- Build "all text" concatenation -----
+      function buildAllText(){
+        var parts = [];
+        images.forEach(function(item){
+          if (item.status === 'done' && item.result){
+            parts.push('===== ' + item.name + ' =====');
+            parts.push(buildOutput(item));
+            parts.push('');
+          }
+        });
+        return parts.join('\n');
+      }
+
+      copyAllBtn.addEventListener('click', function(){
+        var text = buildAllText();
+        if (!text.trim()){ showToast('No extracted text yet', true); return; }
+        copyText(text, 'Copied ' + images.filter(function(i){return i.status==='done';}).length + ' image text');
+      });
+
+      downloadZipBtn.addEventListener('click', async function(){
+        var done = images.filter(function(i){ return i.status === 'done' && i.result; });
+        if (!done.length){ showToast('No extracted text yet', true); return; }
+        if (typeof JSZip === 'undefined'){ showToast('ZIP library not loaded', true); return; }
+        try {
+          var zip = new JSZip();
+          var used = {};
+          done.forEach(function(item){
+            var base = stripExt(item.name);
+            var fname = base + '.txt';
+            var n = 2;
+            while (used[fname.toLowerCase()]){
+              fname = base + ' (' + n + ').txt';
+              n++;
+            }
+            used[fname.toLowerCase()] = true;
+            zip.file(fname, buildOutput(item));
+          });
+          zip.file('all-text.txt', buildAllText());
+          showToast('Building .zip…');
+          var blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+          var url = URL.createObjectURL(blob);
+          var a = doc.createElement('a');
+          a.href = url;
+          a.download = 'ocr-results-' + timestamp() + '.zip';
+          doc.body.appendChild(a);
+          a.click();
+          doc.body.removeChild(a);
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+          showToast('Downloaded ocr-results-' + timestamp() + '.zip');
+        } catch(err){
+          console.error(err);
+          showToast('ZIP build failed: ' + (err.message||err), true);
+        }
+      });
+
+      // ----- Extract (OCR) -----
+      extractBtn.addEventListener('click', function(){
+        if (isProcessing) return;
+        var pending = images.filter(function(i){ return i.status !== 'done'; });
+        if (!pending.length){
+          showToast('All images already processed', true);
+          return;
+        }
+        runOcr(pending);
+      });
+
+      async function runOcr(queue){
+        isProcessing = true;
+        extractBtn.disabled = true;
+        clearBtn.disabled = true;
+        var total = queue.length;
+        var doneSoFar = 0;
+        showToast('OCR started — ' + total + ' image' + (total>1?'s':''));
+
+        for (var i=0; i<queue.length; i++){
+          var item = queue[i];
+          setQueueStatus(item, 'processing');
+          activeId = item.id;
+          var baseOverall = (doneSoFar / total) * 100;
+          var spanOverall = (1 / total) * 100;
+
+          try {
+            var img = await loadImage(item.url);
+            var canvas = downscaleForOcr(img, 2000);
+            var langStr = settings.langs.join('+');
+
+            var result = await Tesseract.recognize(canvas, langStr, {
+              logger: function(m){
+                if (m.status === 'recognizing text'){
+                  var pct = (m.progress || 0) * 100;
+                  showProgress(
+                    item.name + ' — recognizing ' + (pct).toFixed(0) + '%',
+                    pct,
+                    baseOverall + (pct/100) * spanOverall
+                  );
+                } else if (m.status){
+                  showProgress(
+                    item.name + ' — ' + m.status,
+                    0,
+                    baseOverall
+                  );
+                }
+              }
+            });
+
+            var data = result && result.data ? result.data : {};
+            var words = (data.words || []).map(function(w){
+              return {
+                text: w.text != null ? w.text : (w.text || ''),
+                confidence: w.confidence != null ? w.confidence : 0,
+                bbox: w.bbox || null
+              };
+            }).filter(function(w){ return w.text !== ''; });
+
+            item.result = {
+              text: data.text || '',
+              words: words,
+              hocr: data.hocr || ''
+            };
+            item.status = 'done';
+            setQueueStatus(item, 'done');
+            renderResult(item);
+            doneSoFar++;
+          } catch(err){
+            console.error('OCR error for', item.name, err);
+            item.status = 'error';
+            item.error = (err && err.message) ? err.message : String(err);
+            setQueueStatus(item, 'error');
+            renderErrorResult(item);
+            doneSoFar++;
+          }
+        }
+
+        hideProgress();
+        isProcessing = false;
+        renderQueue();
+        var okCount = queue.filter(function(i){ return i.status === 'done'; }).length;
+        var errCount = queue.length - okCount;
+        if (errCount){
+          showToast('Done — ' + okCount + ' ok, ' + errCount + ' failed', true);
+        } else {
+          showToast('OCR complete — ' + okCount + ' image' + (okCount>1?'s':'') + ' processed');
+        }
+        // Scroll to results
+        if (resultsList.children.length){
+          resultsSection.scrollIntoView({ behavior:'smooth', block:'start' });
+        }
+      }
+
+      function renderErrorResult(item){
+        var existing = resultsList.querySelector('[data-rid="'+item.id+'"]');
+        var card = existing || doc.createElement('div');
+        card.className = 'result-card-ocr';
+        card.dataset.rid = item.id;
+        card.innerHTML =
+          '<div class="ocr-head">' +
+            '<div class="ocr-thumb"><img src="'+escapeAttr(item.thumbUrl||item.url)+'" alt=""></div>' +
+            '<div class="ocr-title">' +
+              '<div class="name"></div>' +
+              '<div class="stats" style="color:var(--accent)">Error: ' + escapeHtml(item.error||'unknown') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ocr-body">' +
+            '<div class="ocr-preview"><img src="'+escapeAttr(item.url)+'" alt=""></div>' +
+            '<div class="ocr-text-col">' +
+              '<div class="ocr-text" style="color:var(--accent);font-style:italic">Failed to extract text from this image. ' + escapeHtml(item.error||'') + '</div>' +
+            '</div>' +
+          '</div>';
+        card.querySelector('.name').textContent = item.name;
+        card.querySelector('.ocr-preview').addEventListener('click', function(){ openModal(item.url); });
+        if (!existing) resultsList.appendChild(card);
+        resultsHead.style.display = 'flex';
+      }
+
+      // ----- FAQ accordions -----
+      doc.querySelectorAll('.faq-q').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var itemEl = btn.closest('.faq-item');
+          var wasOpen = itemEl.classList.contains('open');
+          doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+          if (!wasOpen) itemEl.classList.add('open');
+        });
+      });
+
+      // ----- Footer year -----
+      doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // ----- Initial state -----
+      renderQueue();
+
+      // ----- CDN error guard -----
+      function checkLibs(){
+        if (typeof Tesseract === 'undefined'){
+          showToast('Tesseract.js failed to load — check your internet connection', true);
+          extractBtn.disabled = true;
+        }
+      }
+      setTimeout(checkLibs, 4000);
+
+    })();
+  </script>
+</body>
+</html>
