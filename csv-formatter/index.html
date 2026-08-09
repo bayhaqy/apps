@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Clean CSV / Excel Data Formatter & JSON Converter — trim spaces, fix capitalization, split name columns, dedupe rows and export to clean CSV, JSON or formatted XLSX. 100% client-side, runs in your browser. No uploads." />
+  <meta name="keywords" content="CSV formatter, CSV cleaner, Excel formatter, XLSX to JSON, CSV to JSON, dedupe CSV, clean spreadsheet, trim whitespace, split names, data cleaning, offline CSV, browser CSV, privacy CSV" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="CSV / Excel Formatter & JSON Converter — Clean Data Locally" />
+  <meta property="og:description" content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/csv-formatter/" />
+  <meta property="og:site_name" content="CSV Formatter" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CSV / Excel Formatter & JSON Converter — Clean Data Locally" />
+  <meta name="twitter:description" content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/csv-formatter/" />
+  <title>CSV / Excel Formatter & JSON Converter — Clean Data Locally</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECF%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CSV / Excel Formatter & JSON Converter",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/csv-formatter/",
+    "description": "Clean CSV / Excel Data Formatter & JSON Converter. Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "featureList": [
+      "Auto-trim whitespace and collapse multiple spaces",
+      "Remove empty rows and exact duplicate rows",
+      "Title-case name columns and normalize email addresses",
+      "Standardize date columns to ISO YYYY-MM-DD",
+      "Split full name columns into first and last name",
+      "Export to clean CSV, JSON, nested JSON or formatted XLSX"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:960px;
+      --cell-flag:#FEF9C3;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+      --cell-flag:rgba(250,204,21,0.14);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Main card */
+    .fmt-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+    .dropzone{
+      border:2px dashed var(--card-border-hover);border-radius:var(--radius-sm);
+      padding:2.5rem 1.5rem;text-align:center;cursor:pointer;
+      transition:border-color .2s,background .2s,transform .2s;
+      background:var(--bg-2);
+    }
+    .dropzone:hover,.dropzone.dragover{
+      border-color:var(--accent);background:rgba(220,38,38,0.04);
+    }
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{
+      width:54px;height:54px;margin:0 auto .85rem;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45);
+    }
+    .dropzone-icon svg{width:26px;height:26px}
+    .dropzone h3{font-size:1.1rem;margin-bottom:.35rem}
+    .dropzone p{color:var(--muted);font-size:.9rem}
+    .dropzone .browse-link{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+    .dropzone input[type=file]{display:none}
+    .dropzone .file-meta-line{margin-top:.6rem;font-size:.82rem;color:var(--muted)}
+    .dropzone .file-meta-line strong{color:var(--fg);font-weight:600}
+
+    /* Lib fallback */
+    .lib-fallback{
+      display:none;margin-top:1rem;padding:.85rem 1rem;border-radius:var(--radius-sm);
+      background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.3);
+      color:var(--accent);font-size:.88rem;font-weight:500;
+    }
+    .lib-fallback.active{display:block}
+
+    /* Summary card */
+    .summary-card{
+      margin-top:1.25rem;padding:1.25rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+    }
+    .summary-head{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+    .summary-head h3{font-size:1.05rem;font-weight:700}
+    .summary-head .file-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      padding:.3rem .7rem;border-radius:999px;font-size:.8rem;font-weight:600;color:var(--accent);
+    }
+    .summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin-bottom:1rem}
+    .summary-stat{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.75rem .9rem;
+    }
+    .summary-stat .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+    .summary-stat .value{font-size:1.35rem;font-weight:800;margin-top:.15rem}
+    .summary-section{margin-top:.85rem}
+    .summary-section h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;margin-bottom:.5rem}
+    .type-badges{display:flex;flex-wrap:wrap;gap:.4rem}
+    .type-badge{
+      display:inline-flex;align-items:center;gap:.35rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.3rem .65rem;border-radius:8px;font-size:.8rem;font-weight:500;
+    }
+    .type-badge .dot{width:8px;height:8px;border-radius:50%}
+    .type-text .dot{background:#64748B}
+    .type-number .dot{background:#2563EB}
+    .type-date .dot{background:#7C3AED}
+    .type-email .dot{background:#059669}
+    .type-boolean .dot{background:#D97706}
+    .type-badge .col{font-weight:600;color:var(--fg)}
+    .issues-list{display:flex;flex-direction:column;gap:.4rem}
+    .issue-item{
+      display:flex;align-items:center;gap:.5rem;font-size:.88rem;color:var(--muted);
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.5rem .75rem;border-radius:8px;
+    }
+    .issue-item .cnt{font-weight:700;color:var(--accent);min-width:2ch;text-align:right}
+    .issue-item.none{color:var(--green)}
+    .issue-item.none .cnt{color:var(--green)}
+    .issues-empty{color:var(--green);font-size:.88rem;font-weight:500}
+
+    /* Options panel */
+    .options-panel{
+      margin-top:1.25rem;padding:1.25rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+    }
+    .options-panel h3{font-size:1.02rem;font-weight:700;margin-bottom:.85rem}
+    .options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.6rem}
+    .opt{
+      display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.7rem .85rem;border-radius:var(--radius-sm);
+      transition:border-color .15s,background .15s;
+    }
+    .opt:hover{border-color:var(--card-border-hover)}
+    .opt input[type=checkbox]{
+      margin-top:.2rem;width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;
+    }
+    .opt-text{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+    .opt-text strong{font-size:.9rem;font-weight:600;color:var(--fg)}
+    .opt-text small{font-size:.78rem;color:var(--muted);line-height:1.4}
+    .opt-text select{font-size:.78rem;margin-top:.2rem;padding:.15rem .35rem;border-radius:6px;border:1px solid var(--card-border);background:var(--bg);color:var(--fg)}
+    .opt-text select:disabled{opacity:.5;cursor:not-allowed}
+    .opt-row-controls{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+    .opt-row-controls .btn{flex-shrink:0}
+
+    /* Before/after stats */
+    .ba-stats{
+      margin-top:1rem;padding:.85rem 1rem;border-radius:var(--radius-sm);
+      background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);
+      display:none;font-size:.9rem;
+    }
+    .ba-stats.active{display:block}
+    .ba-stats .ba-row{display:flex;flex-wrap:wrap;gap:1.25rem;align-items:center}
+    .ba-stats .ba-item{display:flex;align-items:center;gap:.4rem}
+    .ba-stats .ba-item strong{font-weight:800;color:var(--green)}
+    .ba-stats .ba-item span{color:var(--muted)}
+
+    /* Export bar */
+    .export-bar{
+      display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .export-bar .export-label{font-size:.82rem;color:var(--muted);font-weight:600;margin-right:.25rem;width:100%;margin-bottom:.1rem}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.6rem 1rem;border-radius:10px;border:1px solid transparent;
+      font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s,border-color .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:var(--card-bg);color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:15px;height:15px;flex-shrink:0}
+
+    /* Preview table */
+    .preview-wrap{
+      margin-top:1rem;border:1px solid var(--card-border);border-radius:var(--radius-sm);
+      overflow:auto;max-height:560px;position:relative;background:var(--card-bg);
+    }
+    .preview-wrap:empty{display:none}
+    .preview-table{
+      border-collapse:separate;border-spacing:0;width:100%;font-size:.85rem;
+      min-width:max-content;
+    }
+    .preview-table thead th{
+      position:sticky;top:0;z-index:2;
+      background:var(--bg-3);color:var(--fg);font-weight:700;text-align:left;
+      padding:.65rem .85rem;border-bottom:1px solid var(--card-border);
+      white-space:nowrap;font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;
+    }
+    [data-theme="dark"] .preview-table thead th{background:#334155}
+    .preview-table tbody td{
+      padding:.5rem .85rem;border-bottom:1px solid var(--card-border);
+      white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;
+      cursor:default;transition:background .1s;
+    }
+    .preview-table tbody tr:nth-child(even) td{background:var(--bg-2)}
+    .preview-table tbody td.cell-modified{background:var(--cell-flag) !important;cursor:pointer}
+    .preview-table tbody td.cell-modified:hover{outline:2px solid var(--accent-2);outline-offset:-2px}
+    .preview-table tbody td.cell-null{color:var(--muted);font-style:italic;opacity:.7}
+    .preview-table tbody td.cell-type-num{text-align:right;font-variant-numeric:tabular-nums}
+    .preview-truncated{padding:.6rem .85rem;font-size:.78rem;color:var(--muted);text-align:center;border-top:1px solid var(--card-border);background:var(--bg-2)}
+
+    /* Cell tooltip */
+    .cell-tooltip{
+      position:fixed;z-index:200;max-width:320px;
+      background:var(--fg);color:var(--bg);padding:.55rem .8rem;border-radius:8px;
+      font-size:.82rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.4);
+      pointer-events:none;display:none;line-height:1.45;
+    }
+    .cell-tooltip.active{display:block}
+    .cell-tooltip .tt-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin-bottom:.15rem}
+    .cell-tooltip .tt-val{word-break:break-all;white-space:pre-wrap}
+    .cell-tooltip .tt-new{margin-top:.35rem;font-size:.72rem;opacity:.85}
+    .cell-tooltip .tt-new strong{color:var(--accent-2)}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:360px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:300;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .fmt-card{padding:1.1rem}
+      .dropzone{padding:1.75rem 1rem}
+      .export-bar .btn{flex:1;justify-content:center}
+      .header-links a:not(.theme-toggle){display:none}
+      .options-grid{grid-template-columns:1fr}
+      .summary-stats{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('csvfmt-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/csv-formatter/" class="brand">
+        <span class="brand-logo">CF</span>
+        <span>CSV Formatter</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · CSV · XLSX · JSON</span>
+        <h1>Clean messy spreadsheets <span class="accent">in seconds</span></h1>
+        <p class="sub">Drop a CSV or Excel file and CSV Formatter trims whitespace, fixes capitalization, splits name columns, removes duplicates and exports to clean CSV, JSON or formatted XLSX — all in your browser, nothing uploaded.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Auto-clean</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Split names</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Dedupe</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Multi-format export</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="fmt-card">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3>Drop a CSV or Excel file here</h3>
+          <p>or <span class="browse-link">browse from your device</span> · supports .csv, .xlsx, .xls, .tsv, .txt</p>
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.tsv,.txt,text/csv,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+          <div class="file-meta-line" id="fileMetaLine" style="display:none;"></div>
+        </label>
+
+        <div class="lib-fallback" id="libFallback">
+          ⚠️ A required library (PapaParse or SheetJS) failed to load. Check your internet connection and refresh the page. The app cannot parse files without them.
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-card" id="summaryCard" style="display:none;">
+          <div class="summary-head">
+            <h3>Data summary</h3>
+            <span class="file-pill" id="sumFilePill"></span>
+          </div>
+          <div class="summary-stats">
+            <div class="summary-stat"><div class="label">Rows</div><div class="value" id="sumRows">—</div></div>
+            <div class="summary-stat"><div class="label">Columns</div><div class="value" id="sumCols">—</div></div>
+            <div class="summary-stat"><div class="label">File size</div><div class="value" id="sumSize">—</div></div>
+            <div class="summary-stat"><div class="label">Type</div><div class="value" id="sumType">—</div></div>
+          </div>
+          <div class="summary-section">
+            <h4>Detected column types</h4>
+            <div class="type-badges" id="sumTypes"></div>
+          </div>
+          <div class="summary-section">
+            <h4>Issues found</h4>
+            <div class="issues-list" id="sumIssues"></div>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-panel" id="optionsPanel" style="display:none;">
+          <h3>Cleaning options</h3>
+          <div class="options-grid">
+            <label class="opt"><input type="checkbox" id="opt-trim" checked><span class="opt-text"><strong>Trim whitespace</strong><small>Remove leading/trailing spaces from all cells</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-collapse" checked><span class="opt-text"><strong>Collapse multiple spaces</strong><small>Turn runs of spaces into a single space</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-empty" checked><span class="opt-text"><strong>Remove empty rows</strong><small>Drop rows where every cell is blank</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-dedupe" checked><span class="opt-text"><strong>Remove duplicate rows</strong><small>Delete exact duplicate rows (keeps first)</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-email" checked><span class="opt-text"><strong>Normalize email column</strong><small>Lowercase and trim email addresses</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-name" checked><span class="opt-text"><strong>Title-case name columns</strong><small>"JOhn smIth" → "John Smith"</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-date" checked><span class="opt-text"><strong>Standardize dates to ISO</strong><small>Convert to YYYY-MM-DD where unambiguous</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-split"><span class="opt-text"><strong>Split full name column</strong><small>Auto-detect "Full Name"/"Nama Lengkap" → First + Last</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-nonprint"><span class="opt-text"><strong>Strip non-printable chars</strong><small>Remove control characters from all cells</small></span></label>
+            <label class="opt"><input type="checkbox" id="opt-null"><span class="opt-text"><strong>Empty → null/empty</strong><small>Convert empty strings to <select id="opt-null-val"><option value="empty">empty string</option><option value="null">null</option></select></small></span></label>
+          </div>
+          <div class="opt-row-controls">
+            <div class="action-info" id="cleanInfo" style="font-size:.88rem;color:var(--muted);">Adjust options then apply to re-clean from the original data.</div>
+            <button class="btn btn-primary" id="applyBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Apply cleaning
+            </button>
+          </div>
+          <div class="ba-stats" id="baStats"></div>
+        </div>
+
+        <!-- Export bar + preview -->
+        <div class="export-bar" id="exportBar" style="display:none;">
+          <span class="export-label">Export current view</span>
+          <button class="btn btn-ghost" data-export="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .csv</button>
+          <button class="btn btn-ghost" data-export="json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .json</button>
+          <button class="btn btn-ghost" data-export="json-nested"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .json (nested)</button>
+          <button class="btn btn-ghost" data-export="xlsx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .xlsx</button>
+          <button class="btn btn-ghost" data-copy="markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Markdown</button>
+          <button class="btn btn-ghost" data-copy="json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy JSON</button>
+        </div>
+
+        <div class="preview-wrap" id="previewWrap"></div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use CSV Formatter</h2>
+        <p>Four simple steps — your data is cleaned locally in your browser and never uploaded anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Drop your file</h4>
+            <p>Drag a .csv, .xlsx, .xls, .tsv or .txt file onto the dropzone, or click to browse. Only one file at a time — dropping a new one replaces the previous.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Review the summary</h4>
+            <p>CSV Formatter inspects every column, detects types (text, number, date, email, boolean) and lists issues like empty rows, duplicates and messy whitespace.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Tune &amp; apply cleaning</h4>
+            <p>Toggle the cleaning options you want, then click "Apply cleaning". The preview re-renders from the original data and shows before/after stats.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Export anywhere</h4>
+            <p>Download clean CSV (UTF-8 with BOM for Excel), JSON, nested JSON, or formatted XLSX — or copy the table as Markdown / JSON to your clipboard.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>100% private</h4>
+            <p>Your spreadsheet is parsed entirely in your browser. No upload, no server, no tracking — your data never leaves your device.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Smart auto-clean</h4>
+            <p>Trim whitespace, collapse spaces, normalize emails, title-case names and standardize dates — all detected and applied automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            <h4>Split &amp; dedupe</h4>
+            <p>Split a "Full Name" column into First and Last, and remove exact duplicate rows or empty rows in one click.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+            <h4>Multi-format export</h4>
+            <p>Export to clean CSV (Excel-ready BOM), JSON, nested JSON, or formatted XLSX. Or copy as Markdown / JSON for docs and chat.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <h4>Live preview</h4>
+            <p>Scroll through up to 100 rows with a sticky header. Modified cells are highlighted yellow — click any to see its original value.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Cross-platform</h4>
+            <p>Works on Chrome, Firefox, Safari, Edge and modern mobile browsers. Uses PapaParse and SheetJS — the battle-tested open-source parsers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is my data uploaded to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. CSV Formatter runs entirely in your browser using JavaScript. Your file is read into memory on your own device, cleaned there, and the result is offered as a download — nothing is ever uploaded. You can verify this by opening DevTools → Network and watching that no file data leaves your device.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What file formats are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Input: .csv, .tsv, .txt (plain delimited), .xlsx and .xls (Excel). Output: clean .csv (UTF-8 with BOM for Excel compatibility), .json (array of objects), .json with nested name object, and .xlsx (via SheetJS). You can also copy the table as Markdown or JSON.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How are column types detected? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Each column is sampled: if more than 80% of its non-empty cells match a number pattern, it is flagged "number"; if they match date patterns (DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY, or Indonesian "12 Januari 2020"), it is "date"; if the header contains "email" or >80% of cells match an email regex, it is "email"; if >80% match true/false/yes/no/y/n/0/1, it is "boolean"; otherwise "text". Detection only guides cleaning — it never deletes your data.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How does the name split work? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>If you enable "Split full name column", the app looks for a header matching "Full Name", "Nama Lengkap" or "Name" (case-insensitive). That column is split on the first space into a "First Name" and "Last Name" column. Single-word names get an empty last name. The original full-name column is replaced.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Are formulas preserved when I read an .xlsx file? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. SheetJS reads the cached cell values, not live formulas. If a cell contains a formula, you get its last computed value. Formatting (colors, fonts, number formats) is also not preserved on re-export — the focus of this tool is clean data, not faithful spreadsheet cloning.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How big a file can I clean? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The app handles roughly 50,000 rows smoothly on a typical laptop. Beyond that, parsing and rendering slow down and the preview table (capped at 100 visible rows) may take a moment. There is no hard limit — the only constraint is your device's memory.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any modern browser from the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer is not supported. PapaParse and SheetJS are loaded from a CDN on first visit.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        Powered by <a href="https://www.papaparse.com/" target="_blank" rel="noopener">PapaParse</a> &amp; <a href="https://sheetjs.com/" target="_blank" rel="noopener">SheetJS</a> ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <div class="cell-tooltip" id="cellTooltip">
+    <div class="tt-label">Original value</div>
+    <div class="tt-val" id="ttVal"></div>
+    <div class="tt-new" id="ttNew"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" crossorigin="anonymous"></script>
+  <script>
+    (function(){
+      'use strict';
+      var doc = document;
+
+      // ----- Lib availability -----
+      var hasPapa = typeof window.Papa !== 'undefined';
+      var hasXLSX = typeof window.XLSX !== 'undefined';
+      if (!hasPapa || !hasXLSX){
+        doc.getElementById('libFallback').classList.add('active');
+      }
+
+      // ----- State -----
+      var rawHeader = [];      // string[]  (original column names)
+      var rawRows = [];        // string[][] (original data, cells as strings)
+      var fileName = '';
+      var fileSize = 0;
+      var fileType = '';
+      var columnTypes = {};    // { colName: 'text'|'number'|'date'|'email'|'boolean' }
+      var issues = [];         // [{label, count}]
+      var cleanedHeader = [];  // current preview header
+      var cleanedRows = [];    // current preview rows
+      var cellMeta = [];       // Array<Array<{modified:bool, original:string|null}>> parallel to cleanedRows
+      var lastStats = null;    // { rowsRemoved, cellsModified, rowsBefore, rowsAfter }
+      var hasApplied = false;
+
+      // ----- DOM refs -----
+      var dropzone = doc.getElementById('dropzone');
+      var fileInput = doc.getElementById('fileInput');
+      var fileMetaLine = doc.getElementById('fileMetaLine');
+      var summaryCard = doc.getElementById('summaryCard');
+      var optionsPanel = doc.getElementById('optionsPanel');
+      var exportBar = doc.getElementById('exportBar');
+      var previewWrap = doc.getElementById('previewWrap');
+      var applyBtn = doc.getElementById('applyBtn');
+      var cleanInfo = doc.getElementById('cleanInfo');
+      var baStats = doc.getElementById('baStats');
+      var toast = doc.getElementById('toast');
+      var cellTooltip = doc.getElementById('cellTooltip');
+      var ttVal = doc.getElementById('ttVal');
+      var ttNew = doc.getElementById('ttNew');
+
+      // ----- Theme toggle -----
+      var themeToggle = doc.getElementById('themeToggle');
+      themeToggle.addEventListener('click', function(){
+        var current = doc.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('csvfmt-theme', next);
+      });
+
+      // ----- Toast -----
+      var toastTimer = null;
+      function showToast(msg, isError){
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){
+          toast.className = 'toast' + (isError ? ' error' : '');
+        }, 3200);
+      }
+
+      // ----- Helpers -----
+      function formatBytes(b){
+        if (b < 1024) return b + ' B';
+        if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+        return (b/1024/1024).toFixed(2) + ' MB';
+      }
+      function isBlank(v){ return v == null || String(v).trim() === ''; }
+      function asStr(v){
+        if (v == null) return '';
+        if (typeof v === 'string') return v;
+        if (typeof v === 'number'){
+          if (Number.isFinite(v) && Math.abs(v) < 1e21 && !(v % 1 !== 0 && Math.abs(v) > 1e15)){
+            return Number.isInteger(v) ? String(v) : String(v);
+          }
+          return String(v);
+        }
+        if (v instanceof Date){
+          var y = v.getFullYear(), m = String(v.getMonth()+1).padStart(2,'0'), d = String(v.getDate()).padStart(2,'0');
+          return y + '-' + m + '-' + d;
+        }
+        if (typeof v === 'boolean') return v ? 'true' : 'false';
+        try { return String(v); } catch(e){ return ''; }
+      }
+      function escapeHtml(s){
+        return String(s).replace(/[&<>"']/g, function(c){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+      }
+      function timestamp(){
+        var t = new Date();
+        var p = function(n){ return String(n).padStart(2,'0'); };
+        return t.getFullYear() + p(t.getMonth()+1) + p(t.getDate()) + '-' + p(t.getHours()) + p(t.getMinutes()) + p(t.getSeconds());
+      }
+      function baseName(name){
+        return name.replace(/\.[^.]+$/, '');
+      }
+
+      // ----- Regex patterns -----
+      var RE_NUM = /^-?\d+(?:\.\d+)?$/;
+      var RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var RE_BOOL = /^(true|false|yes|no|y|n|0|1)$/i;
+      var RE_DATE_ISO = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+      var RE_DATE_SLASH = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+      var RE_DATE_DASH = /^(\d{1,2})-(\d{1,2})-(\d{4})$/;
+      var ID_MONTHS = {
+        januari:1, februari:2, maret:3, april:4, mei:5, juni:6, juli:7,
+        agustus:8, agt:8, agu:8, september:9, sepet:9, oktober:10, november:11, desember:12,
+        jan:1, feb:2, mar:3, apr:4, may:5, jun:6, jul:7, aug:8, sep:9, sep:9, okt:10, oct:10, nov:11, des:12
+      };
+      var RE_DATE_ID = /^(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})$/;
+      var RE_NAME_COL = /^(full\s*name|nama\s*lengkap|name|nama)$/i;
+      var RE_EMAIL_COL = /email|e-mail|mail/i;
+      var RE_NONPRINT = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
+
+      // ----- Date parsing -> ISO string or null (if ambiguous) -----
+      function parseDateToISO(v){
+        if (v == null) return null;
+        var s = String(v).trim();
+        if (!s) return null;
+
+        // Indonesian: "12 Januari 2020"
+        var mId = s.match(RE_DATE_ID);
+        if (mId){
+          var mon = ID_MONTHS[mId[2].toLowerCase()];
+          if (mon){
+            var d = parseInt(mId[1],10), y = parseInt(mId[3],10);
+            if (validDate(y, mon, d)) return iso(y, mon, d);
+          }
+          return null;
+        }
+
+        // ISO: YYYY-MM-DD
+        var mIso = s.match(RE_DATE_ISO);
+        if (mIso){
+          var y = parseInt(mIso[1],10), mo = parseInt(mIso[2],10), d = parseInt(mIso[3],10);
+          if (validDate(y, mo, d)) return iso(y, mo, d);
+          return null;
+        }
+
+        // DD/MM/YYYY or MM/DD/YYYY
+        var mSl = s.match(RE_DATE_SLASH);
+        if (mSl){
+          var a = parseInt(mSl[1],10), b = parseInt(mSl[2],10), y = parseInt(mSl[3],10);
+          return resolveDMY(a, b, y);
+        }
+
+        // DD-MM-YYYY or MM-DD-YYYY
+        var mDh = s.match(RE_DATE_DASH);
+        if (mDh){
+          var a = parseInt(mDh[1],10), b = parseInt(mDh[2],10), y = parseInt(mDh[3],10);
+          return resolveDMY(a, b, y);
+        }
+
+        return null;
+      }
+      function resolveDMY(a, b, y){
+        // a/b could be DD/MM or MM/DD
+        if (a > 12 && b <= 12){ // a is day
+          if (validDate(y, b, a)) return iso(y, b, a);
+        } else if (b > 12 && a <= 12){ // b is day
+          if (validDate(y, a, b)) return iso(y, a, b);
+        } else if (a <= 12 && b <= 12 && a > 0 && b > 0){
+          // ambiguous — leave as-is
+          return null;
+        }
+        return null;
+      }
+      function validDate(y, m, d){
+        if (m < 1 || m > 12 || d < 1 || d > 31 || y < 1) return false;
+        var dt = new Date(y, m-1, d);
+        return dt.getFullYear() === y && dt.getMonth() === m-1 && dt.getDate() === d;
+      }
+      function iso(y, m, d){
+        return y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      }
+
+      // ----- Type detection -----
+      function detectColumnType(colName, values){
+        var nonEmpty = values.filter(function(v){ return !isBlank(v); });
+        if (nonEmpty.length === 0) return 'text';
+        // email by header
+        if (RE_EMAIL_COL.test(colName)) return 'email';
+        var emailCnt = 0, numCnt = 0, dateCnt = 0, boolCnt = 0;
+        nonEmpty.forEach(function(v){
+          var s = String(v).trim();
+          if (RE_EMAIL.test(s)) emailCnt++;
+          if (RE_NUM.test(s)) numCnt++;
+          if (parseDateToISO(s)) dateCnt++;
+          if (RE_BOOL.test(s)) boolCnt++;
+        });
+        var n = nonEmpty.length;
+        var thr = n * 0.8;
+        if (emailCnt >= thr) return 'email';
+        if (dateCnt >= thr && numCnt < thr) return 'date';
+        if (numCnt >= thr) return 'number';
+        if (boolCnt >= thr) return 'boolean';
+        // email by content even if header doesn't say so
+        if (emailCnt >= n * 0.8) return 'email';
+        return 'text';
+      }
+
+      function isDateLike(v){ return !isBlank(v) && parseDateToISO(String(v).trim()) !== null; }
+
+      // ----- Issue detection -----
+      function detectIssues(header, rows, types){
+        var list = [];
+        var emptyRows = 0, dupRows = 0, wsCells = 0, mixedEmails = 0, mixedCaseNames = 0, nonIsoDates = 0, nonPrint = 0;
+        var seen = Object.create(null);
+
+        for (var r=0; r<rows.length; r++){
+          var row = rows[r];
+          var allEmpty = true;
+          for (var c=0; c<row.length; c++){
+            var v = row[c] != null ? String(row[c]) : '';
+            if (v.trim() !== '') allEmpty = false;
+            // whitespace issues: leading/trailing OR multiple internal spaces OR internal tabs/newlines
+            if (v !== '' && (v !== v.trim() || /\s{2,}|[\t\r\n]/.test(v))) wsCells++;
+            // non-printable
+            if (v !== '' && RE_NONPRINT.test(v)) nonPrint++;
+          }
+          if (allEmpty){ emptyRows++; continue; }
+          // dup check on the trimmed row join
+          var key = row.map(function(v){ return (v==null?'':String(v).trim()); }).join('\u0001');
+          if (seen[key]){ dupRows++; } else { seen[key] = true; }
+        }
+
+        // per-column issues
+        for (var c=0; c<header.length; c++){
+          var t = types[header[c]] || 'text';
+          for (var r=0; r<rows.length; r++){
+            var v = rows[r][c] != null ? String(rows[r][c]) : '';
+            if (v.trim() === '') continue;
+            if (t === 'email'){
+              if (v !== v.toLowerCase().trim()) mixedEmails++;
+            } else if (t === 'date'){
+              // non-ISO if not already YYYY-MM-DD
+              if (!RE_DATE_ISO.test(v.trim())) nonIsoDates++;
+            } else if (RE_NAME_COL.test(header[c])){
+              if (!isTitleCase(v)) mixedCaseNames++;
+            }
+          }
+        }
+
+        if (emptyRows) list.push({ label: emptyRows + ' empty row' + (emptyRows>1?'s':''), count: emptyRows });
+        if (dupRows) list.push({ label: dupRows + ' duplicate row' + (dupRows>1?'s':''), count: dupRows });
+        if (wsCells) list.push({ label: wsCells + ' cell' + (wsCells>1?'s':'') + ' with extra whitespace', count: wsCells });
+        if (mixedEmails) list.push({ label: mixedEmails + ' mixed-case email' + (mixedEmails>1?'s':''), count: mixedEmails });
+        if (mixedCaseNames) list.push({ label: mixedCaseNames + ' inconsistently-cased name' + (mixedCaseNames>1?'s':''), count: mixedCaseNames });
+        if (nonIsoDates) list.push({ label: nonIsoDates + ' non-ISO date' + (nonIsoDates>1?'s':''), count: nonIsoDates });
+        if (nonPrint) list.push({ label: nonPrint + ' cell' + (nonPrint>1?'s':'') + ' with non-printable chars', count: nonPrint });
+        return list;
+      }
+      function isTitleCase(v){
+        var s = String(v).trim();
+        if (!s) return true;
+        return s === s.replace(/\b\w/g, function(c){ return c.toUpperCase(); }) &&
+               s === s.replace(/\B\w/g, function(c){ return c.toLowerCase(); });
+      }
+      function toTitleCase(v){
+        var s = String(v).trim().replace(/\s+/g, ' ');
+        if (!s) return '';
+        return s.replace(/\b[\w']+\b/g, function(word){
+          if (word.length <= 1) return word.toUpperCase();
+          // preserve all-caps acronyms of 2-3 letters? spec says "JOhn smIth" → "John Smith", so force title case
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+      }
+
+      // ----- File handling -----
+      fileInput.addEventListener('change', function(){
+        if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+        fileInput.value = '';
+      });
+      dropzone.addEventListener('dragover', function(e){
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', function(){ dropzone.classList.remove('dragover'); });
+      dropzone.addEventListener('drop', function(e){
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+      });
+
+      function handleFile(file){
+        if (!hasPapa || !hasXLSX){
+          showToast('Required libraries failed to load. Please refresh.', true);
+          return;
+        }
+        fileName = file.name;
+        fileSize = file.size;
+        var ext = (file.name.split('.').pop() || '').toLowerCase();
+        fileType = ext;
+
+        var ok = false;
+        if (ext === 'csv' || ext === 'tsv' || ext === 'txt'){
+          ok = parseDelimited(file, ext);
+        } else if (ext === 'xlsx' || ext === 'xls'){
+          ok = parseXLSX(file);
+        } else {
+          showToast('Unsupported file type: .' + ext, true);
+          return;
+        }
+        // onFileLoaded() is called from finalizeLoad() after the async parse completes
+      }
+
+      function parseDelimited(file, ext){
+        var delim = ext === 'tsv' ? '\t' : '';
+        try {
+          Papa.parse(file, {
+            header: false,
+            skipEmptyLines: false,
+            delimiter: delim || '',
+            complete: function(res){
+              var data = res.data || [];
+              if (!data.length){
+                showToast('File is empty or unreadable', true);
+                return;
+              }
+              rawHeader = (data[0] || []).map(asStr);
+              rawRows = data.slice(1).map(function(r){ return r.map(asStr); });
+              finalizeLoad();
+            },
+            error: function(err){
+              showToast('Parse error: ' + (err && err.message ? err.message : 'unknown'), true);
+            }
+          });
+          return true;
+        } catch(e){
+          showToast('Parse error: ' + e.message, true);
+          return false;
+        }
+      }
+
+      function parseXLSX(file){
+        try {
+          file.arrayBuffer().then(function(buf){
+            var wb = XLSX.read(buf, { type: 'array' });
+            var ws = wb.Sheets[wb.SheetNames[0]];
+            if (!ws){ showToast('No sheets found in workbook', true); return; }
+            var aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' });
+            if (!aoa.length){ showToast('Sheet is empty', true); return; }
+            rawHeader = (aoa[0] || []).map(asStr);
+            rawRows = aoa.slice(1).map(function(r){ return r.map(asStr); });
+            finalizeLoad();
+          }).catch(function(e){
+            showToast('XLSX read error: ' + e.message, true);
+          });
+          return true;
+        } catch(e){
+          showToast('XLSX error: ' + e.message, true);
+          return false;
+        }
+      }
+
+      function finalizeLoad(){
+        // Normalize header count vs row width
+        var maxLen = rawHeader.length;
+        rawRows.forEach(function(r){ if (r.length > maxLen) maxLen = r.length; });
+        if (rawHeader.length < maxLen){
+          for (var i = rawHeader.length; i < maxLen; i++) rawHeader.push('Column ' + (i+1));
+        }
+        // Trim every row to maxLen
+        rawRows = rawRows.map(function(r){
+          var out = r.slice(0, maxLen);
+          while (out.length < maxLen) out.push('');
+          return out;
+        });
+        // Ensure header uniqueness
+        rawHeader = dedupeHeaders(rawHeader);
+        // Detect types & issues on RAW data
+        columnTypes = {};
+        for (var c=0; c<rawHeader.length; c++){
+          var vals = rawRows.map(function(r){ return r[c]; });
+          columnTypes[rawHeader[c]] = detectColumnType(rawHeader[c], vals);
+        }
+        issues = detectIssues(rawHeader, rawRows, columnTypes);
+        onFileLoaded();
+      }
+
+      function dedupeHeaders(hdr){
+        var seen = Object.create(null), out = [];
+        for (var i=0; i<hdr.length; i++){
+          var h = hdr[i] == null ? '' : String(hdr[i]).trim();
+          if (!h) h = 'Column ' + (i+1);
+          if (seen[h] == null){ seen[h] = 1; out.push(h); }
+          else { seen[h]++; out.push(h + ' (' + seen[h] + ')'); }
+        }
+        return out;
+      }
+
+      function onFileLoaded(){
+        // Show file meta line
+        fileMetaLine.style.display = 'block';
+        fileMetaLine.innerHTML = '<strong>' + escapeHtml(fileName) + '</strong> · ' + formatBytes(fileSize) + ' · ' + rawRows.length + ' rows × ' + rawHeader.length + ' cols &nbsp; <span style="color:var(--accent);font-weight:600">drop another file to replace</span>';
+
+        renderSummary();
+        optionsPanel.style.display = 'block';
+        exportBar.style.display = 'flex';
+        hasApplied = false;
+        baStats.classList.remove('active');
+        cleanInfo.textContent = 'Adjust options then apply to clean from the original data.';
+        // Initial preview = raw data, no modifications flagged
+        cleanedHeader = rawHeader.slice();
+        cleanedRows = rawRows.map(function(r){ return r.slice(); });
+        cellMeta = cleanedRows.map(function(r){ return r.map(function(){ return { modified: false, original: null }; }); });
+        renderPreview();
+        showToast('Loaded ' + fileName + ' · ' + rawRows.length + ' rows');
+        summaryCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ----- Render summary -----
+      function renderSummary(){
+        summaryCard.style.display = 'block';
+        doc.getElementById('sumFilePill').textContent = fileName;
+        doc.getElementById('sumRows').textContent = rawRows.length.toLocaleString();
+        doc.getElementById('sumCols').textContent = rawHeader.length;
+        doc.getElementById('sumSize').textContent = formatBytes(fileSize);
+        doc.getElementById('sumType').textContent = fileType.toUpperCase();
+
+        var typesEl = doc.getElementById('sumTypes');
+        typesEl.innerHTML = '';
+        rawHeader.forEach(function(h){
+          var t = columnTypes[h] || 'text';
+          var b = doc.createElement('span');
+          b.className = 'type-badge type-' + t;
+          b.innerHTML = '<span class="dot"></span><span class="col">' + escapeHtml(h) + '</span> · ' + t;
+          typesEl.appendChild(b);
+        });
+
+        var issuesEl = doc.getElementById('sumIssues');
+        issuesEl.innerHTML = '';
+        if (!issues.length){
+          issuesEl.innerHTML = '<div class="issues-empty">No issues detected — your data looks clean.</div>';
+        } else {
+          issues.forEach(function(it){
+            var d = doc.createElement('div');
+            d.className = 'issue-item';
+            d.innerHTML = '<span class="cnt">' + it.count + '</span><span>' + escapeHtml(it.label) + '</span>';
+            issuesEl.appendChild(d);
+          });
+        }
+      }
+
+      // ----- Get current options -----
+      function getOptions(){
+        return {
+          trim: doc.getElementById('opt-trim').checked,
+          collapse: doc.getElementById('opt-collapse').checked,
+          empty: doc.getElementById('opt-empty').checked,
+          dedupe: doc.getElementById('opt-dedupe').checked,
+          email: doc.getElementById('opt-email').checked,
+          name: doc.getElementById('opt-name').checked,
+          date: doc.getElementById('opt-date').checked,
+          split: doc.getElementById('opt-split').checked,
+          nonprint: doc.getElementById('opt-nonprint').checked,
+          null: doc.getElementById('opt-null').checked,
+          nullVal: doc.getElementById('opt-null-val').value
+        };
+      }
+
+      // ----- Apply cleaning (always from raw data) -----
+      applyBtn.addEventListener('click', function(){
+        runCleaning();
+      });
+
+      function runCleaning(){
+        var opt = getOptions();
+        var rowsBefore = rawRows.length;
+
+        // Work on copies of raw data
+        var header = rawHeader.slice();
+        var rows = rawRows.map(function(r){ return r.slice(); });
+        // meta: track modifications per cell. start: all original=false
+        var meta = rows.map(function(r){ return r.map(function(){ return { modified: false, original: null }; }); });
+
+        // 1. Non-printable strip (before trim)
+        if (opt.nonprint){
+          applyToAll(rows, meta, function(v){
+            var s = String(v);
+            var nv = s.replace(RE_NONPRINT, '');
+            return nv === s ? null : nv;
+          });
+        }
+
+        // 2. Trim whitespace
+        if (opt.trim){
+          applyToAll(rows, meta, function(v){
+            var s = String(v);
+            var nv = s.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '');
+            return nv === s ? null : nv;
+          });
+        }
+
+        // 3. Collapse multiple spaces
+        if (opt.collapse){
+          applyToAll(rows, meta, function(v){
+            var s = String(v);
+            var nv = s.replace(/[ \t]{2,}/g, ' ').replace(/[\r\n]+/g, ' ');
+            return nv === s ? null : nv;
+          });
+        }
+
+        // 4. Normalize email column(s)
+        if (opt.email){
+          for (var c=0; c<header.length; c++){
+            if (columnTypes[rawHeader[c]] === 'email' || RE_EMAIL_COL.test(header[c])){
+              for (var r=0; r<rows.length; r++){
+                var s = String(rows[r][c] || '');
+                if (s.trim() === '') continue;
+                var nv = s.trim().toLowerCase();
+                if (nv !== rows[r][c]){
+                  meta[r][c].original = meta[r][c].original != null ? meta[r][c].original : rows[r][c];
+                  rows[r][c] = nv;
+                  meta[r][c].modified = true;
+                }
+              }
+            }
+          }
+        }
+
+        // 5. Title-case name columns
+        if (opt.name){
+          for (var c=0; c<header.length; c++){
+            if (RE_NAME_COL.test(header[c])){
+              for (var r=0; r<rows.length; r++){
+                var s = String(rows[r][c] || '');
+                if (s.trim() === '') continue;
+                var nv = toTitleCase(s);
+                if (nv !== s){
+                  meta[r][c].original = meta[r][c].original != null ? meta[r][c].original : rows[r][c];
+                  rows[r][c] = nv;
+                  meta[r][c].modified = true;
+                }
+              }
+            }
+          }
+        }
+
+        // 6. Standardize dates
+        if (opt.date){
+          for (var c=0; c<header.length; c++){
+            if (columnTypes[rawHeader[c]] === 'date'){
+              for (var r=0; r<rows.length; r++){
+                var s = String(rows[r][c] || '');
+                if (s.trim() === '') continue;
+                var iso = parseDateToISO(s);
+                if (iso && iso !== s){
+                  meta[r][c].original = meta[r][c].original != null ? meta[r][c].original : rows[r][c];
+                  rows[r][c] = iso;
+                  meta[r][c].modified = true;
+                }
+              }
+            }
+          }
+        }
+
+        // 7. Split name column
+        if (opt.split){
+          var splitIdx = -1;
+          for (var c=0; c<header.length; c++){
+            if (RE_NAME_COL.test(header[c])){ splitIdx = c; break; }
+          }
+          if (splitIdx >= 0){
+            var newHeader = header.slice(0, splitIdx).concat(['First Name', 'Last Name']).concat(header.slice(splitIdx+1));
+            var newRows = [];
+            var newMeta = [];
+            for (var r=0; r<rows.length; r++){
+              var full = String(rows[r][splitIdx] || '');
+              var parts = full.trim().split(/\s+/);
+              var first = parts[0] || '';
+              var last = parts.length > 1 ? parts.slice(1).join(' ') : '';
+              var newRow = rows[r].slice(0, splitIdx).concat([first, last]).concat(rows[r].slice(splitIdx+1));
+              var rowMeta = meta[r].slice(0, splitIdx).concat([
+                { modified: full !== '', original: full !== '' ? full : null },
+                { modified: full !== '', original: full !== '' ? full : null }
+              ]).concat(meta[r].slice(splitIdx+1));
+              newRows.push(newRow);
+              newMeta.push(rowMeta);
+            }
+            header = newHeader;
+            rows = newRows;
+            meta = newMeta;
+          }
+        }
+
+        // 8. Empty → null/empty (mark empty-string cells that were non-empty? No — convert empty strings to chosen representation)
+        if (opt.null){
+          var repl = opt.nullVal === 'null' ? null : '';
+          for (var r=0; r<rows.length; r++){
+            for (var c=0; c<rows[r].length; c++){
+              if (rows[r][c] != null && String(rows[r][c]).trim() === ''){
+                rows[r][c] = repl;
+              }
+            }
+          }
+        }
+
+        // 9. Remove empty rows
+        var rowsRemovedEmpty = 0;
+        if (opt.empty){
+          var kept = [], keptMeta = [];
+          for (var r=0; r<rows.length; r++){
+            var allEmpty = rows[r].every(function(v){ return v == null || String(v).trim() === ''; });
+            if (allEmpty){ rowsRemovedEmpty++; } else { kept.push(rows[r]); keptMeta.push(meta[r]); }
+          }
+          rows = kept; meta = keptMeta;
+        }
+
+        // 10. Remove exact duplicate rows
+        var rowsRemovedDup = 0;
+        if (opt.dedupe){
+          var seen = Object.create(null);
+          var kept = [], keptMeta = [];
+          for (var r=0; r<rows.length; r++){
+            var key = rows[r].map(function(v){ return v == null ? '' : String(v); }).join('\u0001');
+            if (seen[key]){ rowsRemovedDup++; } else { seen[key] = true; kept.push(rows[r]); keptMeta.push(meta[r]); }
+          }
+          rows = kept; meta = keptMeta;
+        }
+
+        // Count modified cells
+        var cellsModified = 0;
+        for (var r=0; r<meta.length; r++){
+          for (var c=0; c<meta[r].length; c++){
+            if (meta[r][c].modified) cellsModified++;
+          }
+        }
+
+        cleanedHeader = header;
+        cleanedRows = rows;
+        cellMeta = meta;
+        lastStats = {
+          rowsBefore: rowsBefore,
+          rowsAfter: rows.length,
+          rowsRemoved: rowsBefore - rows.length,
+          rowsRemovedEmpty: rowsRemovedEmpty,
+          rowsRemovedDup: rowsRemovedDup,
+          cellsModified: cellsModified
+        };
+        hasApplied = true;
+        renderPreview();
+        renderBAStats();
+        showToast('Cleaning applied · ' + lastStats.rowsRemoved + ' rows removed · ' + cellsModified + ' cells modified');
+      }
+
+      function applyToAll(rows, meta, fn){
+        for (var r=0; r<rows.length; r++){
+          for (var c=0; c<rows[r].length; c++){
+            var v = rows[r][c];
+            if (v == null) continue;
+            var nv = fn(v);
+            if (nv !== null && nv !== v){
+              meta[r][c].original = meta[r][c].original != null ? meta[r][c].original : v;
+              rows[r][c] = nv;
+              meta[r][c].modified = true;
+            }
+          }
+        }
+      }
+
+      function renderBAStats(){
+        if (!lastStats) return;
+        var s = lastStats;
+        baStats.classList.add('active');
+        var parts = [];
+        parts.push('<div class="ba-row">');
+        parts.push('<div class="ba-item"><span>Rows:</span><strong>' + s.rowsBefore + '</strong><span>→</span><strong>' + s.rowsAfter + '</strong></div>');
+        parts.push('<div class="ba-item"><span>Rows removed:</span><strong>' + s.rowsRemoved + '</strong></div>');
+        parts.push('<div class="ba-item"><span>Cells modified:</span><strong>' + s.cellsModified + '</strong></div>');
+        if (s.rowsRemovedEmpty) parts.push('<div class="ba-item"><span>Empty rows:</span><strong>' + s.rowsRemovedEmpty + '</strong></div>');
+        if (s.rowsRemovedDup) parts.push('<div class="ba-item"><span>Duplicates:</span><strong>' + s.rowsRemovedDup + '</strong></div>');
+        parts.push('</div>');
+        baStats.innerHTML = parts.join('');
+        cleanInfo.textContent = 'Cleaning applied from the original data. Toggle options and re-apply to re-clean.';
+      }
+
+      // ----- Render preview table -----
+      function renderPreview(){
+        previewWrap.innerHTML = '';
+        if (!cleanedHeader.length){ return; }
+        var table = doc.createElement('table');
+        table.className = 'preview-table';
+        var thead = doc.createElement('thead');
+        var tr = doc.createElement('tr');
+        cleanedHeader.forEach(function(h){
+          var th = doc.createElement('th');
+          th.textContent = h;
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+        table.appendChild(thead);
+
+        var tbody = doc.createElement('tbody');
+        var showRows = cleanedRows.length > 100 ? cleanedRows.slice(0, 100) : cleanedRows;
+        showRows.forEach(function(row, rIdx){
+          var tr = doc.createElement('tr');
+          for (var c=0; c<cleanedHeader.length; c++){
+            var td = doc.createElement('td');
+            var v = row[c];
+            var meta = cellMeta[rIdx] ? cellMeta[rIdx][c] : null;
+            var isNull = v === null;
+            var display = isNull ? 'null' : String(v);
+            td.textContent = display;
+            if (isNull) td.classList.add('cell-null');
+            if (meta && meta.modified){
+              td.classList.add('cell-modified');
+              td.dataset.original = meta.original == null ? '' : String(meta.original);
+              td.dataset.current = display;
+              td.title = 'Modified — click to see original';
+            }
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        previewWrap.appendChild(table);
+
+        if (cleanedRows.length > 100){
+          var note = doc.createElement('div');
+          note.className = 'preview-truncated';
+          note.textContent = 'Showing first 100 of ' + cleanedRows.length.toLocaleString() + ' rows. Export includes all rows.';
+          previewWrap.appendChild(note);
+        }
+      }
+
+      // ----- Cell tooltip on click -----
+      previewWrap.addEventListener('click', function(e){
+        var td = e.target.closest('td.cell-modified');
+        if (!td){ hideTooltip(); return; }
+        var orig = td.dataset.original || '';
+        var cur = td.dataset.current || '';
+        ttVal.textContent = orig === '' ? '(empty)' : orig;
+        ttNew.innerHTML = 'Now: <strong>' + escapeHtml(cur === '' ? '(empty)' : cur) + '</strong>';
+        positionTooltip(e, td);
+      });
+      doc.addEventListener('click', function(e){
+        if (!e.target.closest('.cell-modified') && !e.target.closest('.cell-tooltip')) hideTooltip();
+      });
+      doc.addEventListener('scroll', hideTooltip, true);
+      function positionTooltip(e, td){
+        var rect = td.getBoundingClientRect();
+        var x = rect.left;
+        var y = rect.bottom + 8;
+        // Keep within viewport
+        var ttW = 320;
+        if (x + ttW > window.innerWidth - 12) x = window.innerWidth - ttW - 12;
+        if (x < 12) x = 12;
+        if (y + 120 > window.innerHeight) y = rect.top - 120;
+        cellTooltip.style.left = x + 'px';
+        cellTooltip.style.top = y + 'px';
+        cellTooltip.classList.add('active');
+      }
+      function hideTooltip(){ cellTooltip.classList.remove('active'); }
+
+      // ----- Build array-of-objects from current view -----
+      function rowsToObjects(header, rows){
+        return rows.map(function(r){
+          var o = {};
+          header.forEach(function(h, i){ o[h] = r[i]; });
+          return o;
+        });
+      }
+      function rowsToNestedObjects(header, rows){
+        // If First Name + Last Name exist, nest as {name:{first,last}}
+        var fi = header.indexOf('First Name');
+        var li = header.indexOf('Last Name');
+        if (fi < 0 || li < 0) return rowsToObjects(header, rows);
+        return rows.map(function(r){
+          var o = {};
+          header.forEach(function(h, i){
+            if (h === 'First Name' || h === 'Last Name') return;
+            o[h] = r[i];
+          });
+          o.name = { first: r[fi] == null ? '' : r[fi], last: r[li] == null ? '' : r[li] };
+          return o;
+        });
+      }
+
+      // ----- Exports -----
+      doc.querySelectorAll('[data-export]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var kind = btn.dataset.export;
+          if (kind === 'csv') exportCSV();
+          else if (kind === 'json') exportJSON(rowsToObjects(cleanedHeader, cleanedRows), baseName(fileName) + '-clean.json');
+          else if (kind === 'json-nested') exportJSON(rowsToNestedObjects(cleanedHeader, cleanedRows), baseName(fileName) + '-clean-nested.json');
+          else if (kind === 'xlsx') exportXLSX();
+        });
+      });
+      doc.querySelectorAll('[data-copy]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if (btn.dataset.copy === 'markdown') copyMarkdown();
+          else if (btn.dataset.copy === 'json') copyJSON();
+        });
+      });
+
+      function downloadBlob(blob, name){
+        var url = URL.createObjectURL(blob);
+        var a = doc.createElement('a');
+        a.href = url; a.download = name;
+        doc.body.appendChild(a); a.click(); doc.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+        showToast('Export complete: ' + name);
+      }
+
+      function exportCSV(){
+        var csv = Papa.unparse({ fields: cleanedHeader, data: cleanedRows.map(function(r){ return r.map(function(v){ return v == null ? '' : v; }); }) });
+        var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        downloadBlob(blob, baseName(fileName) + '-clean.csv');
+      }
+      function exportJSON(obj, name){
+        var blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+        downloadBlob(blob, name);
+      }
+      function exportXLSX(){
+        try {
+          var aoa = [cleanedHeader].concat(cleanedRows.map(function(r){ return r.map(function(v){ return v == null ? '' : v; }); }));
+          var ws = XLSX.utils.aoa_to_sheet(aoa);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Cleaned');
+          var out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          var blob = new Blob([out], { type: 'application/octet-stream' });
+          downloadBlob(blob, baseName(fileName) + '-clean.xlsx');
+        } catch(e){
+          showToast('XLSX export failed: ' + e.message, true);
+        }
+      }
+      function buildMarkdown(){
+        var lines = [];
+        lines.push('| ' + cleanedHeader.join(' | ') + ' |');
+        lines.push('| ' + cleanedHeader.map(function(){ return '---'; }).join(' | ') + ' |');
+        var cap = cleanedRows.length > 200 ? cleanedRows.slice(0, 200) : cleanedRows;
+        cap.forEach(function(r){
+          lines.push('| ' + r.map(function(v){
+            var s = v == null ? '' : String(v);
+            return s.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+          }).join(' | ') + ' |');
+        });
+        if (cleanedRows.length > 200) lines.push('\n_...truncated to 200 rows of ' + cleanedRows.length + '_');
+        return lines.join('\n');
+      }
+      function copyMarkdown(){
+        var md = buildMarkdown();
+        copyText(md, 'Markdown table copied (' + Math.min(cleanedRows.length, 200) + ' rows)');
+      }
+      function copyJSON(){
+        var obj = rowsToObjects(cleanedHeader, cleanedRows);
+        var txt = JSON.stringify(obj, null, 2);
+        copyText(txt, 'JSON copied (' + cleanedRows.length + ' rows)');
+      }
+      function copyText(text, msg){
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){
+            showToast(msg);
+          }).catch(function(){ fallbackCopy(text, msg); });
+        } else { fallbackCopy(text, msg); }
+      }
+      function fallbackCopy(text, msg){
+        try {
+          var ta = doc.createElement('textarea');
+          ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          doc.body.appendChild(ta); ta.select();
+          var ok = doc.execCommand('copy');
+          doc.body.removeChild(ta);
+          showToast(ok ? msg : 'Copy failed', !ok);
+        } catch(e){ showToast('Copy failed', true); }
+      }
+
+      // ----- FAQ accordions -----
+      doc.querySelectorAll('.faq-q').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var item = btn.closest('.faq-item');
+          var wasOpen = item.classList.contains('open');
+          doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+          if (!wasOpen) item.classList.add('open');
+        });
+      });
+
+      // ----- Footer year -----
+      doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // ----- Init -----
+      // nothing to render until a file is loaded
+
+    })();
+  </script>
+</body>
+</html>
