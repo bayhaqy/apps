@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Prompt Formatter — build professional mega-prompts from simple fields using proven frameworks (CARE, PREP, RACE, STAR, CRISPE). 100% client-side, no uploads, no sign-up." />
+  <meta name="keywords" content="AI prompt formatter, mega prompt, prompt engineering, CARE framework, PREP framework, RACE framework, STAR framework, CRISPE, prompt builder, ChatGPT prompt, Claude prompt, persona selector" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Prompt Formatter — Build Professional Mega-Prompts" />
+  <meta property="og:description" content="Build professional mega-prompts from simple fields using proven frameworks (CARE, PREP, RACE, STAR, CRISPE). 100% client-side, no uploads." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/prompt-formatter/" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Prompt Formatter — Build Professional Mega-Prompts" />
+  <meta name="twitter:description" content="Build professional mega-prompts from simple fields using proven frameworks (CARE, PREP, RACE, STAR, CRISPE). 100% client-side, no uploads." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/prompt-formatter/" />
+  <title>AI Prompt Formatter — Build Professional Mega-Prompts</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Prompt Formatter",
+    "applicationCategory": "Application",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/prompt-formatter/",
+    "description": "Build professional mega-prompts from simple fields using proven prompt-engineering frameworks (CARE, PREP, RACE, STAR, CRISPE). 100% client-side, no uploads.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "5 prompt frameworks (CARE, PREP, RACE, STAR, CRISPE)",
+      "10 preset personas + custom persona",
+      "Live preview with token estimate",
+      "Save prompts to favorites (localStorage)",
+      "Copy and download prompts",
+      "100% client-side, no uploads"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1120px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:660px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* App grid */
+    .app{padding:.5rem 0 2rem}
+    .app-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;
+    }
+    .form-col,.preview-col{display:flex;flex-direction:column;gap:1.25rem}
+    .preview-col{position:sticky;top:88px}
+
+    /* Form card */
+    .form-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.4rem;
+    }
+    .form-card h3{font-size:1.05rem;margin-bottom:.2rem;letter-spacing:-.01em}
+    .form-card .card-sub{font-size:.85rem;color:var(--muted);margin-bottom:1rem}
+
+    /* Framework radio cards */
+    .framework-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem}
+    .fw-card{
+      position:relative;display:block;cursor:pointer;
+      background:var(--bg-2);border:2px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.85rem .9rem;
+      transition:border-color .15s,background .15s,transform .15s;
+    }
+    .fw-card:hover{border-color:var(--card-border-hover);transform:translateY(-1px)}
+    .fw-card input{position:absolute;opacity:0;pointer-events:none}
+    .fw-card input:checked + .fw-card-body{ }
+    .fw-card:has(input:checked){
+      border-color:var(--accent);background:rgba(220,38,38,0.05);
+      box-shadow:0 0 0 3px rgba(220,38,38,0.1);
+    }
+    .fw-name{font-weight:800;font-size:1rem;color:var(--fg);letter-spacing:-.01em}
+    .fw-full{font-size:.76rem;color:var(--accent);font-weight:600;margin:.15rem 0 .35rem;text-transform:uppercase;letter-spacing:.04em}
+    .fw-best{font-size:.78rem;color:var(--muted);line-height:1.45}
+
+    /* Fields */
+    .field{margin-bottom:.95rem}
+    .field:last-child{margin-bottom:0}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.95rem}
+    .field-row .field{margin-bottom:0}
+    .field label{
+      display:block;font-size:.82rem;font-weight:600;color:var(--fg);
+      margin-bottom:.35rem;letter-spacing:.01em;
+    }
+    .field label .req{color:var(--accent);margin-left:.15rem}
+    .field label .hint{font-weight:400;color:var(--muted);font-size:.76rem;margin-left:.3rem}
+    .field input[type=text],
+    .field input[type=number],
+    .field textarea,
+    .field select{
+      width:100%;font-family:inherit;font-size:.92rem;
+      background:var(--bg);color:var(--fg);
+      border:1px solid var(--card-border);border-radius:var(--radius-sm);
+      padding:.6rem .75rem;transition:border-color .15s,box-shadow .15s,background .15s;
+    }
+    [data-theme="dark"] .field input[type=text],
+    [data-theme="dark"] .field input[type=number],
+    [data-theme="dark"] .field textarea,
+    [data-theme="dark"] .field select{background:var(--bg-2)}
+    .field textarea{resize:vertical;min-height:80px;line-height:1.5}
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus{
+      outline:none;border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(220,38,38,0.12);
+    }
+    .field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
+    .persona-preview{
+      margin-top:.6rem;font-size:.82rem;color:var(--muted);
+      background:var(--bg-2);border:1px dashed var(--card-border);
+      border-radius:var(--radius-sm);padding:.6rem .75rem;line-height:1.5;font-style:italic;
+    }
+    .custom-persona{margin-top:.6rem}
+
+    /* Checkbox */
+    .checkbox{
+      display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.75rem .9rem;margin-top:.4rem;
+    }
+    .checkbox input{margin-top:.2rem;accent-color:var(--accent);width:16px;height:16px;cursor:pointer;flex-shrink:0}
+    .checkbox-text{display:flex;flex-direction:column;gap:.1rem}
+    .checkbox-text strong{font-size:.9rem;font-weight:600;color:var(--fg)}
+    .checkbox-text small{font-size:.78rem;color:var(--muted)}
+
+    /* Form actions */
+    .form-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--card-border)}
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.65rem 1.1rem;border-radius:10px;border:1px solid transparent;
+      font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none;font-family:inherit;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s,border-color .15s;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px;flex-shrink:0}
+
+    /* Preview card */
+    .preview-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.4rem;display:flex;flex-direction:column;
+    }
+    .preview-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.85rem;flex-wrap:wrap}
+    .preview-head h3{font-size:1.05rem;letter-spacing:-.01em}
+    .preview-meta{
+      font-size:.78rem;color:var(--muted);background:var(--chip-bg);
+      border:1px solid var(--chip-border);padding:.3rem .65rem;border-radius:999px;font-weight:500;
+      font-variant-numeric:tabular-nums;
+    }
+    .preview-meta strong{color:var(--fg);font-weight:600}
+    .preview-pre{
+      font-family:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:.82rem;line-height:1.6;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:1rem;
+      white-space:pre-wrap;word-break:break-word;overflow:auto;
+      max-height:480px;min-height:240px;color:var(--fg);
+      margin-bottom:1rem;
+    }
+    .preview-pre.empty{color:var(--muted);font-style:italic;white-space:pre-wrap}
+    .preview-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+    .preview-actions .btn{flex:1;justify-content:center;min-width:130px}
+
+    /* Favorites */
+    .fav-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+    }
+    .fav-toggle{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      background:none;border:none;cursor:pointer;font-family:inherit;
+      padding:1rem 1.25rem;font-size:1rem;font-weight:700;color:var(--fg);
+      text-align:left;
+    }
+    .fav-toggle:hover{background:var(--bg-2)}
+    .fav-toggle .chev{transition:transform .2s;color:var(--muted);font-size:1.1rem}
+    .fav-card.open .fav-toggle .chev{transform:rotate(180deg)}
+    .fav-body{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 1.25rem}
+    .fav-card.open .fav-body{max-height:1200px;padding:0 1.25rem 1rem}
+    .fav-empty{font-size:.85rem;color:var(--muted);padding:.5rem 0;text-align:center;font-style:italic}
+    .fav-list{display:flex;flex-direction:column;gap:.6rem}
+    .fav-item{
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.75rem .85rem;
+    }
+    .fav-item-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.4rem}
+    .fav-item-name{font-weight:600;font-size:.9rem;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+    .fav-badge{
+      font-size:.68rem;font-weight:700;color:var(--accent);background:rgba(220,38,38,0.1);
+      padding:.15rem .45rem;border-radius:6px;letter-spacing:.04em;flex-shrink:0;
+    }
+    .fav-item-meta{font-size:.74rem;color:var(--muted);margin-bottom:.5rem}
+    .fav-item-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+    .fav-mini-btn{
+      font-size:.78rem;font-weight:600;font-family:inherit;cursor:pointer;
+      padding:.35rem .65rem;border-radius:7px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--fg);transition:background .15s,border-color .15s,color .15s;
+    }
+    .fav-mini-btn:hover{background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .fav-mini-btn.danger:hover{color:var(--accent);border-color:var(--accent)}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Frameworks detail */
+    .frameworks{padding:1rem 0 2.5rem}
+    .frameworks h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .frameworks > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .fw-detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .fw-detail{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;box-shadow:var(--shadow);
+    }
+    .fw-detail-head{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap}
+    .fw-detail-name{font-size:1.15rem;font-weight:800;color:var(--fg);letter-spacing:-.01em}
+    .fw-detail-acronym{font-size:.74rem;font-weight:700;color:var(--accent);background:rgba(220,38,38,0.08);padding:.2rem .5rem;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+    .fw-detail-best{font-size:.84rem;color:var(--accent-2);font-weight:600;margin-bottom:.5rem}
+    .fw-detail p{font-size:.88rem;color:var(--muted);line-height:1.55}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:400px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:880px){
+      .app-grid{grid-template-columns:1fr}
+      .preview-col{position:static}
+    }
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .form-card,.preview-card{padding:1.1rem}
+      .field-row{grid-template-columns:1fr;gap:0}
+      .field-row .field{margin-bottom:.95rem}
+      .preview-actions{flex-direction:column}
+      .preview-actions .btn{flex:1;justify-content:center}
+      .form-actions{flex-direction:column}
+      .form-actions .btn{justify-content:center}
+      .header-links a:not(.theme-toggle):not(.back-link){display:none}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('promptfmt-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/prompt-formatter/" class="brand">
+        <span class="brand-logo">PF</span>
+        <span>Prompt Formatter</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#frameworks">Frameworks</a>
+        <a href="#faq">FAQ</a>
+        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · 5 frameworks</span>
+        <h1>Build mega-prompts <span class="accent">that actually work</span></h1>
+        <p class="sub">Fill in a few simple fields, pick a proven prompt-engineering framework, and copy a structured mega-prompt ready for ChatGPT, Claude, Gemini, or any LLM. 100% client-side — nothing leaves your browser.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> CARE · PREP · RACE · STAR · CRISPE</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Persona selector</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Live preview</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Save favorites</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="app">
+      <div class="container">
+        <div class="app-grid">
+          <!-- LEFT: form -->
+          <div class="form-col">
+
+            <div class="form-card">
+              <h3>1. Choose a framework</h3>
+              <p class="card-sub">Each framework shapes the structure of your mega-prompt. Pick the one that fits your task.</p>
+              <div class="framework-grid" id="frameworkGrid">
+                <!-- radio cards injected by JS -->
+              </div>
+            </div>
+
+            <div class="form-card">
+              <h3>2. Pick a persona</h3>
+              <p class="card-sub">Sets the role and expertise the LLM should adopt.</p>
+              <div class="field">
+                <label for="persona">Persona</label>
+                <select id="persona">
+                  <option value="senior-software-engineer">Senior software engineer</option>
+                  <option value="marketing-copywriter">Marketing copywriter</option>
+                  <option value="data-scientist">Data scientist</option>
+                  <option value="academic-researcher">Academic researcher</option>
+                  <option value="ux-designer">UX designer</option>
+                  <option value="financial-analyst">Financial analyst</option>
+                  <option value="product-manager">Product manager</option>
+                  <option value="patient-teacher">Patient teacher</option>
+                  <option value="devops-engineer">DevOps engineer</option>
+                  <option value="custom">Custom (type your own)</option>
+                </select>
+              </div>
+              <div class="custom-persona" id="customPersonaWrap" hidden>
+                <div class="field">
+                  <label for="customPersona">Custom persona description <span class="hint">e.g. "curious science journalist who loves analogies"</span></label>
+                  <textarea id="customPersona" rows="2" placeholder="Describe the role the AI should play..."></textarea>
+                </div>
+              </div>
+              <div class="persona-preview" id="personaPreview"></div>
+            </div>
+
+            <div class="form-card">
+              <h3>3. Fill in the task</h3>
+              <p class="card-sub">The topic is required — everything else is optional but recommended.</p>
+
+              <div class="field">
+                <label for="topic">Topic / Task <span class="req">*</span></label>
+                <textarea id="topic" rows="3" placeholder="What do you want the AI to do? e.g. Write a blog post explaining Kubernetes to absolute beginners."></textarea>
+              </div>
+
+              <div class="field">
+                <label for="audience">Target audience</label>
+                <input type="text" id="audience" list="audienceList" placeholder="Who is this for?" />
+                <datalist id="audienceList">
+                  <option value="beginners"></option>
+                  <option value="experts"></option>
+                  <option value="executives"></option>
+                  <option value="students"></option>
+                  <option value="general public"></option>
+                </datalist>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="tone">Tone of voice</label>
+                  <select id="tone">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="persuasive">Persuasive</option>
+                    <option value="academic">Academic</option>
+                    <option value="friendly">Friendly</option>
+                    <option value="authoritative">Authoritative</option>
+                    <option value="humorous">Humorous</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="format">Output format</label>
+                  <select id="format">
+                    <option value="paragraph">Paragraph</option>
+                    <option value="bullet list">Bullet list</option>
+                    <option value="numbered steps">Numbered steps</option>
+                    <option value="markdown article">Markdown article</option>
+                    <option value="JSON">JSON</option>
+                    <option value="table">Table</option>
+                    <option value="code with comments">Code with comments</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="length">Length constraint</label>
+                  <select id="length">
+                    <option value="short (~100 words)">Short (~100 words)</option>
+                    <option value="medium (~300 words)" selected>Medium (~300 words)</option>
+                    <option value="long (~600 words)">Long (~600 words)</option>
+                    <option value="detailed (~1000+ words)">Detailed (~1000+ words)</option>
+                    <option value="no limit">No limit</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="constraints">Constraints / What to avoid</label>
+                  <input type="text" id="constraints" placeholder="e.g. no jargon, no assumptions" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="examples">Examples / Reference <span class="hint">included verbatim in the prompt</span></label>
+                <textarea id="examples" rows="3" placeholder="Paste a reference snippet, a sample answer, or a few-shot example to anchor the output."></textarea>
+              </div>
+
+              <div class="field">
+                <label for="context">Additional context</label>
+                <textarea id="context" rows="2" placeholder="Background, constraints, or domain details the AI should know."></textarea>
+              </div>
+
+              <label class="checkbox">
+                <input type="checkbox" id="cot" />
+                <span class="checkbox-text">
+                  <strong>Include chain-of-thought instruction</strong>
+                  <small>Adds "Think step by step before answering." to the requirements.</small>
+                </span>
+              </label>
+
+              <div class="form-actions">
+                <button class="btn btn-ghost" id="sampleBtn" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Load sample
+                </button>
+                <button class="btn btn-ghost" id="clearBtn" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+                  Clear form
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: preview -->
+          <div class="preview-col">
+
+            <div class="preview-card">
+              <div class="preview-head">
+                <h3>Live preview</h3>
+                <div class="preview-meta" id="previewMeta"><strong>0</strong> chars · ~<strong>0</strong> tokens</div>
+              </div>
+              <pre class="preview-pre empty" id="previewPre">Enter a topic to generate your prompt…</pre>
+              <div class="preview-actions">
+                <button class="btn btn-primary" id="copyBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy prompt
+                </button>
+                <button class="btn btn-ghost" id="downloadBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download .txt
+                </button>
+                <button class="btn btn-ghost" id="saveBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  Save to favorites
+                </button>
+              </div>
+            </div>
+
+            <div class="fav-card" id="favCard">
+              <button class="fav-toggle" id="favToggle" type="button">
+                <span>Favorites <span class="fav-count" id="favCount">(0)</span></span>
+                <span class="chev">⌄</span>
+              </button>
+              <div class="fav-body" id="favBody">
+                <div class="fav-list" id="favList"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use</h2>
+        <p>Four simple steps — your prompt is assembled locally and never sent anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Pick a framework &amp; persona</h4>
+            <p>Choose a prompt-engineering structure (CARE, PREP, RACE, STAR, or CRISPE) and a persona that matches the expertise you need.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Fill in the fields</h4>
+            <p>Type your topic, audience, tone, output format, and length. Add examples or constraints to sharpen the output.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Watch the live preview</h4>
+            <p>The mega-prompt assembles itself in real time on the right, with a token estimate so you can stay under your model's limit.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Copy, download, or save</h4>
+            <p>Copy the prompt to your clipboard, download it as a .txt file, or save it to favorites for later reuse — all stored locally.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="frameworks" id="frameworks">
+      <div class="container">
+        <h2>The 5 frameworks</h2>
+        <p>Each framework is a proven structure for organising a prompt. Pick the one whose flow matches what you are asking for.</p>
+        <div class="fw-detail-grid" id="fwDetailGrid">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is anything I type sent to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. The AI Prompt Formatter runs entirely in your browser. Your inputs, generated prompts, and saved favorites never leave your device. You can verify this in your browser's DevTools → Network tab — no requests are made when you type or save.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which framework should I choose? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>It depends on the task. Use <strong>CARE</strong> for task-driven requests where context shapes the result. <strong>PREP</strong> is great for persuasive, point-first communication. <strong>RACE</strong> works well for role-and-context tasks. <strong>STAR</strong> is ideal for situational, scenario-based prompts. <strong>CRISPE</strong> gives the most structure when you need explicit personality and experimentation.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How is the token estimate calculated? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The estimate uses the common heuristic of roughly 4 characters per token (characters ÷ 4, rounded up). This is only an approximation — actual token counts vary by tokenizer (GPT, Claude, Gemini all differ) and by language. Use it as a ballpark to avoid blowing past context limits, not as an exact number.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Where are my favorites stored? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Favorites are saved in your browser's <code>localStorage</code> under the key <code>promptfmt-favorites</code>. They persist across page reloads on the same browser, but they are not synced anywhere and will be lost if you clear browser storage or use a different device/browser.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I edit a saved favorite? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Favorites are read-only snapshots. To edit, load the favorite back into the form with the "Load" button, modify the fields, and save it again (optionally under a new name). You can then delete the old one.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does this work with any LLM? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. The generated prompt is plain text that works with ChatGPT, Claude, Gemini, Mistral, Llama, and any other chat-based LLM. Just paste it into the model's input box. Some models may respond better to certain frameworks, so feel free to experiment.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does it work offline? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. The app is a single self-contained HTML file with no external dependencies. After the first load you can disconnect from the internet and keep using it. You can also save the page (Ctrl+S) and run it from your disk.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function(){
+    'use strict';
+    var doc = document;
+
+    // ----- Framework definitions -----
+    var FRAMEWORKS = [
+      { key:'care', name:'CARE', full:'Context · Action · Result · Example',
+        bestFor:'Task-driven requests where context shapes the output and examples anchor quality.' },
+      { key:'prep', name:'PREP', full:'Point · Reason · Example · Point',
+        bestFor:'Persuasive, point-first writing where you state, support, illustrate, and restate.' },
+      { key:'race', name:'RACE', full:'Role · Action · Context · Expectation',
+        bestFor:'Role-and-context tasks with clear deliverables and acceptance criteria.' },
+      { key:'star', name:'STAR', full:'Situation · Task · Action · Result',
+        bestFor:'Scenario-based prompts, behavioural tasks, and case-driven explanations.' },
+      { key:'crispe', name:'CRISPE', full:'Capacity · Role · Insight · Statement · Personality · Experiment',
+        bestFor:'Highly structured prompts needing explicit personality and experimentation.' }
+    ];
+
+    // ----- Persona system-prompt snippets (description only; wrapped as "You are a {desc}.") -----
+    var PERSONAS = {
+      'senior-software-engineer':'senior software engineer with 15 years of experience in scalable systems, clean architecture, and thorough code review. You prioritise correctness, maintainability, and performance',
+      'marketing-copywriter':'marketing copywriter with a decade of experience crafting conversion-focused copy for SaaS, e-commerce, and B2B brands. You write headlines, emails, and landing pages that drive action',
+      'data-scientist':'data scientist with deep expertise in statistics, machine learning, and data visualisation. You communicate findings clearly to both technical and non-technical audiences',
+      'academic-researcher':'academic researcher trained in rigorous methodology, peer-review standards, and evidence-based argumentation. You cite sources, acknowledge limitations, and write in formal academic prose',
+      'ux-designer':'UX designer specialising in user research, information architecture, and interaction design. You balance user needs with business goals and advocate for accessibility',
+      'financial-analyst':'financial analyst skilled in fundamental analysis, financial modelling, and risk assessment. You interpret numbers, identify trends, and produce clear investment narratives',
+      'product-manager':'product manager experienced in discovery, prioritisation, and roadmap planning. You translate user problems into specs and align engineering, design, and stakeholders',
+      'patient-teacher':'patient teacher who breaks complex topics into simple, relatable analogies, checks for understanding, and never assumes prior knowledge. You encourage questions',
+      'devops-engineer':'DevOps engineer specialising in CI/CD, infrastructure as code, observability, and reliability. You automate toil, secure pipelines, and document runbooks'
+    };
+
+    // ----- State -----
+    var state = {
+      framework: 'care',
+      persona: 'senior-software-engineer',
+      customPersona: '',
+      topic: '',
+      audience: '',
+      tone: 'professional',
+      format: 'paragraph',
+      length: 'medium (~300 words)',
+      constraints: '',
+      examples: '',
+      context: '',
+      cot: false
+    };
+    var favorites = [];
+    var FAV_KEY = 'promptfmt-favorites';
+
+    // ----- DOM refs -----
+    var frameworkGrid = doc.getElementById('frameworkGrid');
+    var fwDetailGrid = doc.getElementById('fwDetailGrid');
+    var personaSelect = doc.getElementById('persona');
+    var customPersonaWrap = doc.getElementById('customPersonaWrap');
+    var customPersona = doc.getElementById('customPersona');
+    var personaPreview = doc.getElementById('personaPreview');
+    var topicEl = doc.getElementById('topic');
+    var audienceEl = doc.getElementById('audience');
+    var toneEl = doc.getElementById('tone');
+    var formatEl = doc.getElementById('format');
+    var lengthEl = doc.getElementById('length');
+    var constraintsEl = doc.getElementById('constraints');
+    var examplesEl = doc.getElementById('examples');
+    var contextEl = doc.getElementById('context');
+    var cotEl = doc.getElementById('cot');
+    var sampleBtn = doc.getElementById('sampleBtn');
+    var clearBtn = doc.getElementById('clearBtn');
+    var previewPre = doc.getElementById('previewPre');
+    var previewMeta = doc.getElementById('previewMeta');
+    var copyBtn = doc.getElementById('copyBtn');
+    var downloadBtn = doc.getElementById('downloadBtn');
+    var saveBtn = doc.getElementById('saveBtn');
+    var favCard = doc.getElementById('favCard');
+    var favToggle = doc.getElementById('favToggle');
+    var favBody = doc.getElementById('favBody');
+    var favList = doc.getElementById('favList');
+    var favCount = doc.getElementById('favCount');
+    var toast = doc.getElementById('toast');
+
+    // ----- Theme toggle -----
+    var themeToggle = doc.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function(){
+      var current = doc.documentElement.getAttribute('data-theme') || 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      doc.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('promptfmt-theme', next);
+    });
+
+    // ----- Toast -----
+    var toastTimer = null;
+    function showToast(msg, isError){
+      toast.textContent = msg;
+      toast.className = 'toast show' + (isError ? ' error' : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){
+        toast.className = 'toast' + (isError ? ' error' : '');
+      }, 3200);
+    }
+
+    // ----- Render framework radio cards -----
+    function renderFrameworkCards(){
+      frameworkGrid.innerHTML = '';
+      FRAMEWORKS.forEach(function(fw){
+        var label = doc.createElement('label');
+        label.className = 'fw-card';
+        label.innerHTML =
+          '<input type="radio" name="framework" value="' + fw.key + '"' + (fw.key === state.framework ? ' checked' : '') + '>' +
+          '<div class="fw-card-body">' +
+            '<div class="fw-name">' + fw.name + '</div>' +
+            '<div class="fw-full">' + fw.full + '</div>' +
+            '<div class="fw-best">Best for: ' + fw.bestFor + '</div>' +
+          '</div>';
+        label.querySelector('input').addEventListener('change', function(){
+          if (this.checked){ state.framework = fw.key; scheduleUpdate(); }
+        });
+        frameworkGrid.appendChild(label);
+      });
+    }
+
+    // ----- Render framework detail section -----
+    function renderFrameworkDetails(){
+      fwDetailGrid.innerHTML = '';
+      var details = {
+        care: 'CARE keeps the request grounded: it gives the model the <strong>Context</strong> it needs, specifies the <strong>Action</strong> to take, defines the <strong>Result</strong> (requirements) you expect, and anchors quality with an <strong>Example</strong>. Best for everyday task-driven prompts.',
+        prep: 'PREP leads with the <strong>Point</strong>, backs it with a <strong>Reason</strong>, illustrates with an <strong>Example</strong>, then restates the <strong>Point</strong>. Best for persuasive writing, summaries, and any output that should land a clear takeaway.',
+        race: 'RACE assigns a <strong>Role</strong>, defines the <strong>Action</strong>, provides <strong>Context</strong>, and sets clear <strong>Expectations</strong> for the deliverable. Best for role-and-context tasks with measurable acceptance criteria.',
+        star: 'STAR frames the prompt as a <strong>Situation</strong>, names the <strong>Task</strong>, describes the <strong>Action</strong> to take, and defines the desired <strong>Result</strong>. Best for scenario-based, behavioural, and case-driven prompts.',
+        crispe: 'CRISPE is the most structured: <strong>Capacity &amp; Role</strong>, <strong>Insight</strong> (context), <strong>Statement</strong> (the task), <strong>Personality</strong> (style requirements), and <strong>Experiment</strong> (examples to try). Best for complex, high-stakes prompts.'
+      };
+      FRAMEWORKS.forEach(function(fw){
+        var div = doc.createElement('div');
+        div.className = 'fw-detail';
+        div.innerHTML =
+          '<div class="fw-detail-head">' +
+            '<span class="fw-detail-name">' + fw.name + '</span>' +
+            '<span class="fw-detail-acronym">' + fw.full + '</span>' +
+          '</div>' +
+          '<div class="fw-detail-best">Best for: ' + fw.bestFor + '</div>' +
+          '<p>' + details[fw.key] + '</p>';
+        fwDetailGrid.appendChild(div);
+      });
+    }
+
+    // ----- Persona handling -----
+    function getPersonaDescription(){
+      if (state.persona === 'custom') {
+        var t = (state.customPersona || '').trim();
+        return t || 'helpful AI assistant';
+      }
+      return PERSONAS[state.persona] || 'helpful AI assistant';
+    }
+    function getPersonaLine(){
+      var desc = getPersonaDescription();
+      // Wrap as "You are a {desc}." unless the user already wrote a full sentence
+      if (/^(you are|i am|act as|as a)\b/i.test(desc)) {
+        return desc.replace(/[.\s]+$/,'') + '.';
+      }
+      return 'You are a ' + desc + '.';
+    }
+    function updatePersonaPreview(){
+      if (state.persona === 'custom'){
+        customPersonaWrap.hidden = false;
+        personaPreview.textContent = getPersonaLine();
+        personaPreview.style.display = state.customPersona.trim() ? 'block' : 'none';
+      } else {
+        customPersonaWrap.hidden = true;
+        personaPreview.style.display = 'block';
+        personaPreview.textContent = getPersonaLine();
+      }
+    }
+
+    // ----- Prompt builders per framework -----
+    function requirementsBlock(){
+      var lines = [];
+      lines.push('- Output format: ' + state.format);
+      lines.push('- Length: ' + state.length);
+      if (state.constraints.trim()) lines.push('- Avoid: ' + state.constraints.trim());
+      if (state.cot) lines.push('- Think step by step before answering.');
+      return lines.join('\n');
+    }
+    function contextBlock(){
+      var lines = [];
+      if (state.context.trim()) lines.push(state.context.trim());
+      if (state.audience.trim()) lines.push('Target audience: ' + state.audience.trim());
+      if (state.tone) lines.push('Tone: ' + state.tone);
+      return lines.join('\n');
+    }
+    function expectedLine(){
+      return 'Provide the response in the requested format. Be specific and actionable.';
+    }
+
+    function buildCARE(){
+      var out = '';
+      out += '# Persona\n' + getPersonaLine() + '\n\n';
+      var ctx = contextBlock();
+      if (ctx) out += '# Context\n' + ctx + '\n\n';
+      out += '# Action\n' + state.topic.trim() + '\n\n';
+      out += '# Requirements\n' + requirementsBlock() + '\n\n';
+      if (state.examples.trim()) out += '# Examples\n' + state.examples.trim() + '\n\n';
+      out += '# Expected output\n' + expectedLine();
+      return out;
+    }
+    function buildPREP(){
+      var out = '';
+      out += '# Persona\n' + getPersonaLine() + '\n\n';
+      out += '# Point\n' + state.topic.trim() + '\n\n';
+      var ctx = contextBlock();
+      if (ctx) out += '# Reason\n' + ctx + '\n\n';
+      if (state.examples.trim()) out += '# Example\n' + state.examples.trim() + '\n\n';
+      out += '# Point (restated as requirements)\n' + requirementsBlock() + '\n\n';
+      out += '# Expected output\n' + expectedLine();
+      return out;
+    }
+    function buildRACE(){
+      var out = '';
+      out += '# Role\n' + getPersonaLine() + '\n\n';
+      out += '# Action\n' + state.topic.trim() + '\n\n';
+      var ctx = contextBlock();
+      if (ctx) out += '# Context\n' + ctx + '\n\n';
+      out += '# Expectation\n' + requirementsBlock() + '\n\n';
+      if (state.examples.trim()) out += '# Examples\n' + state.examples.trim() + '\n\n';
+      out += '# Expected output\n' + expectedLine();
+      return out;
+    }
+    function buildSTAR(){
+      var out = '';
+      out += '# Persona\n' + getPersonaLine() + '\n\n';
+      var ctx = contextBlock();
+      if (ctx) out += '# Situation\n' + ctx + '\n\n';
+      out += '# Task\n' + state.topic.trim() + '\n\n';
+      out += '# Action\n' + requirementsBlock() + '\n\n';
+      if (state.examples.trim()) out += '# Result (reference)\n' + state.examples.trim() + '\n\n';
+      out += '# Expected output\n' + expectedLine();
+      return out;
+    }
+    function buildCRISPE(){
+      var out = '';
+      out += '# Capacity & Role\n' + getPersonaLine() + '\n\n';
+      var ctx = contextBlock();
+      if (ctx) out += '# Insight\n' + ctx + '\n\n';
+      out += '# Statement\n' + state.topic.trim() + '\n\n';
+      out += '# Personality\n' + requirementsBlock() + '\n\n';
+      if (state.examples.trim()) out += '# Experiment\n' + state.examples.trim() + '\n\n';
+      out += '# Expected output\n' + expectedLine();
+      return out;
+    }
+
+    function buildPrompt(){
+      if (!state.topic.trim()) return '';
+      switch(state.framework){
+        case 'prep':   return buildPREP();
+        case 'race':   return buildRACE();
+        case 'star':   return buildSTAR();
+        case 'crispe': return buildCRISPE();
+        default:       return buildCARE();
+      }
+    }
+
+    // ----- Live preview (debounced 200ms) -----
+    var updateTimer = null;
+    function scheduleUpdate(){
+      clearTimeout(updateTimer);
+      updateTimer = setTimeout(renderPreview, 200);
+    }
+    function renderPreview(){
+      var prompt = buildPrompt();
+      if (!prompt){
+        previewPre.textContent = 'Enter a topic to generate your prompt…';
+        previewPre.classList.add('empty');
+        previewMeta.innerHTML = '<strong>0</strong> chars · ~<strong>0</strong> tokens';
+        copyBtn.disabled = true;
+        downloadBtn.disabled = true;
+        saveBtn.disabled = true;
+        return;
+      }
+      previewPre.classList.remove('empty');
+      previewPre.textContent = prompt;
+      var chars = prompt.length;
+      var tokens = Math.ceil(chars / 4);
+      previewMeta.innerHTML = '<strong>' + chars.toLocaleString() + '</strong> chars · ~<strong>' + tokens.toLocaleString() + '</strong> tokens';
+      copyBtn.disabled = false;
+      downloadBtn.disabled = false;
+      saveBtn.disabled = false;
+    }
+
+    // ----- Form binding -----
+    function bindField(el, key, isCheckbox){
+      var handler = function(){
+        state[key] = isCheckbox ? el.checked : el.value;
+        if (key === 'persona' || key === 'customPersona') updatePersonaPreview();
+        scheduleUpdate();
+      };
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
+    }
+    bindField(topicEl, 'topic');
+    bindField(audienceEl, 'audience');
+    bindField(toneEl, 'tone');
+    bindField(formatEl, 'format');
+    bindField(lengthEl, 'length');
+    bindField(constraintsEl, 'constraints');
+    bindField(examplesEl, 'examples');
+    bindField(contextEl, 'context');
+    bindField(cotEl, 'cot', true);
+    bindField(customPersona, 'customPersona');
+
+    personaSelect.addEventListener('change', function(){
+      state.persona = personaSelect.value;
+      updatePersonaPreview();
+      scheduleUpdate();
+    });
+
+    // ----- Sync form <-> state helpers -----
+    function syncFormFromState(){
+      // framework radios
+      var radios = frameworkGrid.querySelectorAll('input[name="framework"]');
+      radios.forEach(function(r){ r.checked = (r.value === state.framework); });
+      personaSelect.value = state.persona;
+      customPersona.value = state.customPersona;
+      topicEl.value = state.topic;
+      audienceEl.value = state.audience;
+      toneEl.value = state.tone;
+      formatEl.value = state.format;
+      lengthEl.value = state.length;
+      constraintsEl.value = state.constraints;
+      examplesEl.value = state.examples;
+      contextEl.value = state.context;
+      cotEl.checked = state.cot;
+      updatePersonaPreview();
+      renderPreview();
+    }
+
+    // ----- Sample -----
+    sampleBtn.addEventListener('click', function(){
+      state.framework = 'care';
+      state.persona = 'patient-teacher';
+      state.customPersona = '';
+      state.topic = 'Write a beginner-friendly blog post titled "Kubernetes in 5 Minutes". Explain what Kubernetes is, why teams use it, and the three core concepts (Pod, Deployment, Service) using a simple analogy. End with a one-paragraph summary and a call-to-action inviting readers to try a local minikube cluster.';
+      state.audience = 'beginners with no DevOps experience';
+      state.tone = 'friendly';
+      state.format = 'markdown article';
+      state.length = 'medium (~300 words)';
+      state.constraints = 'no jargon without defining it; no commands longer than one line';
+      state.examples = 'Example opening line: "Imagine you run a restaurant. Kubernetes is the kitchen manager that decides which chef cooks each dish, watches the stove, and calls in backup when an order piles up."';
+      state.context = 'This post will be published on a personal tech blog read by junior developers. Readers have heard of Docker but have never used containers in production.';
+      state.cot = true;
+      syncFormFromState();
+      showToast('Sample loaded — Kubernetes blog post for beginners');
+    });
+
+    // ----- Clear -----
+    clearBtn.addEventListener('click', function(){
+      state.framework = 'care';
+      state.persona = 'senior-software-engineer';
+      state.customPersona = '';
+      state.topic = '';
+      state.audience = '';
+      state.tone = 'professional';
+      state.format = 'paragraph';
+      state.length = 'medium (~300 words)';
+      state.constraints = '';
+      state.examples = '';
+      state.context = '';
+      state.cot = false;
+      syncFormFromState();
+      showToast('Form cleared');
+    });
+
+    // ----- Copy -----
+    copyBtn.addEventListener('click', function(){
+      var prompt = buildPrompt();
+      if (!prompt) return;
+      function fallback(){
+        var ta = doc.createElement('textarea');
+        ta.value = prompt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        doc.body.appendChild(ta);
+        ta.select();
+        try { doc.execCommand('copy'); showToast('Prompt copied to clipboard'); }
+        catch(e){ showToast('Copy failed — please copy manually', true); }
+        doc.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(prompt).then(function(){
+          showToast('Prompt copied to clipboard');
+        }).catch(fallback);
+      } else {
+        fallback();
+      }
+    });
+
+    // ----- Download -----
+    downloadBtn.addEventListener('click', function(){
+      var prompt = buildPrompt();
+      if (!prompt) return;
+      var blob = new Blob([prompt], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var ts = new Date();
+      var pad = function(n){ return String(n).padStart(2,'0'); };
+      var name = 'prompt-' + ts.getFullYear() + pad(ts.getMonth()+1) + pad(ts.getDate()) + '-' + pad(ts.getHours()) + pad(ts.getMinutes()) + '.txt';
+      var a = doc.createElement('a');
+      a.href = url; a.download = name;
+      doc.body.appendChild(a); a.click(); doc.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      showToast('Download started: ' + name);
+    });
+
+    // ----- Favorites (localStorage) -----
+    function loadFavorites(){
+      try {
+        var raw = localStorage.getItem(FAV_KEY);
+        favorites = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(favorites)) favorites = [];
+      } catch(e){ favorites = []; }
+    }
+    function saveFavorites(){
+      try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); }
+      catch(e){ showToast('Could not save favorite (storage full?)', true); }
+    }
+    function formatTs(ts){
+      var d = new Date(ts);
+      var pad = function(n){ return String(n).padStart(2,'0'); };
+      return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
+    function fwName(key){
+      for (var i=0;i<FRAMEWORKS.length;i++){ if (FRAMEWORKS[i].key === key) return FRAMEWORKS[i].name; }
+      return key.toUpperCase();
+    }
+    function renderFavorites(){
+      favCount.textContent = '(' + favorites.length + ')';
+      if (!favorites.length){
+        favList.innerHTML = '<div class="fav-empty">No saved prompts yet. Build a prompt and click "Save to favorites".</div>';
+        return;
+      }
+      favList.innerHTML = '';
+      favorites.forEach(function(fav){
+        var item = doc.createElement('div');
+        item.className = 'fav-item';
+        item.innerHTML =
+          '<div class="fav-item-head">' +
+            '<span class="fav-item-name"></span>' +
+            '<span class="fav-badge">' + fwName(fav.framework) + '</span>' +
+          '</div>' +
+          '<div class="fav-item-meta"></div>' +
+          '<div class="fav-item-actions">' +
+            '<button class="fav-mini-btn" data-act="load" type="button">Load</button>' +
+            '<button class="fav-mini-btn" data-act="copy" type="button">Copy</button>' +
+            '<button class="fav-mini-btn danger" data-act="delete" type="button">Delete</button>' +
+          '</div>';
+        item.querySelector('.fav-item-name').textContent = fav.name;
+        item.querySelector('.fav-item-meta').textContent = formatTs(fav.ts) + ' · ' + fav.prompt.length + ' chars · ~' + Math.ceil(fav.prompt.length/4) + ' tokens';
+        item.querySelector('[data-act="load"]').addEventListener('click', function(){
+          state.framework = fav.framework;
+          state.persona = fav.persona;
+          state.customPersona = fav.customPersona;
+          state.topic = fav.topic;
+          state.audience = fav.audience;
+          state.tone = fav.tone;
+          state.format = fav.format;
+          state.length = fav.length;
+          state.constraints = fav.constraints;
+          state.examples = fav.examples;
+          state.context = fav.context;
+          state.cot = fav.cot;
+          syncFormFromState();
+          showToast('Loaded: ' + fav.name);
+        });
+        item.querySelector('[data-act="copy"]').addEventListener('click', function(){
+          function fb(){
+            var ta = doc.createElement('textarea'); ta.value = fav.prompt;
+            ta.style.position='fixed'; ta.style.opacity='0';
+            doc.body.appendChild(ta); ta.select();
+            try { doc.execCommand('copy'); showToast('Prompt copied'); } catch(e){ showToast('Copy failed', true); }
+            doc.body.removeChild(ta);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(fav.prompt).then(function(){ showToast('Prompt copied'); }).catch(fb);
+          } else { fb(); }
+        });
+        item.querySelector('[data-act="delete"]').addEventListener('click', function(){
+          favorites = favorites.filter(function(f){ return f.id !== fav.id; });
+          saveFavorites();
+          renderFavorites();
+          showToast('Deleted: ' + fav.name);
+        });
+        favList.appendChild(item);
+      });
+    }
+    saveBtn.addEventListener('click', function(){
+      var prompt = buildPrompt();
+      if (!prompt) return;
+      var name = window.prompt('Name this prompt:', defaultFavName());
+      if (name === null) return;
+      name = name.trim() || defaultFavName();
+      var fav = {
+        id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+        name: name,
+        ts: Date.now(),
+        framework: state.framework,
+        persona: state.persona,
+        customPersona: state.customPersona,
+        topic: state.topic,
+        audience: state.audience,
+        tone: state.tone,
+        format: state.format,
+        length: state.length,
+        constraints: state.constraints,
+        examples: state.examples,
+        context: state.context,
+        cot: state.cot,
+        prompt: prompt
+      };
+      favorites.unshift(fav);
+      // cap at 50 to be safe with storage
+      if (favorites.length > 50) favorites = favorites.slice(0,50);
+      saveFavorites();
+      renderFavorites();
+      favCard.classList.add('open');
+      showToast('Saved to favorites: ' + name);
+    });
+    function defaultFavName(){
+      var fw = fwName(state.framework);
+      var t = state.topic.trim().split('\n')[0].slice(0,40);
+      return (t ? t : 'Untitled') + ' (' + fw + ')';
+    }
+
+    favToggle.addEventListener('click', function(){
+      favCard.classList.toggle('open');
+    });
+
+    // ----- FAQ accordions -----
+    doc.querySelectorAll('.faq-q').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var item = btn.closest('.faq-item');
+        var wasOpen = item.classList.contains('open');
+        doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ----- Footer year -----
+    doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ----- Init -----
+    renderFrameworkCards();
+    renderFrameworkDetails();
+    loadFavorites();
+    renderFavorites();
+    updatePersonaPreview();
+    renderPreview();
+
+  })();
+  </script>
+</body>
+</html>
