@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Link-in-Bio Builder — a free, private, 100% client-side visual builder for personal link-in-bio pages. Customize your profile, links, and theme, then download a single self-contained HTML file you can host anywhere. A Linktree alternative that runs in your browser." />
+  <meta name="keywords" content="link in bio, linktree alternative, bio link builder, link page, personal landing page, self-hosted link page, github pages link, single html bio, linktree free, bayhaqy" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Link-in-Bio Builder — Free Linktree Alternative (Self-Hosted)" />
+  <meta property="og:description" content="Build your link-in-bio in minutes. Customize profile, links, and theme, then download a single self-contained HTML file. 100% client-side. Host it anywhere — GitHub Pages, Netlify, your own server." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/link-in-bio/" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Link-in-Bio Builder — Free Linktree Alternative (Self-Hosted)" />
+  <meta name="twitter:description" content="Build your link-in-bio in minutes. Customize profile, links, and theme, then download a single self-contained HTML file. 100% client-side." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/link-in-bio/" />
+  <title>Link-in-Bio Builder — Free Linktree Alternative (Self-Hosted)</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23DC2626'/%3E%3Ctext x='50' y='64' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ELB%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Link-in-Bio Builder",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/link-in-bio/",
+    "description": "A free, private, 100% client-side visual builder for personal link-in-bio pages. Customize your profile, links, and theme, then download a single self-contained HTML file you can host anywhere.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "Visual editor with live phone preview",
+      "6 preset themes with swatches",
+      "Custom backgrounds (solid, gradient, image)",
+      "Button styles (pill, square, underline)",
+      "Button animations (scale, lift, glow)",
+      "4 font families (Inter, System, Poppins, Playfair)",
+      "Social icons row (Instagram, Twitter, LinkedIn, GitHub, YouTube)",
+      "Export single self-contained HTML file",
+      "100% client-side — no uploads, no tracking"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1180px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Builder layout */
+    .builder{
+      display:grid;grid-template-columns:42fr 58fr;gap:1.5rem;
+      margin-bottom:2rem;align-items:start;
+    }
+    @media(max-width:900px){.builder{grid-template-columns:1fr;gap:1.25rem}}
+
+    .editor-pane{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      max-height:calc(100vh - 180px);overflow-y:auto;
+      position:sticky;top:88px;
+    }
+    @media(max-width:900px){.editor-pane{position:static;max-height:none;overflow:visible}}
+    .editor-pane::-webkit-scrollbar{width:10px}
+    .editor-pane::-webkit-scrollbar-track{background:transparent}
+    .editor-pane::-webkit-scrollbar-thumb{background:var(--chip-bg);border-radius:6px;border:2px solid var(--card-bg)}
+    .editor-pane::-webkit-scrollbar-thumb:hover{background:var(--card-border-hover)}
+
+    .preview-pane{
+      display:flex;flex-direction:column;align-items:center;gap:1rem;
+      position:sticky;top:88px;
+    }
+    @media(max-width:900px){.preview-pane{position:static}}
+
+    /* Editor sections */
+    .editor-section{padding:1.25rem 1.25rem;border-bottom:1px solid var(--card-border)}
+    .editor-section:last-child{border-bottom:none}
+    .editor-section h3{
+      font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--muted);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;
+    }
+    .editor-section h3 .sec-num{
+      width:22px;height:22px;border-radius:6px;background:var(--accent);color:white;
+      font-size:.72rem;display:flex;align-items:center;justify-content:center;letter-spacing:0;
+    }
+    .field{margin-bottom:.85rem}
+    .field:last-child{margin-bottom:0}
+    .field label{
+      display:block;font-size:.82rem;font-weight:600;color:var(--fg);margin-bottom:.35rem;
+    }
+    .field label .hint{color:var(--muted);font-weight:400;font-size:.78rem}
+    .field input[type="text"],
+    .field input[type="url"],
+    .field textarea,
+    .field select,
+    .field input[type="number"],
+    .field input[type="color"]{
+      width:100%;padding:.55rem .7rem;border-radius:8px;
+      border:1px solid var(--card-border);background:var(--bg-2);color:var(--fg);
+      font-size:.9rem;font-family:inherit;transition:border-color .15s,box-shadow .15s;
+    }
+    .field input:focus,.field textarea:focus,.field select:focus{
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12);
+    }
+    .field textarea{resize:vertical;min-height:72px}
+    .field input[type="color"]{height:42px;padding:3px;cursor:pointer}
+    .field-row{display:flex;gap:.6rem;align-items:center}
+    .field-row > *{flex:1}
+    .field-row .shrink{flex:0 0 auto}
+    .char-counter{font-size:.75rem;color:var(--muted);text-align:right;margin-top:.2rem}
+    .char-counter.warn{color:var(--accent-2)}
+    .field-error{font-size:.78rem;color:var(--accent);margin-top:.3rem;display:none}
+    .field-error.show{display:block}
+
+    /* Avatar upload */
+    .avatar-row{display:flex;gap:.85rem;align-items:center}
+    .avatar-preview{
+      width:64px;height:64px;border-radius:50%;flex-shrink:0;
+      background:var(--bg-3);border:2px dashed var(--card-border-hover);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      color:var(--muted);font-size:1.4rem;
+    }
+    .avatar-preview img{width:100%;height:100%;object-fit:cover}
+    .avatar-actions{display:flex;flex-direction:column;gap:.35rem;flex:1}
+    .avatar-actions .mini-btn{font-size:.8rem;padding:.4rem .6rem}
+
+    /* Mini buttons */
+    .mini-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
+      padding:.45rem .8rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--bg-2);color:var(--fg);font-size:.85rem;font-weight:500;cursor:pointer;
+      font-family:inherit;transition:background .15s,border-color .15s;
+    }
+    .mini-btn:hover{background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .mini-btn.danger{color:var(--accent)}
+    .mini-btn.danger:hover{border-color:var(--accent)}
+    .mini-btn svg{width:14px;height:14px}
+
+    /* Link rows */
+    .links-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
+    .links-count{font-size:.78rem;color:var(--muted)}
+    .links-count strong{color:var(--fg);font-weight:600}
+    .link-row{
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.7rem;margin-bottom:.6rem;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .link-row.dragging{opacity:.4;border-style:dashed}
+    .link-row.drag-over{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.1)}
+    .link-row-top{display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem}
+    .link-handle{cursor:grab;color:var(--muted);padding:0 .15rem;flex-shrink:0;font-size:1.05rem}
+    .link-handle:active{cursor:grabbing}
+    .link-icon-select{
+      width:46px;flex:0 0 46px;text-align:center;font-size:1.1rem;padding:.4rem .2rem;
+    }
+    .link-label-input{flex:1}
+    .link-toggle{flex-shrink:0;display:flex;align-items:center}
+    .toggle-switch{
+      position:relative;width:38px;height:22px;border-radius:999px;
+      background:var(--card-border-hover);cursor:pointer;transition:background .2s;
+      border:none;
+    }
+    .toggle-switch.on{background:var(--green)}
+    .toggle-switch::after{
+      content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+      background:white;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-switch.on::after{transform:translateX(16px)}
+    .link-url-input{width:100%;margin-bottom:.5rem}
+    .link-row-bottom{display:flex;gap:.4rem;justify-content:flex-end}
+    .link-row-bottom .mini-btn{padding:.35rem .55rem;font-size:.78rem}
+    .link-inactive{opacity:.55}
+
+    /* Theme swatches */
+    .themes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+    @media(max-width:520px){.themes-grid{grid-template-columns:repeat(2,1fr)}}
+    .theme-swatch{
+      cursor:pointer;border:2px solid var(--card-border);border-radius:var(--radius-sm);
+      overflow:hidden;background:var(--bg-2);transition:border-color .15s,transform .15s;
+      padding:0;font-family:inherit;
+    }
+    .theme-swatch:hover{transform:translateY(-2px)}
+    .theme-swatch.selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .swatch-preview{height:54px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+    .swatch-name{padding:.4rem .3rem;font-size:.74rem;text-align:center;color:var(--fg);font-weight:500;background:var(--bg-2)}
+
+    /* Segmented control */
+    .seg{display:flex;gap:.25rem;background:var(--bg-3);padding:.2rem;border-radius:8px}
+    .seg button{
+      flex:1;padding:.4rem .5rem;border:none;background:transparent;color:var(--muted);
+      font-size:.8rem;font-weight:500;cursor:pointer;border-radius:6px;font-family:inherit;
+      transition:background .15s,color .15s;
+    }
+    .seg button.active{background:var(--card-bg);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    [data-theme="dark"] .seg button.active{background:var(--bg-3)}
+
+    /* Checkbox row */
+    .check-row{display:flex;align-items:center;gap:.55rem;cursor:pointer;font-size:.88rem}
+    .check-row input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+    /* Social fields */
+    .social-fields{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem}
+    @media(max-width:520px){.social-fields{grid-template-columns:1fr}}
+    .social-field{display:flex;align-items:center;gap:.4rem}
+    .social-field .social-icon{font-size:1rem;flex-shrink:0}
+    .social-field input{padding:.45rem .55rem;font-size:.82rem}
+
+    /* Export buttons */
+    .export-actions{display:flex;flex-wrap:wrap;gap:.55rem}
+    .export-actions .btn{flex:1;min-width:130px;justify-content:center}
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.25rem;border-radius:10px;border:1px solid transparent;
+      font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px}
+
+    /* Phone preview */
+    .phone-frame{
+      width:395px;max-width:100%;background:#1a1a1a;border-radius:42px;padding:14px;
+      box-shadow:0 30px 60px -20px rgba(0,0,0,0.45),0 0 0 2px rgba(0,0,0,0.1);
+      position:relative;
+    }
+    .phone-frame::before{
+      content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
+      width:130px;height:24px;background:#1a1a1a;border-radius:0 0 16px 16px;z-index:2;
+    }
+    .phone-screen{
+      width:375px;height:667px;max-width:100%;border-radius:30px;overflow:hidden;
+      background:white;border:none;display:block;
+    }
+    .phone-frame.desktop-mode{width:auto;max-width:760px}
+    .phone-frame.desktop-mode::before{display:none}
+    .phone-frame.desktop-mode .phone-screen{width:760px;height:600px;border-radius:10px}
+    .preview-label{
+      font-size:.82rem;color:var(--muted);text-align:center;font-weight:500;
+      display:flex;align-items:center;gap:.5rem;justify-content:center;
+    }
+    .desktop-toggle{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.82rem;color:var(--muted)}
+    .desktop-toggle input{accent-color:var(--accent);cursor:pointer}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+    .step-card code{background:var(--bg-3);padding:.1rem .35rem;border-radius:4px;font-size:.82rem;color:var(--fg);font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:400px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+    .toast.success{background:var(--green);color:white}
+
+    /* Responsive */
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .editor-section{padding:1rem}
+      .header-links a:not(.theme-toggle):not(.back-link){display:none}
+      .phone-screen{height:580px}
+      .export-actions .btn{min-width:100%}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('linkbio-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/link-in-bio/" class="brand">
+        <span class="brand-logo">LB</span>
+        <span>Link-in-Bio Builder</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#themes">Themes</a>
+        <a href="#faq">FAQ</a>
+        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · single HTML export</span>
+        <h1>Build your link-in-bio <span class="accent">in minutes</span></h1>
+        <p class="sub">A visual builder for personal link-in-bio pages. Customize your profile, links, and theme, then download one self-contained HTML file you can host anywhere — GitHub Pages, Netlify, your own server. A Linktree alternative that runs entirely in your browser.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Visual editor</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 6 themes</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Animations</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Self-hosted</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="builder">
+        <!-- LEFT: Editor -->
+        <div class="editor-pane" id="editorPane">
+
+          <!-- 1. Profile -->
+          <div class="editor-section">
+            <h3><span class="sec-num">1</span> Profile</h3>
+            <div class="field">
+              <label>Avatar image <span class="hint">(optional, embedded in export)</span></label>
+              <div class="avatar-row">
+                <div class="avatar-preview" id="avatarPreview">👤</div>
+                <div class="avatar-actions">
+                  <button class="mini-btn" id="avatarBtn" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload image
+                  </button>
+                  <button class="mini-btn danger" id="avatarRemoveBtn" type="button" style="display:none">Remove</button>
+                  <input type="file" id="avatarInput" accept="image/*" style="display:none" />
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Display name <span class="hint" style="color:var(--accent)">*</span></label>
+              <input type="text" id="nameInput" placeholder="e.g. Achmad Bayhaqy" maxlength="50" />
+              <div class="field-error" id="nameError">Display name is required.</div>
+            </div>
+            <div class="field">
+              <label>Bio / tagline <span class="hint">(max 200 chars)</span></label>
+              <textarea id="bioInput" placeholder="Software engineer. Coffee enthusiast. Building things on the web." maxlength="200"></textarea>
+              <div class="char-counter" id="bioCounter">0 / 200</div>
+            </div>
+            <div class="field">
+              <label>Pronouns <span class="hint">(optional)</span></label>
+              <input type="text" id="pronounsInput" placeholder="e.g. he/him, she/her, they/them" maxlength="30" />
+            </div>
+          </div>
+
+          <!-- 2. Links -->
+          <div class="editor-section">
+            <h3><span class="sec-num">2</span> Links <span style="margin-left:auto;font-weight:500;text-transform:none;letter-spacing:0" id="linksHeaderCount"></span></h3>
+            <div class="links-header">
+              <span class="links-count"><strong id="linksCount">0</strong> / 20 links</span>
+              <button class="mini-btn" id="addLinkBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add link
+              </button>
+            </div>
+            <div id="linksList"></div>
+            <div class="field-error" id="linksError">At least one active link is required to export.</div>
+          </div>
+
+          <!-- 3. Themes -->
+          <div class="editor-section">
+            <h3><span class="sec-num">3</span> Theme <span style="margin-left:auto;font-weight:500;text-transform:none;letter-spacing:0">tap a swatch</span></h3>
+            <div class="themes-grid" id="themesGrid"></div>
+          </div>
+
+          <!-- 4. Customization -->
+          <div class="editor-section">
+            <h3><span class="sec-num">4</span> Customization</h3>
+
+            <div class="field">
+              <label>Background type</label>
+              <div class="seg" id="bgTypeSeg">
+                <button data-val="solid" class="active" type="button">Solid</button>
+                <button data-val="gradient" type="button">Gradient</button>
+                <button data-val="image" type="button">Image</button>
+              </div>
+            </div>
+
+            <div class="field" id="solidField">
+              <label>Background color</label>
+              <input type="color" id="bgSolidColor" value="#FFFFFF" />
+            </div>
+
+            <div class="field" id="gradField" style="display:none">
+              <label>Gradient stops</label>
+              <div class="field-row">
+                <input type="color" id="bgGrad1" value="#FF6B6B" />
+                <input type="color" id="bgGrad2" value="#F94BC5" />
+              </div>
+              <div class="field" style="margin-top:.5rem">
+                <label>Angle <span class="hint" id="gradAngleVal">135°</span></label>
+                <input type="range" id="bgGradAngle" min="0" max="360" value="135" style="width:100%;accent-color:var(--accent)" />
+              </div>
+            </div>
+
+            <div class="field" id="imageField" style="display:none">
+              <label>Background image <span class="hint">(embedded in export)</span></label>
+              <div class="avatar-row">
+                <div class="avatar-preview" id="bgImgPreview" style="border-radius:8px">🖼️</div>
+                <div class="avatar-actions">
+                  <button class="mini-btn" id="bgImgBtn" type="button">Upload image</button>
+                  <button class="mini-btn danger" id="bgImgRemoveBtn" type="button" style="display:none">Remove</button>
+                  <input type="file" id="bgImgInput" accept="image/*" style="display:none" />
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Text color</label>
+              <input type="color" id="textColor" value="#0F172A" />
+            </div>
+
+            <div class="field">
+              <label>Button style</label>
+              <div class="seg" id="btnStyleSeg">
+                <button data-val="pill" class="active" type="button">Pill</button>
+                <button data-val="square" type="button">Square</button>
+                <button data-val="underline" type="button">Underline</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Button animation</label>
+              <div class="seg" id="btnAnimSeg">
+                <button data-val="none" class="active" type="button">None</button>
+                <button data-val="scale" type="button">Scale</button>
+                <button data-val="lift" type="button">Lift</button>
+                <button data-val="glow" type="button">Glow</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Font family</label>
+              <div class="seg" id="fontSeg">
+                <button data-val="Inter" class="active" type="button">Inter</button>
+                <button data-val="system" type="button">System</button>
+                <button data-val="Poppins" type="button">Poppins</button>
+                <button data-val="Playfair Display" type="button">Playfair</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="check-row">
+                <input type="checkbox" id="showSocials" />
+                <span>Show social icons row at bottom</span>
+              </label>
+              <div class="social-fields" id="socialFields" style="display:none">
+                <div class="social-field">
+                  <span class="social-icon">📷</span>
+                  <input type="url" data-social="instagram" placeholder="Instagram URL" />
+                </div>
+                <div class="social-field">
+                  <span class="social-icon">🐦</span>
+                  <input type="url" data-social="twitter" placeholder="Twitter / X URL" />
+                </div>
+                <div class="social-field">
+                  <span class="social-icon">💼</span>
+                  <input type="url" data-social="linkedin" placeholder="LinkedIn URL" />
+                </div>
+                <div class="social-field">
+                  <span class="social-icon">🐙</span>
+                  <input type="url" data-social="github" placeholder="GitHub URL" />
+                </div>
+                <div class="social-field">
+                  <span class="social-icon">▶️</span>
+                  <input type="url" data-social="youtube" placeholder="YouTube URL" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Footer -->
+          <div class="editor-section">
+            <h3><span class="sec-num">5</span> Attribution</h3>
+            <label class="check-row">
+              <input type="checkbox" id="showFooter" checked />
+              <span>Show "Made with Bayhaqy Link-in-Bio" footer</span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Preview -->
+        <div class="preview-pane">
+          <div class="preview-label">
+            <span>Live preview</span>
+            <label class="desktop-toggle">
+              <input type="checkbox" id="desktopToggle" />
+              <span>Desktop preview</span>
+            </label>
+          </div>
+          <div class="phone-frame" id="phoneFrame">
+            <iframe class="phone-screen" id="previewFrame" title="Bio page preview" sandbox="allow-same-origin"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Export actions -->
+    <section class="container" style="margin-bottom:2.5rem">
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div>
+            <h3 style="font-size:1.15rem;margin-bottom:.2rem">Export your bio page</h3>
+            <p style="color:var(--muted);font-size:.9rem">Single self-contained HTML file. All images embedded. Ready to host anywhere.</p>
+          </div>
+        </div>
+        <div class="export-actions">
+          <button class="btn btn-primary" id="downloadBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download HTML
+          </button>
+          <button class="btn btn-ghost" id="copyBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy HTML
+          </button>
+          <button class="btn btn-ghost" id="openTabBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open in new tab
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to use -->
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use</h2>
+        <p>Five steps from blank page to a live link-in-bio you own and control completely.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Customize your profile</h4>
+            <p>Upload an avatar, type your display name, write a short bio, and add your pronouns. Everything updates in the live preview on the right as you type.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Add your links</h4>
+            <p>Click "Add link" to build your list. Give each link a label, a URL, and an emoji icon. Drag the handle to reorder, and toggle links on/off. Up to 20 links.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Pick a theme &amp; customize</h4>
+            <p>Tap one of the 6 theme swatches to load a preset. Then tweak the background (solid, gradient, or image), button style, hover animation, and font.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Download the HTML</h4>
+            <p>Click "Download HTML" to get a single <code>link-in-bio-{timestamp}.html</code> file. All CSS, JS, images, and fonts are inlined — no external dependencies except Google Fonts CDN.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <h4>Deploy to GitHub Pages</h4>
+            <p>Create a repo, drop the HTML file in, rename it <code>index.html</code>, push, then enable Pages in repo Settings → Pages → "Deploy from branch". Your bio is live at <code>username.github.io</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Themes showcase -->
+    <section class="features" id="themes">
+      <div class="container">
+        <h2 style="font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em">Six built-in themes</h2>
+        <p style="color:var(--muted);margin-bottom:1.75rem;max-width:640px">Each theme is a starting point. After picking one, everything is fully customizable — colors, background, buttons, fonts.</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#000;color:#fff">▢</div>
+            <h4>Minimal Mono</h4>
+            <p>Clean white background, black text, black pill buttons. The timeless default — works for any personal brand.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#FF6B6B,#F94BC5);color:#fff">☼</div>
+            <h4>Sunset Gradient</h4>
+            <p>Warm orange-to-pink gradient with white text. Energetic and eye-catching — great for creators and lifestyle brands.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#0A0A0A;color:#39FF14;font-family:monospace">&gt;_</div>
+            <h4>Dark Neon</h4>
+            <p>Black background, neon green accents, monospace font. For developers, hackers, and night owls.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#E0F2FE;color:#0F3D6B">≋</div>
+            <h4>Ocean Breeze</h4>
+            <p>Soft blue background, white cards, navy text. Calm and approachable — ideal for portfolios and consultancies.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#1B4332;color:#FDF6E3">🌿</div>
+            <h4>Forest</h4>
+            <p>Deep green background, cream text, brown accents. Earthy and grounded — perfect for nature and craft brands.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#1A0033;color:#FF00FF">⌁</div>
+            <h4>Cyberpunk</h4>
+            <p>Dark purple background, magenta and cyan accents, glitch-style font. Loud and futuristic.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="container">
+        <h2 style="font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em">Why this beats Linktree</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>You own the file</h4>
+            <p>Export a single HTML file. Host it on GitHub Pages, your own domain, or a USB stick. No subscription, no account, no expiry.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h4>No tracking, ever</h4>
+            <p>Linktree tracks every click. Your exported page has zero analytics, zero cookies, zero third-party scripts — unless you add them yourself.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Live visual editor</h4>
+            <p>See your bio page update in real time inside a phone mockup. Switch to desktop preview with one click. No code, no refresh.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+            <h4>Six themes &amp; full control</h4>
+            <p>Start from Minimal Mono, Sunset, Neon, Ocean, Forest, or Cyberpunk. Then tweak every color, button shape, animation, and font.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <h4>Everything inlined</h4>
+            <p>Avatar and background images are embedded as data URLs. CSS and JS are inline. The only external resource is Google Fonts — and it degrades gracefully.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>100% client-side</h4>
+            <p>The builder runs entirely in your browser. No uploads, no server, no sign-up. Your content never leaves your device until you hit export.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Do I need to sign up or pay anything? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. Link-in-Bio Builder is completely free and requires no account. Open the page, build your bio, download the HTML. That's it. There is no premium tier, no trial, no email gate.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Where can I host the exported HTML file? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Anywhere that serves static files. GitHub Pages (free), Netlify (free), Vercel (free), Cloudflare Pages (free), or your own web server. Just upload the <code>.html</code> file — no build step, no dependencies to install. The most popular free option is GitHub Pages: create a repository, drop the file in as <code>index.html</code>, enable Pages in Settings, and you get a URL like <code>username.github.io</code>.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does the exported page track my visitors? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. The exported HTML contains zero analytics, zero cookies, and zero third-party tracking scripts. Your visitors' privacy is fully respected. If you want analytics, you have to add them yourself (e.g. paste a Plausible or Umami snippet into the file). We deliberately do not include any by default.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Are my images and content uploaded anywhere? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. The builder runs 100% in your browser. Your avatar and background images are read with the File API and embedded directly into the exported HTML as base64 data URLs. Nothing is ever sent to a server. You can verify this in your browser's DevTools → Network tab.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I edit the exported HTML by hand afterwards? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. The exported file is a clean, readable HTML document with inline CSS in the <code>&lt;head&gt;</code> and a small inline script for the animations. You can open it in any text editor, change colors, add links, or paste in analytics snippets. The structure is semantic and commented.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What fonts are available, and do they work offline? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Four font choices: Inter, System, Poppins, and Playfair Display. Inter, Poppins, and Playfair Display are loaded from the Google Fonts CDN in the exported page — they need an internet connection on first load but the browser caches them. The "System" option uses your operating system's default UI font stack and works fully offline.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is there a limit on the number of links? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The builder caps you at 20 links — beyond that, a link-in-bio page becomes unusable on mobile. You can toggle individual links off without deleting them, so you can keep a library of links and show only the ones you need right now.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The builder works on any modern browser: Chrome 90+, Edge 90+, Firefox 88+, Safari 14+, and equivalent mobile browsers. The exported bio page works on essentially every browser including older ones, because it is plain HTML and CSS with a tiny progressive-enhancement script. Internet Explorer is not supported for the builder.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        <span id="footerYear">2026</span> ·
+        MIT License
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function(){
+    'use strict';
+    var doc = document;
+
+    // ====== Theme definitions ======
+    var THEMES = {
+      'minimal-mono': {
+        name: 'Minimal Mono',
+        bgType: 'solid', bgSolidColor: '#FFFFFF', bgGrad1: '#FFFFFF', bgGrad2: '#000000', bgGradAngle: 135, bgImage: null,
+        textColor: '#0F172A',
+        btnStyle: 'pill', btnAnim: 'scale',
+        fontFamily: 'Inter',
+        swatchBg: '#FFFFFF', swatchColor: '#000000', swatchLabel: 'Aa'
+      },
+      'sunset-gradient': {
+        name: 'Sunset Gradient',
+        bgType: 'gradient', bgSolidColor: '#FF6B6B', bgGrad1: '#FF6B6B', bgGrad2: '#F94BC5', bgGradAngle: 135, bgImage: null,
+        textColor: '#FFFFFF',
+        btnStyle: 'pill', btnAnim: 'lift',
+        fontFamily: 'Poppins',
+        swatchBg: 'linear-gradient(135deg,#FF6B6B,#F94BC5)', swatchColor: '#FFFFFF', swatchLabel: '☼'
+      },
+      'dark-neon': {
+        name: 'Dark Neon',
+        bgType: 'solid', bgSolidColor: '#0A0A0A', bgGrad1: '#0A0A0A', bgGrad2: '#1A1A1A', bgGradAngle: 135, bgImage: null,
+        textColor: '#39FF14',
+        btnStyle: 'square', btnAnim: 'glow',
+        fontFamily: 'system',
+        swatchBg: '#0A0A0A', swatchColor: '#39FF14', swatchLabel: '&gt;_'
+      },
+      'ocean-breeze': {
+        name: 'Ocean Breeze',
+        bgType: 'solid', bgSolidColor: '#E0F2FE', bgGrad1: '#E0F2FE', bgGrad2: '#7DD3FC', bgGradAngle: 135, bgImage: null,
+        textColor: '#0F3D6B',
+        btnStyle: 'pill', btnAnim: 'lift',
+        fontFamily: 'Inter',
+        swatchBg: '#E0F2FE', swatchColor: '#0F3D6B', swatchLabel: '≋'
+      },
+      'forest': {
+        name: 'Forest',
+        bgType: 'solid', bgSolidColor: '#1B4332', bgGrad1: '#1B4332', bgGrad2: '#2D6A4F', bgGradAngle: 135, bgImage: null,
+        textColor: '#FDF6E3',
+        btnStyle: 'square', btnAnim: 'scale',
+        fontFamily: 'Inter',
+        swatchBg: '#1B4332', swatchColor: '#FDF6E3', swatchLabel: '🌿'
+      },
+      'cyberpunk': {
+        name: 'Cyberpunk',
+        bgType: 'gradient', bgSolidColor: '#1A0033', bgGrad1: '#1A0033', bgGrad2: '#3D0066', bgGradAngle: 135, bgImage: null,
+        textColor: '#FF00FF',
+        btnStyle: 'square', btnAnim: 'glow',
+        fontFamily: 'system',
+        swatchBg: 'linear-gradient(135deg,#1A0033,#FF00FF)', swatchColor: '#00FFFF', swatchLabel: '⌁'
+      }
+    };
+
+    var FONT_STACKS = {
+      'Inter': "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      'system': "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      'Poppins': "'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
+      'Playfair Display': "'Playfair Display', Georgia, serif"
+    };
+
+    var ICONS = ['🔗','🌐','📧','📱','📷','🎵','💼','🛒','📝','🎬','🎮','📚'];
+
+    var SOCIAL_META = [
+      { key: 'instagram', label: 'Instagram', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.38C1.35 2.68.94 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.94 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-11.85a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg>' },
+      { key: 'twitter', label: 'Twitter / X', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
+      { key: 'linkedin', label: 'LinkedIn', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>' },
+      { key: 'github', label: 'GitHub', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.79 23.4c.6.1.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.69.82.57A12 12 0 0 0 12 .3"/></svg>' },
+      { key: 'youtube', label: 'YouTube', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.07 0 12 0 12s0 3.93.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14c.5-1.87.5-5.8.5-5.8s0-3.93-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>' }
+    ];
+
+    // ====== State ======
+    var state = {
+      profile: { avatar: null, name: '', bio: '', pronouns: '' },
+      links: [],
+      selectedTheme: 'minimal-mono',
+      custom: {
+        bgType: 'solid',
+        bgSolidColor: '#FFFFFF',
+        bgGrad1: '#FF6B6B', bgGrad2: '#F94BC5', bgGradAngle: 135,
+        bgImage: null,
+        textColor: '#0F172A',
+        btnStyle: 'pill', btnAnim: 'scale',
+        fontFamily: 'Inter'
+      },
+      showSocials: false,
+      socials: { instagram: '', twitter: '', linkedin: '', github: '', youtube: '' },
+      showFooter: true,
+      desktopPreview: false
+    };
+    var nextLinkId = 1;
+
+    // ====== DOM refs ======
+    var $ = function(id){ return doc.getElementById(id); };
+    var previewFrame = $('previewFrame');
+    var toast = $('toast');
+
+    // ====== Builder theme toggle ======
+    var themeToggle = $('themeToggle');
+    themeToggle.addEventListener('click', function(){
+      var current = doc.documentElement.getAttribute('data-theme') || 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      doc.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('linkbio-theme', next);
+    });
+
+    // ====== Toast ======
+    var toastTimer = null;
+    function showToast(msg, type){
+      toast.textContent = msg;
+      toast.className = 'toast show' + (type ? ' ' + type : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){
+        toast.className = 'toast' + (type ? ' ' + type : '');
+      }, 3400);
+    }
+
+    // ====== Escape utilities ======
+    function esc(s){
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+      });
+    }
+    function escAttr(s){ return esc(s); }
+
+    // ====== Render themes grid ======
+    function renderThemesGrid(){
+      var grid = $('themesGrid');
+      grid.innerHTML = '';
+      Object.keys(THEMES).forEach(function(key){
+        var t = THEMES[key];
+        var btn = doc.createElement('button');
+        btn.type = 'button';
+        btn.className = 'theme-swatch' + (state.selectedTheme === key ? ' selected' : '');
+        btn.dataset.theme = key;
+        btn.innerHTML =
+          '<div class="swatch-preview" style="background:' + t.swatchBg + ';color:' + t.swatchColor + '">' + t.swatchLabel + '</div>' +
+          '<div class="swatch-name">' + t.name + '</div>';
+        btn.addEventListener('click', function(){ applyTheme(key); });
+        grid.appendChild(btn);
+      });
+    }
+
+    function applyTheme(key){
+      var t = THEMES[key];
+      if (!t) return;
+      state.selectedTheme = key;
+      state.custom.bgType = t.bgType;
+      state.custom.bgSolidColor = t.bgSolidColor;
+      state.custom.bgGrad1 = t.bgGrad1;
+      state.custom.bgGrad2 = t.bgGrad2;
+      state.custom.bgGradAngle = t.bgGradAngle;
+      state.custom.bgImage = null;
+      state.custom.textColor = t.textColor;
+      state.custom.btnStyle = t.btnStyle;
+      state.custom.btnAnim = t.btnAnim;
+      state.custom.fontFamily = t.fontFamily;
+      syncCustomUI();
+      renderThemesGrid();
+      render();
+    }
+
+    // ====== Sync customization UI from state ======
+    function syncCustomUI(){
+      var c = state.custom;
+      setSeg('bgTypeSeg', c.bgType);
+      setSeg('btnStyleSeg', c.btnStyle);
+      setSeg('btnAnimSeg', c.btnAnim);
+      setSeg('fontSeg', c.fontFamily);
+      $('bgSolidColor').value = c.bgSolidColor;
+      $('bgGrad1').value = c.bgGrad1;
+      $('bgGrad2').value = c.bgGrad2;
+      $('bgGradAngle').value = c.bgGradAngle;
+      $('gradAngleVal').textContent = c.bgGradAngle + '°';
+      $('textColor').value = c.textColor;
+      toggleBgFields();
+      // bg image preview
+      if (c.bgImage){
+        $('bgImgPreview').innerHTML = '<img src="' + c.bgImage + '" alt="" />';
+        $('bgImgRemoveBtn').style.display = '';
+      } else {
+        $('bgImgPreview').innerHTML = '🖼️';
+        $('bgImgRemoveBtn').style.display = 'none';
+      }
+    }
+
+    function setSeg(segId, val){
+      var seg = $(segId);
+      seg.querySelectorAll('button').forEach(function(b){
+        b.classList.toggle('active', b.dataset.val === val);
+      });
+    }
+
+    function toggleBgFields(){
+      var t = state.custom.bgType;
+      $('solidField').style.display = t === 'solid' ? '' : 'none';
+      $('gradField').style.display = t === 'gradient' ? '' : 'none';
+      $('imageField').style.display = t === 'image' ? '' : 'none';
+    }
+
+    // ====== Profile handlers ======
+    $('nameInput').addEventListener('input', function(e){
+      state.profile.name = e.target.value;
+      $('nameError').classList.remove('show');
+      render();
+    });
+    $('bioInput').addEventListener('input', function(e){
+      state.profile.bio = e.target.value;
+      var len = e.target.value.length;
+      var counter = $('bioCounter');
+      counter.textContent = len + ' / 200';
+      counter.classList.toggle('warn', len > 180);
+      render();
+    });
+    $('pronounsInput').addEventListener('input', function(e){
+      state.profile.pronouns = e.target.value;
+      render();
+    });
+
+    // Avatar
+    $('avatarBtn').addEventListener('click', function(){ $('avatarInput').click(); });
+    $('avatarInput').addEventListener('change', function(e){
+      var file = e.target.files[0];
+      if (!file) return;
+      if (!/image\//.test(file.type)){ showToast('Please choose an image file', 'error'); return; }
+      if (file.size > 4 * 1024 * 1024){ showToast('Image too large (max 4MB for avatar)', 'error'); return; }
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        state.profile.avatar = ev.target.result;
+        $('avatarPreview').innerHTML = '<img src="' + ev.target.result + '" alt="" />';
+        $('avatarRemoveBtn').style.display = '';
+        render();
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    });
+    $('avatarRemoveBtn').addEventListener('click', function(){
+      state.profile.avatar = null;
+      $('avatarPreview').innerHTML = '👤';
+      $('avatarRemoveBtn').style.display = 'none';
+      render();
+    });
+
+    // ====== Links handlers ======
+    $('addLinkBtn').addEventListener('click', function(){
+      if (state.links.length >= 20){ showToast('Maximum 20 links reached', 'error'); return; }
+      state.links.push({
+        id: nextLinkId++,
+        label: 'New link',
+        url: 'https://',
+        icon: '🔗',
+        active: true
+      });
+      renderLinks();
+      render();
+    });
+
+    function renderLinks(){
+      var list = $('linksList');
+      list.innerHTML = '';
+      state.links.forEach(function(link, idx){
+        var row = doc.createElement('div');
+        row.className = 'link-row' + (link.active ? '' : ' link-inactive');
+        row.dataset.id = link.id;
+        row.draggable = true;
+
+        var iconOptions = ICONS.map(function(ic){
+          return '<option value="' + ic + '"' + (ic === link.icon ? ' selected' : '') + '>' + ic + '</option>';
+        }).join('');
+
+        row.innerHTML =
+          '<div class="link-row-top">' +
+            '<span class="link-handle" title="Drag to reorder">⠿</span>' +
+            '<select class="link-icon-select" data-field="icon">' + iconOptions + '</select>' +
+            '<input type="text" class="link-label-input" data-field="label" value="' + escAttr(link.label) + '" placeholder="Link label" maxlength="60" />' +
+            '<div class="link-toggle"><button type="button" class="toggle-switch' + (link.active ? ' on' : '') + '" data-act="toggle" title="Toggle active"></button></div>' +
+          '</div>' +
+          '<input type="url" class="link-url-input" data-field="url" value="' + escAttr(link.url) + '" placeholder="https://..." />' +
+          '<div class="link-row-bottom">' +
+            '<button class="mini-btn" data-act="up" type="button"' + (idx === 0 ? ' disabled' : '') + '>↑</button>' +
+            '<button class="mini-btn" data-act="down" type="button"' + (idx === state.links.length - 1 ? ' disabled' : '') + '>↓</button>' +
+            '<button class="mini-btn danger" data-act="delete" type="button">Delete</button>' +
+          '</div>';
+
+        // Wire field edits
+        row.querySelector('[data-field="label"]').addEventListener('input', function(e){
+          link.label = e.target.value;
+          $('linksError').classList.remove('show');
+          render();
+        });
+        row.querySelector('[data-field="url"]').addEventListener('input', function(e){
+          link.url = e.target.value;
+          $('linksError').classList.remove('show');
+          render();
+        });
+        row.querySelector('[data-field="icon"]').addEventListener('change', function(e){
+          link.icon = e.target.value;
+          render();
+        });
+
+        // Toggle
+        row.querySelector('[data-act="toggle"]').addEventListener('click', function(){
+          link.active = !link.active;
+          renderLinks();
+          render();
+        });
+
+        // Up/down/delete
+        row.querySelector('[data-act="up"]').addEventListener('click', function(){
+          if (idx === 0) return;
+          var tmp = state.links[idx - 1];
+          state.links[idx - 1] = state.links[idx];
+          state.links[idx] = tmp;
+          renderLinks();
+          render();
+        });
+        row.querySelector('[data-act="down"]').addEventListener('click', function(){
+          if (idx === state.links.length - 1) return;
+          var tmp = state.links[idx + 1];
+          state.links[idx + 1] = state.links[idx];
+          state.links[idx] = tmp;
+          renderLinks();
+          render();
+        });
+        row.querySelector('[data-act="delete"]').addEventListener('click', function(){
+          state.links = state.links.filter(function(l){ return l.id !== link.id; });
+          renderLinks();
+          render();
+        });
+
+        // Drag and drop reorder
+        row.addEventListener('dragstart', function(e){
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', String(link.id));
+        });
+        row.addEventListener('dragend', function(){
+          row.classList.remove('dragging');
+          list.querySelectorAll('.link-row').forEach(function(el){ el.classList.remove('drag-over'); });
+        });
+        row.addEventListener('dragover', function(e){
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          row.classList.add('drag-over');
+        });
+        row.addEventListener('dragleave', function(){ row.classList.remove('drag-over'); });
+        row.addEventListener('drop', function(e){
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          var draggedId = parseInt(e.dataTransfer.getData('text/plain'), 10);
+          if (draggedId === link.id) return;
+          var fromIdx = state.links.findIndex(function(l){ return l.id === draggedId; });
+          var toIdx = state.links.findIndex(function(l){ return l.id === link.id; });
+          if (fromIdx < 0 || toIdx < 0) return;
+          var moved = state.links.splice(fromIdx, 1)[0];
+          state.links.splice(toIdx, 0, moved);
+          renderLinks();
+          render();
+        });
+
+        list.appendChild(row);
+      });
+
+      $('linksCount').textContent = state.links.length;
+      $('linksHeaderCount').textContent = state.links.length ? state.links.length + ' link' + (state.links.length > 1 ? 's' : '') : '';
+    }
+
+    // ====== Customization handlers ======
+    function bindSeg(segId, field){
+      var seg = $(segId);
+      seg.querySelectorAll('button').forEach(function(b){
+        b.addEventListener('click', function(){
+          setSeg(segId, b.dataset.val);
+          state.custom[field] = b.dataset.val;
+          state.selectedTheme = ''; // custom = no preset selected
+          renderThemesGrid();
+          toggleBgFields();
+          render();
+        });
+      });
+    }
+    bindSeg('bgTypeSeg', 'bgType');
+    bindSeg('btnStyleSeg', 'btnStyle');
+    bindSeg('btnAnimSeg', 'btnAnim');
+    bindSeg('fontSeg', 'fontFamily');
+
+    $('bgSolidColor').addEventListener('input', function(e){
+      state.custom.bgSolidColor = e.target.value;
+      state.selectedTheme = '';
+      renderThemesGrid();
+      render();
+    });
+    $('bgGrad1').addEventListener('input', function(e){
+      state.custom.bgGrad1 = e.target.value;
+      state.selectedTheme = '';
+      renderThemesGrid();
+      render();
+    });
+    $('bgGrad2').addEventListener('input', function(e){
+      state.custom.bgGrad2 = e.target.value;
+      state.selectedTheme = '';
+      renderThemesGrid();
+      render();
+    });
+    $('bgGradAngle').addEventListener('input', function(e){
+      state.custom.bgGradAngle = parseInt(e.target.value, 10);
+      $('gradAngleVal').textContent = e.target.value + '°';
+      state.selectedTheme = '';
+      renderThemesGrid();
+      render();
+    });
+    $('textColor').addEventListener('input', function(e){
+      state.custom.textColor = e.target.value;
+      state.selectedTheme = '';
+      renderThemesGrid();
+      render();
+    });
+
+    // BG image
+    $('bgImgBtn').addEventListener('click', function(){ $('bgImgInput').click(); });
+    $('bgImgInput').addEventListener('change', function(e){
+      var file = e.target.files[0];
+      if (!file) return;
+      if (!/image\//.test(file.type)){ showToast('Please choose an image file', 'error'); return; }
+      if (file.size > 6 * 1024 * 1024){ showToast('Background image too large (max 6MB)', 'error'); return; }
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        state.custom.bgImage = ev.target.result;
+        state.selectedTheme = '';
+        syncCustomUI();
+        renderThemesGrid();
+        render();
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    });
+    $('bgImgRemoveBtn').addEventListener('click', function(){
+      state.custom.bgImage = null;
+      syncCustomUI();
+      render();
+    });
+
+    // Socials
+    $('showSocials').addEventListener('change', function(e){
+      state.showSocials = e.target.checked;
+      $('socialFields').style.display = e.target.checked ? '' : 'none';
+      render();
+    });
+    doc.querySelectorAll('[data-social]').forEach(function(input){
+      input.addEventListener('input', function(e){
+        state.socials[input.dataset.social] = e.target.value;
+        render();
+      });
+    });
+
+    // Footer toggle
+    $('showFooter').addEventListener('change', function(e){
+      state.showFooter = e.target.checked;
+      if (!e.target.checked){
+        showToast('Heads up: a small attribution link helps others discover this free tool 🙏', 'success');
+      }
+      render();
+    });
+
+    // Desktop preview toggle
+    $('desktopToggle').addEventListener('change', function(e){
+      state.desktopPreview = e.target.checked;
+      $('phoneFrame').classList.toggle('desktop-mode', e.target.checked);
+      render();
+    });
+
+    // ====== Generate bio background CSS ======
+    function getBgCSS(c){
+      if (c.bgType === 'solid') return 'background:' + c.bgSolidColor + ';';
+      if (c.bgType === 'gradient') return 'background:linear-gradient(' + c.bgGradAngle + 'deg,' + c.bgGrad1 + ',' + c.bgGrad2 + ');';
+      if (c.bgType === 'image' && c.bgImage) return 'background:url("' + c.bgImage + '") center center / cover no-repeat;';
+      return 'background:#FFFFFF;';
+    }
+
+    function getBtnRadius(style){
+      if (style === 'pill') return '999px';
+      if (style === 'square') return '10px';
+      if (style === 'underline') return '0';
+      return '10px';
+    }
+
+    function getBtnAnimCSS(anim, textColor){
+      if (anim === 'none') return '';
+      var base = '.lb-link{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;}';
+      if (anim === 'scale'){
+        return base + '.lb-link:hover{transform:scale(1.04);}';
+      }
+      if (anim === 'lift'){
+        return base + '.lb-link:hover{transform:translateY(-3px);box-shadow:0 12px 24px -8px rgba(0,0,0,0.35);}';
+      }
+      if (anim === 'glow'){
+        return base + '.lb-link:hover{box-shadow:0 0 22px ' + hexToRgba(textColor, 0.55) + ',0 0 8px ' + hexToRgba(textColor, 0.4) + ';}';
+      }
+      return '';
+    }
+
+    function hexToRgba(hex, alpha){
+      hex = (hex || '#000000').replace('#', '');
+      if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+      var r = parseInt(hex.substr(0,2),16) || 0;
+      var g = parseInt(hex.substr(2,2),16) || 0;
+      var b = parseInt(hex.substr(4,2),16) || 0;
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+    }
+
+    // Determine button bg/text based on style
+    function getBtnColors(style, textColor){
+      if (style === 'underline'){
+        return { bg: 'transparent', color: textColor, border: 'none', borderB: '2px solid ' + hexToRgba(textColor, 0.3) };
+      }
+      // pill and square use a semi-transparent chip
+      return { bg: hexToRgba(textColor, 0.12), color: textColor, border: '1px solid ' + hexToRgba(textColor, 0.2), borderB: 'none' };
+    }
+
+    // ====== Generate the standalone bio HTML ======
+    function generateBioHTML(forExport){
+      var p = state.profile;
+      var c = state.custom;
+      var fontStack = FONT_STACKS[c.fontFamily] || FONT_STACKS['Inter'];
+      var needsGoogleFont = (c.fontFamily === 'Inter' || c.fontFamily === 'Poppins' || c.fontFamily === 'Playfair Display');
+      var fontImport = needsGoogleFont
+        ? "@import url('https://fonts.googleapis.com/css2?family=" + encodeURIComponent(c.fontFamily).replace(/%20/g,'+') + ":wght@400;500;600;700&display=swap');"
+        : '';
+
+      var bgCSS = getBgCSS(c);
+      var btnColors = getBtnColors(c.btnStyle, c.textColor);
+      var btnRadius = getBtnRadius(c.btnStyle);
+      var animCSS = getBtnAnimCSS(c.btnAnim, c.textColor);
+
+      // Avatar
+      var avatarHTML = p.avatar
+        ? '<img class="lb-avatar-img" src="' + p.avatar + '" alt="' + escAttr(p.name) + '" />'
+        : '<div class="lb-avatar-placeholder">' + esc((p.name || '?').charAt(0).toUpperCase()) + '</div>';
+
+      // Links
+      var linksHTML = state.links.filter(function(l){ return l.active; }).map(function(l){
+        var safeUrl = escAttr(l.url);
+        return '<a class="lb-link" href="' + safeUrl + '" target="_blank" rel="noopener noreferrer">' +
+                 '<span class="lb-link-icon">' + l.icon + '</span>' +
+                 '<span class="lb-link-label">' + esc(l.label) + '</span>' +
+                 '<span class="lb-link-arrow">→</span>' +
+               '</a>';
+      }).join('');
+
+      // Socials
+      var socialsHTML = '';
+      if (state.showSocials){
+        var socialItems = SOCIAL_META.filter(function(s){ return state.socials[s.key] && state.socials[s.key].trim(); })
+          .map(function(s){
+            return '<a class="lb-social" href="' + escAttr(state.socials[s.key]) + '" target="_blank" rel="noopener noreferrer" aria-label="' + s.label + '" title="' + s.label + '">' + s.svg + '</a>';
+          }).join('');
+        if (socialItems){
+          socialsHTML = '<div class="lb-socials">' + socialItems + '</div>';
+        }
+      }
+
+      // Footer
+      var footerHTML = state.showFooter
+        ? '<footer class="lb-footer">Made with <a href="https://bayhaqy.my.id/apps/link-in-bio/" target="_blank" rel="noopener">Bayhaqy Link-in-Bio</a></footer>'
+        : '';
+
+      var pronounsHTML = p.pronouns ? '<div class="lb-pronouns">' + esc(p.pronouns) + '</div>' : '';
+      var bioHTML = p.bio ? '<p class="lb-bio">' + esc(p.bio) + '</p>' : '';
+
+      var html = '';
+      if (forExport){
+        html += '<!DOCTYPE html>\n<html lang="en">\n<head>\n';
+        html += '<meta charset="UTF-8" />\n';
+        html += '<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n';
+        html += '<title>' + esc(p.name || 'My Link-in-Bio') + '</title>\n';
+        html += '<meta name="description" content="' + escAttr((p.bio || (p.name + ' — all my links in one place')).slice(0,160)) + '" />\n';
+        html += '<meta property="og:title" content="' + escAttr(p.name || 'My Link-in-Bio') + '" />\n';
+        html += '<meta property="og:description" content="' + escAttr((p.bio || '').slice(0,160)) + '" />\n';
+        if (p.avatar) html += '<meta property="og:image" content="' + p.avatar + '" />\n';
+        html += '<meta property="og:type" content="profile" />\n';
+        html += '<meta name="twitter:card" content="summary_large_image" />\n';
+        html += '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23DC2626%27/%3E%3Ctext x=%2750%27 y=%2764%27 font-family=%27Arial%27 font-size=%2742%27 font-weight=%27bold%27 fill=%27white%27 text-anchor=%27middle%27%3E' + esc(p.name || 'L').charAt(0).toUpperCase() + '%3C/text%3E%3C/svg%3E" />\n';
+        html += '</head>\n<body>\n';
+      }
+
+      html += '<style>\n';
+      html += fontImport + '\n';
+      html += '*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}\n';
+      html += 'html,body{height:100%}\n';
+      html += 'body{font-family:' + fontStack + ';color:' + c.textColor + ';' + bgCSS + 'background-attachment:fixed;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2.5rem 1.25rem 1.5rem;line-height:1.5;-webkit-font-smoothing:antialiased}\n';
+      html += '.lb-wrap{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:1rem}\n';
+      html += '.lb-avatar{width:108px;height:108px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;border:3px solid ' + hexToRgba(c.textColor, 0.18) + ';box-shadow:0 8px 24px -6px rgba(0,0,0,0.2)}\n';
+      html += '.lb-avatar-img{width:100%;height:100%;object-fit:cover}\n';
+      html += '.lb-avatar-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.6rem;font-weight:700;background:' + hexToRgba(c.textColor, 0.1) + ';color:' + c.textColor + '}\n';
+      html += '.lb-name{font-size:1.6rem;font-weight:700;text-align:center;letter-spacing:-.01em}\n';
+      html += '.lb-pronouns{font-size:.82rem;opacity:.7;text-align:center;margin-top:-.4rem}\n';
+      html += '.lb-bio{font-size:.95rem;text-align:center;opacity:.85;max-width:420px;white-space:pre-wrap}\n';
+      html += '.lb-links{width:100%;display:flex;flex-direction:column;gap:.7rem;margin-top:.5rem}\n';
+      html += '.lb-link{display:flex;align-items:center;gap:.6rem;width:100%;padding:.85rem 1.1rem;border-radius:' + btnRadius + ';background:' + btnColors.bg + ';color:' + btnColors.color + ';border:' + btnColors.border + ';border-bottom:' + btnColors.borderB + ';text-decoration:none;font-weight:600;font-size:.98rem;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}\n';
+      html += '.lb-link-icon{font-size:1.15rem;flex-shrink:0}\n';
+      html += '.lb-link-label{flex:1;text-align:left}\n';
+      html += '.lb-link-arrow{opacity:.5;font-weight:400;flex-shrink:0}\n';
+      html += animCSS + '\n';
+      html += '.lb-socials{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;justify-content:center}\n';
+      html += '.lb-social{color:' + c.textColor + ';opacity:.7;transition:opacity .15s,transform .15s;display:inline-flex}\n';
+      html += '.lb-social:hover{opacity:1;transform:translateY(-2px)}\n';
+      html += '.lb-social svg{width:22px;height:22px}\n';
+      html += '.lb-footer{margin-top:1.5rem;font-size:.78rem;opacity:.5;text-align:center}\n';
+      html += '.lb-footer a{color:inherit;text-decoration:underline}\n';
+      html += '@media(max-width:480px){body{padding:1.75rem 1rem 1.25rem}.lb-name{font-size:1.4rem}.lb-avatar{width:92px;height:92px}}\n';
+      html += '@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}\n';
+      html += '</style>\n';
+
+      html += '<main class="lb-wrap">\n';
+      html += '<div class="lb-avatar">' + avatarHTML + '</div>\n';
+      if (p.name) html += '<h1 class="lb-name">' + esc(p.name) + '</h1>\n';
+      html += pronounsHTML + '\n';
+      html += bioHTML + '\n';
+      html += '<div class="lb-links">' + (linksHTML || '<p style="opacity:.5;text-align:center;padding:1rem">No links yet.</p>') + '</div>\n';
+      html += socialsHTML + '\n';
+      html += '</main>\n';
+      html += footerHTML + '\n';
+
+      if (forExport){
+        html += '</body>\n</html>\n';
+      }
+
+      return html;
+    }
+
+    // ====== Render (live preview) ======
+    var renderTimer = null;
+    function render(){
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(function(){
+        var html = generateBioHTML(false);
+        previewFrame.srcdoc = html;
+      }, 80);
+    }
+
+    // ====== Validation ======
+    function validate(){
+      var errors = [];
+      if (!state.profile.name.trim()){
+        errors.push('Display name is required');
+        $('nameError').classList.add('show');
+      }
+      var activeLinks = state.links.filter(function(l){ return l.active; });
+      if (activeLinks.length === 0){
+        errors.push('At least one active link is required');
+        $('linksError').classList.add('show');
+      }
+      // URL validation
+      var badUrls = [];
+      activeLinks.forEach(function(l){
+        if (!isValidURL(l.url)) badUrls.push(l.label || l.url);
+      });
+      if (badUrls.length){
+        errors.push('Invalid URL' + (badUrls.length > 1 ? 's' : '') + ': ' + badUrls.slice(0,3).join(', ') + (badUrls.length > 3 ? '…' : '') + ' — must start with http://, https://, mailto:, or tel:');
+      }
+      return errors;
+    }
+    function isValidURL(url){
+      var u = (url || '').trim();
+      if (!u) return false;
+      return /^(https?:\/\/|mailto:|tel:)/i.test(u);
+    }
+
+    // ====== Export handlers ======
+    function timestamp(){
+      var d = new Date();
+      var pad = function(n){ return String(n).padStart(2,'0'); };
+      return d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+    }
+
+    $('downloadBtn').addEventListener('click', function(){
+      var errors = validate();
+      if (errors.length){
+        showToast(errors[0], 'error');
+        return;
+      }
+      var html = generateBioHTML(true);
+      var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = doc.createElement('a');
+      a.href = url;
+      a.download = 'link-in-bio-' + timestamp() + '.html';
+      doc.body.appendChild(a);
+      a.click();
+      doc.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      showToast('Downloaded link-in-bio-' + timestamp().slice(0,15) + '.html', 'success');
+    });
+
+    $('copyBtn').addEventListener('click', function(){
+      var errors = validate();
+      if (errors.length){
+        showToast(errors[0], 'error');
+        return;
+      }
+      var html = generateBioHTML(true);
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(html).then(function(){
+          showToast('HTML copied to clipboard (' + Math.round(html.length/1024) + ' KB)', 'success');
+        }, function(){
+          fallbackCopy(html);
+        });
+      } else {
+        fallbackCopy(html);
+      }
+    });
+
+    function fallbackCopy(text){
+      var ta = doc.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      doc.body.appendChild(ta);
+      ta.select();
+      try {
+        doc.execCommand('copy');
+        showToast('HTML copied to clipboard', 'success');
+      } catch(e){
+        showToast('Copy failed — your browser blocked clipboard access', 'error');
+      }
+      doc.body.removeChild(ta);
+    }
+
+    $('openTabBtn').addEventListener('click', function(){
+      var errors = validate();
+      if (errors.length){
+        showToast(errors[0], 'error');
+        return;
+      }
+      var html = generateBioHTML(true);
+      var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+    });
+
+    // ====== FAQ accordions ======
+    doc.querySelectorAll('.faq-q').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var item = btn.closest('.faq-item');
+        var wasOpen = item.classList.contains('open');
+        doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ====== Footer year ======
+    $('footerYear').textContent = new Date().getFullYear();
+
+    // ====== Init ======
+    renderThemesGrid();
+    syncCustomUI();
+    // Seed one example link so the preview is not empty
+    state.links.push({ id: nextLinkId++, label: 'My portfolio', url: 'https://bayhaqy.my.id/', icon: '🌐', active: true });
+    state.links.push({ id: nextLinkId++, label: 'Email me', url: 'mailto:hello@example.com', icon: '📧', active: true });
+    renderLinks();
+    render();
+
+  })();
+  </script>
+</body>
+</html>
