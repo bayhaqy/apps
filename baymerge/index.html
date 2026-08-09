@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="BayMerge - a free, private, offline PDF merger. Combine multiple PDF files into one directly in your browser. No uploads, no internet, no tracking." />
+  <meta name="keywords" content="PDF merger, merge PDF, combine PDF, offline PDF, privacy PDF, browser PDF, BayMerge" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BayMerge — Offline PDF Merger" />
+  <meta property="og:description" content="Combine multiple PDF files into one directly in your browser. No uploads, no internet, no tracking." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/baymerge/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BayMerge — Offline PDF Merger" />
+  <meta name="twitter:description" content="Combine multiple PDF files into one directly in your browser. No uploads, no internet, no tracking." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/baymerge/" />
+  <title>BayMerge — Offline PDF Merger</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EBM%3C/text%3E%3C/svg%3E" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:960px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Main card */
+    .merge-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+    .dropzone{
+      border:2px dashed var(--card-border-hover);border-radius:var(--radius-sm);
+      padding:2.5rem 1.5rem;text-align:center;cursor:pointer;
+      transition:border-color .2s,background .2s,transform .2s;
+      background:var(--bg-2);
+    }
+    .dropzone:hover,.dropzone.dragover{
+      border-color:var(--accent);background:rgba(220,38,38,0.04);
+    }
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{
+      width:54px;height:54px;margin:0 auto .85rem;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45);
+    }
+    .dropzone-icon svg{width:26px;height:26px}
+    .dropzone h3{font-size:1.1rem;margin-bottom:.35rem}
+    .dropzone p{color:var(--muted);font-size:.9rem}
+    .dropzone .browse-link{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+    .dropzone input[type=file]{display:none}
+
+    /* File list */
+    .file-list{margin-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
+    .file-list:empty{display:none}
+    .file-item{
+      display:grid;grid-template-columns:auto 1fr auto auto;gap:.85rem;align-items:center;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      padding:.85rem 1rem;border-radius:var(--radius-sm);
+      transition:border-color .15s,background .15s,box-shadow .15s;
+    }
+    .file-item.dragging{opacity:.4;border-style:dashed}
+    .file-item.drag-over{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.1)}
+    .file-num{
+      width:28px;height:28px;border-radius:50%;
+      background:var(--accent);color:white;font-weight:700;font-size:.82rem;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .file-info{min-width:0}
+    .file-name{
+      font-weight:600;font-size:.95rem;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .file-meta{font-size:.78rem;color:var(--muted);margin-top:.1rem}
+    .file-controls{display:flex;gap:.25rem}
+    .file-btn{
+      width:32px;height:32px;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--muted);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:background .15s,color .15s,border-color .15s;
+    }
+    .file-btn:hover:not(:disabled){background:var(--chip-bg);color:var(--fg);border-color:var(--card-border-hover)}
+    .file-btn:disabled{opacity:.3;cursor:not-allowed}
+    .file-btn svg{width:14px;height:14px}
+    .file-btn.danger:hover{color:var(--accent);border-color:var(--accent)}
+    .file-handle{cursor:grab;color:var(--muted);padding:0 .2rem}
+    .file-handle:active{cursor:grabbing}
+
+    /* Action bar */
+    .action-bar{
+      display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .action-info{font-size:.88rem;color:var(--muted)}
+    .action-info strong{color:var(--fg);font-weight:600}
+    .action-buttons{display:flex;gap:.6rem;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.25rem;border-radius:10px;border:1px solid transparent;
+      font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px}
+
+    /* Progress */
+    .progress-wrap{
+      margin-top:1rem;padding:1rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+      display:none;
+    }
+    .progress-wrap.active{display:block}
+    .progress-label{font-size:.88rem;font-weight:500;margin-bottom:.5rem}
+    .progress-bar{height:8px;background:var(--chip-bg);border-radius:999px;overflow:hidden}
+    .progress-fill{
+      height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      width:0%;transition:width .25s ease;border-radius:999px;
+    }
+
+    /* Result */
+    .result-card{
+      background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.25);
+      border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;
+      display:none;
+    }
+    .result-card.active{display:block}
+    .result-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem}
+    .result-icon{
+      width:40px;height:40px;border-radius:10px;background:var(--green);
+      color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .result-icon svg{width:22px;height:22px}
+    .result-card h3{font-size:1.1rem;margin-bottom:.25rem}
+    .result-card p{color:var(--muted);font-size:.92rem;margin-bottom:1rem}
+    .result-meta{display:flex;gap:1.5rem;margin-bottom:1rem;font-size:.85rem;color:var(--muted)}
+    .result-meta strong{color:var(--fg);font-weight:600;display:block;font-size:1.1rem}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:300px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .merge-card{padding:1.1rem}
+      .dropzone{padding:1.75rem 1rem}
+      .file-item{grid-template-columns:auto 1fr auto;gap:.6rem;padding:.7rem .85rem}
+      .file-handle{display:none}
+      .action-bar{flex-direction:column;align-items:stretch}
+      .action-buttons{justify-content:stretch}
+      .action-buttons .btn{flex:1;justify-content:center}
+      .header-links a:not(.theme-toggle){display:none}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('baymerge-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/baymerge/" class="brand">
+        <span class="brand-logo">BM</span>
+        <span>BayMerge</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">← Back to portfolio</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% private · works offline</span>
+        <h1>Merge PDF files <span class="accent">right in your browser</span></h1>
+        <p class="sub">BayMerge combines multiple PDF documents into a single file without uploading anything to the internet. Your files never leave your device.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No tracking</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No sign-up</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Works offline</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="merge-card">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3>Drop PDF files here</h3>
+          <p>or <span class="browse-link">browse from your device</span> · you can select multiple files</p>
+          <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple />
+        </label>
+
+        <div class="file-list" id="fileList"></div>
+
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-label" id="progressLabel">Preparing…</div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+          <div class="result-head">
+            <div class="result-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h3>Merged PDF ready</h3>
+              <p>Your merged file has been generated locally and is ready to download.</p>
+            </div>
+          </div>
+          <div class="result-meta">
+            <div><strong id="resultPages">—</strong>pages</div>
+            <div><strong id="resultSize">—</strong>size</div>
+            <div><strong id="resultFiles">—</strong>files merged</div>
+          </div>
+          <button class="btn btn-primary" id="downloadBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download merged PDF
+          </button>
+        </div>
+
+        <div class="action-bar">
+          <div class="action-info" id="actionInfo">No files added yet.</div>
+          <div class="action-buttons">
+            <button class="btn btn-ghost" id="clearBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              Clear all
+            </button>
+            <button class="btn btn-primary" id="mergeBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+              Merge PDFs
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use BayMerge</h2>
+        <p>Four simple steps — your PDFs are merged locally in your browser and never uploaded anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Add PDF files</h4>
+            <p>Click the dropzone to browse, or drag-and-drop multiple PDF files at once. You can also keep adding more files later.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Reorder pages</h4>
+            <p>Drag any file by its handle to reorder, or use the up/down arrows. The numbers on the left show the final merge order.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Click "Merge PDFs"</h4>
+            <p>BayMerge combines every file in the chosen order using pdf-lib. A progress bar shows the merge status in real time.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Download the result</h4>
+            <p>Once the merge completes, click "Download merged PDF" to save the combined file to your device. No watermark, no email, no catch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Your PDFs are processed entirely in your browser. They are never uploaded to a server, never stored, never logged.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div>
+            <h4>Works offline</h4>
+            <p>After the first load, the page works without an internet connection. The pdf-lib library is bundled locally — no CDN required.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Fast &amp; free</h4>
+            <p>No queue, no rate limit, no subscription. The merge runs at the speed of your device — usually under a second for a few PDFs.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <h4>No file limits</h4>
+            <p>There is no artificial cap on the number of files or pages. The only limit is your device's memory.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Cross-platform</h4>
+            <p>Works on Chrome, Firefox, Safari, Edge, and most modern mobile browsers. Use it on desktop, tablet, or phone.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></div>
+            <h4>Open &amp; transparent</h4>
+            <p>Built on the open-source pdf-lib. The full source is on GitHub — you can audit it, fork it, or self-host it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Are my PDFs uploaded to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. BayMerge runs entirely in your browser using JavaScript. Your PDF files are read into memory on your own device, merged there, and the result is offered as a download — they never touch any server. You can verify this by opening your browser's DevTools → Network tab and watching that no PDF data is sent anywhere while you merge.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does BayMerge work without internet? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. The pdf-lib library is bundled inside the app — there is no CDN dependency. Once the page has loaded once, you can disconnect from the internet and continue merging PDFs. You can also save the page locally (Ctrl+S → "Webpage, Complete") and run it from your disk.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is there a file size or page limit? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>There is no artificial limit. The only constraint is the memory available to your browser. For most devices, merging dozens of PDFs totalling a few hundred MB works fine. Very large files (over ~500 MB total) may slow down or fail on low-memory devices.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What about encrypted or password-protected PDFs? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>BayMerge cannot merge password-protected PDFs because pdf-lib does not decrypt them. Remove the password first using your PDF reader (e.g. Adobe Acrobat → File → Print → "Save as PDF"), then merge the unprotected copy.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Will the merged PDF have a watermark? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. BayMerge adds no watermark, no cover page, and no metadata beyond what was already in your source files. The output is a clean concatenation of your inputs in the order you chose.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I reorder pages within a single PDF? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>BayMerge merges whole PDF files in the order you specify. It does not split or reorder individual pages within a file. For page-level manipulation, use a tool like PDFtk or a desktop PDF editor.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>BayMerge works on any modern browser released in the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer is not supported.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        Powered by <a href="https://pdf-lib.js.org/" target="_blank" rel="noopener">pdf-lib</a> ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="lib/pdf-lib.min.js"></script>
+  <script>
+    (function(){
+      'use strict';
+      var doc = document;
+      var PDFLib = window.PDFLib;
+      var { PDFDocument } = PDFLib;
+
+      // ----- State -----
+      var files = []; // { id, file, name, size, pages }
+      var nextId = 1;
+      var mergedBlobUrl = null;
+      var mergedMeta = null;
+
+      // ----- DOM refs -----
+      var dropzone = doc.getElementById('dropzone');
+      var fileInput = doc.getElementById('fileInput');
+      var fileList = doc.getElementById('fileList');
+      var actionInfo = doc.getElementById('actionInfo');
+      var clearBtn = doc.getElementById('clearBtn');
+      var mergeBtn = doc.getElementById('mergeBtn');
+      var progressWrap = doc.getElementById('progressWrap');
+      var progressLabel = doc.getElementById('progressLabel');
+      var progressFill = doc.getElementById('progressFill');
+      var resultCard = doc.getElementById('resultCard');
+      var downloadBtn = doc.getElementById('downloadBtn');
+      var toast = doc.getElementById('toast');
+
+      // ----- Theme toggle -----
+      var themeToggle = doc.getElementById('themeToggle');
+      themeToggle.addEventListener('click', function(){
+        var current = doc.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('baymerge-theme', next);
+      });
+
+      // ----- Toast -----
+      var toastTimer = null;
+      function showToast(msg, isError){
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){
+          toast.className = 'toast' + (isError ? ' error' : '');
+        }, 3200);
+      }
+
+      // ----- File size formatter -----
+      function formatBytes(b){
+        if (b < 1024) return b + ' B';
+        if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+        return (b/1024/1024).toFixed(2) + ' MB';
+      }
+
+      // ----- Add files -----
+      function addFiles(fileArr){
+        var added = 0;
+        var skipped = 0;
+        for (var i=0; i<fileArr.length; i++){
+          var f = fileArr[i];
+          if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)){
+            skipped++;
+            continue;
+          }
+          files.push({
+            id: nextId++,
+            file: f,
+            name: f.name,
+            size: f.size,
+            pages: null
+          });
+          added++;
+        }
+        if (added) {
+          renderList();
+          showToast(added + ' file' + (added>1?'s':'') + ' added' + (skipped ? ' ('+skipped+' non-PDF skipped)' : ''));
+        } else if (skipped) {
+          showToast('Only PDF files are supported', true);
+        }
+      }
+
+      // ----- Render list -----
+      function renderList(){
+        fileList.innerHTML = '';
+        if (!files.length){
+          actionInfo.textContent = 'No files added yet.';
+          clearBtn.disabled = true;
+          mergeBtn.disabled = true;
+          hideResult();
+          return;
+        }
+        clearBtn.disabled = false;
+        mergeBtn.disabled = false;
+
+        var totalPages = 0;
+        var totalSize = 0;
+        var unknownPages = false;
+
+        files.forEach(function(item, idx){
+          totalPages += item.pages || 0;
+          if (!item.pages) unknownPages = true;
+          totalSize += item.size;
+
+          var row = doc.createElement('div');
+          row.className = 'file-item';
+          row.dataset.id = item.id;
+          row.draggable = true;
+
+          row.innerHTML =
+            '<span class="file-handle" title="Drag to reorder">⠿</span>' +
+            '<div class="file-info">' +
+              '<div class="file-name"></div>' +
+              '<div class="file-meta"></div>' +
+            '</div>' +
+            '<div class="file-controls">' +
+              '<button class="file-btn" data-act="up" title="Move up"' + (idx===0?' disabled':'') + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>' +
+              '<button class="file-btn" data-act="down" title="Move down"' + (idx===files.length-1?' disabled':'') + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+              '<button class="file-btn danger" data-act="remove" title="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+            '</div>';
+
+          // Need to insert the number badge before the handle
+          var num = doc.createElement('span');
+          num.className = 'file-num';
+          num.textContent = String(idx+1).padStart(2,'0');
+          row.insertBefore(num, row.firstChild);
+
+          row.querySelector('.file-name').textContent = item.name;
+          row.querySelector('.file-meta').textContent = formatBytes(item.size) + (item.pages ? ' · ' + item.pages + ' page' + (item.pages>1?'s':'') : ' · counting pages…');
+
+          // Wire up buttons
+          row.querySelector('[data-act="up"]').addEventListener('click', function(e){
+            e.stopPropagation();
+            moveItem(item.id, -1);
+          });
+          row.querySelector('[data-act="down"]').addEventListener('click', function(e){
+            e.stopPropagation();
+            moveItem(item.id, +1);
+          });
+          row.querySelector('[data-act="remove"]').addEventListener('click', function(e){
+            e.stopPropagation();
+            removeItem(item.id);
+          });
+
+          // Drag-and-drop reorder
+          row.addEventListener('dragstart', function(e){
+            row.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', String(item.id));
+          });
+          row.addEventListener('dragend', function(){
+            row.classList.remove('dragging');
+            doc.querySelectorAll('.file-item').forEach(function(el){ el.classList.remove('drag-over'); });
+          });
+          row.addEventListener('dragover', function(e){
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            row.classList.add('drag-over');
+          });
+          row.addEventListener('dragleave', function(){
+            row.classList.remove('drag-over');
+          });
+          row.addEventListener('drop', function(e){
+            e.preventDefault();
+            row.classList.remove('drag-over');
+            var draggedId = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            if (draggedId === item.id) return;
+            var fromIdx = files.findIndex(function(f){ return f.id === draggedId; });
+            var toIdx = files.findIndex(function(f){ return f.id === item.id; });
+            if (fromIdx < 0 || toIdx < 0) return;
+            var moved = files.splice(fromIdx, 1)[0];
+            files.splice(toIdx, 0, moved);
+            renderList();
+          });
+
+          fileList.appendChild(row);
+        });
+
+        actionInfo.innerHTML = '<strong>' + files.length + '</strong> file' + (files.length>1?'s':'') + ' ready' +
+          (unknownPages ? '' : ' · <strong>' + totalPages + '</strong> page' + (totalPages>1?'s':'')) +
+          ' · <strong>' + formatBytes(totalSize) + '</strong> total';
+
+        // Async-load page counts
+        if (files.some(function(f){ return !f.pages; })){
+          loadPageCounts();
+        }
+      }
+
+      function loadPageCounts(){
+        files.forEach(function(item){
+          if (item.pages !== null) return;
+          item.file.arrayBuffer().then(function(buf){
+            return PDFDocument.load(buf, { ignoreEncryption: true });
+          }).then(function(pdf){
+            item.pages = pdf.getPageCount();
+            // Only update the meta text for this row (avoid full re-render)
+            var row = fileList.querySelector('.file-item[data-id="'+item.id+'"] .file-meta');
+            if (row) row.textContent = formatBytes(item.size) + ' · ' + item.pages + ' page' + (item.pages>1?'s':'');
+            // Refresh totals
+            var totalPages = 0, totalSize = 0, allKnown = true;
+            files.forEach(function(f){
+              totalSize += f.size;
+              if (f.pages) totalPages += f.pages; else allKnown = false;
+            });
+            actionInfo.innerHTML = '<strong>' + files.length + '</strong> file' + (files.length>1?'s':'') + ' ready' +
+              (allKnown ? ' · <strong>' + totalPages + '</strong> page' + (totalPages>1?'s':'') : '') +
+              ' · <strong>' + formatBytes(totalSize) + '</strong> total';
+          }).catch(function(){
+            item.pages = 0; // unknown / unreadable
+          });
+        });
+      }
+
+      function moveItem(id, delta){
+        var idx = files.findIndex(function(f){ return f.id === id; });
+        if (idx < 0) return;
+        var newIdx = idx + delta;
+        if (newIdx < 0 || newIdx >= files.length) return;
+        var tmp = files[idx];
+        files[idx] = files[newIdx];
+        files[newIdx] = tmp;
+        renderList();
+      }
+
+      function removeItem(id){
+        files = files.filter(function(f){ return f.id !== id; });
+        renderList();
+      }
+
+      // ----- File input + dropzone events -----
+      fileInput.addEventListener('change', function(){
+        addFiles(Array.prototype.slice.call(fileInput.files));
+        fileInput.value = '';
+      });
+
+      dropzone.addEventListener('dragover', function(e){
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', function(){
+        dropzone.classList.remove('dragover');
+      });
+      dropzone.addEventListener('drop', function(e){
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+          addFiles(Array.prototype.slice.call(e.dataTransfer.files));
+        }
+      });
+
+      // ----- Clear all -----
+      clearBtn.addEventListener('click', function(){
+        if (!files.length) return;
+        files = [];
+        renderList();
+        hideResult();
+        showToast('Cleared all files');
+      });
+
+      // ----- Hide result -----
+      function hideResult(){
+        resultCard.classList.remove('active');
+        if (mergedBlobUrl){
+          URL.revokeObjectURL(mergedBlobUrl);
+          mergedBlobUrl = null;
+        }
+        mergedMeta = null;
+      }
+
+      // ----- Merge -----
+      mergeBtn.addEventListener('click', function(){
+        if (files.length < 2){
+          showToast('Add at least 2 PDFs to merge', true);
+          return;
+        }
+        runMerge();
+      });
+
+      function setProgress(pct, label){
+        progressWrap.classList.add('active');
+        progressFill.style.width = pct + '%';
+        if (label) progressLabel.textContent = label;
+      }
+
+      async function runMerge(){
+        mergeBtn.disabled = true;
+        clearBtn.disabled = true;
+        hideResult();
+        setProgress(5, 'Loading PDFs…');
+
+        try {
+          var outPdf = await PDFDocument.create();
+          var totalPages = 0;
+
+          for (var i=0; i<files.length; i++){
+            var item = files[i];
+            setProgress(Math.round(5 + (i / files.length) * 85), 'Reading ' + (i+1) + ' of ' + files.length + ': ' + item.name);
+            var buf = await item.file.arrayBuffer();
+            var src = await PDFDocument.load(buf, { ignoreEncryption: true });
+            var pages = await outPdf.copyPages(src, src.getPageIndices());
+            pages.forEach(function(p){ outPdf.addPage(p); });
+            totalPages += pages.length;
+          }
+
+          setProgress(95, 'Writing merged PDF…');
+          var outBytes = await outPdf.save();
+          var blob = new Blob([outBytes], { type: 'application/pdf' });
+          mergedBlobUrl = URL.createObjectURL(blob);
+          mergedMeta = {
+            pages: totalPages,
+            size: blob.size,
+            files: files.length
+          };
+
+          setProgress(100, 'Done');
+          showResult(mergedMeta, blob);
+          progressWrap.classList.remove('active');
+          progressFill.style.width = '0%';
+        } catch (err){
+          console.error(err);
+          progressWrap.classList.remove('active');
+          progressFill.style.width = '0%';
+          var msg = (err && err.message) ? err.message : 'Unknown error';
+          if (/encrypted|password/i.test(msg)){
+            showToast('One of the PDFs is password-protected — remove the password first', true);
+          } else {
+            showToast('Merge failed: ' + msg, true);
+          }
+        } finally {
+          mergeBtn.disabled = false;
+          clearBtn.disabled = false;
+        }
+      }
+
+      function showResult(meta, blob){
+        doc.getElementById('resultPages').textContent = meta.pages;
+        doc.getElementById('resultSize').textContent = formatBytes(meta.size);
+        doc.getElementById('resultFiles').textContent = meta.files;
+        resultCard.classList.add('active');
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      downloadBtn.addEventListener('click', function(){
+        if (!mergedBlobUrl) return;
+        var a = doc.createElement('a');
+        a.href = mergedBlobUrl;
+        var ts = new Date();
+        var pad = function(n){ return String(n).padStart(2,'0'); };
+        var name = 'merged-' + ts.getFullYear() + pad(ts.getMonth()+1) + pad(ts.getDate()) + '-' + pad(ts.getHours()) + pad(ts.getMinutes()) + '.pdf';
+        a.download = name;
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        showToast('Download started: ' + name);
+      });
+
+      // ----- FAQ accordions -----
+      doc.querySelectorAll('.faq-q').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var item = btn.closest('.faq-item');
+          var wasOpen = item.classList.contains('open');
+          // Close all
+          doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+          // Toggle this one
+          if (!wasOpen) item.classList.add('open');
+        });
+      });
+
+      // ----- Footer year -----
+      doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // ----- Initial state -----
+      renderList();
+
+      // ----- Service worker registration removed for offline simplicity ----
+      // The page is fully functional offline after first load because pdf-lib
+      // is bundled locally. For installable/offline-cacheable behaviour you
+      // can add a service worker — see README.md.
+
+    })();
+  </script>
+</body>
+</html>
