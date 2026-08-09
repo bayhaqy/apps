@@ -1,0 +1,50 @@
+{
+  "name": "Apps by Achmad Bayhaqy",
+  "short_name": "Apps",
+  "description": "11 free, privacy-first web tools. All run locally in your browser — no uploads, no tracking.",
+  "start_url": "/apps/",
+  "scope": "/apps/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFFFFF",
+  "theme_color": "#DC2626",
+  "lang": "en",
+  "categories": ["productivity", "utilities", "developer"],
+  "icons": [
+    {
+      "src": "/apps/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apps/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "BayMerge",
+      "short_name": "BayMerge",
+      "description": "Merge PDF files locally",
+      "url": "/apps/baymerge/",
+      "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "AI Context Packer",
+      "short_name": "Context",
+      "description": "Combine code files for AI prompts",
+      "url": "/apps/ai-context-packer/",
+      "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Text Humanizer",
+      "short_name": "Humanizer",
+      "description": "Detect and replace AI cliché phrases",
+      "url": "/apps/text-humanizer/",
+      "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
