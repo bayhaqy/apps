@@ -2,24 +2,29 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="11 free, privacy-first web tools by Achmad Bayhaqy. PDF merger, AI context packer, text humanizer, prompt formatter, image optimizer, OCR, carousel generator, waveform maker, CSV formatter, link-in-bio builder, PDF anonymizer. All run locally in your browser — no uploads, no tracking." />
   <meta name="keywords" content="PDF merger, AI tools, offline web apps, privacy tools, browser tools, OCR, image optimizer, carousel generator, prompt formatter, link in bio, PDF anonymizer, BayMerge, Achmad Bayhaqy" />
   <meta name="author" content="Achmad Bayhaqy" />
   <meta name="theme-color" content="#DC2626" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Apps by Achmad Bayhaqy — 11 Free Browser-Based Tools" />
-  <meta property="og:description" content="11 free, privacy-first web tools. PDF merger, AI context packer, text humanizer, prompt formatter, image optimizer, OCR, carousel generator, waveform maker, CSV formatter, link-in-bio, PDF anonymizer. All run locally." />
+  <meta property="og:title" content="Apps — Free Browser-Based Tools by Achmad Bayhaqy" />
+  <meta property="og:description" content="A growing collection of focused, privacy-first web apps. No tracking, no uploads, just useful tools." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
   <meta property="og:site_name" content="Apps by Achmad Bayhaqy" />
   <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="id_ID" />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Apps by Achmad Bayhaqy — 11 Free Browser-Based Tools" />
+  <meta name="twitter:title" content="Apps — Free Browser-Based Tools by Achmad Bayhaqy" />
   <meta name="twitter:description" content="Privacy-first web tools. All run locally in your browser — no uploads, no tracking." />
+  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/" />
-  <title>Apps — 11 Free Browser-Based Tools by Achmad Bayhaqy</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="/apps/icons/icon-192.png" />
+  <link rel="manifest" href="/apps/manifest.json" />
+  <title>Apps — 11 Free Browser-Based Tools by Achmad Bayhaqy</title>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -55,25 +60,66 @@
     .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
     .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
     .brand-logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;box-shadow:0 4px 12px -2px rgba(220,38,38,0.4)}
-    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
     .header-links a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s}
     .header-links a:hover{color:var(--fg);background:var(--bg-2)}
+    .lang-toggle{display:inline-flex;align-items:center;gap:.25rem;border:1px solid var(--card-border);background:var(--bg-2);border-radius:999px;padding:.2rem;cursor:pointer;font-size:.82rem;font-weight:600}
+    .lang-toggle button{background:transparent;border:none;cursor:pointer;color:var(--muted);padding:.3rem .6rem;border-radius:999px;font-size:.82rem;font-weight:600;transition:background .15s,color .15s}
+    .lang-toggle button.active{background:var(--accent);color:white}
     .theme-toggle{width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);background:var(--bg-2);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background .15s,border-color .15s}
     .theme-toggle:hover{background:var(--card-border-hover)}
     .theme-toggle .icon-sun{display:none}
     [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
     [data-theme="dark"] .theme-toggle .icon-moon{display:none}
 
-    .hero{padding:3.5rem 0 2rem;text-align:center}
+    .hero{padding:3rem 0 1.5rem;text-align:center}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:.4rem;background:var(--bg-2);border:1px solid var(--card-border);color:var(--accent);font-size:.78rem;font-weight:600;padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.1rem}
     .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
     .hero h1{font-size:clamp(2.2rem,5.5vw,3rem);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin-bottom:.85rem}
     .hero h1 .accent{color:var(--accent)}
     .hero p.sub{font-size:1.1rem;color:var(--muted);max-width:680px;margin:0 auto 1.5rem}
-    .hero-stats{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;margin-bottom:2.5rem}
+    .hero-stats{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;margin-bottom:1.5rem}
     .hero-stat{text-align:center}
     .hero-stat-num{font-size:1.75rem;font-weight:800;color:var(--accent);line-height:1}
     .hero-stat-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+
+    /* PWA / Mobile banner */
+    .mobile-banner{background:linear-gradient(135deg,rgba(220,38,38,0.08),rgba(245,158,11,0.08));border:1px solid var(--card-border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:0 auto 2rem;max-width:760px}
+    [data-theme="dark"] .mobile-banner{background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(245,158,11,0.1))}
+    .mobile-banner-text{display:flex;align-items:center;gap:.7rem;font-size:.92rem;color:var(--fg);font-weight:500}
+    .mobile-banner-icon{font-size:1.6rem}
+    .mobile-banner-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+    .mb-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--accent);color:white;text-decoration:none;padding:.55rem 1rem;border-radius:10px;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:background .15s,transform .15s}
+    .mb-btn:hover{background:#b91c1c;transform:translateY(-1px)}
+    .mb-btn.secondary{background:var(--bg-2);color:var(--fg);border:1px solid var(--card-border)}
+    .mb-btn.secondary:hover{background:var(--card-border-hover)}
+
+    /* Search & filters */
+    .search-section{margin:0 auto 2rem;max-width:760px}
+    .search-wrap{position:relative;margin-bottom:1rem}
+    .search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;pointer-events:none}
+    #searchInput{width:100%;padding:.85rem 1rem .85rem 2.85rem;border:1px solid var(--card-border);border-radius:12px;background:var(--card-bg);color:var(--fg);font-size:1rem;transition:border-color .15s,box-shadow .15s;font-family:inherit}
+    #searchInput:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    #searchInput::placeholder{color:var(--muted)}
+    .tag-filters{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center}
+    .tag-filter{display:inline-flex;align-items:center;gap:.3rem;background:var(--bg-2);border:1px solid var(--card-border);color:var(--muted);padding:.4rem .85rem;border-radius:999px;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s;font-family:inherit}
+    .tag-filter:hover{border-color:var(--card-border-hover);color:var(--fg)}
+    .tag-filter.active{background:var(--accent);color:white;border-color:var(--accent)}
+    .tag-filter .count{font-size:.72rem;opacity:.8}
+
+    /* Recently Used */
+    .recently-used{margin-bottom:2rem;display:none}
+    .recently-used.has-items{display:block}
+    .recently-used-head{display:flex;align-items:center;gap:.55rem;margin-bottom:1rem;font-size:1rem;font-weight:700;color:var(--fg)}
+    .recently-used-head .clear-btn{margin-left:auto;font-size:.78rem;font-weight:500;color:var(--muted);background:transparent;border:none;cursor:pointer;text-decoration:underline}
+    .recently-used-head .clear-btn:hover{color:var(--accent)}
+    .recent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem}
+    .recent-card{display:flex;align-items:center;gap:.75rem;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.8rem 1rem;text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+    .recent-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+    .recent-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;flex-shrink:0}
+    .recent-card-body{min-width:0}
+    .recent-card h4{font-size:.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .recent-card small{color:var(--muted);font-size:.74rem}
 
     .category{padding:1rem 0 2rem}
     .category-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.25rem}
@@ -90,6 +136,21 @@
     .app-tag{font-size:.72rem;font-weight:600;color:var(--accent);background:rgba(220,38,38,0.08);padding:.2rem .55rem;border-radius:999px;letter-spacing:.04em}
     .app-card .arrow{display:inline-block;color:var(--accent);font-size:.88rem;font-weight:600}
 
+    /* Request a Tool card */
+    .request-card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:transparent;border:2px dashed var(--card-border-hover);border-radius:var(--radius);padding:2rem 1.5rem;text-decoration:none;color:var(--muted);transition:border-color .15s,color .15s,transform .15s;min-height:240px}
+    .request-card:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px)}
+    .request-card .req-icon{font-size:2.4rem;margin-bottom:.85rem}
+    .request-card h3{font-size:1.1rem;margin-bottom:.5rem;color:inherit}
+    .request-card p{font-size:.88rem;line-height:1.5;color:inherit;max-width:220px}
+    .request-card .arrow{margin-top:.85rem;font-size:.85rem;font-weight:600;color:inherit}
+
+    .no-results{display:none;text-align:center;padding:3rem 1rem;color:var(--muted)}
+    .no-results.show{display:block}
+    .no-results-icon{font-size:2.5rem;margin-bottom:.75rem}
+    .no-results h3{font-size:1.15rem;color:var(--fg);margin-bottom:.4rem}
+    .no-results p{font-size:.92rem}
+    .no-results button{margin-top:1rem;background:var(--accent);color:white;border:none;padding:.55rem 1.25rem;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.9rem}
+
     footer.site-footer{border-top:1px solid var(--card-border);padding:2rem 0;margin-top:2rem}
     .footer-inner{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
     .footer-text{font-size:.85rem;color:var(--muted)}
@@ -98,18 +159,25 @@
     .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
     .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
     .footer-links a:hover{color:var(--fg)}
+    .footer-privacy{font-size:.78rem;color:var(--muted);text-align:center;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--card-border)}
+
+    .hidden{display:none !important}
 
     @media(max-width:600px){
-      .hero{padding:2.25rem 0 1.5rem}
-      .header-links a:not(.theme-toggle){display:none}
+      .hero{padding:2.25rem 0 1.25rem}
+      .header-links a:not(.theme-toggle):not(.lang-toggle){display:none}
       .hero-stats{gap:1rem}
       .hero-stat-num{font-size:1.4rem}
+      .mobile-banner{flex-direction:column;text-align:center}
+      .mobile-banner-text{justify-content:center}
     }
   </style>
   <script>
     (function(){
       var saved = localStorage.getItem('apps-theme') || localStorage.getItem('bayhaqy-theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
+      var savedLang = localStorage.getItem('apps-lang') || 'en';
+      document.documentElement.setAttribute('lang', savedLang);
     })();
   </script>
   <script type="application/ld+json">
@@ -153,8 +221,12 @@
         <span>Apps</span>
       </a>
       <nav class="header-links">
-        <a href="https://bayhaqy.my.id/">← Back to portfolio</a>
-        <a href="https://bayhaqy.my.id/games">Games</a>
+        <a href="https://bayhaqy.my.id/" data-i18n="back_portfolio">← Back to portfolio</a>
+        <a href="https://bayhaqy.my.id/games" data-i18n="games">Games</a>
+        <div class="lang-toggle" role="group" aria-label="Language switcher">
+          <button type="button" data-lang="en" class="active">EN</button>
+          <button type="button" data-lang="id">ID</button>
+        </div>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
           <span class="icon-moon">🌙</span>
           <span class="icon-sun">☀️</span>
@@ -166,231 +238,527 @@
   <main>
     <section class="hero">
       <div class="container">
-        <span class="hero-eyebrow">By Achmad Bayhaqy</span>
-        <h1>Small tools, <span class="accent">built right</span></h1>
-        <p class="sub">A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run entirely in your browser.</p>
+        <span class="hero-eyebrow" data-i18n="by_author">By Achmad Bayhaqy</span>
+        <h1 data-i18n-html="hero_title">Small tools, <span class="accent">built right</span></h1>
+        <p class="sub" data-i18n="hero_sub">A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run entirely in your browser.</p>
         <div class="hero-stats">
           <div class="hero-stat">
             <div class="hero-stat-num">11</div>
-            <div class="hero-stat-label">Free apps</div>
+            <div class="hero-stat-label" data-i18n="stat_apps">Free apps</div>
           </div>
           <div class="hero-stat">
             <div class="hero-stat-num">100%</div>
-            <div class="hero-stat-label">Client-side</div>
+            <div class="hero-stat-label" data-i18n="stat_client">Client-side</div>
           </div>
           <div class="hero-stat">
             <div class="hero-stat-num">0</div>
-            <div class="hero-stat-label">Uploads</div>
+            <div class="hero-stat-label" data-i18n="stat_uploads">Uploads</div>
           </div>
           <div class="hero-stat">
             <div class="hero-stat-num">0</div>
-            <div class="hero-stat-label">Trackers</div>
+            <div class="hero-stat-label" data-i18n="stat_trackers">Trackers</div>
+          </div>
+        </div>
+
+        <!-- Mobile / PWA banner -->
+        <div class="mobile-banner">
+          <div class="mobile-banner-text">
+            <span class="mobile-banner-icon">📱</span>
+            <span data-i18n="mobile_banner_text">Take these tools on your phone. Works 100% offline.</span>
+          </div>
+          <div class="mobile-banner-actions">
+            <a class="mb-btn" href="/apps/download-apk.html" data-i18n="download_apk">🤖 Download APK</a>
+            <a class="mb-btn secondary" href="#ios-install" data-i18n="ios_guide">🍎 iOS Install Guide</a>
           </div>
         </div>
       </div>
     </section>
 
     <section class="container">
-      <div class="category">
-        <div class="category-head">
-          <div class="category-icon">🛠️</div>
-          <div>
-            <h2>File utilities</h2>
-            <p>PDF and document tools that respect your privacy</p>
-          </div>
+      <!-- Search & filter -->
+      <div class="search-section">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="search" id="searchInput" placeholder="Search tools by name, tag, or description…" autocomplete="off" data-i18n-placeholder="search_placeholder" />
         </div>
-        <div class="app-grid">
-          <a class="app-card" href="/apps/baymerge/">
-            <div class="app-icon">BM</div>
-            <h3>BayMerge</h3>
-            <p>Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline after first load.</p>
-            <div class="app-tags">
-              <span class="app-tag">PDF</span>
-              <span class="app-tag">Offline</span>
-              <span class="app-tag">Private</span>
-            </div>
-            <span class="arrow">Open BayMerge →</span>
-          </a>
-
-          <a class="app-card" href="/apps/pdf-anonymizer/">
-            <div class="app-icon">PA</div>
-            <h3>PDF Anonymizer</h3>
-            <p>Redact sensitive data (emails, NIK, phone, NPWP, credit cards) from PDFs before sharing. Auto-detect or manual redaction, export clean PDF.</p>
-            <div class="app-tags">
-              <span class="app-tag">PDF</span>
-              <span class="app-tag">Redaction</span>
-              <span class="app-tag">Privacy</span>
-            </div>
-            <span class="arrow">Open PDF Anonymizer →</span>
-          </a>
-
-          <a class="app-card" href="/apps/csv-formatter/">
-            <div class="app-icon">CF</div>
-            <h3>CSV Formatter</h3>
-            <p>Clean messy spreadsheets — trim whitespace, dedupe rows, split names, normalize dates and emails. Export to CSV, JSON, or XLSX.</p>
-            <div class="app-tags">
-              <span class="app-tag">CSV</span>
-              <span class="app-tag">Excel</span>
-              <span class="app-tag">JSON</span>
-            </div>
-            <span class="arrow">Open CSV Formatter →</span>
-          </a>
+        <div class="tag-filters" id="tagFilters">
+          <!-- populated by JS -->
         </div>
       </div>
 
-      <div class="category">
-        <div class="category-head">
-          <div class="category-icon">🤖</div>
-          <div>
-            <h2>AI workflow &amp; data tools</h2>
-            <p>Tools that make working with AI faster and more effective</p>
-          </div>
+      <!-- Recently Used -->
+      <div class="recently-used" id="recentlyUsed">
+        <div class="recently-used-head">
+          <span>🕒</span>
+          <span data-i18n="recently_used">Recently Used</span>
+          <button class="clear-btn" id="clearRecent" data-i18n="clear_history">Clear history</button>
         </div>
-        <div class="app-grid">
-          <a class="app-card" href="/apps/ai-context-packer/">
-            <div class="app-icon">CP</div>
-            <h3>AI Context Packer</h3>
-            <p>Combine project files into one Markdown file ready to paste into ChatGPT/Claude/DeepSeek. Folder drag-drop, token counter, 3 templates.</p>
-            <div class="app-tags">
-              <span class="app-tag">AI</span>
-              <span class="app-tag">Markdown</span>
-              <span class="app-tag">Developer</span>
-            </div>
-            <span class="arrow">Open AI Context Packer →</span>
-          </a>
-
-          <a class="app-card" href="/apps/text-humanizer/">
-            <div class="app-icon">TH</div>
-            <h3>Anti-AI Text Humanizer</h3>
-            <p>Detect AI cliché phrases (Indonesian + English) in real-time, highlight them by severity, and replace with natural alternatives in one click.</p>
-            <div class="app-tags">
-              <span class="app-tag">AI</span>
-              <span class="app-tag">Writing</span>
-              <span class="app-tag">Bilingual</span>
-            </div>
-            <span class="arrow">Open Text Humanizer →</span>
-          </a>
-
-          <a class="app-card" href="/apps/prompt-formatter/">
-            <div class="app-icon">PF</div>
-            <h3>AI Prompt Formatter</h3>
-            <p>Build professional mega-prompts using CARE, PREP, RACE, STAR, or CRISPE frameworks. Persona selector, live preview, save favorites.</p>
-            <div class="app-tags">
-              <span class="app-tag">AI</span>
-              <span class="app-tag">Prompts</span>
-              <span class="app-tag">Templates</span>
-            </div>
-            <span class="arrow">Open Prompt Formatter →</span>
-          </a>
-
-          <a class="app-card" href="/apps/ocr-extractor/">
-            <div class="app-icon">OE</div>
-            <h3>Local OCR Extractor</h3>
-            <p>Extract text from images (receipts, book pages, notes) using Tesseract.js running fully in your browser. Indonesian + English, multi-image.</p>
-            <div class="app-tags">
-              <span class="app-tag">OCR</span>
-              <span class="app-tag">Tesseract</span>
-              <span class="app-tag">Offline</span>
-            </div>
-            <span class="arrow">Open OCR Extractor →</span>
-          </a>
-        </div>
+        <div class="recent-grid" id="recentGrid"></div>
       </div>
 
-      <div class="category">
-        <div class="category-head">
-          <div class="category-icon">🖼️</div>
-          <div>
-            <h2>Image &amp; media</h2>
-            <p>Optimize, convert, and create visuals — all locally</p>
-          </div>
-        </div>
-        <div class="app-grid">
-          <a class="app-card" href="/apps/image-optimizer/">
-            <div class="app-icon">IO</div>
-            <h3>Bulk Image Optimizer</h3>
-            <p>Compress and convert many JPG/PNG images to WebP in parallel. Quality control, max dimensions, ZIP download. No 20-file limits.</p>
-            <div class="app-tags">
-              <span class="app-tag">WebP</span>
-              <span class="app-tag">Compress</span>
-              <span class="app-tag">Bulk</span>
-            </div>
-            <span class="arrow">Open Image Optimizer →</span>
-          </a>
-
-          <a class="app-card" href="/apps/carousel-generator/">
-            <div class="app-icon">CG</div>
-            <h3>Carousel Generator</h3>
-            <p>Turn Markdown bullet points into polished social media carousel slides for LinkedIn, Instagram, and X. 6 themes, 4 aspect ratios, PNG export.</p>
-            <div class="app-tags">
-              <span class="app-tag">Social</span>
-              <span class="app-tag">Markdown</span>
-              <span class="app-tag">PNG</span>
-            </div>
-            <span class="arrow">Open Carousel Generator →</span>
-          </a>
-
-          <a class="app-card" href="/apps/waveform-maker/">
-            <div class="app-icon">WM</div>
-            <h3>Waveform Maker</h3>
-            <p>Create animated waveform videos from audio for TikTok, Reels, and Shorts. Custom background, 4 waveform styles, text overlay. WebM export.</p>
-            <div class="app-tags">
-              <span class="app-tag">Audio</span>
-              <span class="app-tag">Video</span>
-              <span class="app-tag">Waveform</span>
-            </div>
-            <span class="arrow">Open Waveform Maker →</span>
-          </a>
-        </div>
+      <div id="appsContainer">
+        <!-- Categories rendered by JS -->
       </div>
 
-      <div class="category">
-        <div class="category-head">
-          <div class="category-icon">✨</div>
-          <div>
-            <h2>Personal branding</h2>
-            <p>Build your online presence without third-party platforms</p>
-          </div>
-        </div>
-        <div class="app-grid">
-          <a class="app-card" href="/apps/link-in-bio/">
-            <div class="app-icon">LB</div>
-            <h3>Link-in-Bio Builder</h3>
-            <p>Build a custom Linktree alternative and export it as a single HTML file. 6 themes, animations, social icons, self-host on GitHub Pages.</p>
-            <div class="app-tags">
-              <span class="app-tag">Linktree</span>
-              <span class="app-tag">HTML</span>
-              <span class="app-tag">Self-host</span>
-            </div>
-            <span class="arrow">Open Link-in-Bio Builder →</span>
-          </a>
-        </div>
+      <div class="no-results" id="noResults">
+        <div class="no-results-icon">🤷</div>
+        <h3 data-i18n="no_results_title">No tools found</h3>
+        <p data-i18n="no_results_text">Try a different keyword or clear your filters.</p>
+        <button id="clearSearch" data-i18n="clear_filters">Clear filters</button>
       </div>
+    </section>
+
+    <!-- iOS install guide (hidden by default, shown on anchor click) -->
+    <section class="container hidden" id="ios-install" style="margin:2rem auto 3rem;padding:1.5rem;background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius)">
+      <h3 style="font-size:1.2rem;margin-bottom:1rem" data-i18n="ios_title">🍎 Install on iOS (Safari)</h3>
+      <ol style="padding-left:1.5rem;color:var(--muted);font-size:.92rem;line-height:1.8">
+        <li data-i18n="ios_step1">Open this page in <strong>Safari</strong> on your iPhone or iPad.</li>
+        <li data-i18n="ios_step2">Tap the <strong>Share</strong> button (square with up-arrow) at the bottom.</li>
+        <li data-i18n="ios_step3">Choose <strong>Add to Home Screen</strong>.</li>
+        <li data-i18n="ios_step4">Tap <strong>Add</strong>. The app icon will appear on your home screen.</li>
+        <li data-i18n="ios_step5">Launch from the home screen — it runs full-screen and works offline.</li>
+      </ol>
+      <h3 style="font-size:1.2rem;margin:1.5rem 0 1rem" data-i18n="android_title">🤖 Install on Android (Chrome/Edge)</h3>
+      <ol style="padding-left:1.5rem;color:var(--muted);font-size:.92rem;line-height:1.8">
+        <li data-i18n="android_step1">Open this page in <strong>Chrome</strong> or <strong>Edge</strong> on Android.</li>
+        <li data-i18n="android_step2">Tap the <strong>three-dot menu</strong> in the top-right.</li>
+        <li data-i18n="android_step3">Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+        <li data-i18n="android_step4">Confirm — the app installs and works offline.</li>
+      </ol>
+      <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)" data-i18n="apk_alt">Prefer a standalone .apk? Use the <strong>Download APK</strong> button above (Android only, sideload required).</p>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-text">
-        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        <span data-i18n="built_by">Built by</span> <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
         <span id="year">2026</span>
       </div>
       <div class="footer-links">
-        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source</a>
-        <a href="https://bayhaqy.my.id/">Portfolio</a>
-        <a href="https://bayhaqy.my.id/games">Games</a>
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener" data-i18n="source">Source</a>
+        <a href="https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md&title=%5BTool+Idea%5D" target="_blank" rel="noopener" data-i18n="request_tool">Request a tool</a>
+        <a href="https://bayhaqy.my.id/" data-i18n="portfolio">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" data-i18n="games">Games</a>
       </div>
+    </div>
+    <div class="container footer-privacy">
+      🔒 <span data-i18n="privacy_note">All tools run 100% locally in your browser. Your files never leave your device. No cookies, no analytics, no tracking — ever.</span>
     </div>
   </footer>
 
   <script>
+    /* ============================================================
+       i18n strings
+       ============================================================ */
+    var I18N = {
+      en: {
+        back_portfolio: "← Back to portfolio",
+        games: "Games",
+        by_author: "By Achmad Bayhaqy",
+        hero_title: 'Small tools, <span class="accent">built right</span>',
+        hero_sub: "A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run entirely in your browser.",
+        stat_apps: "Free apps",
+        stat_client: "Client-side",
+        stat_uploads: "Uploads",
+        stat_trackers: "Trackers",
+        mobile_banner_text: "Take these tools on your phone. Works 100% offline.",
+        download_apk: "🤖 Download APK",
+        ios_guide: "🍎 iOS Install Guide",
+        search_placeholder: "Search tools by name, tag, or description…",
+        recently_used: "Recently Used",
+        clear_history: "Clear history",
+        no_results_title: "No tools found",
+        no_results_text: "Try a different keyword or clear your filters.",
+        clear_filters: "Clear filters",
+        ios_title: "🍎 Install on iOS (Safari)",
+        ios_step1: 'Open this page in <strong>Safari</strong> on your iPhone or iPad.',
+        ios_step2: 'Tap the <strong>Share</strong> button (square with up-arrow) at the bottom.',
+        ios_step3: 'Choose <strong>Add to Home Screen</strong>.',
+        ios_step4: 'Tap <strong>Add</strong>. The app icon will appear on your home screen.',
+        ios_step5: 'Launch from the home screen — it runs full-screen and works offline.',
+        android_title: "🤖 Install on Android (Chrome/Edge)",
+        android_step1: 'Open this page in <strong>Chrome</strong> or <strong>Edge</strong> on Android.',
+        android_step2: 'Tap the <strong>three-dot menu</strong> in the top-right.',
+        android_step3: 'Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.',
+        android_step4: 'Confirm — the app installs and works offline.',
+        apk_alt: 'Prefer a standalone .apk? Use the <strong>Download APK</strong> button above (Android only, sideload required).',
+        built_by: "Built by",
+        source: "Source",
+        request_tool: "Request a tool",
+        portfolio: "Portfolio",
+        privacy_note: "All tools run 100% locally in your browser. Your files never leave your device. No cookies, no analytics, no tracking — ever.",
+        cat_file: "File utilities",
+        cat_file_sub: "PDF and document tools that respect your privacy",
+        cat_ai: "AI workflow & data tools",
+        cat_ai_sub: "Tools that make working with AI faster and more effective",
+        cat_media: "Image & media",
+        cat_media_sub: "Optimize, convert, and create visuals — all locally",
+        cat_brand: "Personal branding",
+        cat_brand_sub: "Build your online presence without third-party platforms",
+        request_title: "Have another tool idea?",
+        request_body: "Submit your idea on GitHub Issues — community-driven additions.",
+        request_cta: "Suggest on GitHub →"
+      },
+      id: {
+        back_portfolio: "← Kembali ke portofolio",
+        games: "Game",
+        by_author: "Oleh Achmad Bayhaqy",
+        hero_title: 'Alat kecil, <span class="accent">dibuat dengan benar</span>',
+        hero_sub: "Kumpulan aplikasi web terfokus yang mengutamakan privasi. Tanpa pelacakan, tanpa unggahan, tanpa basa-basi — hanya alat bermanfaat yang berjalan sepenuhnya di browser Anda.",
+        stat_apps: "App gratis",
+        stat_client: "Sisi klien",
+        stat_uploads: "Unggahan",
+        stat_trackers: "Pelacak",
+        mobile_banner_text: "Bawa alat-alat ini di ponsel Anda. Berjalan 100% luring.",
+        download_apk: "🤖 Unduh APK",
+        ios_guide: "🍎 Panduan Pasang iOS",
+        search_placeholder: "Cari alat berdasarkan nama, tag, atau deskripsi…",
+        recently_used: "Baru Saya Pakai",
+        clear_history: "Hapus riwayat",
+        no_results_title: "Tidak ada alat ditemukan",
+        no_results_text: "Coba kata kunci lain atau hapus filter.",
+        clear_filters: "Hapus filter",
+        ios_title: "🍎 Pasang di iOS (Safari)",
+        ios_step1: 'Buka halaman ini di <strong>Safari</strong> pada iPhone atau iPad Anda.',
+        ios_step2: 'Ketuk tombol <strong>Bagikan</strong> (kotak dengan panah ke atas) di bagian bawah.',
+        ios_step3: 'Pilih <strong>Tambahkan ke Layar Utama</strong>.',
+        ios_step4: 'Ketuk <strong>Tambah</strong>. Ikon aplikasi akan muncul di layar utama.',
+        ios_step5: 'Buka dari layar utama — berjalan layar penuh dan bekerja luring.',
+        android_title: "🤖 Pasang di Android (Chrome/Edge)",
+        android_step1: 'Buka halaman ini di <strong>Chrome</strong> atau <strong>Edge</strong> pada Android.',
+        android_step2: 'Ketuk <strong>menu tiga titik</strong> di kanan atas.',
+        android_step3: 'Pilih <strong>Pasang aplikasi</strong> atau <strong>Tambahkan ke layar utama</strong>.',
+        android_step4: 'Konfirmasi — aplikasi terpasang dan bekerja luring.',
+        apk_alt: 'Lebih suka .apk mandiri? Gunakan tombol <strong>Unduh APK</strong> di atas (khusus Android, perlu sideload).',
+        built_by: "Dibuat oleh",
+        source: "Kode sumber",
+        request_tool: "Ajukan alat",
+        portfolio: "Portofolio",
+        privacy_note: "Semua alat berjalan 100% lokal di browser Anda. File Anda tidak pernah meninggalkan perangkat. Tanpa cookie, tanpa analitik, tanpa pelacakan — selamanya.",
+        cat_file: "Utilitas berkas",
+        cat_file_sub: "Alat PDF dan dokumen yang menghormati privasi Anda",
+        cat_ai: "Alur kerja AI & data",
+        cat_ai_sub: "Alat yang membuat bekerja dengan AI lebih cepat dan efektif",
+        cat_media: "Gambar & media",
+        cat_media_sub: "Optimalkan, konversi, dan buat visual — semuanya lokal",
+        cat_brand: "Personal branding",
+        cat_brand_sub: "Bangun kehadiran online tanpa platform pihak ketiga",
+        request_title: "Punya ide alat lain?",
+        request_body: "Kirim ide Anda di GitHub Issues — tambahan berbasis komunitas.",
+        request_cta: "Sarankan di GitHub →"
+      }
+    };
+
+    /* ============================================================
+       Apps catalog data
+       ============================================================ */
+    var APPS = [
+      { id:"baymerge", cat:"file", icon:"BM", name:"BayMerge",
+        desc:{en:"Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline after first load.",
+              id:"Gabungkan banyak file PDF menjadi satu — langsung di browser Anda. File tidak pernah meninggalkan perangkat. Bekerja luring setelah dimuat pertama kali."},
+        tags:["PDF","Offline","Private"], url:"/apps/baymerge/" },
+      { id:"pdf-anonymizer", cat:"file", icon:"PA", name:"PDF Anonymizer",
+        desc:{en:"Redact sensitive data (emails, NIK, phone, NPWP, credit cards) from PDFs before sharing. Auto-detect or manual redaction, export clean PDF.",
+              id:"Redaksi data sensitif (email, NIK, telepon, NPWP, kartu kredit) dari PDF sebelum dibagikan. Deteksi otomatis atau manual, ekspor PDF bersih."},
+        tags:["PDF","Redaction","Privacy"], url:"/apps/pdf-anonymizer/" },
+      { id:"csv-formatter", cat:"file", icon:"CF", name:"CSV Formatter",
+        desc:{en:"Clean messy spreadsheets — trim whitespace, dedupe rows, split names, normalize dates and emails. Export to CSV, JSON, or XLSX.",
+              id:"Bersihkan spreadsheet berantakan — pangkas spasi, hapus duplikat, pisahkan nama, normalkan tanggal dan email. Ekspor ke CSV, JSON, atau XLSX."},
+        tags:["CSV","Excel","JSON"], url:"/apps/csv-formatter/" },
+      { id:"ai-context-packer", cat:"ai", icon:"CP", name:"AI Context Packer",
+        desc:{en:"Combine project files into one Markdown file ready to paste into ChatGPT/Claude/DeepSeek. Folder drag-drop, token counter, 3 templates.",
+              id:"Gabungkan file proyek menjadi satu file Markdown siap tempel ke ChatGPT/Claude/DeepSeek. Seret folder, penghitung token, 3 template."},
+        tags:["AI","Markdown","Developer"], url:"/apps/ai-context-packer/" },
+      { id:"text-humanizer", cat:"ai", icon:"TH", name:"Anti-AI Text Humanizer",
+        desc:{en:"Detect AI cliché phrases (Indonesian + English) in real-time, highlight them by severity, and replace with natural alternatives in one click.",
+              id:"Deteksi frasa klise AI (Indonesia + Inggris) secara real-time, sorot berdasarkan tingkat keparahan, dan ganti dengan alternatif natural sekali klik."},
+        tags:["AI","Writing","Bilingual"], url:"/apps/text-humanizer/" },
+      { id:"prompt-formatter", cat:"ai", icon:"PF", name:"AI Prompt Formatter",
+        desc:{en:"Build professional mega-prompts using CARE, PREP, RACE, STAR, or CRISPE frameworks. Persona selector, live preview, save favorites.",
+              id:"Bangun mega-prompt profesional dengan kerangka CARE, PREP, RACE, STAR, atau CRISPE. Pemilih persona, pratinjau langsung, simpan favorit."},
+        tags:["AI","Prompts","Templates"], url:"/apps/prompt-formatter/" },
+      { id:"ocr-extractor", cat:"ai", icon:"OE", name:"Local OCR Extractor",
+        desc:{en:"Extract text from images (receipts, book pages, notes) using Tesseract.js running fully in your browser. Indonesian + English, multi-image.",
+              id:"Ekstrak teks dari gambar (struk, halaman buku, catatan) menggunakan Tesseract.js yang berjalan sepenuhnya di browser Anda. Indonesia + Inggris, banyak gambar."},
+        tags:["OCR","Tesseract","Offline"], url:"/apps/ocr-extractor/" },
+      { id:"image-optimizer", cat:"media", icon:"IO", name:"Bulk Image Optimizer",
+        desc:{en:"Compress and convert many JPG/PNG images to WebP in parallel. Quality control, max dimensions, ZIP download. No 20-file limits.",
+              id:"Kompres dan konversi banyak gambar JPG/PNG ke WebP secara paralel. Kontrol kualitas, dimensi maksimum, unduh ZIP. Tanpa batas 20 file."},
+        tags:["WebP","Compress","Bulk"], url:"/apps/image-optimizer/" },
+      { id:"carousel-generator", cat:"media", icon:"CG", name:"Carousel Generator",
+        desc:{en:"Turn Markdown bullet points into polished social media carousel slides for LinkedIn, Instagram, and X. 6 themes, 4 aspect ratios, PNG export.",
+              id:"Ubah poin-poin Markdown menjadi slide carousel media sosil yang rapi untuk LinkedIn, Instagram, dan X. 6 tema, 4 rasio aspek, ekspor PNG."},
+        tags:["Social","Markdown","PNG"], url:"/apps/carousel-generator/" },
+      { id:"waveform-maker", cat:"media", icon:"WM", name:"Waveform Maker",
+        desc:{en:"Create animated waveform videos from audio for TikTok, Reels, and Shorts. Custom background, 4 waveform styles, text overlay. WebM export.",
+              id:"Buat video bentuk gelombang animasi dari audio untuk TikTok, Reels, dan Shorts. Latar kustom, 4 gaya gelombang, overlay teks. Ekspor WebM."},
+        tags:["Audio","Video","Waveform"], url:"/apps/waveform-maker/" },
+      { id:"link-in-bio", cat:"brand", icon:"LB", name:"Link-in-Bio Builder",
+        desc:{en:"Build a custom Linktree alternative and export it as a single HTML file. 6 themes, animations, social icons, self-host on GitHub Pages.",
+              id:"Bangun alternatif Linktree kustom dan ekspor sebagai satu file HTML. 6 tema, animasi, ikon sosial, hosting mandiri di GitHub Pages."},
+        tags:["Linktree","HTML","Self-host"], url:"/apps/link-in-bio/" }
+    ];
+
+    var CATEGORIES = [
+      { id:"file", icon:"🛠️", titleKey:"cat_file", subKey:"cat_file_sub" },
+      { id:"ai", icon:"🤖", titleKey:"cat_ai", subKey:"cat_ai_sub" },
+      { id:"media", icon:"🖼️", titleKey:"cat_media", subKey:"cat_media_sub" },
+      { id:"brand", icon:"✨", titleKey:"cat_brand", subKey:"cat_brand_sub" }
+    ];
+
+    var currentLang = localStorage.getItem('apps-lang') || 'en';
+    var activeTag = null;
+    var searchQuery = '';
+
+    /* ============================================================
+       i18n application
+       ============================================================ */
+    function applyI18n(){
+      var dict = I18N[currentLang] || I18N.en;
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) el.textContent = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+        var key = el.getAttribute('data-i18n-html');
+        if (dict[key] !== undefined) el.innerHTML = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+        var key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key] !== undefined) el.placeholder = dict[key];
+      });
+      // Update lang toggle buttons
+      document.querySelectorAll('.lang-toggle button').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-lang') === currentLang);
+      });
+      document.documentElement.setAttribute('lang', currentLang);
+      // Re-render apps so descriptions update
+      renderApps();
+      renderTagFilters();
+      renderRecentlyUsed();
+    }
+
+    function setLang(lang){
+      currentLang = lang;
+      localStorage.setItem('apps-lang', lang);
+      applyI18n();
+    }
+
+    /* ============================================================
+       Tag filter computation
+       ============================================================ */
+    function computeTagCounts(){
+      var counts = {};
+      APPS.forEach(function(a){ a.tags.forEach(function(t){ counts[t] = (counts[t]||0)+1; }); });
+      return counts;
+    }
+
+    function renderTagFilters(){
+      var counts = computeTagCounts();
+      var container = document.getElementById('tagFilters');
+      container.innerHTML = '';
+      var allBtn = document.createElement('button');
+      allBtn.className = 'tag-filter' + (activeTag === null ? ' active' : '');
+      allBtn.innerHTML = '<span>' + (currentLang === 'id' ? 'Semua' : 'All') + '</span> <span class="count">(' + APPS.length + ')</span>';
+      allBtn.addEventListener('click', function(){ activeTag = null; renderTagFilters(); renderApps(); });
+      container.appendChild(allBtn);
+      Object.keys(counts).sort().forEach(function(tag){
+        var btn = document.createElement('button');
+        btn.className = 'tag-filter' + (activeTag === tag ? ' active' : '');
+        btn.innerHTML = '<span>#' + tag + '</span> <span class="count">(' + counts[tag] + ')</span>';
+        btn.addEventListener('click', function(){
+          activeTag = (activeTag === tag) ? null : tag;
+          renderTagFilters();
+          renderApps();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    /* ============================================================
+       App rendering
+       ============================================================ */
+    function filterApps(){
+      var q = searchQuery.toLowerCase().trim();
+      return APPS.filter(function(a){
+        var matchesTag = !activeTag || a.tags.indexOf(activeTag) !== -1;
+        var matchesQuery = !q ||
+          a.name.toLowerCase().indexOf(q) !== -1 ||
+          a.desc.en.toLowerCase().indexOf(q) !== -1 ||
+          a.desc.id.toLowerCase().indexOf(q) !== -1 ||
+          a.tags.some(function(t){ return t.toLowerCase().indexOf(q) !== -1; });
+        return matchesTag && matchesQuery;
+      });
+    }
+
+    function renderApps(){
+      var filtered = filterApps();
+      var container = document.getElementById('appsContainer');
+      container.innerHTML = '';
+      var noResults = document.getElementById('noResults');
+      if (filtered.length === 0){
+        noResults.classList.add('show');
+        return;
+      }
+      noResults.classList.remove('show');
+
+      CATEGORIES.forEach(function(cat){
+        var catApps = filtered.filter(function(a){ return a.cat === cat.id; });
+        if (catApps.length === 0) return;
+        var section = document.createElement('div');
+        section.className = 'category';
+        var dict = I18N[currentLang] || I18N.en;
+        section.innerHTML =
+          '<div class="category-head">' +
+            '<div class="category-icon">' + cat.icon + '</div>' +
+            '<div><h2>' + dict[cat.titleKey] + '</h2><p>' + dict[cat.subKey] + '</p></div>' +
+          '</div>';
+        var grid = document.createElement('div');
+        grid.className = 'app-grid';
+        catApps.forEach(function(a){
+          grid.appendChild(buildAppCard(a));
+        });
+        // If this is the last category with apps, add the "Request a Tool" card
+        if (cat.id === 'brand' || (catApps.length > 0 && cat === CATEGORIES[CATEGORIES.length-1])){
+          grid.appendChild(buildRequestCard());
+        }
+        section.appendChild(grid);
+        container.appendChild(section);
+      });
+      // Ensure request card appears even if brand category is filtered out but other categories remain
+      if (!container.querySelector('.request-card')){
+        var lastGrid = container.querySelector('.app-grid:last-child');
+        if (lastGrid) lastGrid.appendChild(buildRequestCard());
+      }
+    }
+
+    function buildAppCard(a){
+      var card = document.createElement('a');
+      card.className = 'app-card';
+      card.href = a.url;
+      card.setAttribute('data-app-id', a.id);
+      card.addEventListener('click', function(){ recordUse(a.id); });
+      var tagsHtml = a.tags.map(function(t){ return '<span class="app-tag">' + t + '</span>'; }).join('');
+      var openLabel = currentLang === 'id' ? 'Buka' : 'Open';
+      card.innerHTML =
+        '<div class="app-icon">' + a.icon + '</div>' +
+        '<h3>' + a.name + '</h3>' +
+        '<p>' + a.desc[currentLang] + '</p>' +
+        '<div class="app-tags">' + tagsHtml + '</div>' +
+        '<span class="arrow">' + openLabel + ' ' + a.name + ' →</span>';
+      return card;
+    }
+
+    function buildRequestCard(){
+      var dict = I18N[currentLang] || I18N.en;
+      var card = document.createElement('a');
+      card.className = 'request-card';
+      card.href = 'https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md&title=%5BTool+Idea%5D';
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.innerHTML =
+        '<div class="req-icon">💡</div>' +
+        '<h3>' + dict.request_title + '</h3>' +
+        '<p>' + dict.request_body + '</p>' +
+        '<span class="arrow">' + dict.request_cta + '</span>';
+      return card;
+    }
+
+    /* ============================================================
+       Recently Used (localStorage)
+       ============================================================ */
+    var RECENT_KEY = 'apps-recently-used';
+    var RECENT_MAX = 4;
+
+    function getRecent(){
+      try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+      catch(e){ return []; }
+    }
+
+    function recordUse(id){
+      var list = getRecent().filter(function(x){ return x !== id; });
+      list.unshift(id);
+      list = list.slice(0, RECENT_MAX);
+      try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch(e){}
+    }
+
+    function renderRecentlyUsed(){
+      var list = getRecent();
+      var container = document.getElementById('recentlyUsed');
+      var grid = document.getElementById('recentGrid');
+      grid.innerHTML = '';
+      if (list.length === 0){
+        container.classList.remove('has-items');
+        return;
+      }
+      container.classList.add('has-items');
+      list.forEach(function(id){
+        var a = APPS.find(function(x){ return x.id === id; });
+        if (!a) return;
+        var card = document.createElement('a');
+        card.className = 'recent-card';
+        card.href = a.url;
+        card.addEventListener('click', function(){ recordUse(a.id); });
+        var openLabel = currentLang === 'id' ? 'Buka' : 'Open';
+        card.innerHTML =
+          '<div class="recent-icon">' + a.icon + '</div>' +
+          '<div class="recent-card-body"><h4>' + a.name + '</h4><small>' + openLabel + ' →</small></div>';
+        grid.appendChild(card);
+      });
+    }
+
+    /* ============================================================
+       Wire-up
+       ============================================================ */
     document.getElementById('themeToggle').addEventListener('click', function(){
       var cur = document.documentElement.getAttribute('data-theme') || 'light';
       var next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('apps-theme', next);
     });
+
+    document.querySelectorAll('.lang-toggle button').forEach(function(b){
+      b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function(e){
+      searchQuery = e.target.value;
+      renderApps();
+    });
+
+    document.getElementById('clearSearch').addEventListener('click', function(){
+      searchQuery = '';
+      activeTag = null;
+      document.getElementById('searchInput').value = '';
+      renderTagFilters();
+      renderApps();
+    });
+
+    document.getElementById('clearRecent').addEventListener('click', function(){
+      try { localStorage.removeItem(RECENT_KEY); } catch(e){}
+      renderRecentlyUsed();
+    });
+
+    // iOS install guide anchor toggle
+    document.querySelector('a[href="#ios-install"]').addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.getElementById('ios-install');
+      target.classList.toggle('hidden');
+      target.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Initial render
+    applyI18n();
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator){
+      window.addEventListener('load', function(){
+        navigator.serviceWorker.register('/apps/service-worker.js').catch(function(){ /* silent */ });
+      });
+    }
   </script>
 </body>
 </html>
