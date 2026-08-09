@@ -3,15 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Small, focused web tools by Achmad Bayhaqy. Privacy-first, offline-capable, no tracking." />
+  <meta name="description" content="11 free, privacy-first web tools by Achmad Bayhaqy. PDF merger, AI context packer, text humanizer, prompt formatter, image optimizer, OCR, carousel generator, waveform maker, CSV formatter, link-in-bio builder, PDF anonymizer. All run locally in your browser — no uploads, no tracking." />
+  <meta name="keywords" content="PDF merger, AI tools, offline web apps, privacy tools, browser tools, OCR, image optimizer, carousel generator, prompt formatter, link in bio, PDF anonymizer, BayMerge, Achmad Bayhaqy" />
   <meta name="author" content="Achmad Bayhaqy" />
   <meta name="theme-color" content="#DC2626" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Apps by Achmad Bayhaqy" />
-  <meta property="og:description" content="Small, focused web tools. Privacy-first, offline-capable, no tracking." />
+  <meta property="og:title" content="Apps by Achmad Bayhaqy — 11 Free Browser-Based Tools" />
+  <meta property="og:description" content="11 free, privacy-first web tools. PDF merger, AI context packer, text humanizer, prompt formatter, image optimizer, OCR, carousel generator, waveform maker, CSV formatter, link-in-bio, PDF anonymizer. All run locally." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
+  <meta property="og:site_name" content="Apps by Achmad Bayhaqy" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Apps by Achmad Bayhaqy — 11 Free Browser-Based Tools" />
+  <meta name="twitter:description" content="Privacy-first web tools. All run locally in your browser — no uploads, no tracking." />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/" />
-  <title>Apps — Achmad Bayhaqy</title>
+  <title>Apps — 11 Free Browser-Based Tools by Achmad Bayhaqy</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -42,8 +49,8 @@
         radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
         radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
     }
-    .container{max-width:880px;margin:0 auto;padding:0 1.25rem}
-    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border)}
+    .container{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border)}
     [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
     .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
     .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
@@ -56,22 +63,34 @@
     .theme-toggle .icon-sun{display:none}
     [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
     [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
     .hero{padding:3.5rem 0 2rem;text-align:center}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:.4rem;background:var(--bg-2);border:1px solid var(--card-border);color:var(--accent);font-size:.78rem;font-weight:600;padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.1rem}
     .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
     .hero h1{font-size:clamp(2.2rem,5.5vw,3rem);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin-bottom:.85rem}
     .hero h1 .accent{color:var(--accent)}
-    .hero p.sub{font-size:1.1rem;color:var(--muted);max-width:580px;margin:0 auto 2rem}
-    .app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;padding-bottom:4rem}
-    .app-card{display:block;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);text-decoration:none;color:var(--fg);transition:transform .15s,border-color .15s,box-shadow .15s}
+    .hero p.sub{font-size:1.1rem;color:var(--muted);max-width:680px;margin:0 auto 1.5rem}
+    .hero-stats{display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;margin-bottom:2.5rem}
+    .hero-stat{text-align:center}
+    .hero-stat-num{font-size:1.75rem;font-weight:800;color:var(--accent);line-height:1}
+    .hero-stat-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+
+    .category{padding:1rem 0 2rem}
+    .category-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.25rem}
+    .category-icon{width:36px;height:36px;border-radius:10px;background:var(--bg-2);border:1px solid var(--card-border);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .category-head h2{font-size:1.3rem;font-weight:700;letter-spacing:-.01em}
+    .category-head p{font-size:.88rem;color:var(--muted);margin-top:.1rem}
+    .app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+    .app-card{display:flex;flex-direction:column;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);text-decoration:none;color:var(--fg);transition:transform .15s,border-color .15s,box-shadow .15s}
     .app-card:hover{transform:translateY(-3px);border-color:var(--card-border-hover);box-shadow:0 16px 36px -10px rgba(15,23,42,0.18)}
-    .app-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;letter-spacing:-.5px;margin-bottom:1rem;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45)}
-    .app-card h3{font-size:1.2rem;margin-bottom:.4rem}
-    .app-card p{color:var(--muted);font-size:.92rem;line-height:1.55;margin-bottom:.85rem}
-    .app-tags{display:flex;gap:.4rem;flex-wrap:wrap}
-    .app-tag{font-size:.74rem;font-weight:600;color:var(--accent);background:rgba(220,38,38,0.08);padding:.2rem .55rem;border-radius:999px;letter-spacing:.04em}
-    .app-card .arrow{display:inline-block;color:var(--accent);font-size:.9rem;font-weight:600;margin-top:.4rem}
-    footer.site-footer{border-top:1px solid var(--card-border);padding:2rem 0}
+    .app-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.05rem;letter-spacing:-.5px;margin-bottom:1rem;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45)}
+    .app-card h3{font-size:1.15rem;margin-bottom:.4rem}
+    .app-card p{color:var(--muted);font-size:.9rem;line-height:1.55;margin-bottom:.85rem;flex:1}
+    .app-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
+    .app-tag{font-size:.72rem;font-weight:600;color:var(--accent);background:rgba(220,38,38,0.08);padding:.2rem .55rem;border-radius:999px;letter-spacing:.04em}
+    .app-card .arrow{display:inline-block;color:var(--accent);font-size:.88rem;font-weight:600}
+
+    footer.site-footer{border-top:1px solid var(--card-border);padding:2rem 0;margin-top:2rem}
     .footer-inner{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
     .footer-text{font-size:.85rem;color:var(--muted)}
     .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
@@ -79,6 +98,13 @@
     .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
     .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
     .footer-links a:hover{color:var(--fg)}
+
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1.5rem}
+      .header-links a:not(.theme-toggle){display:none}
+      .hero-stats{gap:1rem}
+      .hero-stat-num{font-size:1.4rem}
+    }
   </style>
   <script>
     (function(){
@@ -92,27 +118,29 @@
     "@type": "WebSite",
     "name": "Apps by Achmad Bayhaqy",
     "url": "https://bayhaqy.my.id/apps/",
-    "description": "Small, focused, privacy-first web tools. Offline-capable, no tracking.",
+    "description": "11 free, privacy-first web tools. All run locally in your browser — no uploads, no tracking.",
     "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" }
   }
   </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "BayMerge",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Web Browser",
-    "url": "https://bayhaqy.my.id/apps/baymerge/",
-    "description": "A free, private, offline PDF merger. Combine multiple PDF files into one directly in your browser — no uploads, no internet, no tracking.",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
-    "featureList": [
-      "Merge multiple PDF files into one",
-      "100% client-side — files never leave the browser",
-      "Works offline after first load",
-      "Drag-and-drop file reordering",
-      "No watermarks, no sign-up, no tracking"
+    "@type": "ItemList",
+    "name": "Apps by Achmad Bayhaqy",
+    "url": "https://bayhaqy.my.id/apps/",
+    "numberOfItems": 11,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "BayMerge", "url": "https://bayhaqy.my.id/apps/baymerge/" },
+      { "@type": "ListItem", "position": 2, "name": "AI Context Packer", "url": "https://bayhaqy.my.id/apps/ai-context-packer/" },
+      { "@type": "ListItem", "position": 3, "name": "Anti-AI Text Humanizer", "url": "https://bayhaqy.my.id/apps/text-humanizer/" },
+      { "@type": "ListItem", "position": 4, "name": "AI Prompt Formatter", "url": "https://bayhaqy.my.id/apps/prompt-formatter/" },
+      { "@type": "ListItem", "position": 5, "name": "PDF Anonymizer", "url": "https://bayhaqy.my.id/apps/pdf-anonymizer/" },
+      { "@type": "ListItem", "position": 6, "name": "Bulk Image Optimizer", "url": "https://bayhaqy.my.id/apps/image-optimizer/" },
+      { "@type": "ListItem", "position": 7, "name": "Local OCR Extractor", "url": "https://bayhaqy.my.id/apps/ocr-extractor/" },
+      { "@type": "ListItem", "position": 8, "name": "Markdown Carousel Generator", "url": "https://bayhaqy.my.id/apps/carousel-generator/" },
+      { "@type": "ListItem", "position": 9, "name": "Audio Waveform Maker", "url": "https://bayhaqy.my.id/apps/waveform-maker/" },
+      { "@type": "ListItem", "position": 10, "name": "CSV / Excel Formatter", "url": "https://bayhaqy.my.id/apps/csv-formatter/" },
+      { "@type": "ListItem", "position": 11, "name": "Link-in-Bio Builder", "url": "https://bayhaqy.my.id/apps/link-in-bio/" }
     ]
   }
   </script>
@@ -140,23 +168,203 @@
       <div class="container">
         <span class="hero-eyebrow">By Achmad Bayhaqy</span>
         <h1>Small tools, <span class="accent">built right</span></h1>
-        <p class="sub">A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run in your browser.</p>
+        <p class="sub">A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run entirely in your browser.</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num">11</div>
+            <div class="hero-stat-label">Free apps</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">100%</div>
+            <div class="hero-stat-label">Client-side</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">0</div>
+            <div class="hero-stat-label">Uploads</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">0</div>
+            <div class="hero-stat-label">Trackers</div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="container">
-      <div class="app-grid">
-        <a class="app-card" href="/apps/baymerge/">
-          <div class="app-icon">BM</div>
-          <h3>BayMerge</h3>
-          <p>Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline after first load.</p>
-          <div class="app-tags">
-            <span class="app-tag">PDF</span>
-            <span class="app-tag">Offline</span>
-            <span class="app-tag">Private</span>
+      <div class="category">
+        <div class="category-head">
+          <div class="category-icon">🛠️</div>
+          <div>
+            <h2>File utilities</h2>
+            <p>PDF and document tools that respect your privacy</p>
           </div>
-          <span class="arrow">Open BayMerge →</span>
-        </a>
+        </div>
+        <div class="app-grid">
+          <a class="app-card" href="/apps/baymerge/">
+            <div class="app-icon">BM</div>
+            <h3>BayMerge</h3>
+            <p>Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline after first load.</p>
+            <div class="app-tags">
+              <span class="app-tag">PDF</span>
+              <span class="app-tag">Offline</span>
+              <span class="app-tag">Private</span>
+            </div>
+            <span class="arrow">Open BayMerge →</span>
+          </a>
+
+          <a class="app-card" href="/apps/pdf-anonymizer/">
+            <div class="app-icon">PA</div>
+            <h3>PDF Anonymizer</h3>
+            <p>Redact sensitive data (emails, NIK, phone, NPWP, credit cards) from PDFs before sharing. Auto-detect or manual redaction, export clean PDF.</p>
+            <div class="app-tags">
+              <span class="app-tag">PDF</span>
+              <span class="app-tag">Redaction</span>
+              <span class="app-tag">Privacy</span>
+            </div>
+            <span class="arrow">Open PDF Anonymizer →</span>
+          </a>
+
+          <a class="app-card" href="/apps/csv-formatter/">
+            <div class="app-icon">CF</div>
+            <h3>CSV Formatter</h3>
+            <p>Clean messy spreadsheets — trim whitespace, dedupe rows, split names, normalize dates and emails. Export to CSV, JSON, or XLSX.</p>
+            <div class="app-tags">
+              <span class="app-tag">CSV</span>
+              <span class="app-tag">Excel</span>
+              <span class="app-tag">JSON</span>
+            </div>
+            <span class="arrow">Open CSV Formatter →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-head">
+          <div class="category-icon">🤖</div>
+          <div>
+            <h2>AI workflow &amp; data tools</h2>
+            <p>Tools that make working with AI faster and more effective</p>
+          </div>
+        </div>
+        <div class="app-grid">
+          <a class="app-card" href="/apps/ai-context-packer/">
+            <div class="app-icon">CP</div>
+            <h3>AI Context Packer</h3>
+            <p>Combine project files into one Markdown file ready to paste into ChatGPT/Claude/DeepSeek. Folder drag-drop, token counter, 3 templates.</p>
+            <div class="app-tags">
+              <span class="app-tag">AI</span>
+              <span class="app-tag">Markdown</span>
+              <span class="app-tag">Developer</span>
+            </div>
+            <span class="arrow">Open AI Context Packer →</span>
+          </a>
+
+          <a class="app-card" href="/apps/text-humanizer/">
+            <div class="app-icon">TH</div>
+            <h3>Anti-AI Text Humanizer</h3>
+            <p>Detect AI cliché phrases (Indonesian + English) in real-time, highlight them by severity, and replace with natural alternatives in one click.</p>
+            <div class="app-tags">
+              <span class="app-tag">AI</span>
+              <span class="app-tag">Writing</span>
+              <span class="app-tag">Bilingual</span>
+            </div>
+            <span class="arrow">Open Text Humanizer →</span>
+          </a>
+
+          <a class="app-card" href="/apps/prompt-formatter/">
+            <div class="app-icon">PF</div>
+            <h3>AI Prompt Formatter</h3>
+            <p>Build professional mega-prompts using CARE, PREP, RACE, STAR, or CRISPE frameworks. Persona selector, live preview, save favorites.</p>
+            <div class="app-tags">
+              <span class="app-tag">AI</span>
+              <span class="app-tag">Prompts</span>
+              <span class="app-tag">Templates</span>
+            </div>
+            <span class="arrow">Open Prompt Formatter →</span>
+          </a>
+
+          <a class="app-card" href="/apps/ocr-extractor/">
+            <div class="app-icon">OE</div>
+            <h3>Local OCR Extractor</h3>
+            <p>Extract text from images (receipts, book pages, notes) using Tesseract.js running fully in your browser. Indonesian + English, multi-image.</p>
+            <div class="app-tags">
+              <span class="app-tag">OCR</span>
+              <span class="app-tag">Tesseract</span>
+              <span class="app-tag">Offline</span>
+            </div>
+            <span class="arrow">Open OCR Extractor →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-head">
+          <div class="category-icon">🖼️</div>
+          <div>
+            <h2>Image &amp; media</h2>
+            <p>Optimize, convert, and create visuals — all locally</p>
+          </div>
+        </div>
+        <div class="app-grid">
+          <a class="app-card" href="/apps/image-optimizer/">
+            <div class="app-icon">IO</div>
+            <h3>Bulk Image Optimizer</h3>
+            <p>Compress and convert many JPG/PNG images to WebP in parallel. Quality control, max dimensions, ZIP download. No 20-file limits.</p>
+            <div class="app-tags">
+              <span class="app-tag">WebP</span>
+              <span class="app-tag">Compress</span>
+              <span class="app-tag">Bulk</span>
+            </div>
+            <span class="arrow">Open Image Optimizer →</span>
+          </a>
+
+          <a class="app-card" href="/apps/carousel-generator/">
+            <div class="app-icon">CG</div>
+            <h3>Carousel Generator</h3>
+            <p>Turn Markdown bullet points into polished social media carousel slides for LinkedIn, Instagram, and X. 6 themes, 4 aspect ratios, PNG export.</p>
+            <div class="app-tags">
+              <span class="app-tag">Social</span>
+              <span class="app-tag">Markdown</span>
+              <span class="app-tag">PNG</span>
+            </div>
+            <span class="arrow">Open Carousel Generator →</span>
+          </a>
+
+          <a class="app-card" href="/apps/waveform-maker/">
+            <div class="app-icon">WM</div>
+            <h3>Waveform Maker</h3>
+            <p>Create animated waveform videos from audio for TikTok, Reels, and Shorts. Custom background, 4 waveform styles, text overlay. WebM export.</p>
+            <div class="app-tags">
+              <span class="app-tag">Audio</span>
+              <span class="app-tag">Video</span>
+              <span class="app-tag">Waveform</span>
+            </div>
+            <span class="arrow">Open Waveform Maker →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-head">
+          <div class="category-icon">✨</div>
+          <div>
+            <h2>Personal branding</h2>
+            <p>Build your online presence without third-party platforms</p>
+          </div>
+        </div>
+        <div class="app-grid">
+          <a class="app-card" href="/apps/link-in-bio/">
+            <div class="app-icon">LB</div>
+            <h3>Link-in-Bio Builder</h3>
+            <p>Build a custom Linktree alternative and export it as a single HTML file. 6 themes, animations, social icons, self-host on GitHub Pages.</p>
+            <div class="app-tags">
+              <span class="app-tag">Linktree</span>
+              <span class="app-tag">HTML</span>
+              <span class="app-tag">Self-host</span>
+            </div>
+            <span class="arrow">Open Link-in-Bio Builder →</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
