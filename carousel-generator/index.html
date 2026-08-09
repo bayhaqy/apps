@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free Markdown to social media carousel generator. Paste bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads, no sign-up." />
+  <meta name="keywords" content="carousel generator, markdown to slides, social media carousel, LinkedIn carousel, Instagram carousel, PNG slides, markdown carousel, free carousel maker" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Markdown to Carousel Generator — Social Media Slides from Text" />
+  <meta property="og:description" content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/carousel-generator/" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Markdown to Carousel Generator — Social Media Slides from Text" />
+  <meta name="twitter:description" content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/carousel-generator/" />
+  <title>Markdown to Carousel Generator — Social Media Slides from Text</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECG%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Markdown to Carousel Generator",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/carousel-generator/",
+    "description": "Free Markdown to social media carousel generator. Paste bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads, no sign-up.",
+    "browserRequirements": "Requires SVG foreignObject and canvas toBlob support. Chrome 90+, Firefox 88+, Safari 14+, Edge 90+.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "featureList": [
+      "Markdown-native parsing (headings, bullets, numbered lists, blockquotes, bold, italic)",
+      "Six designer themes (Minimal Light, Bold Dark, Sunset, Ocean, Forest, Cyberpunk)",
+      "Four aspect ratios (1:1, 4:5, 9:16, 16:9) at 1080-base resolution",
+      "Four web fonts (Inter, Plus Jakarta Sans, Poppins, Playfair Display)",
+      "PNG export via SVG foreignObject + canvas (single, bulk, or ZIP)",
+      "100% client-side — no uploads, no tracking, no sign-up"
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1080px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* App grid */
+    .app-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+    .app-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+    }
+    .panel{display:flex;flex-direction:column;gap:1rem}
+    .panel-label{
+      font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+      color:var(--muted);margin-bottom:.4rem;
+    }
+
+    /* Textarea */
+    .md-textarea{
+      width:100%;min-height:320px;resize:vertical;
+      font-family:"SF Mono","Monaco","Cascadia Code","Roboto Mono",Consolas,monospace;
+      font-size:.88rem;line-height:1.6;
+      padding:.9rem 1rem;border-radius:var(--radius-sm);
+      border:1px solid var(--card-border);background:var(--bg-2);color:var(--fg);
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .md-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .textarea-toolbar{
+      display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;
+      margin-top:.6rem;
+    }
+    .textarea-info{font-size:.82rem;color:var(--muted)}
+    .textarea-info strong{color:var(--fg);font-weight:600}
+    .textarea-info .count{color:var(--accent);font-weight:700}
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.6rem 1.05rem;border-radius:10px;border:1px solid transparent;
+      font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s,border-color .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn-sm{padding:.45rem .8rem;font-size:.82rem}
+    .btn svg{width:15px;height:15px}
+
+    /* Format help */
+    .format-help{
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.85rem 1rem;font-size:.82rem;color:var(--muted);line-height:1.65;
+    }
+    .format-help strong{color:var(--fg);font-weight:600}
+    .format-help code{
+      background:var(--chip-bg);padding:1px 5px;border-radius:4px;
+      font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.8em;color:var(--accent);
+    }
+
+    /* Settings */
+    .settings-section{display:flex;flex-direction:column;gap:.5rem}
+    .setting-row{display:flex;flex-direction:column;gap:.4rem}
+    .setting-label{font-size:.82rem;font-weight:600;color:var(--fg)}
+    .setting-hint{font-size:.76rem;color:var(--muted)}
+
+    /* Theme swatches */
+    .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+    .swatch{
+      cursor:pointer;border:2px solid var(--card-border);border-radius:10px;
+      padding:.45rem;background:var(--bg-2);transition:border-color .15s,transform .15s;
+      display:flex;flex-direction:column;align-items:center;gap:.35rem;
+    }
+    .swatch:hover{transform:translateY(-1px)}
+    .swatch.selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .swatch-preview{
+      width:100%;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+      font-size:.7rem;font-weight:700;
+    }
+    .swatch-name{font-size:.72rem;font-weight:600;color:var(--fg);text-align:center;line-height:1.2}
+
+    /* Radio group */
+    .radio-group{display:flex;flex-wrap:wrap;gap:.4rem}
+    .radio-pill{
+      cursor:pointer;padding:.4rem .75rem;border-radius:8px;
+      border:1px solid var(--card-border);background:var(--bg-2);
+      font-size:.82rem;font-weight:500;color:var(--muted);
+      transition:border-color .15s,background .15s,color .15s;
+    }
+    .radio-pill:hover{border-color:var(--card-border-hover)}
+    .radio-pill.selected{
+      border-color:var(--accent);background:rgba(220,38,38,0.08);color:var(--accent);font-weight:600;
+    }
+    .radio-pill input{display:none}
+
+    /* Color picker */
+    .color-input-wrap{display:flex;align-items:center;gap:.6rem}
+    .color-input-wrap input[type=color]{
+      width:44px;height:38px;border:1px solid var(--card-border);border-radius:8px;
+      cursor:pointer;background:var(--bg-2);padding:3px;
+    }
+    .color-hex{font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.82rem;color:var(--muted);text-transform:uppercase}
+
+    /* Toggle + text input */
+    .toggle-row{display:flex;align-items:center;gap:.6rem}
+    .toggle{
+      position:relative;width:42px;height:24px;border-radius:999px;
+      background:var(--chip-bg);border:1px solid var(--card-border);cursor:pointer;
+      transition:background .15s;
+    }
+    .toggle::after{
+      content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+      background:var(--fg);transition:transform .15s;
+    }
+    .toggle.on{background:var(--accent);border-color:var(--accent)}
+    .toggle.on::after{transform:translateX(18px);background:white}
+    .text-input{
+      padding:.5rem .7rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--bg-2);color:var(--fg);font-size:.85rem;font-family:inherit;width:100%;
+    }
+    .text-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .text-input:disabled{opacity:.5;cursor:not-allowed}
+
+    /* Preview panel */
+    .preview-toolbar{
+      display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;
+      padding-bottom:.85rem;border-bottom:1px solid var(--card-border);margin-bottom:.85rem;
+    }
+    .preview-meta{font-size:.85rem;color:var(--muted)}
+    .preview-meta strong{color:var(--fg);font-weight:600}
+    .preview-list{display:flex;flex-direction:column;gap:1.25rem;align-items:center}
+    .preview-list:empty::before{
+      content:"Your slides will appear here";color:var(--muted);font-size:.9rem;
+      padding:3rem 1rem;text-align:center;
+    }
+    .preview-item{display:flex;flex-direction:column;align-items:center;gap:.6rem;width:100%;max-width:400px}
+    .preview-card{
+      width:100%;border-radius:12px;overflow:hidden;cursor:zoom-in;
+      box-shadow:var(--shadow);border:1px solid var(--card-border);
+      transition:transform .15s,box-shadow .15s;position:relative;
+    }
+    .preview-card:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px rgba(15,23,42,0.22)}
+    .preview-card-empty{
+      padding:3rem 1rem;text-align:center;color:var(--muted);font-size:.9rem;
+    }
+    .preview-item-actions{display:flex;gap:.5rem;align-items:center;width:100%;justify-content:space-between}
+    .preview-item-num{
+      width:28px;height:28px;border-radius:50%;background:var(--accent);color:white;
+      font-weight:700;font-size:.78rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .preview-item-title{font-size:.85rem;color:var(--muted);flex:1;min-width:0;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+
+    /* Progress */
+    .progress-wrap{
+      margin-top:.85rem;padding:.85rem 1rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+      display:none;
+    }
+    .progress-wrap.active{display:block}
+    .progress-label{font-size:.85rem;font-weight:500;margin-bottom:.5rem}
+    .progress-bar{height:8px;background:var(--chip-bg);border-radius:999px;overflow:hidden}
+    .progress-fill{
+      height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      width:0%;transition:width .25s ease;border-radius:999px;
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed;inset:0;z-index:90;display:none;
+      background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
+      align-items:center;justify-content:center;padding:1.5rem;
+    }
+    .modal.open{display:flex}
+    .modal-inner{position:relative;max-width:95vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
+    .modal-close{
+      position:absolute;top:-12px;right:-12px;z-index:2;
+      width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
+      background:var(--accent);color:white;font-size:1.3rem;font-weight:600;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 6px 16px -4px rgba(0,0,0,0.5);
+    }
+    .modal-close:hover{transform:scale(1.08)}
+    .modal-nav{
+      position:absolute;top:50%;transform:translateY(-50%);
+      width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+      background:rgba(255,255,255,0.15);color:white;font-size:1.3rem;font-weight:600;
+      display:flex;align-items:center;justify-content:center;
+      backdrop-filter:blur(4px);transition:background .15s;
+    }
+    .modal-nav:hover{background:rgba(255,255,255,0.28)}
+    .modal-nav.prev{left:-60px}
+    .modal-nav.next{right:-60px}
+    .modal-nav:disabled{opacity:.3;cursor:not-allowed}
+    .modal-content{display:flex;align-items:center;justify-content:center;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px -10px rgba(0,0,0,0.6)}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Themes showcase */
+    .themes-showcase{padding:2rem 0}
+    .themes-showcase h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .themes-showcase > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .themes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .theme-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.2rem;box-shadow:var(--shadow);
+      display:flex;flex-direction:column;gap:.75rem;
+    }
+    .theme-card-preview{
+      height:110px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:1rem;padding:1rem;text-align:center;
+    }
+    .theme-card h4{font-size:.98rem;margin:0}
+    .theme-card p{font-size:.84rem;color:var(--muted);line-height:1.5;margin:0}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .features > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:400px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;text-align:center;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:820px){
+      .app-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .app-card{padding:1.1rem}
+      .theme-grid{grid-template-columns:repeat(2,1fr)}
+      .modal-nav.prev{left:8px}
+      .modal-nav.next{right:8px}
+      .header-links a:not(.theme-toggle):not(.back-link){display:none}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('carousel-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/carousel-generator/" class="brand">
+        <span class="brand-logo">CG</span>
+        <span>Carousel Generator</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#themes">Themes</a>
+        <a href="#faq">FAQ</a>
+        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">&larr; Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">&#127769;</span>
+          <span class="icon-sun">&#9728;&#65039;</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local &middot; LinkedIn &middot; Instagram &middot; X</span>
+        <h1>Turn Markdown into <span class="accent">carousel slides</span></h1>
+        <p class="sub">Paste bullet points, pick a theme, and export polished PNG slides ready for LinkedIn, Instagram, and X &mdash; no design skills, no uploads, no sign-up. Everything renders in your browser.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Markdown input</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 6 themes</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> PNG export</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No design skills</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="app-card">
+        <div class="app-grid">
+          <!-- LEFT: Input + Settings -->
+          <div class="panel">
+            <div>
+              <div class="panel-label">Markdown input</div>
+              <textarea class="md-textarea" id="mdInput" spellcheck="false" placeholder="# Slide title&#10;&#10;- Bullet point one&#10;- Bullet point two&#10;- Bullet point three&#10;&#10;> A memorable quote for emphasis.&#10;&#10;---&#10;&#10;## Next slide&#10;&#10;1. First numbered item&#10;2. Second numbered item&#10;3. Third numbered item"></textarea>
+              <div class="textarea-toolbar">
+                <div class="textarea-info"><strong id="slideCount">0</strong> <span id="slideLabel">slides</span> detected</div>
+                <button class="btn btn-ghost btn-sm" id="loadSampleBtn" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                  Load sample
+                </button>
+              </div>
+            </div>
+
+            <div class="format-help">
+              <strong>Format:</strong> Each <code># Title</code> or <code>## Section</code> starts a new slide. Use <code>- item</code> for bullets, <code>1.</code> for numbered lists, <code>&gt; quote</code> for callouts. <code>**bold**</code> and <code>*italic*</code> supported. <code>---</code> forces a slide break.
+            </div>
+
+            <div class="settings-section">
+              <div class="panel-label">Settings</div>
+
+              <div class="setting-row">
+                <div class="setting-label">Theme</div>
+                <div class="theme-grid" id="themeGrid"></div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label">Aspect ratio</div>
+                <div class="radio-group" id="ratioGroup"></div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label">Font family</div>
+                <div class="radio-group" id="fontGroup"></div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label">Slide number style</div>
+                <div class="radio-group" id="numStyleGroup"></div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label">Accent color</div>
+                <div class="color-input-wrap">
+                  <input type="color" id="accentColor" value="#DC2626" />
+                  <span class="color-hex" id="accentHex">#DC2626</span>
+                  <button class="btn btn-ghost btn-sm" id="resetAccentBtn" type="button" title="Use theme default">Reset</button>
+                </div>
+                <div class="setting-hint">Used for highlights, bullets, and slide numbers. Leave on default to match the theme.</div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label">Author handle</div>
+                <div class="toggle-row">
+                  <div class="toggle" id="handleToggle" role="switch" aria-checked="false" tabindex="0"></div>
+                  <span class="setting-hint">Show on every slide</span>
+                </div>
+                <input type="text" class="text-input" id="handleText" value="@yourhandle" placeholder="@yourhandle" maxlength="40" disabled />
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Preview -->
+          <div class="panel">
+            <div class="panel-label">Live preview</div>
+            <div class="preview-toolbar">
+              <div class="preview-meta"><strong id="previewCount">0</strong> slides &middot; <span id="previewRatio">1:1</span></div>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                <button class="btn btn-ghost btn-sm" id="downloadAllIndivBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download all individually
+                </button>
+                <button class="btn btn-primary btn-sm" id="downloadZipBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+                  Download all as ZIP
+                </button>
+              </div>
+            </div>
+            <div class="progress-wrap" id="progressWrap">
+              <div class="progress-label" id="progressLabel">Preparing&hellip;</div>
+              <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+            <div class="preview-list" id="previewList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use</h2>
+        <p>Five simple steps &mdash; your slides are generated locally in your browser and never uploaded anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Write or paste Markdown</h4>
+            <p>Use <code>#</code> or <code>##</code> for slide titles, <code>-</code> for bullets, <code>1.</code> for numbered lists, <code>&gt;</code> for callouts. Or click "Load sample" to see an example.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Pick a theme &amp; ratio</h4>
+            <p>Choose from 6 polished themes, set the aspect ratio (1:1 for Instagram, 9:16 for Stories, 16:9 for LinkedIn), and pick a font.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Preview live</h4>
+            <p>Slides update instantly as you type. Click any slide to zoom in. Adjust the accent color, slide numbers, and author handle.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Export PNGs</h4>
+            <p>Download a single slide, grab all slides individually, or bundle them into a ZIP. Each PNG is rendered at full 1080-base resolution.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <h4>Post &amp; engage</h4>
+            <p>Upload the PNGs to LinkedIn, Instagram, or X as a carousel post. Add a caption, tag your audience, and publish.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="themes-showcase" id="themes">
+      <div class="container">
+        <h2>Six polished themes</h2>
+        <p>Each theme is designed for readability on mobile feeds &mdash; pick one, then fine-tune the accent color.</p>
+        <div class="themes-grid" id="themesShowcase"></div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <h2>Why this beats manual design</h2>
+        <p>Stop fighting with drag-and-drop editors. Write your ideas in Markdown and get publication-ready slides in seconds.</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Your text never leaves your browser. No uploads, no tracking, no server-side processing &mdash; everything runs locally.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+            <h4>Markdown-native</h4>
+            <p>Write in the format you already know. Headings, bullets, numbered lists, blockquotes, bold, and italic &mdash; all parsed automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+            <h4>Six designer themes</h4>
+            <p>Minimal Light, Bold Dark, Sunset, Ocean, Forest, and Cyberpunk &mdash; each tuned for social media readability. Custom accent color included.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Multi-platform ratios</h4>
+            <p>1:1 Instagram square, 4:5 portrait, 9:16 Story/Reels, 16:9 LinkedIn landscape &mdash; switch with one click, preview updates instantly.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            <h4>Bulk PNG export</h4>
+            <p>Download every slide at 1080-base resolution, individually or bundled as a ZIP. Filenames include slide numbers and title slugs.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <h4>Instant &amp; free</h4>
+            <p>No queue, no watermark, no subscription. Slides render in milliseconds &mdash; the only limit is how fast you can write.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is my Markdown uploaded to a server? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>No. This tool runs entirely in your browser. Your Markdown text is parsed locally, slides are rendered locally, and PNGs are generated locally &mdash; nothing is ever sent to a server. You can verify this in your browser's DevTools Network tab.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What Markdown is supported? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>Slide titles from <code># H1</code> and <code>## H2</code>. Bullets (<code>- item</code>), numbered lists (<code>1. item</code>), blockquotes (<code>&gt; quote</code>), <code>**bold**</code>, <code>*italic*</code>, and <code>`code`</code>. A horizontal rule (<code>---</code>) forces a slide break. Tables, images, and complex nesting are not supported &mdash; this is a slide generator, not a full document renderer.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Why do the exported PNGs use a different font than the preview? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>The live preview uses the Google Font you selected (Inter, Plus Jakarta Sans, Poppins, or Playfair Display). The PNG export uses an SVG rendering technique that does not have access to web fonts loaded by the page, so it falls back to a similar system font (sans-serif or serif). The layout, colors, and structure are identical &mdash; only the exact font glyphs differ. This is a documented limitation of browser-based image export.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What resolution are the exported PNGs? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>Each slide is exported at full social-media resolution: 1080&times;1080 for 1:1, 1080&times;1350 for 4:5, 1080&times;1920 for 9:16, and 1920&times;1080 for 16:9. These are the recommended dimensions for LinkedIn, Instagram, and X &mdash; sharp on retina displays and ready to publish.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I edit a slide after exporting? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>PNGs are flat raster images &mdash; you cannot edit the text in a PNG after export. To change a slide, edit your Markdown in the input area, then re-export. Your settings (theme, ratio, font, colors) are remembered in localStorage between sessions.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How many slides can I generate? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>There is no hard limit. In practice, 20&ndash;30 slides work smoothly. Very long carousels (50+ slides) may slow down the preview rendering and the ZIP export, since each slide is rasterized through an SVG-to-canvas pipeline. For best engagement, aim for 5&ndash;10 slides per post.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does it work offline? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>Almost. The app itself runs entirely client-side, but it loads the marked.js parser, JSZip, and Google Fonts from CDNs on first visit. Once cached by your browser, it will work without an internet connection. PNG export does not require fonts to be loaded, so it works fully offline after the first load.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">&#8964;</span></button>
+          <div class="faq-a"><p>Any modern browser that supports SVG <code>foreignObject</code> and canvas <code>toBlob</code>: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer and very old browsers are not supported.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> &middot;
+        Powered by <a href="https://marked.js.org/" target="_blank" rel="noopener">marked.js</a> &amp; <a href="https://stuk.github.io/jszip/" target="_blank" rel="noopener">JSZip</a> &middot;
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose" aria-label="Close preview">&times;</button>
+      <button class="modal-nav prev" id="modalPrev" aria-label="Previous slide">&lsaquo;</button>
+      <button class="modal-nav next" id="modalNext" aria-label="Next slide">&rsaquo;</button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      'use strict';
+      var doc = document;
+
+      // ----- Constants -----
+      var THEMES = {
+        'minimal-light': {
+          name: 'Minimal Light',
+          background: '#FFFFFF',
+          textColor: '#0F172A',
+          mutedColor: '#94A3B8',
+          accentDefault: '#DC2626',
+          isGradient: false,
+          swatchBg: '#FFFFFF',
+          swatchColor: '#0F172A',
+          swatchBorder: '#E2E8F0',
+          desc: 'Clean white background with dark text and a red accent. The safe choice for professional LinkedIn posts.'
+        },
+        'bold-dark': {
+          name: 'Bold Dark',
+          background: '#0A0A0A',
+          textColor: '#FFFFFF',
+          mutedColor: '#A1A1AA',
+          accentDefault: '#F59E0B',
+          isGradient: false,
+          swatchBg: '#0A0A0A',
+          swatchColor: '#FFFFFF',
+          swatchBorder: '#27272A',
+          desc: 'Near-black background with white text and an amber accent. High contrast, modern, and dramatic.'
+        },
+        'sunset': {
+          name: 'Sunset',
+          background: 'linear-gradient(135deg, #FF6B6B 0%, #F94BC5 100%)',
+          textColor: '#FFFFFF',
+          mutedColor: 'rgba(255,255,255,0.82)',
+          accentDefault: '#FFE66D',
+          isGradient: true,
+          swatchBg: 'linear-gradient(135deg, #FF6B6B, #F94BC5)',
+          swatchColor: '#FFFFFF',
+          swatchBorder: 'transparent',
+          desc: 'Warm orange-to-pink gradient. Energetic, playful, and perfect for lifestyle and creator content.'
+        },
+        'ocean': {
+          name: 'Ocean',
+          background: 'linear-gradient(135deg, #0EA5E9 0%, #6366F1 100%)',
+          textColor: '#FFFFFF',
+          mutedColor: 'rgba(255,255,255,0.82)',
+          accentDefault: '#FBBF24',
+          isGradient: true,
+          swatchBg: 'linear-gradient(135deg, #0EA5E9, #6366F1)',
+          swatchColor: '#FFFFFF',
+          swatchBorder: 'transparent',
+          desc: 'Calm blue-to-indigo gradient. Trustworthy and cool &mdash; great for tech, finance, and education.'
+        },
+        'forest': {
+          name: 'Forest',
+          background: 'linear-gradient(135deg, #134E5E 0%, #71B280 100%)',
+          textColor: '#FFFFFF',
+          mutedColor: 'rgba(255,255,255,0.82)',
+          accentDefault: '#FBBF24',
+          isGradient: true,
+          swatchBg: 'linear-gradient(135deg, #134E5E, #71B280)',
+          swatchColor: '#FFFFFF',
+          swatchBorder: 'transparent',
+          desc: 'Deep teal-to-green gradient. Grounded and natural &mdash; ideal for sustainability, health, and outdoors.'
+        },
+        'cyberpunk': {
+          name: 'Cyberpunk',
+          background: '#0F0015',
+          textColor: '#39FF14',
+          mutedColor: '#FF00FF',
+          accentDefault: '#FF00FF',
+          isGradient: false,
+          swatchBg: '#0F0015',
+          swatchColor: '#39FF14',
+          swatchBorder: '#39FF14',
+          desc: 'Dark purple base with neon green text and magenta accent. Loud, futuristic, and impossible to scroll past.'
+        }
+      };
+
+      var ASPECT_RATIOS = {
+        '1:1':  { w: 1080, h: 1080, label: '1:1 &middot; Square' },
+        '4:5':  { w: 1080, h: 1350, label: '4:5 &middot; Portrait' },
+        '9:16': { w: 1080, h: 1920, label: '9:16 &middot; Story' },
+        '16:9': { w: 1920, h: 1080, label: '16:9 &middot; Landscape' }
+      };
+
+      var FONTS = {
+        'inter':   { label: 'Inter',            stack: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" },
+        'jakarta': { label: 'Plus Jakarta',     stack: "'Plus Jakarta Sans', 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif" },
+        'poppins': { label: 'Poppins',          stack: "'Poppins', 'Helvetica Neue', Arial, sans-serif" },
+        'playfair':{ label: 'Playfair Display', stack: "'Playfair Display', Georgia, 'Times New Roman', serif" }
+      };
+
+      var NUM_STYLES = {
+        'bottom-right':  'Bottom right',
+        'bottom-center': 'Bottom center',
+        'hidden':        'Hidden'
+      };
+
+      var SAMPLE_MD = [
+        '# Why Most Startups Fail',
+        '',
+        '- 42% fail due to no market need',
+        '- 29% run out of cash',
+        '- 23% have the wrong team',
+        '- 19% get outcompeted',
+        '',
+        '> Build something people actually want.',
+        '',
+        '# The MVP Mindset',
+        '',
+        '1. Identify the core problem',
+        '2. Strip features to the essentials',
+        '3. Ship in weeks, not months',
+        '4. Measure, learn, iterate',
+        '',
+        '# Avoid These Pitfalls',
+        '',
+        '- Building before talking to users',
+        '- Optimizing for premature scale',
+        '- Ignoring unit economics',
+        '- Hiring too fast',
+        '',
+        '# Ship. Learn. Repeat.',
+        '',
+        'Your first 10 users matter more than your next 10,000.',
+        '',
+        '> Speed beats perfection. Always.',
+        '',
+        '# Thank You',
+        '',
+        'Follow for more startup insights.',
+        '',
+        '- Share if this helped',
+        '- Save for later'
+      ].join('\n');
+
+      // ----- State -----
+      var state = {
+        theme: 'minimal-light',
+        aspectRatio: '1:1',
+        fontFamily: 'inter',
+        slideNumberStyle: 'bottom-right',
+        showHandle: false,
+        handleText: '@yourhandle',
+        accentColor: '' // empty = theme default
+      };
+      var slides = [];
+      var isExporting = false;
+      var modalIndex = -1;
+
+      // ----- DOM refs -----
+      var mdInput = doc.getElementById('mdInput');
+      var slideCountEl = doc.getElementById('slideCount');
+      var slideLabelEl = doc.getElementById('slideLabel');
+      var loadSampleBtn = doc.getElementById('loadSampleBtn');
+      var themeGrid = doc.getElementById('themeGrid');
+      var ratioGroup = doc.getElementById('ratioGroup');
+      var fontGroup = doc.getElementById('fontGroup');
+      var numStyleGroup = doc.getElementById('numStyleGroup');
+      var accentColorInput = doc.getElementById('accentColor');
+      var accentHex = doc.getElementById('accentHex');
+      var resetAccentBtn = doc.getElementById('resetAccentBtn');
+      var handleToggle = doc.getElementById('handleToggle');
+      var handleText = doc.getElementById('handleText');
+      var previewList = doc.getElementById('previewList');
+      var previewCount = doc.getElementById('previewCount');
+      var previewRatio = doc.getElementById('previewRatio');
+      var downloadZipBtn = doc.getElementById('downloadZipBtn');
+      var downloadAllIndivBtn = doc.getElementById('downloadAllIndivBtn');
+      var progressWrap = doc.getElementById('progressWrap');
+      var progressLabel = doc.getElementById('progressLabel');
+      var progressFill = doc.getElementById('progressFill');
+      var toast = doc.getElementById('toast');
+      var modal = doc.getElementById('modal');
+      var modalContent = doc.getElementById('modalContent');
+      var modalClose = doc.getElementById('modalClose');
+      var modalPrev = doc.getElementById('modalPrev');
+      var modalNext = doc.getElementById('modalNext');
+      var themeToggle = doc.getElementById('themeToggle');
+      var themesShowcase = doc.getElementById('themesShowcase');
+
+      // ----- Theme toggle -----
+      themeToggle.addEventListener('click', function(){
+        var current = doc.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('carousel-theme', next);
+      });
+
+      // ----- Toast -----
+      var toastTimer = null;
+      function showToast(msg, isError){
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){
+          toast.className = 'toast' + (isError ? ' error' : '');
+        }, 3400);
+      }
+
+      // ----- Helpers -----
+      function escapeXml(s){
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+      }
+      function escapeHtml(s){
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+      function slugify(s){
+        return String(s).toLowerCase().trim()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .substring(0, 40) || 'untitled';
+      }
+
+      // ----- Markdown parsing -----
+      function parseSlides(markdown){
+        if (!markdown || !markdown.trim()) return [];
+        var lines = markdown.split('\n');
+        var result = [];
+        var current = null;
+
+        function pushCurrent(){
+          if (current && (current.title || current.body.some(function(l){ return l.trim(); }))) {
+            result.push(current);
+          }
+          current = null;
+        }
+
+        for (var i = 0; i < lines.length; i++){
+          var line = lines[i];
+          var trimmed = line.trim();
+          if (/^#\s+/.test(trimmed)) {
+            pushCurrent();
+            current = { title: trimmed.replace(/^#\s+/, ''), body: [] };
+          } else if (/^##\s+/.test(trimmed)) {
+            pushCurrent();
+            current = { title: trimmed.replace(/^##\s+/, ''), body: [] };
+          } else if (/^---+\s*$/.test(trimmed)) {
+            pushCurrent();
+            current = { title: '', body: [] };
+          } else {
+            if (!current) current = { title: '', body: [] };
+            current.body.push(line);
+          }
+        }
+        pushCurrent();
+        return result;
+      }
+
+      // ----- XHTML serializer (for SVG foreignObject) -----
+      var SELF_CLOSING = { br:1, img:1, hr:1, input:1, meta:1, link:1, area:1, base:1, col:1, embed:1, source:1, track:1, wbr:1 };
+      function serializeNode(node){
+        if (node.nodeType === 3) return escapeXml(node.textContent);
+        if (node.nodeType === 8) return '';
+        if (node.nodeType !== 1) return '';
+        var tag = node.tagName.toLowerCase();
+        var attrs = '';
+        var attrsList = node.attributes;
+        for (var i = 0; i < attrsList.length; i++){
+          attrs += ' ' + attrsList[i].name + '="' + escapeXml(attrsList[i].value) + '"';
+        }
+        if (SELF_CLOSING[tag]) return '<' + tag + attrs + ' />';
+        var inner = '';
+        var children = node.childNodes;
+        for (var j = 0; j < children.length; j++){
+          inner += serializeNode(children[j]);
+        }
+        return '<' + tag + attrs + '>' + inner + '</' + tag + '>';
+      }
+      function xhtmlSerialize(element){
+        var out = '';
+        var children = element.childNodes;
+        for (var i = 0; i < children.length; i++){
+          out += serializeNode(children[i]);
+        }
+        return out;
+      }
+
+      // ----- Body markdown -> styled XHTML -----
+      function parseBodyMarkdown(md, accent, baseFont, fontStack){
+        if (!md || !md.trim()) return '';
+        var html;
+        try {
+          if (window.marked && window.marked.parse) {
+            html = window.marked.parse(md, { breaks: true, gfm: true });
+          } else {
+            // Fallback: simple paragraph wrap
+            html = '<p>' + escapeHtml(md) + '</p>';
+          }
+        } catch(e){
+          html = '<p>' + escapeHtml(md) + '</p>';
+        }
+
+        var temp = doc.createElement('div');
+        temp.innerHTML = html;
+        styleBodyNodes(temp, accent, baseFont, fontStack);
+        return xhtmlSerialize(temp);
+      }
+
+      function styleBodyNodes(element, accent, baseFont, fontStack){
+        var bf = baseFont;
+        var styles = {
+          'ul':        'list-style:none;padding-left:0;margin:0;',
+          'ol':        'list-style:none;padding-left:0;margin:0;',
+          'li':        'font-size:' + bf + 'px;line-height:1.55;margin-bottom:' + Math.round(bf*0.45) + 'px;padding-left:' + Math.round(bf*1.15) + 'px;position:relative;',
+          'p':         'font-size:' + bf + 'px;line-height:1.55;margin:0 0 ' + Math.round(bf*0.5) + 'px 0;',
+          'blockquote':'font-size:' + Math.round(bf*1.05) + 'px;line-height:1.5;margin:' + Math.round(bf*0.5) + 'px 0;padding:' + Math.round(bf*0.55) + 'px ' + bf + 'px;border-left:4px solid ' + accent + ';background:rgba(255,255,255,0.10);border-radius:8px;font-style:italic;',
+          'strong':    'font-weight:700;color:' + accent + ';',
+          'em':        'font-style:italic;',
+          'a':         'color:' + accent + ';text-decoration:underline;',
+          'code':      'font-family:Menlo,Monaco,Consolas,monospace;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;font-size:0.88em;',
+          'pre':       'font-family:Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,0.25);padding:' + Math.round(bf*0.5) + 'px;border-radius:8px;overflow:hidden;margin:0 0 ' + Math.round(bf*0.5) + 'px 0;',
+          'h1':        'font-size:' + Math.round(bf*1.5) + 'px;font-weight:800;line-height:1.2;margin:0 0 ' + Math.round(bf*0.6) + 'px 0;',
+          'h2':        'font-size:' + Math.round(bf*1.3) + 'px;font-weight:700;line-height:1.2;margin:0 0 ' + Math.round(bf*0.5) + 'px 0;',
+          'h3':        'font-size:' + Math.round(bf*1.15) + 'px;font-weight:700;margin:0 0 ' + Math.round(bf*0.4) + 'px 0;',
+          'hr':        'border:none;border-top:1px solid currentColor;opacity:0.3;margin:' + bf + 'px 0;',
+          'br':        ''
+        };
+
+        Object.keys(styles).forEach(function(tag){
+          var els = element.querySelectorAll(tag);
+          for (var i = 0; i < els.length; i++){
+            if (styles[tag]) els[i].setAttribute('style', styles[tag]);
+          }
+        });
+
+        // Apply font family to all text-bearing elements
+        var allEls = element.querySelectorAll('p,li,blockquote,h1,h2,h3,h4,h5,h6,code,pre,a,strong,em,span,div');
+        for (var k = 0; k < allEls.length; k++){
+          var el = allEls[k];
+          var existing = el.getAttribute('style') || '';
+          if (existing.indexOf('font-family') === -1){
+            el.setAttribute('style', existing + 'font-family:' + fontStack + ';');
+          }
+        }
+
+        // Add bullet markers for ul
+        var uls = element.querySelectorAll('ul');
+        for (var u = 0; u < uls.length; u++){
+          var lis = uls[u].children;
+          for (var li = 0; li < lis.length; li++){
+            if (lis[li].tagName.toLowerCase() !== 'li') continue;
+            var marker = doc.createElement('span');
+            marker.textContent = '\u2022';
+            marker.setAttribute('style', 'position:absolute;left:0;top:0;color:' + accent + ';font-weight:700;font-size:' + bf + 'px;font-family:' + fontStack + ';');
+            lis[li].insertBefore(marker, lis[li].firstChild);
+          }
+        }
+
+        // Add number markers for ol
+        var ols = element.querySelectorAll('ol');
+        for (var o = 0; o < ols.length; o++){
+          var olis = ols[o].children;
+          var n = 1;
+          for (var oi = 0; oi < olis.length; oi++){
+            if (olis[oi].tagName.toLowerCase() !== 'li') continue;
+            var numMarker = doc.createElement('span');
+            numMarker.textContent = (n++) + '.';
+            numMarker.setAttribute('style', 'position:absolute;left:0;top:0;color:' + accent + ';font-weight:700;font-size:' + bf + 'px;font-family:' + fontStack + ';');
+            olis[oi].insertBefore(numMarker, olis[oi].firstChild);
+          }
+        }
+      }
+
+      // ----- Generate slide HTML (with inline styles, for both preview & export) -----
+      function generateSlideHTML(slide, idx, total, forExport){
+        var theme = THEMES[state.theme];
+        var accent = state.accentColor || theme.accentDefault;
+        var fontStack = FONTS[state.fontFamily].stack;
+        var dims = ASPECT_RATIOS[state.aspectRatio];
+        var w = dims.w, h = dims.h;
+        var baseFont = Math.round(w / 29); // ~37px at 1080
+        var padding = Math.round(w / 13.5); // ~80px at 1080
+        var bg = theme.background;
+        var textColor = theme.textColor;
+        var mutedColor = theme.mutedColor;
+
+        // Title
+        var titleHTML = '';
+        if (slide.title){
+          titleHTML = '<h1 xmlns="http://www.w3.org/1999/xhtml" style="font-size:' + Math.round(baseFont*1.85) + 'px;font-weight:800;line-height:1.12;margin:0 0 ' + Math.round(baseFont*0.85) + 'px 0;color:' + textColor + ';font-family:' + fontStack + ';letter-spacing:-0.02em;">' + escapeXml(slide.title) + '</h1>';
+        }
+
+        // Body
+        var bodyHTML = parseBodyMarkdown(slide.body.join('\n'), accent, baseFont, fontStack);
+
+        // Slide number
+        var numberHTML = '';
+        if (state.slideNumberStyle !== 'hidden'){
+          var numText = String(idx+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+          var posStyle = state.slideNumberStyle === 'bottom-center'
+            ? 'bottom:' + Math.round(padding*0.35) + 'px;left:50%;transform:translateX(-50%);'
+            : 'bottom:' + Math.round(padding*0.35) + 'px;right:' + Math.round(padding*0.55) + 'px;';
+          numberHTML = '<div xmlns="http://www.w3.org/1999/xhtml" style="position:absolute;' + posStyle + 'font-size:' + Math.round(baseFont*0.62) + 'px;color:' + mutedColor + ';font-family:' + fontStack + ';font-weight:500;letter-spacing:0.06em;">' + numText + '</div>';
+        }
+
+        // Handle
+        var handleHTML = '';
+        if (state.showHandle && state.handleText){
+          handleHTML = '<div xmlns="http://www.w3.org/1999/xhtml" style="position:absolute;bottom:' + Math.round(padding*0.35) + 'px;left:' + Math.round(padding*0.55) + 'px;font-size:' + Math.round(baseFont*0.68) + 'px;color:' + mutedColor + ';font-family:' + fontStack + ';font-weight:500;">' + escapeXml(state.handleText) + '</div>';
+        }
+
+        var xmlnsAttr = forExport ? 'xmlns="http://www.w3.org/1999/xhtml" ' : '';
+        return '<div ' + xmlnsAttr + 'style="width:' + w + 'px;height:' + h + 'px;background:' + bg + ';color:' + textColor + ';font-family:' + fontStack + ';padding:' + padding + 'px;display:flex;flex-direction:column;justify-content:center;position:relative;box-sizing:border-box;overflow:hidden;">' + titleHTML + '<div xmlns="http://www.w3.org/1999/xhtml" style="flex:1;display:flex;flex-direction:column;justify-content:center;">' + bodyHTML + '</div>' + numberHTML + handleHTML + '</div>';
+      }
+
+      // ----- Render preview -----
+      function renderPreview(){
+        slides = parseSlides(mdInput.value);
+        var count = slides.length;
+        slideCountEl.textContent = count;
+        slideLabelEl.textContent = count === 1 ? 'slide' : 'slides';
+        previewCount.textContent = count;
+        previewRatio.textContent = state.aspectRatio;
+
+        previewList.innerHTML = '';
+        downloadZipBtn.disabled = count === 0;
+        downloadAllIndivBtn.disabled = count === 0;
+
+        if (count === 0){
+          var empty = doc.createElement('div');
+          empty.className = 'preview-card-empty';
+          empty.textContent = 'Your slides will appear here. Start typing Markdown on the left, or click "Load sample".';
+          previewList.appendChild(empty);
+          return;
+        }
+
+        var dims = ASPECT_RATIOS[state.aspectRatio];
+        var w = dims.w, h = dims.h;
+        var previewW = Math.min(380, previewList.clientWidth - 4);
+        if (previewW < 200) previewW = 380;
+        var scale = previewW / w;
+        var previewH = h * scale;
+
+        for (var i = 0; i < count; i++){
+          var slide = slides[i];
+          var slideHTML = generateSlideHTML(slide, i, count, false);
+
+          var item = doc.createElement('div');
+          item.className = 'preview-item';
+
+          var card = doc.createElement('div');
+          card.className = 'preview-card';
+          card.style.width = previewW + 'px';
+          card.style.height = previewH + 'px';
+          card.innerHTML = '<div style="width:' + w + 'px;height:' + h + 'px;transform:scale(' + scale + ');transform-origin:top left;">' + slideHTML + '</div>';
+          (function(idx){
+            card.addEventListener('click', function(){ openModal(idx); });
+          })(i);
+
+          var actions = doc.createElement('div');
+          actions.className = 'preview-item-actions';
+          actions.innerHTML =
+            '<span class="preview-item-num">' + String(i+1).padStart(2,'0') + '</span>' +
+            '<span class="preview-item-title">' + escapeHtml(slide.title || '(untitled)') + '</span>' +
+            '<button class="btn btn-ghost btn-sm dl-one-btn" data-idx="' + i + '" type="button">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+              'Download PNG' +
+            '</button>';
+
+          item.appendChild(card);
+          item.appendChild(actions);
+          previewList.appendChild(item);
+        }
+
+        // Wire up per-slide download buttons
+        var dlBtns = previewList.querySelectorAll('.dl-one-btn');
+        for (var d = 0; d < dlBtns.length; d++){
+          dlBtns[d].addEventListener('click', function(e){
+            e.stopPropagation();
+            var idx = parseInt(this.getAttribute('data-idx'), 10);
+            downloadOne(idx, this);
+          });
+        }
+      }
+
+      // ----- SVG to PNG -----
+      function slideToPng(slide, idx, total){
+        return new Promise(function(resolve, reject){
+          var dims = ASPECT_RATIOS[state.aspectRatio];
+          var w = dims.w, h = dims.h;
+          var slideHTML = generateSlideHTML(slide, idx, total, true);
+
+          var svgString = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '"><foreignObject width="100%" height="100%">' + slideHTML + '</foreignObject></svg>';
+
+          // Use a data: URL (not a blob: URL) to avoid canvas tainting.
+          // Blob URLs cause "Tainted canvases may not be exported" in most browsers
+          // when the SVG contains a foreignObject, even with fully inline styles.
+          // Data URLs are treated as same-origin and do not taint the canvas.
+          var svgDataUrl;
+          try {
+            svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+          } catch(e){
+            reject(e);
+            return;
+          }
+          var img = new Image();
+          img.onload = function(){
+            try {
+              var canvas = doc.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              var ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+              canvas.toBlob(function(pngBlob){
+                if (pngBlob) resolve(pngBlob);
+                else reject(new Error('toBlob returned null'));
+              }, 'image/png');
+            } catch(err){
+              reject(err);
+            }
+          };
+          img.onerror = function(){
+            reject(new Error('SVG image failed to load'));
+          };
+          img.src = svgDataUrl;
+        });
+      }
+
+      function downloadBlob(blob, filename){
+        var url = URL.createObjectURL(blob);
+        var a = doc.createElement('a');
+        a.href = url;
+        a.download = filename;
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+      }
+
+      // ----- Download one slide -----
+      function downloadOne(idx, btn){
+        if (isExporting) return;
+        if (idx < 0 || idx >= slides.length) return;
+        var slide = slides[idx];
+        var originalHTML = btn ? btn.innerHTML : '';
+        if (btn){ btn.disabled = true; btn.innerHTML = 'Rendering&hellip;'; }
+
+        slideToPng(slide, idx, slides.length).then(function(blob){
+          var filename = 'slide-' + String(idx+1).padStart(2,'0') + '-' + slugify(slide.title || 'untitled') + '.png';
+          downloadBlob(blob, filename);
+          showToast('Downloaded ' + filename);
+        }).catch(function(err){
+          showToast('Export failed: ' + (err.message || err), true);
+        }).then(function(){
+          if (btn){ btn.disabled = false; btn.innerHTML = originalHTML; }
+        });
+      }
+
+      // ----- Download all as ZIP -----
+      function downloadAllZip(){
+        if (isExporting || slides.length === 0) return;
+        isExporting = true;
+        setExportingState(true);
+        progressWrap.classList.add('active');
+        progressLabel.textContent = 'Rendering slides&hellip;';
+        progressFill.style.width = '0%';
+
+        if (!window.JSZip){
+          showToast('JSZip failed to load. Check your connection.', true);
+          isExporting = false;
+          setExportingState(false);
+          progressWrap.classList.remove('active');
+          return;
+        }
+
+        var zip = new JSZip();
+        var total = slides.length;
+        var completed = 0;
+        var failed = 0;
+
+        function processNext(i){
+          if (i >= total){
+            // All done
+            progressLabel.textContent = 'Compressing ZIP&hellip;';
+            progressFill.style.width = '95%';
+            var ts = new Date();
+            var stamp = ts.getFullYear() + String(ts.getMonth()+1).padStart(2,'0') + String(ts.getDate()).padStart(2,'0') + '-' + String(ts.getHours()).padStart(2,'0') + String(ts.getMinutes()).padStart(2,'0') + String(ts.getSeconds()).padStart(2,'0');
+            var zipName = 'carousel-' + stamp + '.zip';
+            zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } }).then(function(blob){
+              downloadBlob(blob, zipName);
+              showToast('Downloaded ' + zipName + (failed ? ' (' + failed + ' failed)' : ''));
+              progressFill.style.width = '100%';
+              setTimeout(function(){ progressWrap.classList.remove('active'); }, 800);
+              isExporting = false;
+              setExportingState(false);
+            }).catch(function(err){
+              showToast('ZIP creation failed: ' + (err.message || err), true);
+              isExporting = false;
+              setExportingState(false);
+              progressWrap.classList.remove('active');
+            });
+            return;
+          }
+          var slide = slides[i];
+          slideToPng(slide, i, total).then(function(blob){
+            var filename = 'slide-' + String(i+1).padStart(2,'0') + '-' + slugify(slide.title || 'untitled') + '.png';
+            zip.file(filename, blob);
+            completed++;
+            progressFill.style.width = Math.round((completed / total) * 90) + '%';
+            progressLabel.textContent = 'Rendering slide ' + (i+1) + ' of ' + total + '&hellip;';
+            processNext(i + 1);
+          }).catch(function(){
+            failed++;
+            completed++;
+            progressFill.style.width = Math.round((completed / total) * 90) + '%';
+            processNext(i + 1);
+          });
+        }
+        processNext(0);
+      }
+
+      // ----- Download all individually -----
+      function downloadAllIndividually(){
+        if (isExporting || slides.length === 0) return;
+        isExporting = true;
+        setExportingState(true);
+        progressWrap.classList.add('active');
+        progressLabel.textContent = 'Rendering slides&hellip;';
+        progressFill.style.width = '0%';
+
+        var total = slides.length;
+        var completed = 0;
+        var failed = 0;
+        var downloaded = 0;
+
+        // Browsers may block multiple downloads; warn the user
+        showToast('Downloading ' + total + ' slides. If your browser asks for permission, click "Allow".');
+
+        function processNext(i){
+          if (i >= total){
+            showToast('Downloaded ' + downloaded + ' slide' + (downloaded===1?'':'s') + (failed ? ' (' + failed + ' failed)' : ''));
+            progressFill.style.width = '100%';
+            setTimeout(function(){ progressWrap.classList.remove('active'); }, 600);
+            isExporting = false;
+            setExportingState(false);
+            return;
+          }
+          var slide = slides[i];
+          slideToPng(slide, i, total).then(function(blob){
+            var filename = 'slide-' + String(i+1).padStart(2,'0') + '-' + slugify(slide.title || 'untitled') + '.png';
+            downloadBlob(blob, filename);
+            downloaded++;
+            completed++;
+            progressFill.style.width = Math.round((completed / total) * 100) + '%';
+            progressLabel.textContent = 'Downloaded ' + completed + ' of ' + total + '&hellip;';
+            setTimeout(function(){ processNext(i + 1); }, 450);
+          }).catch(function(){
+            failed++;
+            completed++;
+            progressFill.style.width = Math.round((completed / total) * 100) + '%';
+            processNext(i + 1);
+          });
+        }
+        processNext(0);
+      }
+
+      function setExportingState(on){
+        downloadZipBtn.disabled = on || slides.length === 0;
+        downloadAllIndivBtn.disabled = on || slides.length === 0;
+        var dlBtns = previewList.querySelectorAll('.dl-one-btn');
+        for (var i = 0; i < dlBtns.length; i++){
+          dlBtns[i].disabled = on;
+        }
+      }
+
+      // ----- Modal -----
+      function openModal(idx){
+        if (idx < 0 || idx >= slides.length) return;
+        modalIndex = idx;
+        renderModal();
+        modal.classList.add('open');
+        doc.body.style.overflow = 'hidden';
+      }
+      function renderModal(){
+        var dims = ASPECT_RATIOS[state.aspectRatio];
+        var w = dims.w, h = dims.h;
+        var maxW = window.innerWidth * 0.86;
+        var maxH = window.innerHeight * 0.84;
+        var scale = Math.min(maxW / w, maxH / h);
+        var dispW = w * scale, dispH = h * scale;
+        var slideHTML = generateSlideHTML(slides[modalIndex], modalIndex, slides.length, false);
+        modalContent.style.width = dispW + 'px';
+        modalContent.style.height = dispH + 'px';
+        modalContent.innerHTML = '<div style="width:' + w + 'px;height:' + h + 'px;transform:scale(' + scale + ');transform-origin:top left;">' + slideHTML + '</div>';
+        modalPrev.disabled = modalIndex <= 0;
+        modalNext.disabled = modalIndex >= slides.length - 1;
+      }
+      function closeModal(){
+        modal.classList.remove('open');
+        doc.body.style.overflow = '';
+        modalIndex = -1;
+      }
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e){
+        if (e.target === modal) closeModal();
+      });
+      modalPrev.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (modalIndex > 0){ modalIndex--; renderModal(); }
+      });
+      modalNext.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (modalIndex < slides.length - 1){ modalIndex++; renderModal(); }
+      });
+      doc.addEventListener('keydown', function(e){
+        if (!modal.classList.contains('open')) return;
+        if (e.key === 'Escape') closeModal();
+        else if (e.key === 'ArrowLeft' && modalIndex > 0){ modalIndex--; renderModal(); }
+        else if (e.key === 'ArrowRight' && modalIndex < slides.length - 1){ modalIndex++; renderModal(); }
+      });
+
+      // ----- Build settings UI -----
+      function buildThemeGrid(){
+        themeGrid.innerHTML = '';
+        Object.keys(THEMES).forEach(function(key){
+          var t = THEMES[key];
+          var sw = doc.createElement('div');
+          sw.className = 'swatch' + (state.theme === key ? ' selected' : '');
+          sw.setAttribute('data-theme', key);
+          sw.setAttribute('role', 'button');
+          sw.setAttribute('tabindex', '0');
+          sw.setAttribute('aria-label', t.name);
+          var borderStyle = t.swatchBorder !== 'transparent' ? 'border:1px solid ' + t.swatchBorder + ';' : '';
+          sw.innerHTML = '<div class="swatch-preview" style="background:' + t.swatchBg + ';color:' + t.swatchColor + ';' + borderStyle + '">Aa</div><div class="swatch-name">' + t.name + '</div>';
+          sw.addEventListener('click', function(){ selectTheme(key); });
+          sw.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); selectTheme(key); } });
+          themeGrid.appendChild(sw);
+        });
+      }
+      function selectTheme(key){
+        state.theme = key;
+        var swatches = themeGrid.querySelectorAll('.swatch');
+        for (var i = 0; i < swatches.length; i++){
+          swatches[i].classList.toggle('selected', swatches[i].getAttribute('data-theme') === key);
+        }
+        // Reset accent to theme default when switching themes (if accent is empty or was a theme default)
+        if (!state.accentColor){
+          accentColorInput.value = THEMES[key].accentDefault;
+          accentHex.textContent = THEMES[key].accentDefault.toUpperCase();
+        }
+        renderPreview();
+      }
+
+      function buildRatioGroup(){
+        ratioGroup.innerHTML = '';
+        Object.keys(ASPECT_RATIOS).forEach(function(key){
+          var r = ASPECT_RATIOS[key];
+          var pill = doc.createElement('label');
+          pill.className = 'radio-pill' + (state.aspectRatio === key ? ' selected' : '');
+          pill.innerHTML = '<input type="radio" name="ratio" value="' + key + '"' + (state.aspectRatio === key ? ' checked' : '') + '>' + r.label;
+          pill.addEventListener('click', function(){
+            state.aspectRatio = key;
+            buildRatioGroup();
+            renderPreview();
+          });
+          ratioGroup.appendChild(pill);
+        });
+      }
+
+      function buildFontGroup(){
+        fontGroup.innerHTML = '';
+        Object.keys(FONTS).forEach(function(key){
+          var f = FONTS[key];
+          var pill = doc.createElement('label');
+          pill.className = 'radio-pill' + (state.fontFamily === key ? ' selected' : '');
+          pill.style.fontFamily = f.stack;
+          pill.innerHTML = '<input type="radio" name="font" value="' + key + '"' + (state.fontFamily === key ? ' checked' : '') + '>' + f.label;
+          pill.addEventListener('click', function(){
+            state.fontFamily = key;
+            buildFontGroup();
+            renderPreview();
+          });
+          fontGroup.appendChild(pill);
+        });
+      }
+
+      function buildNumStyleGroup(){
+        numStyleGroup.innerHTML = '';
+        Object.keys(NUM_STYLES).forEach(function(key){
+          var pill = doc.createElement('label');
+          pill.className = 'radio-pill' + (state.slideNumberStyle === key ? ' selected' : '');
+          pill.innerHTML = '<input type="radio" name="numstyle" value="' + key + '"' + (state.slideNumberStyle === key ? ' checked' : '') + '>' + NUM_STYLES[key];
+          pill.addEventListener('click', function(){
+            state.slideNumberStyle = key;
+            buildNumStyleGroup();
+            renderPreview();
+          });
+          numStyleGroup.appendChild(pill);
+        });
+      }
+
+      function buildThemesShowcase(){
+        themesShowcase.innerHTML = '';
+        Object.keys(THEMES).forEach(function(key){
+          var t = THEMES[key];
+          var card = doc.createElement('div');
+          card.className = 'theme-card';
+          var borderStyle = t.swatchBorder !== 'transparent' ? 'border:1px solid ' + t.swatchBorder + ';' : '';
+          card.innerHTML =
+            '<div class="theme-card-preview" style="background:' + t.swatchBg + ';color:' + t.swatchColor + ';' + borderStyle + '">' + t.name + '</div>' +
+            '<h4>' + t.name + '</h4>' +
+            '<p>' + t.desc + '</p>';
+          themesShowcase.appendChild(card);
+        });
+      }
+
+      // ----- Event listeners -----
+      var renderTimer = null;
+      mdInput.addEventListener('input', function(){
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(renderPreview, 180);
+      });
+
+      loadSampleBtn.addEventListener('click', function(){
+        mdInput.value = SAMPLE_MD;
+        renderPreview();
+        showToast('Sample carousel loaded — 5 slides');
+      });
+
+      accentColorInput.addEventListener('input', function(){
+        state.accentColor = this.value;
+        accentHex.textContent = this.value.toUpperCase();
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(renderPreview, 120);
+      });
+
+      resetAccentBtn.addEventListener('click', function(){
+        state.accentColor = '';
+        var def = THEMES[state.theme].accentDefault;
+        accentColorInput.value = def;
+        accentHex.textContent = def.toUpperCase();
+        renderPreview();
+        showToast('Accent reset to theme default');
+      });
+
+      handleToggle.addEventListener('click', function(){
+        state.showHandle = !state.showHandle;
+        handleToggle.classList.toggle('on', state.showHandle);
+        handleToggle.setAttribute('aria-checked', state.showHandle ? 'true' : 'false');
+        handleText.disabled = !state.showHandle;
+        renderPreview();
+      });
+      handleToggle.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          handleToggle.click();
+        }
+      });
+      handleText.addEventListener('input', function(){
+        state.handleText = this.value;
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(renderPreview, 180);
+      });
+
+      downloadZipBtn.addEventListener('click', downloadAllZip);
+      downloadAllIndivBtn.addEventListener('click', downloadAllIndividually);
+
+      // FAQ accordion
+      var faqItems = doc.querySelectorAll('.faq-item');
+      for (var f = 0; f < faqItems.length; f++){
+        (function(item){
+          var q = item.querySelector('.faq-q');
+          q.addEventListener('click', function(){
+            item.classList.toggle('open');
+          });
+        })(faqItems[f]);
+      }
+
+      // Window resize -> re-render modal
+      var resizeTimer = null;
+      window.addEventListener('resize', function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+          if (modal.classList.contains('open')) renderModal();
+          renderPreview();
+        }, 200);
+      });
+
+      // ----- Init -----
+      doc.getElementById('footerYear').textContent = new Date().getFullYear();
+      buildThemeGrid();
+      buildRatioGroup();
+      buildFontGroup();
+      buildNumStyleGroup();
+      buildThemesShowcase();
+
+      // Set initial accent display
+      accentColorInput.value = THEMES[state.theme].accentDefault;
+      accentHex.textContent = THEMES[state.theme].accentDefault.toUpperCase();
+
+      renderPreview();
+    })();
+  </script>
+</body>
+</html>
