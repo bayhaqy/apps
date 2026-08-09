@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Small, focused web tools by Achmad Bayhaqy. Privacy-first, offline-capable, no tracking." />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Apps by Achmad Bayhaqy" />
+  <meta property="og:description" content="Small, focused web tools. Privacy-first, offline-capable, no tracking." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/" />
+  <title>Apps — Achmad Bayhaqy</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:880px;margin:0 auto;padding:0 1.25rem}
+    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border)}
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;box-shadow:0 4px 12px -2px rgba(220,38,38,0.4)}
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s}
+    .header-links a:hover{color:var(--fg);background:var(--bg-2)}
+    .theme-toggle{width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);background:var(--bg-2);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background .15s,border-color .15s}
+    .theme-toggle:hover{background:var(--card-border-hover)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+    .hero{padding:3.5rem 0 2rem;text-align:center}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:.4rem;background:var(--bg-2);border:1px solid var(--card-border);color:var(--accent);font-size:.78rem;font-weight:600;padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.1rem}
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{font-size:clamp(2.2rem,5.5vw,3rem);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin-bottom:.85rem}
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{font-size:1.1rem;color:var(--muted);max-width:580px;margin:0 auto 2rem}
+    .app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;padding-bottom:4rem}
+    .app-card{display:block;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);text-decoration:none;color:var(--fg);transition:transform .15s,border-color .15s,box-shadow .15s}
+    .app-card:hover{transform:translateY(-3px);border-color:var(--card-border-hover);box-shadow:0 16px 36px -10px rgba(15,23,42,0.18)}
+    .app-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;letter-spacing:-.5px;margin-bottom:1rem;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45)}
+    .app-card h3{font-size:1.2rem;margin-bottom:.4rem}
+    .app-card p{color:var(--muted);font-size:.92rem;line-height:1.55;margin-bottom:.85rem}
+    .app-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+    .app-tag{font-size:.74rem;font-weight:600;color:var(--accent);background:rgba(220,38,38,0.08);padding:.2rem .55rem;border-radius:999px;letter-spacing:.04em}
+    .app-card .arrow{display:inline-block;color:var(--accent);font-size:.9rem;font-weight:600;margin-top:.4rem}
+    footer.site-footer{border-top:1px solid var(--card-border);padding:2rem 0}
+    .footer-inner{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+  </style>
+  <script>
+    (function(){
+      var saved = localStorage.getItem('apps-theme') || localStorage.getItem('bayhaqy-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Apps by Achmad Bayhaqy",
+    "url": "https://bayhaqy.my.id/apps/",
+    "description": "Small, focused, privacy-first web tools. Offline-capable, no tracking.",
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BayMerge",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/baymerge/",
+    "description": "A free, private, offline PDF merger. Combine multiple PDF files into one directly in your browser — no uploads, no internet, no tracking.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "Merge multiple PDF files into one",
+      "100% client-side — files never leave the browser",
+      "Works offline after first load",
+      "Drag-and-drop file reordering",
+      "No watermarks, no sign-up, no tracking"
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/" class="brand">
+        <span class="brand-logo">A</span>
+        <span>Apps</span>
+      </a>
+      <nav class="header-links">
+        <a href="https://bayhaqy.my.id/">← Back to portfolio</a>
+        <a href="https://bayhaqy.my.id/games">Games</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">By Achmad Bayhaqy</span>
+        <h1>Small tools, <span class="accent">built right</span></h1>
+        <p class="sub">A growing collection of focused, privacy-first web apps. No tracking, no uploads, no nonsense — just useful tools that run in your browser.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="app-grid">
+        <a class="app-card" href="/apps/baymerge/">
+          <div class="app-icon">BM</div>
+          <h3>BayMerge</h3>
+          <p>Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline after first load.</p>
+          <div class="app-tags">
+            <span class="app-tag">PDF</span>
+            <span class="app-tag">Offline</span>
+            <span class="app-tag">Private</span>
+          </div>
+          <span class="arrow">Open BayMerge →</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        <span id="year">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source</a>
+        <a href="https://bayhaqy.my.id/">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games">Games</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('apps-theme', next);
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
