@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Context Packer - a free, private, offline tool that combines many project files into one AI-ready Markdown file for ChatGPT, Claude, and DeepSeek. No uploads, no tracking, works in your browser." />
+  <meta name="keywords" content="AI context packer, context for chatgpt, context for claude, context for deepseek, combine files markdown, prompt builder, ai prompt, llm context, context window, offline prompt, browser prompt, bayhaqy" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Context Packer — Combine Files into AI-Ready Markdown" />
+  <meta property="og:description" content="Drag-drop project files and pack them into a single Markdown file ready to paste into ChatGPT, Claude, or DeepSeek. 100% client-side, no uploads, works offline." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/ai-context-packer/" />
+  <meta property="og:site_name" content="Achmad Bayhaqy" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Context Packer — Combine Files into AI-Ready Markdown" />
+  <meta name="twitter:description" content="Drag-drop project files and pack them into a single Markdown file ready to paste into ChatGPT, Claude, or DeepSeek. 100% client-side, no uploads, works offline." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/ai-context-packer/" />
+  <title>AI Context Packer — Combine Files into AI-Ready Markdown</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECP%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Context Packer",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/ai-context-packer/",
+    "description": "Combine many project files into one AI-ready Markdown file for ChatGPT, Claude, and DeepSeek. Runs 100% client-side with no uploads.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "featureList": [
+      "Multi-file drag-and-drop including folder support",
+      "Token counter using chars/4 heuristic",
+      "Three output templates: Standard Markdown, Compact, XML-tagged for Claude",
+      "Auto-skip binary files (images, PDFs, zips)",
+      "File tree generation with reordering",
+      "Works 100% client-side, no uploads, no tracking"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1040px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:680px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Main card */
+    .packer-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+    .dropzone{
+      border:2px dashed var(--card-border-hover);border-radius:var(--radius-sm);
+      padding:2.5rem 1.5rem;text-align:center;cursor:pointer;
+      transition:border-color .2s,background .2s,transform .2s;
+      background:var(--bg-2);
+    }
+    .dropzone:hover,.dropzone.dragover{
+      border-color:var(--accent);background:rgba(220,38,38,0.04);
+    }
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{
+      width:54px;height:54px;margin:0 auto .85rem;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45);
+    }
+    .dropzone-icon svg{width:26px;height:26px}
+    .dropzone h3{font-size:1.1rem;margin-bottom:.35rem}
+    .dropzone p{color:var(--muted);font-size:.9rem}
+    .dropzone .browse-link{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+    .dropzone .browse-folder{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer;margin-left:.3rem;background:none;border:none;padding:0;font:inherit;font-size:.9rem;display:inline}
+    .dropzone input[type=file]{display:none}
+
+    /* Filter chips */
+    .filter-row{
+      display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .filter-row .filter-label{font-size:.82rem;color:var(--muted);font-weight:600;margin-right:.3rem;text-transform:uppercase;letter-spacing:.05em}
+    .filter-chip{
+      padding:.35rem .8rem;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--bg-2);color:var(--muted);font-size:.85rem;font-weight:500;
+      cursor:pointer;transition:all .15s;font-family:inherit;
+    }
+    .filter-chip:hover{color:var(--fg);border-color:var(--card-border-hover)}
+    .filter-chip.active{background:var(--accent);color:white;border-color:var(--accent)}
+
+    /* File list */
+    .file-list{margin-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
+    .file-list:empty{display:none}
+    .file-item{
+      display:grid;grid-template-columns:auto 1fr auto auto;gap:.85rem;align-items:center;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      padding:.85rem 1rem;border-radius:var(--radius-sm);
+      transition:border-color .15s,background .15s,box-shadow .15s,opacity .15s;
+    }
+    .file-item.skipped{opacity:.55}
+    .file-item.dragging{opacity:.4;border-style:dashed}
+    .file-item.drag-over{border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.1)}
+    .file-handle{cursor:grab;color:var(--muted);padding:0 .2rem;font-size:1.1rem;line-height:1;user-select:none}
+    .file-handle:active{cursor:grabbing}
+    .file-info{min-width:0}
+    .file-name{
+      font-weight:600;font-size:.95rem;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+    }
+    .file-path{font-size:.78rem;color:var(--muted);margin-top:.15rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .file-meta{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+    .ext-badge{
+      display:inline-flex;align-items:center;
+      padding:.1rem .4rem;border-radius:5px;
+      background:var(--chip-bg);color:var(--fg);
+      font-size:.7rem;font-weight:700;letter-spacing:.03em;
+      text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      border:1px solid var(--card-border);
+    }
+    .ext-badge.code{background:rgba(220,38,38,0.1);color:var(--accent);border-color:rgba(220,38,38,0.25)}
+    .ext-badge.docs{background:rgba(16,185,129,0.1);color:var(--green);border-color:rgba(16,185,129,0.25)}
+    .ext-badge.config{background:rgba(245,158,11,0.1);color:var(--accent-2);border-color:rgba(245,158,11,0.25)}
+    .ext-badge.binary{background:rgba(100,116,139,0.12);color:var(--muted);border-color:rgba(100,116,139,0.25)}
+    .skipped-tag{
+      display:inline-flex;align-items:center;gap:.25rem;
+      padding:.1rem .45rem;border-radius:5px;
+      background:rgba(100,116,139,0.12);color:var(--muted);
+      font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+    }
+    .file-controls{display:flex;gap:.25rem}
+    .file-btn{
+      width:32px;height:32px;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--muted);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:background .15s,color .15s,border-color .15s;
+    }
+    .file-btn:hover:not(:disabled){background:var(--chip-bg);color:var(--fg);border-color:var(--card-border-hover)}
+    .file-btn:disabled{opacity:.3;cursor:not-allowed}
+    .file-btn svg{width:14px;height:14px}
+    .file-btn.danger:hover{color:var(--accent);border-color:var(--accent)}
+
+    /* Config panel */
+    .config-panel{
+      margin-top:1.25rem;border:1px solid var(--card-border);border-radius:var(--radius-sm);
+      background:var(--bg-2);overflow:hidden;
+    }
+    .config-toggle{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .config-toggle:hover{background:var(--bg-3)}
+    .config-toggle .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .config-panel.open .config-toggle .chev{transform:rotate(180deg)}
+    .config-body{display:none;padding:0 1.25rem 1.25rem}
+    .config-panel.open .config-body{display:block}
+    .config-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:.5rem}
+    .config-field{display:flex;flex-direction:column;gap:.4rem}
+    .config-field label{font-size:.82rem;font-weight:600;color:var(--fg)}
+    .config-field .hint{font-size:.75rem;color:var(--muted);font-weight:400}
+    .config-field select,.config-field input[type=number]{
+      padding:.55rem .75rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--fg);font-size:.92rem;font-family:inherit;
+      transition:border-color .15s;
+    }
+    .config-field select:focus,.config-field input[type=number]:focus,.config-field textarea:focus{
+      outline:none;border-color:var(--accent);
+    }
+    .config-field textarea{
+      padding:.6rem .8rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--fg);font-size:.9rem;font-family:inherit;
+      min-height:72px;resize:vertical;transition:border-color .15s;line-height:1.5;
+    }
+    .config-field-full{grid-column:1 / -1}
+    .checkbox-row{display:flex;align-items:center;gap:.6rem;cursor:pointer;user-select:none}
+    .checkbox-row input[type=checkbox]{
+      width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;
+    }
+    .checkbox-row span{font-size:.92rem;color:var(--fg);font-weight:500}
+    .config-checkboxes{display:flex;flex-direction:column;gap:.65rem;margin-top:.5rem}
+
+    /* Action bar */
+    .action-bar{
+      display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .action-info{font-size:.88rem;color:var(--muted)}
+    .action-info strong{color:var(--fg);font-weight:600}
+    .action-buttons{display:flex;gap:.6rem;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.25rem;border-radius:10px;border:1px solid transparent;
+      font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px}
+
+    /* Output */
+    .output-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;display:none;
+    }
+    .output-card.active{display:block}
+    .output-head{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;justify-content:space-between;margin-bottom:1rem}
+    .output-title{display:flex;align-items:center;gap:.7rem}
+    .output-icon{
+      width:40px;height:40px;border-radius:10px;background:var(--green);
+      color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .output-icon svg{width:22px;height:22px}
+    .output-card h3{font-size:1.1rem;margin-bottom:.15rem}
+    .output-card .output-sub{color:var(--muted);font-size:.88rem}
+    .output-stats{display:flex;flex-wrap:wrap;gap:1rem;font-size:.82rem;color:var(--muted)}
+    .stat-pill{
+      display:inline-flex;align-items:center;gap:.35rem;
+      padding:.3rem .7rem;border-radius:999px;background:var(--bg-2);
+      border:1px solid var(--card-border);font-weight:500;
+    }
+    .stat-pill strong{color:var(--fg);font-weight:700}
+    .stat-pill .dot{width:8px;height:8px;border-radius:50%}
+    .stat-pill.tokens .dot{background:var(--accent)}
+    .stat-pill.chars .dot{background:var(--accent-2)}
+    .stat-pill.files .dot{background:var(--green)}
+    .output-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+    .output-actions .btn{padding:.55rem .9rem;font-size:.88rem}
+    .output-preview-wrap{
+      margin-top:1rem;border:1px solid var(--card-border);border-radius:var(--radius-sm);
+      background:var(--bg-2);overflow:hidden;
+    }
+    .output-preview-head{
+      padding:.6rem .9rem;border-bottom:1px solid var(--card-border);
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+    }
+    .output-preview{
+      margin:0;padding:1rem;max-height:480px;overflow:auto;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.82rem;line-height:1.55;color:var(--fg);
+      white-space:pre-wrap;word-break:break-word;
+    }
+    .output-preview:empty::before{
+      content:"No files yet. Add files above to generate output.";
+      color:var(--muted);font-style:italic;
+    }
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:680px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:380px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .packer-card,.output-card{padding:1.1rem}
+      .dropzone{padding:1.75rem 1rem}
+      .file-item{grid-template-columns:auto 1fr auto;gap:.6rem;padding:.7rem .85rem}
+      .file-handle{display:none}
+      .action-bar{flex-direction:column;align-items:stretch}
+      .action-buttons{justify-content:stretch}
+      .action-buttons .btn{flex:1;justify-content:center}
+      .header-links a:not(.theme-toggle){display:none}
+      .header-links a.back-link{display:inline;font-size:.85rem}
+      .output-head{flex-direction:column;align-items:stretch}
+      .output-stats{justify-content:flex-start}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('ctxpacker-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/ai-context-packer/" class="brand">
+        <span class="brand-logo">CP</span>
+        <span>AI Context Packer</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener" class="back-link">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · ready for AI</span>
+        <h1>Pack project files <span class="accent">for AI context</span></h1>
+        <p class="sub">Drag-drop code, notes, and configs from your project and AI Context Packer combines them into one clean Markdown file — ready to paste into ChatGPT, Claude, or DeepSeek. Everything runs in your browser. No uploads, no tracking.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Multi-file</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Token counter</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Markdown output</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="packer-card">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3>Drop files or folders here</h3>
+          <p>or <span class="browse-link">browse files</span> <button type="button" class="browse-folder" id="browseFolderLink">· browse folder</button></p>
+          <input type="file" id="fileInput" multiple />
+          <input type="file" id="folderInput" webkitdirectory multiple style="display:none" />
+        </label>
+
+        <div class="filter-row" id="filterRow" style="display:none">
+          <span class="filter-label">Show:</span>
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="code">Code only</button>
+          <button class="filter-chip" data-filter="docs">Docs only</button>
+          <button class="filter-chip" data-filter="config">Configs only</button>
+        </div>
+
+        <div class="file-list" id="fileList"></div>
+
+        <div class="config-panel" id="configPanel">
+          <button class="config-toggle" id="configToggle" type="button">
+            <span>Output configuration</span>
+            <span class="chev">⌄</span>
+          </button>
+          <div class="config-body">
+            <div class="config-grid">
+              <div class="config-field">
+                <label for="tplSelect">Template</label>
+                <select id="tplSelect">
+                  <option value="standard">Standard markdown</option>
+                  <option value="compact">Compact</option>
+                  <option value="xml">XML-tagged (Claude)</option>
+                </select>
+                <span class="hint">XML-tagged wraps each file in <code>&lt;file path="..."&gt;</code> tags.</span>
+              </div>
+              <div class="config-field">
+                <label for="maxSizeInput">Max file size (KB)</label>
+                <input type="number" id="maxSizeInput" min="1" max="102400" value="100" />
+                <span class="hint">Larger files are truncated with a note.</span>
+              </div>
+              <div class="config-field config-field-full">
+                <div class="config-checkboxes">
+                  <label class="checkbox-row"><input type="checkbox" id="treeChk" checked /><span>Include file tree at top</span></label>
+                  <label class="checkbox-row"><input type="checkbox" id="lineChk" /><span>Include line numbers in each file</span></label>
+                  <label class="checkbox-row"><input type="checkbox" id="fenceChk" checked /><span>Wrap each file with code fence matching language</span></label>
+                </div>
+              </div>
+              <div class="config-field config-field-full">
+                <label for="customHeader">Custom header text (optional)</label>
+                <textarea id="customHeader" placeholder="e.g. This is a Node.js Express API project. Please review the architecture and suggest improvements."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <div class="action-info" id="actionInfo">No files added yet.</div>
+          <div class="action-buttons">
+            <button class="btn btn-ghost" id="clearBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              Clear all
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-card" id="outputCard">
+        <div class="output-head">
+          <div class="output-title">
+            <div class="output-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <h3>AI-ready context</h3>
+              <p class="output-sub">Copy this into ChatGPT, Claude, or DeepSeek.</p>
+            </div>
+          </div>
+          <div class="output-stats">
+            <span class="stat-pill files"><span class="dot"></span> <strong id="statFiles">0</strong> files</span>
+            <span class="stat-pill chars"><span class="dot"></span> <strong id="statChars">0</strong> chars</span>
+            <span class="stat-pill tokens"><span class="dot"></span> <strong id="statTokens">0</strong> tokens</span>
+          </div>
+        </div>
+        <div class="output-actions">
+          <button class="btn btn-primary" id="copyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy to clipboard
+          </button>
+          <button class="btn btn-ghost" id="downloadMdBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .md
+          </button>
+          <button class="btn btn-ghost" id="downloadTxtBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .txt
+          </button>
+        </div>
+        <div class="output-preview-wrap">
+          <div class="output-preview-head">
+            <span>Output preview</span>
+            <span id="previewMeta">—</span>
+          </div>
+          <pre class="output-preview" id="outputPreview"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use AI Context Packer</h2>
+        <p>Four simple steps — your files are read locally and combined into one Markdown file. Nothing is uploaded.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Add your files</h4>
+            <p>Drag-drop files or a whole folder onto the dropzone, or click "browse files" / "browse folder". Binary files (images, PDFs, zips) are auto-skipped.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Reorder &amp; configure</h4>
+            <p>Drag the handle (or use arrow keys on mobile) to reorder. Open "Output configuration" to pick a template, set max file size, and toggle the file tree.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Watch the preview</h4>
+            <p>The Markdown output updates live in the preview pane. The token counter (≈ chars ÷ 4) shows how much context you are about to send to the model.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Copy or download</h4>
+            <p>Click "Copy to clipboard" to paste straight into ChatGPT, Claude, or DeepSeek — or download as <code>.md</code> / <code>.txt</code> for later.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+            <h4>Folder-aware drop</h4>
+            <p>Drop an entire project folder and AI Context Packer reads the file tree, preserves relative paths, and skips binaries automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+            <h4>Three output templates</h4>
+            <p>Standard Markdown, Compact (just headings + code), or XML-tagged for Claude. Switch instantly and the preview updates.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Live token counter</h4>
+            <p>A simple chars ÷ 4 heuristic gives an instant estimate of how many tokens your context will cost — no external library, no API calls.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Files are read into memory on your device only. They are never uploaded, never stored, never logged. Verify it in your browser's Network tab.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div>
+            <h4>Works offline</h4>
+            <p>No dependencies, no CDN, no service worker required. Save the page with Ctrl+S and run it from your disk on a plane.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Reorderable &amp; filterable</h4>
+            <p>Drag to reorder, filter by code/docs/configs, and remove files individually. The file tree at the top of the output reflects your chosen order.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Are my files uploaded to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. AI Context Packer runs entirely in your browser using vanilla JavaScript. Your files are read into memory on your own device, combined into a Markdown string, and offered as a preview / download / clipboard copy. Nothing is sent over the network. You can verify this in your browser's DevTools → Network tab while you work.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does it work without internet? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. The app has zero external dependencies — no CDN, no fonts, no analytics. Once the page has loaded once you can disconnect from the internet and keep packing files. You can also save the page locally (Ctrl+S → "Webpage, Complete") and double-click the saved HTML to run it from disk.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How is the token count calculated? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>We use a simple heuristic: tokens ≈ total characters ÷ 4. This is a well-known approximation that works reasonably well for English text and most code. It is not exact — real tokenizers (like OpenAI's tiktoken or Anthropic's tokenizer) will differ by ±10–20% depending on language, Unicode, and whitespace. Use it as a budgeting guide, not a guarantee.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which file types are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any text-based file is supported: code (.js, .ts, .py, .java, .go, .rs, .rb, .php, .c, .cpp, etc.), docs (.md, .txt, .rst, .tex), and configs (.json, .yaml, .toml, .ini, .env, .xml, .csv). Binary files (images, PDFs, Office documents, archives, executables, media) are automatically detected and skipped — they cannot be pasted into a chat as text anyway.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What is the difference between the three templates? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p><strong>Standard markdown</strong> includes a "# Project Context" header, an optional file tree, and each file wrapped in a code fence with its language. <strong>Compact</strong> drops the headers and tree, keeping only a "### path" heading and a code block per file — useful when you are tight on tokens. <strong>XML-tagged</strong> wraps each file in <code>&lt;file path="..."&gt;</code> tags, which Claude in particular parses well as structured context.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">What happens to very large files? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>By default each file is truncated at 100 KB (configurable in "Output configuration" → Max file size). When a file is truncated, a note is inserted into the output telling the model the file was cut off, so it does not hallucinate the rest. Files larger than 100 MB are skipped entirely to avoid crashing the browser.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I drag in a whole folder? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. You can either click "browse folder" (uses the <code>webkitdirectory</code> attribute on the file input) or drag a folder onto the dropzone (uses <code>DataTransferItem.webkitGetAsEntry()</code>). Both preserve the relative folder structure in the output paths and the file tree. Folder drag-drop works in Chrome, Edge, and Firefox; Safari has partial support.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any modern browser from the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer is not supported. The Clipboard API requires a secure context (HTTPS or localhost) — if you open the file directly from disk via <code>file://</code>, copying to clipboard may fall back to a legacy method or fail silently; downloading still works.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function(){
+      'use strict';
+      var doc = document;
+
+      // ----- State -----
+      var files = []; // { id, file, name, path, size, ext, kind, skipped, truncated, content }
+      var nextId = 1;
+      var currentFilter = 'all';
+      var generatedMarkdown = '';
+
+      // ----- Extension maps -----
+      var EXT_LANG = {
+        js:'javascript',mjs:'javascript',cjs:'javascript',jsx:'jsx',
+        ts:'typescript',mts:'typescript',cts:'typescript',tsx:'tsx',
+        py:'python',pyw:'python',
+        java:'java',c:'c',h:'c',cpp:'cpp',cc:'cpp',cxx:'cpp',hpp:'cpp',hh:'cpp',
+        cs:'csharp',go:'go',rs:'rust',rb:'ruby',php:'php',swift:'swift',
+        kt:'kotlin',kts:'kotlin',scala:'scala',clj:'clojure',
+        sh:'bash',bash:'bash',zsh:'bash',fish:'bash',
+        ps1:'powershell',psm1:'powershell',
+        lua:'lua',pl:'perl',pm:'perl',r:'r',dart:'dart',
+        vue:'vue',svelte:'svelte',
+        html:'html',htm:'html',xml:'xml',svg:'xml',
+        css:'css',scss:'scss',sass:'sass',less:'less',styl:'stylus',
+        sql:'sql',graphql:'graphql',gql:'graphql',
+        yml:'yaml',yaml:'yaml',toml:'toml',ini:'ini',cfg:'ini',conf:'ini',
+        json:'json',jsonc:'json',json5:'json',
+        md:'markdown',markdown:'markdown',mdx:'markdown',
+        txt:'text',log:'text',env:'ini',
+        csv:'csv',tsv:'csv',
+        dockerfile:'dockerfile',makefile:'makefile',
+        gitignore:'text',gitattributes:'text',editorconfig:'ini',
+        tex:'latex',bib:'bibtex',rst:'rst',adoc:'asciidoc',asciidoc:'asciidoc'
+      };
+
+      var CODE_EXTS = ['js','mjs','cjs','jsx','ts','mts','cts','tsx','py','pyw','java','c','h','cpp','cc','cxx','hpp','hh','cs','go','rs','rb','php','swift','kt','kts','scala','clj','sh','bash','zsh','fish','ps1','psm1','lua','pl','pm','r','dart','vue','svelte','html','htm','css','scss','sass','less','styl','sql','graphql','gql','tex','bib','rst','adoc','asciidoc'];
+      var DOC_EXTS  = ['md','markdown','mdx','txt','log','rst','adoc','asciidoc','tex','bib'];
+      var CONFIG_EXTS = ['json','jsonc','json5','yml','yaml','toml','ini','cfg','conf','env','xml','csv','tsv','gitignore','gitattributes','editorconfig','dockerfile','makefile'];
+      var BINARY_EXTS = ['png','jpg','jpeg','gif','bmp','ico','icns','webp','avif','tiff','tif','heic','psd','ai','eps','sketch','pdf','doc','docx','xls','xlsx','xlsm','ppt','pptx','odt','ods','odp','rtf','zip','gz','tar','tgz','bz2','xz','7z','rar','jar','war','ear','class','pyc','pyo','o','obj','so','dll','dylib','exe','bin','app','deb','rpm','dmg','pkg','msi','apk','aab','ipa','wasm','mp3','wav','aac','flac','ogg','opus','m4a','mp4','mov','avi','mkv','webm','flv','wmv','m4v','ttf','otf','woff','woff2','eot','sqlite','db','mdb','lock'];
+
+      function getExt(name){
+        var lower = name.toLowerCase();
+        // Special filenames
+        if (lower === 'dockerfile') return 'dockerfile';
+        if (lower === 'makefile') return 'makefile';
+        if (lower === '.gitignore') return 'gitignore';
+        if (lower === '.gitattributes') return 'gitattributes';
+        if (lower === '.editorconfig') return 'editorconfig';
+        if (lower === '.env' || lower.startsWith('.env.')) return 'env';
+        var dot = lower.lastIndexOf('.');
+        if (dot < 0 || dot === lower.length - 1) return '';
+        return lower.substring(dot + 1);
+      }
+
+      function extKind(ext){
+        if (!ext) return 'unknown';
+        if (CODE_EXTS.indexOf(ext) >= 0) return 'code';
+        if (DOC_EXTS.indexOf(ext) >= 0) return 'docs';
+        if (CONFIG_EXTS.indexOf(ext) >= 0) return 'config';
+        if (BINARY_EXTS.indexOf(ext) >= 0) return 'binary';
+        return 'unknown';
+      }
+
+      function langForExt(ext){
+        if (EXT_LANG[ext]) return EXT_LANG[ext];
+        return '';
+      }
+
+      function isLikelyBinaryByMime(file){
+        var t = (file.type || '').toLowerCase();
+        if (!t) return null; // unknown
+        if (t.indexOf('text/') === 0) return false;
+        if (t === 'application/json' || t === 'application/javascript' || t === 'application/xml' || t === 'application/xhtml+xml') return false;
+        if (t.indexOf('application/') === 0 && /json|xml|javascript|yaml|toml/.test(t)) return false;
+        // image/*, audio/*, video/*, application/pdf, application/zip, application/octet-stream often binary
+        if (t.indexOf('image/') === 0) return true;
+        if (t.indexOf('audio/') === 0) return true;
+        if (t.indexOf('video/') === 0) return true;
+        if (t === 'application/pdf' || t === 'application/zip' || t === 'application/x-tar' || t === 'application/gzip' || t === 'application/x-7z-compressed' || t === 'application/x-rar-compressed' || t === 'application/x-bzip2' || t === 'application/x-xz') return true;
+        if (t === 'application/octet-stream') return null; // ambiguous, decide by extension
+        if (t.indexOf('font/') === 0) return true;
+        return null;
+      }
+
+      // ----- DOM refs -----
+      var dropzone = doc.getElementById('dropzone');
+      var fileInput = doc.getElementById('fileInput');
+      var folderInput = doc.getElementById('folderInput');
+      var browseFolderLink = doc.getElementById('browseFolderLink');
+      var fileList = doc.getElementById('fileList');
+      var filterRow = doc.getElementById('filterRow');
+      var actionInfo = doc.getElementById('actionInfo');
+      var clearBtn = doc.getElementById('clearBtn');
+      var toast = doc.getElementById('toast');
+      var configPanel = doc.getElementById('configPanel');
+      var configToggle = doc.getElementById('configToggle');
+      var tplSelect = doc.getElementById('tplSelect');
+      var maxSizeInput = doc.getElementById('maxSizeInput');
+      var treeChk = doc.getElementById('treeChk');
+      var lineChk = doc.getElementById('lineChk');
+      var fenceChk = doc.getElementById('fenceChk');
+      var customHeader = doc.getElementById('customHeader');
+      var outputCard = doc.getElementById('outputCard');
+      var outputPreview = doc.getElementById('outputPreview');
+      var previewMeta = doc.getElementById('previewMeta');
+      var statFiles = doc.getElementById('statFiles');
+      var statChars = doc.getElementById('statChars');
+      var statTokens = doc.getElementById('statTokens');
+      var copyBtn = doc.getElementById('copyBtn');
+      var downloadMdBtn = doc.getElementById('downloadMdBtn');
+      var downloadTxtBtn = doc.getElementById('downloadTxtBtn');
+
+      // ----- Theme toggle -----
+      var themeToggle = doc.getElementById('themeToggle');
+      themeToggle.addEventListener('click', function(){
+        var current = doc.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ctxpacker-theme', next);
+      });
+
+      // ----- Toast -----
+      var toastTimer = null;
+      function showToast(msg, isError){
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){
+          toast.className = 'toast' + (isError ? ' error' : '');
+        }, 3200);
+      }
+
+      // ----- File size formatter -----
+      function formatBytes(b){
+        if (b < 1024) return b + ' B';
+        if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+        return (b/1024/1024).toFixed(2) + ' MB';
+      }
+
+      function formatNum(n){
+        if (n >= 1000000) return (n/1000000).toFixed(2) + 'M';
+        if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+        return String(n);
+      }
+
+      // ----- Config toggle -----
+      configToggle.addEventListener('click', function(){
+        configPanel.classList.toggle('open');
+      });
+
+      // ----- Add files -----
+      function makeItem(file, relPath){
+        var name = file.name;
+        var ext = getExt(name);
+        var kind = extKind(ext);
+        var path = relPath || name;
+        // Decide skipped
+        var mimeBinary = isLikelyBinaryByMime(file);
+        var skipped = false;
+        if (kind === 'binary') skipped = true;
+        else if (mimeBinary === true) skipped = true;
+        else if (file.size > 100 * 1024 * 1024) skipped = true; // >100MB hard skip
+        return {
+          id: nextId++,
+          file: file,
+          name: name,
+          path: path,
+          size: file.size,
+          ext: ext,
+          kind: kind,
+          skipped: skipped,
+          truncated: false,
+          content: null
+        };
+      }
+
+      function addFileEntries(fileArr){
+        // fileArr: array of { file: File, path: string }
+        var added = 0, skipped = 0;
+        fileArr.forEach(function(entry){
+          var item = makeItem(entry.file, entry.path);
+          files.push(item);
+          if (item.skipped) skipped++;
+          else added++;
+        });
+        renderList();
+        if (fileArr.length){
+          var msg = added + ' file' + (added===1?'':'s') + ' added';
+          if (skipped) msg += ' · ' + skipped + ' binary skipped';
+          showToast(msg);
+        }
+        // Async-read text content for non-skipped files
+        loadContents();
+      }
+
+      function loadContents(){
+        files.forEach(function(item){
+          if (item.skipped || item.content !== null) return;
+          item.file.text().then(function(text){
+            item.content = text;
+            // Re-render only if this file is currently visible and is non-skipped
+            refreshOutput();
+          }).catch(function(){
+            // Treat as binary if read fails
+            item.skipped = true;
+            item.kind = 'binary';
+            renderList();
+            refreshOutput();
+          });
+        });
+      }
+
+      // ----- Read dropped entries (file system entry API) -----
+      function readEntriesRecursively(entry, pathPrefix, collected){
+        return new Promise(function(resolve){
+          if (entry.isFile){
+            entry.file(function(file){
+              collected.push({ file: file, path: pathPrefix + entry.name });
+              resolve();
+            }, function(){ resolve(); });
+          } else if (entry.isDirectory){
+            var dirReader = entry.createReader();
+            var dirPath = pathPrefix + entry.name + '/';
+            function readBatch(){
+              dirReader.readEntries(function(entries){
+                if (!entries.length){ resolve(); return; }
+                var promises = [];
+                for (var i=0; i<entries.length; i++){
+                  promises.push(readEntriesRecursively(entries[i], dirPath, collected));
+                }
+                Promise.all(promises).then(readBatch);
+              }, function(){ resolve(); });
+            }
+            readBatch();
+          } else {
+            resolve();
+          }
+        });
+      }
+
+      function handleDataTransferItems(dataTransfer){
+        var items = dataTransfer.items;
+        if (!items || !items.length) return false;
+        var entries = [];
+        for (var i=0; i<items.length; i++){
+          var it = items[i];
+          if (it.kind !== 'file') continue;
+          var entry = null;
+          if (it.webkitGetAsEntry) entry = it.webkitGetAsEntry();
+          else if (it.getAsEntry) entry = it.getAsEntry();
+          if (entry) entries.push(entry);
+        }
+        if (!entries.length) return false;
+        var collected = [];
+        var promises = entries.map(function(entry){
+          return readEntriesRecursively(entry, '', collected);
+        });
+        Promise.all(promises).then(function(){
+          if (collected.length){
+            addFileEntries(collected);
+          }
+        });
+        return true;
+      }
+
+      // ----- Render list -----
+      function renderList(){
+        fileList.innerHTML = '';
+        var visible = files.filter(function(f){
+          if (currentFilter === 'all') return true;
+          if (currentFilter === 'code') return f.kind === 'code' && !f.skipped;
+          if (currentFilter === 'docs') return f.kind === 'docs' && !f.skipped;
+          if (currentFilter === 'config') return f.kind === 'config' && !f.skipped;
+          return true;
+        });
+
+        if (!files.length){
+          filterRow.style.display = 'none';
+          actionInfo.textContent = 'No files added yet.';
+          clearBtn.disabled = true;
+          refreshOutput();
+          return;
+        }
+
+        filterRow.style.display = 'flex';
+        clearBtn.disabled = false;
+
+        if (!visible.length){
+          var empty = doc.createElement('div');
+          empty.style.cssText = 'text-align:center;color:var(--muted);font-size:.9rem;padding:1.5rem;font-style:italic';
+          empty.textContent = 'No files match the current filter.';
+          fileList.appendChild(empty);
+        }
+
+        visible.forEach(function(item, idx){
+          var row = doc.createElement('div');
+          row.className = 'file-item' + (item.skipped ? ' skipped' : '');
+          row.dataset.id = item.id;
+          row.draggable = true;
+
+          var badgeClass = item.kind === 'binary' ? 'binary' : item.kind;
+          var badgeText = item.ext || (item.kind === 'binary' ? 'bin' : '?');
+          var skippedTag = item.skipped ? '<span class="skipped-tag">skipped</span>' : '';
+
+          row.innerHTML =
+            '<span class="file-handle" title="Drag to reorder">⠿</span>' +
+            '<div class="file-info">' +
+              '<div class="file-name">' +
+                '<span class="ext-badge ' + badgeClass + '"></span>' +
+                '<span class="name-text"></span>' +
+                skippedTag +
+              '</div>' +
+              '<div class="file-path"></div>' +
+              '<div class="file-meta"></div>' +
+            '</div>' +
+            '<div class="file-controls">' +
+              '<button class="file-btn" data-act="up" title="Move up"' + (idx===0?' disabled':'') + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>' +
+              '<button class="file-btn" data-act="down" title="Move down"' + (idx===visible.length-1?' disabled':'') + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+              '<button class="file-btn danger" data-act="remove" title="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+            '</div>';
+
+          row.querySelector('.ext-badge').textContent = badgeText;
+          row.querySelector('.name-text').textContent = item.name;
+          var pathEl = row.querySelector('.file-path');
+          if (item.path && item.path !== item.name){
+            pathEl.textContent = item.path;
+          }
+          row.querySelector('.file-meta').textContent = formatBytes(item.size) + (item.skipped ? ' · ' + (item.kind === 'binary' ? 'binary' : 'too large') : '');
+
+          row.querySelector('[data-act="up"]').addEventListener('click', function(e){
+            e.stopPropagation(); moveItem(item.id, -1);
+          });
+          row.querySelector('[data-act="down"]').addEventListener('click', function(e){
+            e.stopPropagation(); moveItem(item.id, +1);
+          });
+          row.querySelector('[data-act="remove"]').addEventListener('click', function(e){
+            e.stopPropagation(); removeItem(item.id);
+          });
+
+          // Drag reorder
+          row.addEventListener('dragstart', function(e){
+            row.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', String(item.id));
+          });
+          row.addEventListener('dragend', function(){
+            row.classList.remove('dragging');
+            doc.querySelectorAll('.file-item').forEach(function(el){ el.classList.remove('drag-over'); });
+          });
+          row.addEventListener('dragover', function(e){
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            row.classList.add('drag-over');
+          });
+          row.addEventListener('dragleave', function(){
+            row.classList.remove('drag-over');
+          });
+          row.addEventListener('drop', function(e){
+            e.preventDefault();
+            row.classList.remove('drag-over');
+            var draggedId = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            if (draggedId === item.id) return;
+            var fromIdx = files.findIndex(function(f){ return f.id === draggedId; });
+            var toIdx = files.findIndex(function(f){ return f.id === item.id; });
+            if (fromIdx < 0 || toIdx < 0) return;
+            var moved = files.splice(fromIdx, 1)[0];
+            files.splice(toIdx, 0, moved);
+            renderList();
+          });
+
+          fileList.appendChild(row);
+        });
+
+        // Update action info
+        var total = files.length;
+        var textCount = files.filter(function(f){ return !f.skipped; }).length;
+        var skippedCount = total - textCount;
+        var totalSize = files.reduce(function(s,f){ return s + f.size; }, 0);
+        actionInfo.innerHTML = '<strong>' + total + '</strong> file' + (total===1?'':'s') +
+          ' · <strong>' + textCount + '</strong> text' +
+          (skippedCount ? ' · <strong>' + skippedCount + '</strong> skipped' : '') +
+          ' · <strong>' + formatBytes(totalSize) + '</strong> total';
+
+        refreshOutput();
+      }
+
+      function moveItem(id, delta){
+        var idx = files.findIndex(function(f){ return f.id === id; });
+        if (idx < 0) return;
+        var newIdx = idx + delta;
+        if (newIdx < 0 || newIdx >= files.length) return;
+        var tmp = files[idx];
+        files[idx] = files[newIdx];
+        files[newIdx] = tmp;
+        renderList();
+      }
+
+      function removeItem(id){
+        files = files.filter(function(f){ return f.id !== id; });
+        renderList();
+        showToast('File removed');
+      }
+
+      // ----- File tree builder -----
+      function buildFileTree(paths){
+        // Build a nested structure
+        var root = { name:'', children:{}, isDir:true };
+        paths.forEach(function(p){
+          var parts = p.split('/').filter(Boolean);
+          var node = root;
+          for (var i=0; i<parts.length; i++){
+            var part = parts[i];
+            var isLast = (i === parts.length - 1);
+            if (!node.children[part]){
+              node.children[part] = { name:part, children:{}, isDir:!isLast };
+            }
+            node = node.children[part];
+          }
+        });
+        // Render
+        var lines = ['project/'];
+        function renderNode(node, prefix){
+          var keys = Object.keys(node.children).sort();
+          for (var i=0; i<keys.length; i++){
+            var key = keys[i];
+            var child = node.children[key];
+            var isLast = (i === keys.length - 1);
+            var branch = isLast ? '└── ' : '├── ';
+            lines.push(prefix + branch + child.name + (child.isDir ? '/' : ''));
+            if (child.isDir){
+              renderNode(child, prefix + (isLast ? '    ' : '│   '));
+            }
+          }
+        }
+        renderNode(root, '');
+        return lines.join('\n');
+      }
+
+      // ----- Output generation -----
+      function generateOutput(){
+        var template = tplSelect.value;
+        var includeTree = treeChk.checked;
+        var lineNumbers = lineChk.checked;
+        var useFence = fenceChk.checked;
+        var maxBytes = (parseInt(maxSizeInput.value, 10) || 100) * 1024;
+        var header = (customHeader.value || '').trim();
+        var parts = [];
+        var includedItems = files.filter(function(f){ return !f.skipped; });
+
+        if (template === 'standard'){
+          parts.push('# Project Context');
+          parts.push('');
+          if (header){
+            parts.push(header);
+            parts.push('');
+          }
+          if (includeTree && includedItems.length){
+            var treePaths = includedItems.map(function(f){ return f.path; });
+            parts.push('## File Tree');
+            parts.push('```');
+            parts.push(buildFileTree(treePaths));
+            parts.push('```');
+            parts.push('');
+          }
+          parts.push('## Files');
+          parts.push('');
+          includedItems.forEach(function(item){
+            var content = item.content || '';
+            var truncated = false;
+            if (content.length > maxBytes){
+              content = content.substring(0, maxBytes);
+              truncated = true;
+            }
+            parts.push('--- File: ' + item.path + ' ---');
+            if (useFence){
+              var lang = langForExt(item.ext);
+              parts.push('```' + lang);
+            }
+            if (lineNumbers){
+              var lines = content.split('\n');
+              var padWidth = String(lines.length).length;
+              content = lines.map(function(ln, i){
+                var n = String(i+1).padStart(padWidth, ' ');
+                return n + ' | ' + ln;
+              }).join('\n');
+            }
+            parts.push(content);
+            if (truncated){
+              parts.push('');
+              parts.push('<!-- ... FILE TRUNCATED at ' + formatBytes(maxBytes) + ' ... -->');
+            }
+            if (useFence) parts.push('```');
+            parts.push('');
+          });
+        } else if (template === 'compact'){
+          if (header){
+            parts.push(header);
+            parts.push('');
+          }
+          includedItems.forEach(function(item){
+            var content = item.content || '';
+            var truncated = false;
+            if (content.length > maxBytes){
+              content = content.substring(0, maxBytes);
+              truncated = true;
+            }
+            parts.push('### ' + item.path);
+            if (useFence){
+              var lang2 = langForExt(item.ext);
+              parts.push('```' + lang2);
+            }
+            if (lineNumbers){
+              var lines2 = content.split('\n');
+              var padWidth2 = String(lines2.length).length;
+              content = lines2.map(function(ln, i){
+                var n = String(i+1).padStart(padWidth2, ' ');
+                return n + ' | ' + ln;
+              }).join('\n');
+            }
+            parts.push(content);
+            if (truncated) parts.push('\n<!-- truncated -->');
+            if (useFence) parts.push('```');
+            parts.push('');
+          });
+        } else if (template === 'xml'){
+          if (header){
+            parts.push(header);
+            parts.push('');
+          }
+          if (includeTree && includedItems.length){
+            var treePaths2 = includedItems.map(function(f){ return f.path; });
+            parts.push('<file_tree>');
+            parts.push(buildFileTree(treePaths2));
+            parts.push('</file_tree>');
+            parts.push('');
+          }
+          includedItems.forEach(function(item){
+            var content = item.content || '';
+            var truncated = false;
+            if (content.length > maxBytes){
+              content = content.substring(0, maxBytes);
+              truncated = true;
+            }
+            if (lineNumbers){
+              var lines3 = content.split('\n');
+              var padWidth3 = String(lines3.length).length;
+              content = lines3.map(function(ln, i){
+                var n = String(i+1).padStart(padWidth3, ' ');
+                return n + ' | ' + ln;
+              }).join('\n');
+            }
+            parts.push('<file path="' + item.path + '">');
+            parts.push(content);
+            if (truncated) parts.push('\n<!-- truncated -->');
+            parts.push('</file>');
+            parts.push('');
+          });
+        }
+
+        return parts.join('\n');
+      }
+
+      function refreshOutput(){
+        if (!files.length){
+          outputCard.classList.remove('active');
+          generatedMarkdown = '';
+          return;
+        }
+        generatedMarkdown = generateOutput();
+        outputCard.classList.add('active');
+        var charCount = generatedMarkdown.length;
+        var tokenEst = Math.ceil(charCount / 4);
+        var fileCount = files.filter(function(f){ return !f.skipped; }).length;
+
+        // Show preview (truncated to avoid lag with huge outputs)
+        var previewMax = 20000;
+        var shown = generatedMarkdown.length > previewMax
+          ? generatedMarkdown.substring(0, previewMax) + '\n\n… (preview truncated, full output has ' + formatNum(charCount) + ' chars) …'
+          : generatedMarkdown;
+        outputPreview.textContent = shown;
+
+        statFiles.textContent = fileCount;
+        statChars.textContent = formatNum(charCount);
+        statTokens.textContent = formatNum(tokenEst);
+        previewMeta.textContent = formatBytes(new Blob([generatedMarkdown]).size) + ' · ~' + formatNum(tokenEst) + ' tokens';
+      }
+
+      // ----- Debounced output refresh for textarea typing -----
+      var refreshTimer = null;
+      function debouncedRefresh(){
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(refreshOutput, 150);
+      }
+      [tplSelect, maxSizeInput, treeChk, lineChk, fenceChk, customHeader].forEach(function(el){
+        el.addEventListener('change', refreshOutput);
+        el.addEventListener('input', debouncedRefresh);
+      });
+
+      // ----- File input events -----
+      fileInput.addEventListener('change', function(){
+        var arr = [];
+        for (var i=0; i<fileInput.files.length; i++){
+          arr.push({ file: fileInput.files[i], path: fileInput.files[i].name });
+        }
+        if (arr.length) addFileEntries(arr);
+        fileInput.value = '';
+      });
+
+      folderInput.addEventListener('change', function(){
+        var arr = [];
+        for (var i=0; i<folderInput.files.length; i++){
+          var f = folderInput.files[i];
+          // webkitRelativePath preserves folder structure
+          var rel = f.webkitRelativePath || f.name;
+          arr.push({ file: f, path: rel });
+        }
+        if (arr.length) addFileEntries(arr);
+        folderInput.value = '';
+      });
+
+      browseFolderLink.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        folderInput.click();
+      });
+
+      // ----- Dropzone drag/drop (folders via entries) -----
+      var dragCounter = 0;
+      dropzone.addEventListener('dragenter', function(e){
+        e.preventDefault();
+        dragCounter++;
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragover', function(e){
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      });
+      dropzone.addEventListener('dragleave', function(){
+        dragCounter--;
+        if (dragCounter <= 0){
+          dragCounter = 0;
+          dropzone.classList.remove('dragover');
+        }
+      });
+      dropzone.addEventListener('drop', function(e){
+        e.preventDefault();
+        dragCounter = 0;
+        dropzone.classList.remove('dragover');
+        // Try folder-aware entry API first
+        if (e.dataTransfer && e.dataTransfer.items){
+          var handled = handleDataTransferItems(e.dataTransfer);
+          if (handled) return;
+        }
+        // Fallback: flat file list
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+          var arr = [];
+          for (var i=0; i<e.dataTransfer.files.length; i++){
+            arr.push({ file: e.dataTransfer.files[i], path: e.dataTransfer.files[i].name });
+          }
+          addFileEntries(arr);
+        }
+      });
+
+      // ----- Filter chips -----
+      doc.querySelectorAll('.filter-chip').forEach(function(chip){
+        chip.addEventListener('click', function(){
+          doc.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
+          chip.classList.add('active');
+          currentFilter = chip.dataset.filter;
+          renderList();
+        });
+      });
+
+      // ----- Clear all -----
+      clearBtn.addEventListener('click', function(){
+        if (!files.length) return;
+        files = [];
+        renderList();
+        showToast('Cleared all files');
+      });
+
+      // ----- Copy to clipboard -----
+      copyBtn.addEventListener('click', function(){
+        if (!generatedMarkdown){
+          showToast('Nothing to copy yet', true);
+          return;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(generatedMarkdown).then(function(){
+            showToast('Copied ' + formatNum(generatedMarkdown.length) + ' chars to clipboard');
+          }).catch(function(){
+            fallbackCopy(generatedMarkdown);
+          });
+        } else {
+          fallbackCopy(generatedMarkdown);
+        }
+      });
+
+      function fallbackCopy(text){
+        try {
+          var ta = doc.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          doc.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          var ok = doc.execCommand('copy');
+          doc.body.removeChild(ta);
+          if (ok) showToast('Copied ' + formatNum(text.length) + ' chars to clipboard');
+          else showToast('Copy failed — please select and copy manually', true);
+        } catch(err){
+          showToast('Copy not supported in this browser', true);
+        }
+      }
+
+      // ----- Download -----
+      function downloadAs(filename, mime){
+        if (!generatedMarkdown){
+          showToast('Nothing to download yet', true);
+          return;
+        }
+        var blob = new Blob([generatedMarkdown], { type: mime });
+        var url = URL.createObjectURL(blob);
+        var a = doc.createElement('a');
+        a.href = url;
+        a.download = filename;
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+        showToast('Download started: ' + filename);
+      }
+
+      downloadMdBtn.addEventListener('click', function(){
+        var ts = new Date();
+        var pad = function(n){ return String(n).padStart(2,'0'); };
+        var name = 'context-' + ts.getFullYear() + pad(ts.getMonth()+1) + pad(ts.getDate()) + '-' + pad(ts.getHours()) + pad(ts.getMinutes()) + '.md';
+        downloadAs(name, 'text/markdown');
+      });
+
+      downloadTxtBtn.addEventListener('click', function(){
+        var ts = new Date();
+        var pad = function(n){ return String(n).padStart(2,'0'); };
+        var name = 'context-' + ts.getFullYear() + pad(ts.getMonth()+1) + pad(ts.getDate()) + '-' + pad(ts.getHours()) + pad(ts.getMinutes()) + '.txt';
+        downloadAs(name, 'text/plain');
+      });
+
+      // ----- FAQ accordions -----
+      doc.querySelectorAll('.faq-q').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var item = btn.closest('.faq-item');
+          var wasOpen = item.classList.contains('open');
+          doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+          if (!wasOpen) item.classList.add('open');
+        });
+      });
+
+      // ----- Footer year -----
+      doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // ----- Initial state -----
+      renderList();
+
+    })();
+  </script>
+</body>
+</html>
