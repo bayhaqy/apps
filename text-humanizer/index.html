@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Anti-AI Text Humanizer — detect AI cliché phrases in Indonesian and English writing, highlight them by severity, and apply one-click natural human replacements. 100% client-side, works offline." />
+  <meta name="keywords" content="AI text humanizer, anti AI, AI cliche detector, humanize AI text, Indonesian AI detector, English AI detector, rewrite AI text, offline text editor, writing assistant, bayhaqy" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Anti-AI Text Humanizer — Clean AI-Style Text Patterns" />
+  <meta property="og:description" content="Detect AI cliché phrases in Indonesian and English writing, highlight them by severity, and apply one-click natural human replacements. 100% client-side, works offline." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/text-humanizer/" />
+  <meta property="og:site_name" content="Anti-AI Text Humanizer" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Anti-AI Text Humanizer — Clean AI-Style Text Patterns" />
+  <meta name="twitter:description" content="Detect AI cliché phrases in Indonesian and English writing, highlight them by severity, and apply one-click natural human replacements. 100% client-side, works offline." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/text-humanizer/" />
+  <title>Anti-AI Text Humanizer — Clean AI-Style Text Patterns</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3ETH%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Anti-AI Text Humanizer",
+    "applicationCategory": "WritingApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/text-humanizer/",
+    "description": "Detect AI cliché phrases in Indonesian and English writing, highlight them by severity, and apply one-click natural human replacements. 100% client-side, works offline.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "Real-time highlighting of AI cliché phrases",
+      "One-click natural human replacements",
+      "Bilingual — Indonesian + English",
+      "Severity-coded highlights (high, medium, low)",
+      "Bulk replace-all actions and alternative suggestions",
+      "100% local — no uploads, no tracking, works offline"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1080px;
+      --sev-high-bg:rgba(220,38,38,0.14);--sev-high-bd:rgba(220,38,38,0.45);--sev-high-tx:#b91c1c;
+      --sev-med-bg:rgba(245,158,11,0.16);--sev-med-bd:rgba(245,158,11,0.5);--sev-med-tx:#b45309;
+      --sev-low-bg:rgba(16,185,129,0.14);--sev-low-bd:rgba(16,185,129,0.4);--sev-low-tx:#047857;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+      --sev-high-bg:rgba(248,113,113,0.22);--sev-high-bd:rgba(248,113,113,0.55);--sev-high-tx:#fca5a5;
+      --sev-med-bg:rgba(251,191,36,0.22);--sev-med-bd:rgba(251,191,36,0.55);--sev-med-tx:#fcd34d;
+      --sev-low-bg:rgba(52,211,153,0.22);--sev-low-bd:rgba(52,211,153,0.55);--sev-low-tx:#6ee7b7;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.95rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:680px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Stats bar */
+    .stats-bar{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem;
+    }
+    .stat-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.9rem 1rem;box-shadow:var(--shadow);
+    }
+    .stat-card .stat-label{font-size:.74rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+    .stat-card .stat-value{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+    .stat-card .stat-sub{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+    .stat-value.c-high{color:var(--sev-high-tx)}
+    .stat-value.c-med{color:var(--sev-med-tx)}
+    .stat-value.c-low{color:var(--sev-low-tx)}
+    .stat-value.c-score{color:var(--green)}
+
+    /* Toolbar */
+    .toolbar{
+      display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.85rem;margin-bottom:1rem;box-shadow:var(--shadow);
+    }
+    .toolbar .toolbar-label{font-size:.85rem;color:var(--muted);font-weight:600;margin-right:.25rem}
+    .toolbar-spacer{flex:1}
+    .btn{
+      display:inline-flex;align-items:center;gap:.45rem;
+      padding:.6rem 1rem;border-radius:9px;border:1px solid transparent;
+      font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s,border-color .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn-amber{
+      background:linear-gradient(135deg,var(--accent-2),#d97706);color:white;
+      box-shadow:0 6px 16px -4px rgba(245,158,11,0.45);
+    }
+    .btn-amber:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(245,158,11,0.5)}
+    .btn-sm{padding:.45rem .75rem;font-size:.82rem;border-radius:8px}
+    .btn svg{width:15px;height:15px}
+
+    /* Editor panes */
+    .editor-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.25rem;margin-bottom:1.25rem;
+    }
+    .panes{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .pane{display:flex;flex-direction:column;min-width:0}
+    .pane-head{
+      display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+      margin-bottom:.5rem;
+    }
+    .pane-title{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+    .pane-title .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.15)}
+    .pane-title .dot.green{background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .pane-meta{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+    .pane-actions{display:flex;gap:.4rem}
+    .text-input{
+      width:100%;min-height:340px;resize:vertical;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.9rem 1rem;
+      color:var(--fg);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.92rem;line-height:1.6;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .text-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .text-input::placeholder{color:var(--muted)}
+    .preview-pane{
+      position:relative;
+      width:100%;min-height:340px;overflow:auto;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:.9rem 1rem;
+      color:var(--fg);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.92rem;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;
+    }
+    .preview-pane:empty::before{
+      content:"Humanized preview will appear here — start typing on the left.";
+      color:var(--muted);font-style:italic;
+    }
+    .preview-pane mark{
+      padding:.05rem .15rem;border-radius:4px;cursor:help;
+      border-bottom:2px dotted;position:relative;
+      transition:filter .15s;
+    }
+    .preview-pane mark:hover{filter:brightness(0.97)}
+    .preview-pane mark.hl-high{background:var(--sev-high-bg);border-color:var(--sev-high-bd);color:var(--sev-high-tx)}
+    .preview-pane mark.hl-medium{background:var(--sev-med-bg);border-color:var(--sev-med-bd);color:var(--sev-med-tx)}
+    .preview-pane mark.hl-low{background:var(--sev-low-bg);border-color:var(--sev-low-bd);color:var(--sev-low-tx)}
+    .preview-pane mark[data-tip]::after{
+      content:attr(data-tip);
+      position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+      background:var(--fg);color:var(--bg);
+      padding:.4rem .7rem;border-radius:7px;font-size:.78rem;font-weight:500;
+      white-space:nowrap;max-width:300px;
+      opacity:0;pointer-events:none;transition:opacity .15s;z-index:20;
+      box-shadow:0 6px 18px -4px rgba(0,0,0,0.3);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    .preview-pane mark[data-tip]::before{
+      content:"";position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);
+      border:5px solid transparent;border-top-color:var(--fg);
+      opacity:0;transition:opacity .15s;z-index:20;
+    }
+    .preview-pane mark[data-tip]:hover::after,
+    .preview-pane mark[data-tip]:hover::before{opacity:1}
+
+    /* Legend */
+    .legend{
+      display:flex;flex-wrap:wrap;gap:.85rem;align-items:center;
+      margin-top:.85rem;font-size:.8rem;color:var(--muted);
+    }
+    .legend-item{display:inline-flex;align-items:center;gap:.35rem}
+    .legend-swatch{width:14px;height:14px;border-radius:4px;border-bottom:2px dotted}
+    .legend-swatch.high{background:var(--sev-high-bg);border-color:var(--sev-high-bd)}
+    .legend-swatch.medium{background:var(--sev-med-bg);border-color:var(--sev-med-bd)}
+    .legend-swatch.low{background:var(--sev-low-bg);border-color:var(--sev-low-bd)}
+
+    /* Settings */
+    .settings-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow);
+    }
+    .settings-head{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-family:inherit;
+      color:var(--fg);font-size:.98rem;font-weight:600;text-align:left;
+    }
+    .settings-head:hover{background:var(--bg-2)}
+    .settings-head .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .settings-card.open .settings-head .chev{transform:rotate(180deg)}
+    .settings-body{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;
+    }
+    .settings-card.open .settings-body{max-height:400px;padding:0 1.25rem 1.1rem}
+    .settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;padding-top:.25rem}
+    .setting{display:flex;flex-direction:column;gap:.35rem}
+    .setting label{font-size:.82rem;color:var(--muted);font-weight:600}
+    .setting select, .setting input[type="checkbox"]{
+      font-family:inherit;font-size:.9rem;
+      background:var(--bg-2);border:1px solid var(--card-border);border-radius:8px;
+      color:var(--fg);padding:.5rem .7rem;cursor:pointer;
+    }
+    .setting select:focus{outline:none;border-color:var(--accent)}
+    .setting-check{display:flex;align-items:center;gap:.5rem;font-size:.9rem;color:var(--fg);cursor:pointer}
+    .setting-check input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+    .setting-hint{font-size:.75rem;color:var(--muted)}
+
+    /* Detection panel */
+    .detection-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.25rem;margin-bottom:2rem;
+    }
+    .detection-head{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      margin-bottom:.85rem;
+    }
+    .detection-head h3{font-size:1.05rem;display:flex;align-items:center;gap:.5rem}
+    .detection-head h3 .count-pill{
+      background:var(--accent);color:white;font-size:.78rem;font-weight:700;
+      padding:.15rem .55rem;border-radius:999px;
+    }
+    .detection-list{display:flex;flex-direction:column;gap:.55rem}
+    .detection-list:empty::before{
+      content:"No clichés detected — your text reads naturally.";
+      display:block;padding:1rem;text-align:center;color:var(--muted);font-style:italic;
+      background:var(--bg-2);border-radius:var(--radius-sm);border:1px dashed var(--card-border);
+    }
+    .detect-row{
+      display:grid;grid-template-columns:auto 1fr auto auto auto;gap:.7rem;align-items:center;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      padding:.7rem .9rem;border-radius:var(--radius-sm);
+    }
+    .detect-phrase{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.88rem;font-weight:600;
+      padding:.1rem .35rem;border-radius:4px;border-bottom:2px dotted;
+    }
+    .detect-phrase.high{background:var(--sev-high-bg);border-color:var(--sev-high-bd);color:var(--sev-high-tx)}
+    .detect-phrase.medium{background:var(--sev-med-bg);border-color:var(--sev-med-bd);color:var(--sev-med-tx)}
+    .detect-phrase.low{background:var(--sev-low-bg);border-color:var(--sev-low-bd);color:var(--sev-low-tx)}
+    .detect-meta{font-size:.78rem;color:var(--muted)}
+    .badge{
+      display:inline-flex;align-items:center;gap:.3rem;
+      font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+      padding:.2rem .5rem;border-radius:6px;
+    }
+    .badge.high{background:var(--sev-high-bg);color:var(--sev-high-tx);border:1px solid var(--sev-high-bd)}
+    .badge.medium{background:var(--sev-med-bg);color:var(--sev-med-tx);border:1px solid var(--sev-med-bd)}
+    .badge.low{background:var(--sev-low-bg);color:var(--sev-low-tx);border:1px solid var(--sev-low-bd)}
+    .badge.lang{background:var(--chip-bg);color:var(--muted);border:1px solid var(--chip-border)}
+    .detect-controls{display:flex;gap:.4rem;align-items:center}
+    .detect-select{
+      font-family:inherit;font-size:.8rem;
+      background:var(--card-bg);border:1px solid var(--card-border);border-radius:7px;
+      color:var(--fg);padding:.35rem .5rem;cursor:pointer;max-width:160px;
+    }
+    .detect-select:focus{outline:none;border-color:var(--accent)}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:380px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+
+    /* Responsive */
+    @media(max-width:760px){
+      .panes{grid-template-columns:1fr}
+      .text-input, .preview-pane{min-height:240px}
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      .detect-row{grid-template-columns:auto 1fr;grid-template-areas:
+        "phrase phrase"
+        "meta   controls";
+        gap:.5rem .7rem}
+      .detect-row .detect-phrase{grid-area:phrase}
+      .detect-row .detect-meta{grid-area:meta}
+      .detect-row .badge{display:none}
+      .detect-row .detect-controls{grid-area:controls;justify-content:flex-end}
+    }
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .editor-card{padding:1rem}
+      .toolbar{flex-direction:column;align-items:stretch}
+      .toolbar .toolbar-label{margin-bottom:.2rem}
+      .toolbar-spacer{display:none}
+      .toolbar .btn{justify-content:center}
+      .header-links a:not(.theme-toggle){display:none}
+      .header-links a.back-link{display:inline}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('humanizer-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/text-humanizer/" class="brand">
+        <span class="brand-logo">TH</span>
+        <span>Anti-AI Text Humanizer</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · Indonesian + English</span>
+        <h1>Strip AI clichés <span class="accent">from your writing</span></h1>
+        <p class="sub">Anti-AI Text Humanizer detects overused AI-style phrases in your Indonesian or English text, highlights them by severity, and lets you swap them for natural human wording with one click. Everything runs in your browser — no uploads, no tracking.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Real-time highlight</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> One-click fix</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Bilingual</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-label">Total clichés</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-sub" id="statTotalSub">across all severities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">High · Medium · Low</div>
+          <div class="stat-value" id="statBreakdown" style="font-size:1.1rem;letter-spacing:0">
+            <span class="c-high">0</span> · <span class="c-med">0</span> · <span class="c-low">0</span>
+          </div>
+          <div class="stat-sub">by severity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Words · Chars</div>
+          <div class="stat-value" id="statWords" style="font-size:1.1rem;letter-spacing:0">0 · 0</div>
+          <div class="stat-sub">in current text</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Humanized score</div>
+          <div class="stat-value c-score" id="statScore">100%</div>
+          <div class="stat-sub" id="statScoreSub">fewer clichés = higher</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <span class="toolbar-label">Bulk actions:</span>
+        <button class="btn btn-amber btn-sm" id="btnReplaceHigh" disabled title="Replace every high-severity cliché with its primary suggestion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          Replace all (high)
+        </button>
+        <button class="btn btn-primary btn-sm" id="btnReplaceAll" disabled title="Replace every detected cliché with its primary suggestion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          Replace all (all severities)
+        </button>
+        <div class="toolbar-spacer"></div>
+        <button class="btn btn-ghost btn-sm" id="btnCopy" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy humanized text
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnDownload" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .txt
+        </button>
+        <button class="btn btn-ghost btn-sm" id="btnReset" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Reset to original
+        </button>
+      </div>
+
+      <!-- Editor panes -->
+      <div class="editor-card">
+        <div class="panes">
+          <div class="pane">
+            <div class="pane-head">
+              <div class="pane-title"><span class="dot"></span> Your text</div>
+              <div class="pane-actions">
+                <button class="btn btn-ghost btn-sm" id="btnSample">Load sample</button>
+                <button class="btn btn-ghost btn-sm" id="btnClear">Clear</button>
+              </div>
+            </div>
+            <textarea class="text-input" id="textInput" placeholder="Paste your text here…&#10;&#10;Tip: write or paste anything in Indonesian or English. Detected AI clichés will be highlighted on the right in real time."></textarea>
+            <div class="pane-meta" id="inputMeta" style="margin-top:.4rem;text-align:right">0 words · 0 chars</div>
+          </div>
+          <div class="pane">
+            <div class="pane-head">
+              <div class="pane-title"><span class="dot green"></span> Humanized preview</div>
+              <div class="pane-meta" id="previewMeta">Hover any highlighted phrase for a suggestion</div>
+            </div>
+            <div class="preview-pane" id="previewPane"></div>
+          </div>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch high"></span> High severity — strong AI signal</span>
+          <span class="legend-item"><span class="legend-swatch medium"></span> Medium severity — formal filler</span>
+          <span class="legend-item"><span class="legend-swatch low"></span> Low severity — minor over-usage</span>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="settings-card" id="settingsCard">
+        <button class="settings-head" type="button" id="settingsToggle">
+          <span>⚙️ Detection settings</span>
+          <span class="chev">⌄</span>
+        </button>
+        <div class="settings-body">
+          <div class="settings-grid">
+            <div class="setting">
+              <label for="setLang">Language</label>
+              <select id="setLang">
+                <option value="auto">Auto (Indonesian + English)</option>
+                <option value="id">Indonesian only</option>
+                <option value="en">English only</option>
+              </select>
+              <span class="setting-hint">Which cliché set to scan for.</span>
+            </div>
+            <div class="setting">
+              <label>Matching</label>
+              <label class="setting-check"><input type="checkbox" id="setWholeWord" checked /> Whole-word matching</label>
+              <label class="setting-check"><input type="checkbox" id="setCaseSensitive" /> Case-sensitive matching</label>
+              <span class="setting-hint">Whole-word avoids matching inside other words. Off by default for case.</span>
+            </div>
+            <div class="setting" style="justify-content:flex-end">
+              <span class="setting-hint" style="font-size:.78rem">Settings apply instantly. Your text is never sent anywhere — all detection runs in your browser.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection panel -->
+      <div class="detection-card">
+        <div class="detection-head">
+          <h3>Detected clichés <span class="count-pill" id="detectCount">0</span></h3>
+          <span class="pane-meta">Use the dropdown to pick an alternative, then click Replace all.</span>
+        </div>
+        <div class="detection-list" id="detectList"></div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use Anti-AI Text Humanizer</h2>
+        <p>Four simple steps — your text is analyzed locally in your browser and never uploaded anywhere.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Paste your text</h4>
+            <p>Drop any Indonesian or English text into the left pane — an essay, blog post, email, or article draft. Click "Load sample" to try a demo paragraph first.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Review highlights</h4>
+            <p>Clichés are highlighted in the right pane in real time, colored by severity. Hover any highlighted phrase to see a suggested human replacement.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Replace one or many</h4>
+            <p>Use the detection panel to replace a specific cliché everywhere, or hit "Replace all (high)" / "Replace all (all severities)" in the toolbar for bulk fixes.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Copy or download</h4>
+            <p>Once you're happy with the humanized score, click "Copy humanized text" or "Download .txt". Use "Reset to original" anytime to start over.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+            <h4>Real-time detection</h4>
+            <p>Clichés are flagged as you type — debounced at 300ms so it stays smooth on long documents. No "analyze" button to remember.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <h4>One-click replace</h4>
+            <p>Each cliché has a primary suggestion and several alternatives. Replace one phrase everywhere, or sweep all high-severity clichés at once.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <h4>Bilingual coverage</h4>
+            <p>70+ cliché entries split across Indonesian and English — including classic GPT-isms like "delve into", "menyelami", "leverage", and "di era digital ini".</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Your text never leaves your device. There is no server, no API, no analytics. The whole app is a single HTML file you can save and run offline.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Severity-coded</h4>
+            <p>Clichés are scored high, medium, or low based on how strongly they signal AI authorship. Red = fix first, green = optional polish.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <h4>Tunable matching</h4>
+            <p>Toggle language scope, whole-word matching, and case sensitivity. Adapt the detector to formal documents, code comments, or mixed-language text.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is my text sent to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. Anti-AI Text Humanizer is a single self-contained HTML file with no external dependencies. All detection, highlighting, and replacement happen in your browser using JavaScript. Open DevTools → Network and you'll see zero requests while you work. You can even save the page (Ctrl+S → "Webpage, Complete") and run it from disk with no internet.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How does the detector decide what is an AI cliché? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The app ships with a curated list of 70+ phrases that large language models (ChatGPT, Claude, Gemini, etc.) tend to overuse — things like "delve into", "leverage", "menyelami", "di era digital ini". Each entry has a severity (high/medium/low) based on how strongly it signals AI authorship and a primary replacement plus alternatives. Matching uses JavaScript regular expressions, so it is fast and predictable.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Will this guarantee my text passes AI detectors? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No, and you should be skeptical of any tool that promises that. AI detectors (GPTZero, Originality.ai, Turnitin, etc.) use statistical models, not phrase matching. Removing clichés reduces the most obvious AI-style wording, which often helps your text read more naturally — but it is not a guarantee. The best way to humanize writing is to edit it yourself, using this tool as a highlighting aid.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I get false positives? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Yes. Common words like "however", "therefore", and "namun" are flagged as medium severity because AI uses them very frequently — but human writers use them too. Use the severity colors as guidance, not a verdict. Toggle "Case-sensitive" or "Whole-word" off if you want looser matching, or just skip the suggestions you disagree with.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">How is the "humanized score" calculated? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Score = max(0, 100 − 10 × number of clichés). So zero clichés = 100%, five = 50%, ten or more = 0%. It is intentionally simple — it rewards removing clichés rather than punishing word count. It is a progress indicator for your editing session, not a scientific AI-probability score.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does "Replace all" preserve capitalization or punctuation? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Replacements are inserted verbatim. If a cliché appears at the start of a sentence, the replacement will start with a lowercase letter unless the suggestion itself is capitalized. After a bulk replace, scan the result and fix sentence-initial capitalization manually. The "Reset to original" button restores the text to the last version you typed yourself (before any replace operations).</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any modern browser released in the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. The app uses only standard JavaScript (regex, textarea events, Blob downloads, Clipboard API) and works on desktop, tablet, and phone.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        Powered by vanilla JS &amp; regex ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function(){
+    'use strict';
+    var doc = document;
+
+    // ============================================================
+    // Cliché database — 70+ entries, Indonesian + English
+    // Each entry: { pattern, replacement, alternatives, severity, lang }
+    // ============================================================
+    var CLICHES = [
+      // ----- Indonesian high severity -----
+      { pattern:"menyelami", replacement:"mengulas", alternatives:["membahas","membedah"], severity:"high", lang:"id" },
+      { pattern:"merupakan bukti", replacement:"menunjukkan", alternatives:["buktinya"], severity:"high", lang:"id" },
+      { pattern:"penting untuk diingat", replacement:"perlu diingat", alternatives:["ingatlah"], severity:"high", lang:"id" },
+      { pattern:"oleh karena itu", replacement:"jadi", alternatives:["maka"], severity:"high", lang:"id" },
+      { pattern:"dengan demikian", replacement:"jadi", alternatives:["maka"], severity:"high", lang:"id" },
+      { pattern:"secara keseluruhan", replacement:"seluruhnya", alternatives:["utuhnya"], severity:"high", lang:"id" },
+      { pattern:"pada akhirnya", replacement:"akhirnya", alternatives:["pada akhir"], severity:"high", lang:"id" },
+      { pattern:"tak dapat dipungkiri", replacement:"memang", alternatives:["sulit dipungkiri"], severity:"high", lang:"id" },
+      { pattern:"tidak dapat dipungkiri", replacement:"memang", alternatives:["sulit dipungkiri"], severity:"high", lang:"id" },
+      { pattern:"di era digital ini", replacement:"kini", alternatives:["masa kini"], severity:"high", lang:"id" },
+      { pattern:"di dunia yang serba cepat ini", replacement:"kini", alternatives:["belakangan"], severity:"high", lang:"id" },
+      { pattern:"memainkan peran penting", replacement:"berperan penting", alternatives:["penting"], severity:"high", lang:"id" },
+      { pattern:"memberikan kontribusi", replacement:"menyumbang", alternatives:["berkontribusi"], severity:"high", lang:"id" },
+      { pattern:"melakukan pendekatan", replacement:"menjangkau", alternatives:["mendekati"], severity:"high", lang:"id" },
+      { pattern:"mengimplementasikan", replacement:"menerapkan", alternatives:["melaksanakan"], severity:"high", lang:"id" },
+      { pattern:"melakukan optimasi", replacement:"mengoptimalkan", alternatives:["meningkatkan"], severity:"high", lang:"id" },
+      { pattern:"berperan vital", replacement:"berperan penting", alternatives:["sangat penting"], severity:"high", lang:"id" },
+      { pattern:"menjadi sorotan", replacement:"menonjol", alternatives:["diwarnai"], severity:"high", lang:"id" },
+      { pattern:"mengupayakan", replacement:"berusaha", alternatives:["mengusahakan"], severity:"high", lang:"id" },
+      { pattern:"berupaya untuk", replacement:"berusaha", alternatives:["mencoba"], severity:"high", lang:"id" },
+      { pattern:"diharapkan dapat", replacement:"dapat", alternatives:["bisa"], severity:"high", lang:"id" },
+      { pattern:"di tengah pesatnya perkembangan", replacement:"seiring perkembangan", alternatives:["saat ini"], severity:"high", lang:"id" },
+      { pattern:"merupakan salah satu", replacement:"adalah salah satu", alternatives:["salah satu"], severity:"high", lang:"id" },
+
+      // ----- Indonesian medium severity -----
+      { pattern:"selain itu", replacement:"tambahan", alternatives:["lagi pula"], severity:"medium", lang:"id" },
+      { pattern:"namun demikian", replacement:"namun", alternatives:["tetapi"], severity:"medium", lang:"id" },
+      { pattern:"akan tetapi", replacement:"tapi", alternatives:["namun"], severity:"medium", lang:"id" },
+      { pattern:"lebih lanjut", replacement:"selanjutnya", alternatives:["lebih jauh"], severity:"medium", lang:"id" },
+      { pattern:"lebih jauh lagi", replacement:"lebih jauh", alternatives:["selanjutnya"], severity:"medium", lang:"id" },
+      { pattern:"perlu dicatat", replacement:"catat", alternatives:["catatlah"], severity:"medium", lang:"id" },
+      { pattern:"perlu diperhatikan", replacement:"perhatikan", alternatives:["catat"], severity:"medium", lang:"id" },
+      { pattern:"secara umum", replacement:"umumnya", alternatives:["lazimnya"], severity:"medium", lang:"id" },
+      { pattern:"pada umumnya", replacement:"umumnya", alternatives:["biasanya"], severity:"medium", lang:"id" },
+      { pattern:"pada dasarnya", replacement:"dasarnya", alternatives:["aslinya"], severity:"medium", lang:"id" },
+      { pattern:"secara khusus", replacement:"khususnya", alternatives:["terutama"], severity:"medium", lang:"id" },
+      { pattern:"dalam konteks ini", replacement:"di sini", alternatives:["untuk hal ini"], severity:"medium", lang:"id" },
+
+      // ----- Indonesian low severity -----
+      { pattern:"sangat penting", replacement:"penting", alternatives:["krusial"], severity:"low", lang:"id" },
+      { pattern:"cukup baik", replacement:"baik", alternatives:["memadai"], severity:"low", lang:"id" },
+      { pattern:"sungguh menarik", replacement:"menarik", alternatives:["unik"], severity:"low", lang:"id" },
+
+      // ----- English high severity -----
+      { pattern:"delve into", replacement:"explore", alternatives:["dig into","examine"], severity:"high", lang:"en" },
+      { pattern:"navigate", replacement:"handle", alternatives:["manage"], severity:"high", lang:"en" },
+      { pattern:"leverage", replacement:"use", alternatives:["apply"], severity:"high", lang:"en" },
+      { pattern:"in today's fast-paced world", replacement:"today", alternatives:["nowadays"], severity:"high", lang:"en" },
+      { pattern:"in the realm of", replacement:"in", alternatives:["within"], severity:"high", lang:"en" },
+      { pattern:"plays a crucial role", replacement:"is key", alternatives:["is essential","matters"], severity:"high", lang:"en" },
+      { pattern:"it's important to note", replacement:"note that", alternatives:["remember"], severity:"high", lang:"en" },
+      { pattern:"it's worth noting", replacement:"notably", alternatives:["notably,"], severity:"high", lang:"en" },
+      { pattern:"moreover", replacement:"also", alternatives:["plus"], severity:"high", lang:"en" },
+      { pattern:"furthermore", replacement:"also", alternatives:["plus"], severity:"high", lang:"en" },
+      { pattern:"additionally", replacement:"also", alternatives:["plus"], severity:"high", lang:"en" },
+      { pattern:"consequently", replacement:"so", alternatives:["thus"], severity:"high", lang:"en" },
+      { pattern:"in conclusion", replacement:"finally", alternatives:["to sum up"], severity:"high", lang:"en" },
+      { pattern:"tapestry", replacement:"mix", alternatives:["blend"], severity:"high", lang:"en" },
+      { pattern:"navigating the complexities", replacement:"handling", alternatives:["managing"], severity:"high", lang:"en" },
+      { pattern:"a testament to", replacement:"proof of", alternatives:["evidence of"], severity:"high", lang:"en" },
+      { pattern:"underscores", replacement:"shows", alternatives:["highlights"], severity:"high", lang:"en" },
+      { pattern:"myriad", replacement:"many", alternatives:["numerous"], severity:"high", lang:"en" },
+      { pattern:"plethora", replacement:"many", alternatives:["plenty of"], severity:"high", lang:"en" },
+      { pattern:"robust", replacement:"strong", alternatives:["solid"], severity:"high", lang:"en" },
+      { pattern:"seamless", replacement:"smooth", alternatives:["easy"], severity:"high", lang:"en" },
+      { pattern:"holistic", replacement:"complete", alternatives:["whole"], severity:"high", lang:"en" },
+      { pattern:"unlock", replacement:"open", alternatives:["enable"], severity:"high", lang:"en" },
+      { pattern:"embark on", replacement:"start", alternatives:["begin"], severity:"high", lang:"en" },
+
+      // ----- English medium severity -----
+      { pattern:"however", replacement:"but", alternatives:["yet"], severity:"medium", lang:"en" },
+      { pattern:"therefore", replacement:"so", alternatives:["thus"], severity:"medium", lang:"en" },
+      { pattern:"thus", replacement:"so", alternatives:["hence"], severity:"medium", lang:"en" },
+      { pattern:"hence", replacement:"so", alternatives:["therefore"], severity:"medium", lang:"en" },
+      { pattern:"subsequently", replacement:"then", alternatives:["later"], severity:"medium", lang:"en" },
+      { pattern:"nevertheless", replacement:"still", alternatives:["even so"], severity:"medium", lang:"en" },
+      { pattern:"nonetheless", replacement:"still", alternatives:["even so"], severity:"medium", lang:"en" },
+      { pattern:"in essence", replacement:"essentially", alternatives:["basically"], severity:"medium", lang:"en" },
+      { pattern:"ultimately", replacement:"finally", alternatives:["in the end"], severity:"medium", lang:"en" },
+      { pattern:"overall", replacement:"in all", alternatives:["on the whole"], severity:"medium", lang:"en" },
+      { pattern:"generally speaking", replacement:"generally", alternatives:["usually"], severity:"medium", lang:"en" },
+
+      // ----- English low severity -----
+      { pattern:"very important", replacement:"important", alternatives:["key"], severity:"low", lang:"en" },
+      { pattern:"quite good", replacement:"good", alternatives:["decent"], severity:"low", lang:"en" },
+      { pattern:"truly interesting", replacement:"interesting", alternatives:["unique"], severity:"low", lang:"en" }
+    ];
+
+    // ============================================================
+    // State
+    // ============================================================
+    var state = {
+      originalText: "",       // user-authored snapshot (typing/paste/sample/clear)
+      currentText: "",        // current text after replacements
+      matches: [],            // filtered, non-overlapping matches
+      settings: {
+        lang: "auto",
+        caseSensitive: false,
+        wholeWord: true
+      }
+    };
+
+    // ============================================================
+    // DOM refs
+    // ============================================================
+    var $ = function(id){ return doc.getElementById(id); };
+    var textInput = $("textInput");
+    var previewPane = $("previewPane");
+    var inputMeta = $("inputMeta");
+    var previewMeta = $("previewMeta");
+    var detectList = $("detectList");
+    var detectCount = $("detectCount");
+    var statTotal = $("statTotal");
+    var statTotalSub = $("statTotalSub");
+    var statBreakdown = $("statBreakdown");
+    var statWords = $("statWords");
+    var statScore = $("statScore");
+    var statScoreSub = $("statScoreSub");
+    var btnSample = $("btnSample");
+    var btnClear = $("btnClear");
+    var btnReplaceHigh = $("btnReplaceHigh");
+    var btnReplaceAll = $("btnReplaceAll");
+    var btnCopy = $("btnCopy");
+    var btnDownload = $("btnDownload");
+    var btnReset = $("btnReset");
+    var setLang = $("setLang");
+    var setWholeWord = $("setWholeWord");
+    var setCaseSensitive = $("setCaseSensitive");
+    var settingsToggle = $("settingsToggle");
+    var settingsCard = $("settingsCard");
+    var themeToggle = $("themeToggle");
+    var toast = $("toast");
+
+    // ============================================================
+    // Theme toggle
+    // ============================================================
+    themeToggle.addEventListener("click", function(){
+      var current = doc.documentElement.getAttribute("data-theme") || "light";
+      var next = current === "dark" ? "light" : "dark";
+      doc.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("humanizer-theme", next);
+    });
+
+    // ============================================================
+    // Toast
+    // ============================================================
+    var toastTimer = null;
+    function showToast(msg, isError){
+      toast.textContent = msg;
+      toast.className = "toast show" + (isError ? " error" : "");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){
+        toast.className = "toast" + (isError ? " error" : "");
+      }, 3200);
+    }
+
+    // ============================================================
+    // Helpers — HTML escape
+    // ============================================================
+    function escapeHTML(s){
+      return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+    function escapeAttr(s){
+      return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    // ============================================================
+    // Regex builder
+    // ============================================================
+    function buildRegex(entry, settings){
+      var p = entry.pattern;
+      // Escape regex special chars
+      var escaped = p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      var prefix = settings.wholeWord ? "\\b" : "";
+      var suffix = settings.wholeWord ? "\\b" : "";
+      var flags = "g" + (settings.caseSensitive ? "" : "i") + "u";
+      try {
+        return new RegExp(prefix + escaped + suffix, flags);
+      } catch(e){
+        return null; // fail safe on bad regex
+      }
+    }
+
+    // ============================================================
+    // Analyze text — returns sorted, non-overlapping matches
+    // ============================================================
+    function analyze(text, settings){
+      var matches = [];
+      if (!text) return matches;
+      CLICHES.forEach(function(entry){
+        if (settings.lang !== "auto" && entry.lang !== settings.lang) return;
+        var re = buildRegex(entry, settings);
+        if (!re) return;
+        var m;
+        var safety = 0;
+        while ((m = re.exec(text)) !== null && safety < 10000){
+          matches.push({ start: m.index, end: m.index + m[0].length, entry: entry, match: m[0] });
+          if (m.index === re.lastIndex) re.lastIndex++;
+          safety++;
+        }
+      });
+      // Sort: earliest start first; on tie, longest match first
+      matches.sort(function(a, b){
+        if (a.start !== b.start) return a.start - b.start;
+        return b.end - a.end;
+      });
+      // Filter overlaps (earliest non-overlapping chain wins)
+      var filtered = [];
+      var lastEnd = -1;
+      matches.forEach(function(m){
+        if (m.start >= lastEnd){
+          filtered.push(m);
+          lastEnd = m.end;
+        }
+      });
+      return filtered;
+    }
+
+    // ============================================================
+    // Build preview HTML with highlights
+    // ============================================================
+    function buildPreviewHTML(text, matches){
+      var html = "";
+      var last = 0;
+      for (var i = 0; i < matches.length; i++){
+        var m = matches[i];
+        html += escapeHTML(text.slice(last, m.start));
+        var tip = "Saran: " + m.entry.replacement;
+        if (m.entry.alternatives && m.entry.alternatives.length){
+          tip += " (atau: " + m.entry.alternatives.join(", ") + ")";
+        }
+        html += '<mark class="hl hl-' + m.entry.severity + '" data-tip="' + escapeAttr(tip) + '">' +
+                escapeHTML(text.slice(m.start, m.end)) + '</mark>';
+        last = m.end;
+      }
+      html += escapeHTML(text.slice(last));
+      return html;
+    }
+
+    // ============================================================
+    // Group matches by cliché entry for detection panel
+    // ============================================================
+    function groupMatches(matches){
+      var groups = {};
+      var order = [];
+      matches.forEach(function(m){
+        var key = m.entry.lang + "|" + m.entry.pattern;
+        if (!groups[key]){
+          groups[key] = { entry: m.entry, count: 0, key: key };
+          order.push(key);
+        }
+        groups[key].count++;
+      });
+      var sevOrder = { high: 0, medium: 1, low: 2 };
+      return order.map(function(k){ return groups[k]; }).sort(function(a, b){
+        var sd = sevOrder[a.entry.severity] - sevOrder[b.entry.severity];
+        if (sd !== 0) return sd;
+        return b.count - a.count;
+      });
+    }
+
+    // ============================================================
+    // Render functions
+    // ============================================================
+    function renderPreview(){
+      previewPane.innerHTML = buildPreviewHTML(state.currentText, state.matches);
+    }
+
+    function renderStats(){
+      var total = state.matches.length;
+      var high = 0, med = 0, low = 0;
+      state.matches.forEach(function(m){
+        if (m.entry.severity === "high") high++;
+        else if (m.entry.severity === "medium") med++;
+        else low++;
+      });
+      statTotal.textContent = total;
+      statTotalSub.textContent = total === 0 ? "text reads naturally" : ("across " + state.matches.length + " highlight" + (total>1?"s":""));
+      statBreakdown.innerHTML =
+        '<span class="c-high">' + high + '</span> · ' +
+        '<span class="c-med">' + med + '</span> · ' +
+        '<span class="c-low">' + low + '</span>';
+
+      // Words/chars
+      var trimmed = (state.currentText || "").trim();
+      var words = trimmed ? trimmed.split(/\s+/).length : 0;
+      var chars = state.currentText.length;
+      statWords.innerHTML = words + " · " + chars;
+
+      // Humanized score = max(0, 100 - 10 * cliché count)
+      var score = Math.max(0, 100 - total * 10);
+      statScore.textContent = score + "%";
+      if (score >= 80) statScoreSub.textContent = "looks clean";
+      else if (score >= 50) statScoreSub.textContent = "some clichés remain";
+      else if (score > 0) statScoreSub.textContent = "needs work";
+      else statScoreSub.textContent = "heavily AI-flavored";
+
+      // Input meta
+      inputMeta.textContent = words + " words · " + chars + " chars";
+
+      // Preview meta
+      if (total === 0){
+        previewMeta.textContent = state.currentText ? "No clichés detected — looks natural." : "Hover any highlighted phrase for a suggestion";
+      } else {
+        previewMeta.textContent = total + " highlight" + (total>1?"s":"") + " — hover for suggestions";
+      }
+
+      // Detection count pill
+      detectCount.textContent = total;
+
+      // Enable/disable toolbar buttons
+      var hasText = state.currentText.length > 0;
+      var hasMatches = total > 0;
+      var hasHigh = high > 0;
+      btnReplaceHigh.disabled = !hasHigh;
+      btnReplaceAll.disabled = !hasMatches;
+      btnCopy.disabled = !hasText;
+      btnDownload.disabled = !hasText;
+      btnReset.disabled = state.currentText !== state.originalText;
+    }
+
+    function renderDetectionList(){
+      var groups = groupMatches(state.matches);
+      detectList.innerHTML = "";
+      if (groups.length === 0){
+        return; // :empty::before shows the "no clichés" message
+      }
+      groups.forEach(function(g){
+        var row = doc.createElement("div");
+        row.className = "detect-row";
+
+        // Phrase
+        var ph = doc.createElement("span");
+        ph.className = "detect-phrase " + g.entry.severity;
+        ph.textContent = g.entry.pattern;
+        row.appendChild(ph);
+
+        // Meta (count + lang)
+        var meta = doc.createElement("div");
+        meta.className = "detect-meta";
+        meta.innerHTML = '<strong style="color:var(--fg)">' + g.count + "</strong>× found";
+        row.appendChild(meta);
+
+        // Severity badge
+        var sevBadge = doc.createElement("span");
+        sevBadge.className = "badge " + g.entry.severity;
+        sevBadge.textContent = g.entry.severity;
+        row.appendChild(sevBadge);
+
+        // Lang badge
+        var langBadge = doc.createElement("span");
+        langBadge.className = "badge lang";
+        langBadge.textContent = g.entry.lang === "id" ? "ID" : "EN";
+        row.appendChild(langBadge);
+
+        // Controls: select + replace button
+        var controls = doc.createElement("div");
+        controls.className = "detect-controls";
+
+        var sel = doc.createElement("select");
+        sel.className = "detect-select";
+        sel.title = "Choose a replacement";
+        var optDefault = doc.createElement("option");
+        optDefault.value = g.entry.replacement;
+        optDefault.textContent = "→ " + g.entry.replacement;
+        sel.appendChild(optDefault);
+        (g.entry.alternatives || []).forEach(function(alt){
+          var o = doc.createElement("option");
+          o.value = alt;
+          o.textContent = "→ " + alt;
+          sel.appendChild(o);
+        });
+        if (g.entry.alternatives && g.entry.alternatives.length === 0){
+          // add a "delete" option for clichés that should just be removed
+          var oDel = doc.createElement("option");
+          oDel.value = "";
+          oDel.textContent = "→ (delete)";
+          sel.appendChild(oDel);
+        }
+        controls.appendChild(sel);
+
+        var btn = doc.createElement("button");
+        btn.className = "btn btn-primary btn-sm";
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Replace all';
+        btn.addEventListener("click", function(){
+          var chosen = sel.value;
+          applyReplacement(g.entry, chosen);
+          showToast('Replaced all "' + g.entry.pattern + '" with "' + (chosen === "" ? "(deleted)" : chosen) + '"');
+        });
+        controls.appendChild(btn);
+
+        row.appendChild(controls);
+        detectList.appendChild(row);
+      });
+    }
+
+    // ============================================================
+    // Apply a replacement across the current text
+    // ============================================================
+    function applyReplacement(entry, replacementText){
+      var re = buildRegex(entry, state.settings);
+      if (!re) return;
+      state.currentText = state.currentText.replace(re, function(){ return replacementText; });
+      textInput.value = state.currentText;
+      scheduleAnalysis();
+    }
+
+    function applyBulk(severityFilter){
+      var toApply = [];
+      var seen = {};
+      state.matches.forEach(function(m){
+        if (severityFilter && m.entry.severity !== severityFilter) return;
+        var key = m.entry.lang + "|" + m.entry.pattern;
+        if (seen[key]) return;
+        seen[key] = true;
+        toApply.push(m.entry);
+      });
+      toApply.forEach(function(entry){
+        var re = buildRegex(entry, state.settings);
+        if (!re) return;
+        state.currentText = state.currentText.replace(re, function(){ return entry.replacement; });
+      });
+      textInput.value = state.currentText;
+      scheduleAnalysis();
+      return toApply.length;
+    }
+
+    // ============================================================
+    // Debounced analysis (300ms)
+    // ============================================================
+    var analysisTimer = null;
+    function scheduleAnalysis(){
+      if (analysisTimer) clearTimeout(analysisTimer);
+      analysisTimer = setTimeout(runAnalysis, 300);
+    }
+
+    function runAnalysis(){
+      state.matches = analyze(state.currentText, state.settings);
+      renderPreview();
+      renderStats();
+      renderDetectionList();
+    }
+
+    // ============================================================
+    // Text input — typing/paste updates original snapshot
+    // ============================================================
+    textInput.addEventListener("input", function(){
+      state.currentText = textInput.value;
+      // Only update originalText when the user authors text (not via replace ops)
+      state.originalText = state.currentText;
+      scheduleAnalysis();
+    });
+
+    // ============================================================
+    // Toolbar buttons
+    // ============================================================
+    btnSample.addEventListener("click", function(){
+      var sample = [
+        "In today's fast-paced world, it's important to note that artificial intelligence plays a crucial role in modern business. Moreover, companies leverage robust platforms to delve into the myriad of data points generated daily. Furthermore, a plethora of tools exist to help navigate the complexities of this seamless digital transformation. It's worth noting that, ultimately, these holistic approaches are a testament to the power of innovation.",
+        "",
+        "Di era digital ini, tak dapat dipungkiri bahwa teknologi memainkan peran penting dalam kehidupan sehari-hari. Oleh karena itu, perusahaan berupaya untuk mengimplementasikan solusi yang dapat memberikan kontribusi besar bagi masyarakat. Selain itu, secara keseluruhan, dengan demikian masyarakat diharapkan dapat beradaptasi. Penting untuk diingat bahwa pada akhirnya, transformasi ini merupakan bukti kemajuan zaman."
+      ].join("\n");
+      textInput.value = sample;
+      state.currentText = sample;
+      state.originalText = sample;
+      runAnalysis();
+      showToast("Sample text loaded — bilingual AI-flavored paragraph");
+    });
+
+    btnClear.addEventListener("click", function(){
+      if (!textInput.value) return;
+      textInput.value = "";
+      state.currentText = "";
+      state.originalText = "";
+      runAnalysis();
+      showToast("Cleared");
+      textInput.focus();
+    });
+
+    btnReplaceHigh.addEventListener("click", function(){
+      var n = applyBulk("high");
+      showToast(n > 0 ? ("Replaced " + n + " high-severity cliché" + (n>1?"s":"")) : "No high-severity clichés to replace");
+    });
+
+    btnReplaceAll.addEventListener("click", function(){
+      var n = applyBulk(null);
+      showToast(n > 0 ? ("Replaced " + n + " cliché type" + (n>1?"s":"") + " across the text") : "No clichés to replace");
+    });
+
+    btnCopy.addEventListener("click", function(){
+      var txt = state.currentText;
+      if (!txt) return;
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){
+          showToast("Copied " + txt.length + " characters to clipboard");
+        }).catch(function(){
+          fallbackCopy(txt);
+        });
+      } else {
+        fallbackCopy(txt);
+      }
+    });
+
+    function fallbackCopy(txt){
+      var ta = doc.createElement("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      doc.body.appendChild(ta);
+      ta.select();
+      try {
+        doc.execCommand("copy");
+        showToast("Copied " + txt.length + " characters to clipboard");
+      } catch(e){
+        showToast("Copy failed — select the textarea and press Ctrl+C", true);
+      }
+      doc.body.removeChild(ta);
+    }
+
+    btnDownload.addEventListener("click", function(){
+      var txt = state.currentText;
+      if (!txt) return;
+      var blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var ts = new Date();
+      var pad = function(n){ return String(n).padStart(2, "0"); };
+      var name = "humanized-" + ts.getFullYear() + pad(ts.getMonth()+1) + pad(ts.getDate()) + "-" + pad(ts.getHours()) + pad(ts.getMinutes()) + ".txt";
+      var a = doc.createElement("a");
+      a.href = url;
+      a.download = name;
+      doc.body.appendChild(a);
+      a.click();
+      doc.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      showToast("Download started: " + name);
+    });
+
+    btnReset.addEventListener("click", function(){
+      if (state.currentText === state.originalText) return;
+      state.currentText = state.originalText;
+      textInput.value = state.currentText;
+      runAnalysis();
+      showToast("Reset to your original text");
+    });
+
+    // ============================================================
+    // Settings
+    // ============================================================
+    settingsToggle.addEventListener("click", function(){
+      settingsCard.classList.toggle("open");
+    });
+
+    setLang.addEventListener("change", function(){
+      state.settings.lang = setLang.value;
+      scheduleAnalysis();
+    });
+    setWholeWord.addEventListener("change", function(){
+      state.settings.wholeWord = setWholeWord.checked;
+      scheduleAnalysis();
+    });
+    setCaseSensitive.addEventListener("change", function(){
+      state.settings.caseSensitive = setCaseSensitive.checked;
+      scheduleAnalysis();
+    });
+
+    // ============================================================
+    // FAQ accordions
+    // ============================================================
+    doc.querySelectorAll(".faq-q").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var item = btn.closest(".faq-item");
+        var wasOpen = item.classList.contains("open");
+        doc.querySelectorAll(".faq-item").forEach(function(el){ el.classList.remove("open"); });
+        if (!wasOpen) item.classList.add("open");
+      });
+    });
+
+    // ============================================================
+    // Footer year
+    // ============================================================
+    doc.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    // ============================================================
+    // Init
+    // ============================================================
+    runAnalysis();
+    textInput.focus();
+
+  })();
+  </script>
+</body>
+</html>
