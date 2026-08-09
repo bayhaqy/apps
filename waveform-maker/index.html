@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free, private, 100% client-side Audio Waveform Video Maker. Turn any MP3/WAV/OGG into an animated waveform video for TikTok, Reels, and YouTube Shorts — with custom background, colors, and text. No uploads, no sign-up." />
+  <meta name="keywords" content="waveform video, audio visualizer, waveform maker, TikTok audio, Reels audio, Shorts audio, animated waveform, MP3 to video, audio to MP4, audio to WebM, Web Audio API, MediaRecorder, browser audio" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Audio Waveform Video Maker — Animated Waveform for TikTok/Reels/Shorts" />
+  <meta property="og:description" content="Turn any audio file into an animated waveform video for TikTok, Reels, and Shorts — with custom background, colors, and text. 100% client-side, no uploads." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/waveform-maker/" />
+  <meta property="og:site_name" content="Waveform Maker" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Audio Waveform Video Maker — Animated Waveform for TikTok/Reels/Shorts" />
+  <meta name="twitter:description" content="Turn any audio file into an animated waveform video for TikTok, Reels, and Shorts — with custom background, colors, and text. 100% client-side, no uploads." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/waveform-maker/" />
+  <title>Audio Waveform Video Maker — Animated Waveform for TikTok/Reels/Shorts</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EWM%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Audio Waveform Video Maker",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/waveform-maker/",
+    "description": "Free, private, 100% client-side tool that turns any audio file into an animated waveform video for TikTok, Reels, and YouTube Shorts. Custom background, colors, waveform styles, and text overlay. No uploads.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "Dropzone for MP3/WAV/OGG/M4A/AAC/FLAC",
+      "Animated waveform styles: bars, line, mirror, radial",
+      "Aspect ratios: 9:16 (TikTok/Reels), 1:1 (Instagram), 16:9 (Shorts)",
+      "Custom background image or solid color",
+      "Optional text overlay (title + subtitle) with font picker",
+      "Live preview canvas synced to audio playback",
+      "Renders to WebM (VP9+Opus) via MediaRecorder API",
+      "100% client-side — no uploads, no tracking, no sign-up"
+    ]
+  }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
+      --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
+      --radius:14px;--radius-sm:10px;
+      --max-w:1180px;
+    }
+    [data-theme="dark"]{
+      --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
+      --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
+      --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.06),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.05),transparent 70%);
+      background-attachment:fixed;
+      transition:background-color .25s ease,color .25s ease;
+    }
+    [data-theme="dark"] body{
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%,rgba(220,38,38,0.15),transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.08),transparent 70%);
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(15,23,42,0.85)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1.15rem}
+    .brand-logo{
+      width:34px;height:34px;border-radius:9px;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.9rem;letter-spacing:-.5px;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.4);
+    }
+    .header-links{display:flex;align-items:center;gap:.5rem}
+    .header-links a{
+      color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+      padding:.4rem .7rem;border-radius:8px;transition:color .15s,background .15s;
+    }
+    .header-links a:hover{color:var(--fg);background:var(--chip-bg)}
+    .theme-toggle{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--card-border);
+      background:var(--chip-bg);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1.05rem;transition:background .15s,border-color .15s,transform .15s;
+    }
+    .theme-toggle:hover{background:var(--card-border-hover);transform:translateY(-1px)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:3.25rem 0 1.5rem;text-align:center}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--chip-bg);border:1px solid var(--chip-border);
+      color:var(--accent);font-size:.78rem;font-weight:600;
+      padding:.35rem .8rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:1.1rem;
+    }
+    .hero-eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
+    .hero h1{
+      font-size:clamp(2.2rem,5.5vw,3.4rem);line-height:1.1;letter-spacing:-.02em;
+      font-weight:800;margin-bottom:.85rem;
+    }
+    .hero h1 .accent{color:var(--accent)}
+    .hero p.sub{
+      font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 1.5rem;
+    }
+    .hero-pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .hero-pill{
+      display:inline-flex;align-items:center;gap:.4rem;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      padding:.45rem .85rem;border-radius:999px;font-size:.85rem;font-weight:500;
+      box-shadow:var(--shadow);
+    }
+    .hero-pill svg{width:15px;height:15px;color:var(--green)}
+
+    /* Main card */
+    .app-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:1.5rem;margin-bottom:2rem;
+    }
+    .dropzone{
+      border:2px dashed var(--card-border-hover);border-radius:var(--radius-sm);
+      padding:2.5rem 1.5rem;text-align:center;cursor:pointer;
+      transition:border-color .2s,background .2s,transform .2s;
+      background:var(--bg-2);
+    }
+    .dropzone:hover,.dropzone.dragover{
+      border-color:var(--accent);background:rgba(220,38,38,0.04);
+    }
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{
+      width:54px;height:54px;margin:0 auto .85rem;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;
+      color:white;box-shadow:0 8px 20px -6px rgba(220,38,38,0.45);
+    }
+    .dropzone-icon svg{width:26px;height:26px}
+    .dropzone h3{font-size:1.1rem;margin-bottom:.35rem}
+    .dropzone p{color:var(--muted);font-size:.9rem}
+    .dropzone .browse-link{color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+    .dropzone input[type=file]{display:none}
+
+    /* Audio info + transport */
+    .audio-info{
+      display:none;margin-top:1.25rem;padding:1rem 1.1rem;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);
+    }
+    .audio-info.active{display:block}
+    .audio-info-row{
+      display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;
+    }
+    .audio-info-row + .audio-info-row{margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--card-border)}
+    .ai-name{font-weight:600;font-size:.95rem;flex:1 1 200px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ai-meta{font-size:.82rem;color:var(--muted);display:flex;gap:.8rem;flex-wrap:wrap}
+    .ai-meta strong{color:var(--fg);font-weight:600}
+    .audio-replace{
+      font-size:.8rem;color:var(--accent);background:none;border:none;cursor:pointer;
+      text-decoration:underline;font-weight:500;font-family:inherit;padding:.2rem;
+    }
+    .audio-replace:hover{color:#b91c1c}
+
+    .transport{
+      display:flex;align-items:center;gap:.8rem;margin-top:.75rem;
+    }
+    .play-btn{
+      width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      box-shadow:0 4px 12px -2px rgba(220,38,38,0.45);transition:transform .15s,box-shadow .15s;
+    }
+    .play-btn:hover:not(:disabled){transform:scale(1.05);box-shadow:0 6px 16px -3px rgba(220,38,38,0.55)}
+    .play-btn:disabled{opacity:.4;cursor:not-allowed}
+    .play-btn svg{width:18px;height:18px}
+    .seek-wrap{flex:1;display:flex;align-items:center;gap:.6rem}
+    .seek-time{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:42px;text-align:center}
+    input[type=range].seek{
+      flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:999px;
+      background:var(--chip-bg);outline:none;cursor:pointer;
+    }
+    input[type=range].seek::-webkit-slider-thumb{
+      -webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
+      background:var(--accent);cursor:pointer;border:2px solid white;
+      box-shadow:0 1px 4px rgba(0,0,0,.25);
+    }
+    input[type=range].seek::-moz-range-thumb{
+      width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;
+      border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.25);
+    }
+
+    /* Two-column workspace */
+    .workspace{
+      display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:1.5rem;margin-top:1.5rem;
+    }
+    .preview-pane{position:sticky;top:90px;align-self:start;display:flex;flex-direction:column;gap:.85rem}
+    .preview-label{
+      display:flex;align-items:center;justify-content:space-between;
+      font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+    }
+    .preview-frame{
+      background:#000;border-radius:var(--radius-sm);overflow:hidden;
+      box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;
+      max-height:560px;border:1px solid var(--card-border);
+    }
+    #previewCanvas{display:block;width:auto;height:auto;max-width:100%;max-height:560px;background:#000}
+    .preview-hint{font-size:.78rem;color:var(--muted);text-align:center}
+
+    /* Settings pane */
+    .settings-pane{display:flex;flex-direction:column;gap:1.1rem}
+    .settings-section{
+      background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);padding:1rem 1.1rem;
+    }
+    .settings-section h4{
+      font-size:.95rem;font-weight:700;margin-bottom:.85rem;
+      display:flex;align-items:center;gap:.5rem;
+    }
+    .settings-section h4 .sec-num{
+      width:22px;height:22px;border-radius:6px;background:var(--accent);color:white;
+      font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+    }
+    .field{margin-bottom:.85rem}
+    .field:last-child{margin-bottom:0}
+    .field-label{
+      display:block;font-size:.82rem;font-weight:600;color:var(--fg);margin-bottom:.4rem;
+    }
+    .field-hint{font-size:.76rem;color:var(--muted);margin-top:.3rem}
+    .seg{
+      display:flex;flex-wrap:wrap;gap:.35rem;
+    }
+    .seg-btn{
+      padding:.45rem .85rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--muted);font-size:.83rem;font-weight:500;
+      cursor:pointer;transition:all .15s;font-family:inherit;
+    }
+    .seg-btn:hover{border-color:var(--card-border-hover);color:var(--fg)}
+    .seg-btn.active{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;border-color:transparent;
+      box-shadow:0 2px 8px -2px rgba(220,38,38,.45);
+    }
+    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+    input[type=text].field-input,
+    input[type=number].field-input,
+    select.field-input{
+      width:100%;padding:.55rem .75rem;border:1px solid var(--card-border);
+      border-radius:8px;background:var(--card-bg);color:var(--fg);font-size:.88rem;font-family:inherit;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    input[type=text].field-input:focus,
+    input[type=number].field-input:focus,
+    select.field-input:focus{
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,.12);
+    }
+    .color-row{display:flex;align-items:center;gap:.6rem}
+    input[type=color]{
+      width:38px;height:38px;border:1px solid var(--card-border);border-radius:8px;
+      background:var(--card-bg);cursor:pointer;padding:2px;
+    }
+    input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+    input[type=color]::-webkit-color-swatch{border:none;border-radius:6px}
+    input[type=color]::-moz-color-swatch{border:none;border-radius:6px}
+    .color-hex{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;color:var(--muted)}
+    input[type=range].slider{
+      width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:999px;
+      background:var(--chip-bg);outline:none;cursor:pointer;
+    }
+    input[type=range].slider::-webkit-slider-thumb{
+      -webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;
+      background:var(--accent);cursor:pointer;border:2px solid white;
+      box-shadow:0 1px 4px rgba(0,0,0,.25);
+    }
+    input[type=range].slider::-moz-range-thumb{
+      width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;
+      border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.25);
+    }
+    .slider-row{display:flex;align-items:center;gap:.7rem}
+    .slider-val{font-size:.8rem;font-weight:600;color:var(--fg);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+    .bg-upload-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .file-mini-btn{
+      padding:.4rem .75rem;border-radius:8px;border:1px solid var(--card-border);
+      background:var(--card-bg);color:var(--fg);font-size:.8rem;font-weight:500;cursor:pointer;
+      font-family:inherit;transition:border-color .15s,background .15s;
+    }
+    .file-mini-btn:hover{border-color:var(--card-border-hover);background:var(--chip-bg)}
+    .file-mini-btn.danger:hover{color:var(--accent);border-color:var(--accent)}
+    .bg-filename{font-size:.78rem;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .checkbox-row{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--fg)}
+    .checkbox-row input{cursor:pointer}
+
+    /* Action bar */
+    .action-bar{
+      display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;
+      margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--card-border);
+    }
+    .action-info{font-size:.88rem;color:var(--muted)}
+    .action-info strong{color:var(--fg);font-weight:600}
+    .action-buttons{display:flex;gap:.6rem;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1.25rem;border-radius:10px;border:1px solid transparent;
+      font-size:.92rem;font-weight:600;cursor:pointer;text-decoration:none;
+      transition:transform .15s,box-shadow .15s,background .15s,opacity .15s;
+      font-family:inherit;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),#b91c1c);color:white;
+      box-shadow:0 6px 16px -4px rgba(220,38,38,0.5);
+    }
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px -6px rgba(220,38,38,0.55)}
+    .btn-ghost{background:transparent;color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn svg{width:16px;height:16px}
+
+    /* Progress */
+    .progress-wrap{
+      margin-top:1rem;padding:1rem;border-radius:var(--radius-sm);
+      background:var(--bg-2);border:1px solid var(--card-border);
+      display:none;
+    }
+    .progress-wrap.active{display:block}
+    .progress-label{font-size:.88rem;font-weight:500;margin-bottom:.5rem;display:flex;justify-content:space-between;gap:1rem}
+    .progress-bar{height:8px;background:var(--chip-bg);border-radius:999px;overflow:hidden}
+    .progress-fill{
+      height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      width:0%;transition:width .25s ease;border-radius:999px;
+    }
+    .progress-time{font-size:.78rem;color:var(--muted);margin-top:.4rem;font-variant-numeric:tabular-nums}
+
+    /* Result */
+    .result-card{
+      background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.25);
+      border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;
+      display:none;
+    }
+    .result-card.active{display:block}
+    .result-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem}
+    .result-icon{
+      width:40px;height:40px;border-radius:10px;background:var(--green);
+      color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .result-icon svg{width:22px;height:22px}
+    .result-card h3{font-size:1.1rem;margin-bottom:.25rem}
+    .result-card p{color:var(--muted);font-size:.92rem;margin-bottom:1rem}
+    .result-meta{display:flex;gap:1.5rem;margin-bottom:1rem;font-size:.85rem;color:var(--muted);flex-wrap:wrap}
+    .result-meta strong{color:var(--fg);font-weight:600;display:block;font-size:1.1rem}
+
+    /* How to use */
+    .howto{padding:2.5rem 0}
+    .howto h2{font-size:1.7rem;margin-bottom:.5rem;letter-spacing:-.01em}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.75rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);
+    }
+    .step-num{
+      width:38px;height:38px;border-radius:10px;
+      background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;
+    }
+    .step-card h4{font-size:1.02rem;margin-bottom:.4rem}
+    .step-card p{font-size:.9rem;color:var(--muted);line-height:1.55}
+
+    /* Features */
+    .features{padding:2rem 0 3rem}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+    .feature-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.35rem;
+    }
+    .feature-icon{
+      width:36px;height:36px;border-radius:9px;background:var(--chip-bg);
+      color:var(--accent);display:flex;align-items:center;justify-content:center;
+      margin-bottom:.7rem;
+    }
+    .feature-icon svg{width:18px;height:18px}
+    .feature-card h4{font-size:.98rem;margin-bottom:.35rem}
+    .feature-card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+    /* FAQ */
+    .faq{padding:1rem 0 3rem}
+    .faq h2{font-size:1.7rem;margin-bottom:1.5rem;letter-spacing:-.01em}
+    .faq-item{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius-sm);margin-bottom:.6rem;overflow:hidden;
+    }
+    .faq-q{
+      width:100%;text-align:left;background:none;border:none;cursor:pointer;
+      padding:1rem 1.25rem;font-size:.98rem;font-weight:600;color:var(--fg);
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;
+      font-family:inherit;
+    }
+    .faq-q:hover{background:var(--bg-2)}
+    .faq-q .chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+    .faq-item.open .faq-q .chev{transform:rotate(180deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .25s ease;
+      padding:0 1.25rem;color:var(--muted);font-size:.92rem;line-height:1.6;
+    }
+    .faq-item.open .faq-a{max-height:400px;padding:0 1.25rem 1rem}
+
+    /* Footer */
+    footer.site-footer{
+      border-top:1px solid var(--card-border);
+      padding:2rem 0;margin-top:1rem;
+    }
+    .footer-inner{
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+    }
+    .footer-text{font-size:.85rem;color:var(--muted)}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+    .footer-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .footer-links a:hover{color:var(--fg)}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.85rem 1.4rem;border-radius:10px;
+      font-size:.92rem;font-weight:500;box-shadow:0 10px 30px -5px rgba(0,0,0,0.3);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:100;
+      max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:white}
+    .toast.success{background:var(--green);color:white}
+
+    /* Responsive */
+    @media(max-width:880px){
+      .workspace{grid-template-columns:1fr}
+      .preview-pane{position:static}
+      .preview-frame{max-height:480px;margin:0 auto}
+      #previewCanvas{max-height:480px}
+    }
+    @media(max-width:600px){
+      .hero{padding:2.25rem 0 1rem}
+      .app-card{padding:1.1rem}
+      .dropzone{padding:1.75rem 1rem}
+      .row-2,.row-3{grid-template-columns:1fr}
+      .action-bar{flex-direction:column;align-items:stretch}
+      .action-buttons{justify-content:stretch}
+      .action-buttons .btn{flex:1;justify-content:center}
+      .header-links a:not(.theme-toggle){display:none}
+      .preview-frame{max-height:420px}
+      #previewCanvas{max-height:420px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Prevent theme flash
+    (function(){
+      var saved = localStorage.getItem('waveform-theme');
+      if (!saved) saved = 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/waveform-maker/" class="brand">
+        <span class="brand-logo">WM</span>
+        <span>Waveform Maker</span>
+      </a>
+      <nav class="header-links">
+        <a href="#how-to-use">How to use</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">100% local · Web Audio + Canvas</span>
+        <h1>Make waveform videos <span class="accent">for short-form audio</span></h1>
+        <p class="sub">Drop an MP3, WAV, or OGG, pick a background and a waveform style, and render an animated video ready for TikTok, Reels, or YouTube Shorts — all in your browser, nothing uploaded.</p>
+        <div class="hero-pills">
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Custom background</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Animated waveform</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> MP4/WebM export</span>
+          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="app-card">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <h3>Drop an audio file here</h3>
+          <p>or <span class="browse-link">browse from your device</span> · MP3, WAV, OGG, M4A, AAC, FLAC</p>
+          <input type="file" id="fileInput" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" />
+        </label>
+
+        <div class="audio-info" id="audioInfo">
+          <div class="audio-info-row">
+            <div class="ai-name" id="aiName">—</div>
+            <button class="audio-replace" id="replaceBtn">Replace audio</button>
+          </div>
+          <div class="ai-meta" id="aiMeta"></div>
+          <div class="transport">
+            <button class="play-btn" id="previewPlayBtn" disabled aria-label="Play preview">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <div class="seek-wrap">
+              <span class="seek-time" id="seekCur">0:00</span>
+              <input type="range" class="seek" id="seekBar" min="0" max="1000" value="0" step="1" disabled aria-label="Seek" />
+              <span class="seek-time" id="seekDur">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace" id="workspace" style="display:none">
+          <!-- LEFT: Preview pane -->
+          <div class="preview-pane">
+            <div class="preview-label">
+              <span>Live preview</span>
+              <span id="resolutionLabel">540 × 960</span>
+            </div>
+            <div class="preview-frame">
+              <canvas id="previewCanvas" width="540" height="960"></canvas>
+            </div>
+            <div class="preview-hint" id="previewHint">Press play above to preview the animation.</div>
+          </div>
+
+          <!-- RIGHT: Settings pane -->
+          <div class="settings-pane">
+            <!-- Visual settings -->
+            <div class="settings-section">
+              <h4><span class="sec-num">1</span> Aspect ratio &amp; waveform</h4>
+              <div class="field">
+                <label class="field-label">Aspect ratio</label>
+                <div class="seg" id="aspectSeg">
+                  <button class="seg-btn active" data-val="9:16" type="button">9:16 · TikTok/Reels</button>
+                  <button class="seg-btn" data-val="1:1" type="button">1:1 · Instagram</button>
+                  <button class="seg-btn" data-val="16:9" type="button">16:9 · Shorts</button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label">Waveform style</label>
+                <div class="seg" id="styleSeg">
+                  <button class="seg-btn active" data-val="bars" type="button">Bars</button>
+                  <button class="seg-btn" data-val="line" type="button">Line</button>
+                  <button class="seg-btn" data-val="mirror" type="button">Mirror</button>
+                  <button class="seg-btn" data-val="radial" type="button">Radial</button>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label">Waveform position</label>
+                <div class="seg" id="positionSeg">
+                  <button class="seg-btn active" data-val="center" type="button">Center</button>
+                  <button class="seg-btn" data-val="bottom" type="button">Bottom</button>
+                  <button class="seg-btn" data-val="top" type="button">Top</button>
+                </div>
+                <div class="field-hint" id="positionHint">Position is ignored when style is Radial (always centered).</div>
+              </div>
+              <div class="field">
+                <label class="field-label">Waveform size · <span class="slider-val" id="sizeVal" style="display:inline">70%</span></label>
+                <input type="range" class="slider" id="sizeSlider" min="30" max="100" value="70" />
+              </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="settings-section">
+              <h4><span class="sec-num">2</span> Color</h4>
+              <div class="field">
+                <label class="field-label">Color mode</label>
+                <div class="seg" id="colorModeSeg">
+                  <button class="seg-btn active" data-val="solid" type="button">Solid</button>
+                  <button class="seg-btn" data-val="gradient" type="button">Gradient (2 stops)</button>
+                </div>
+              </div>
+              <div class="row-2">
+                <div class="field">
+                  <label class="field-label" id="color1Label">Waveform color</label>
+                  <div class="color-row">
+                    <input type="color" id="color1" value="#DC2626" />
+                    <span class="color-hex" id="color1Hex">#DC2626</span>
+                  </div>
+                </div>
+                <div class="field" id="color2Field" style="display:none">
+                  <label class="field-label">Gradient stop 2</label>
+                  <div class="color-row">
+                    <input type="color" id="color2" value="#F59E0B" />
+                    <span class="color-hex" id="color2Hex">#F59E0B</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Background -->
+            <div class="settings-section">
+              <h4><span class="sec-num">3</span> Background</h4>
+              <div class="field">
+                <label class="field-label">Background image (optional)</label>
+                <div class="bg-upload-row">
+                  <button class="file-mini-btn" id="bgUploadBtn" type="button">Upload image…</button>
+                  <button class="file-mini-btn danger" id="bgClearBtn" type="button" style="display:none">Remove</button>
+                  <span class="bg-filename" id="bgFilename">No image — using solid color below</span>
+                </div>
+                <input type="file" id="bgFileInput" accept="image/*" style="display:none" />
+                <div class="field-hint">JPG or PNG. Image is cover-fit to the frame. Falls back to solid color if no image.</div>
+              </div>
+              <div class="field">
+                <label class="field-label">Solid color (used when no image)</label>
+                <div class="color-row">
+                  <input type="color" id="bgColor" value="#0F172A" />
+                  <span class="color-hex" id="bgColorHex">#0F172A</span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label">Dark overlay · <span class="slider-val" id="overlayVal" style="display:inline">30%</span> (for text readability)</label>
+                <input type="range" class="slider" id="overlaySlider" min="0" max="80" value="30" />
+              </div>
+            </div>
+
+            <!-- Text overlay -->
+            <div class="settings-section">
+              <h4><span class="sec-num">4</span> Text overlay (optional)</h4>
+              <div class="field">
+                <label class="field-label">Title (top)</label>
+                <input type="text" class="field-input" id="titleText" placeholder="e.g. Track Name" maxlength="80" />
+              </div>
+              <div class="field">
+                <label class="field-label">Subtitle / handle (bottom)</label>
+                <input type="text" class="field-input" id="subtitleText" placeholder="e.g. @yourhandle" maxlength="80" />
+              </div>
+              <div class="row-3">
+                <div class="field">
+                  <label class="field-label">Font</label>
+                  <select class="field-input" id="fontSelect">
+                    <option value="Inter, system-ui, sans-serif">Inter</option>
+                    <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">System</option>
+                    <option value="Poppins, system-ui, sans-serif">Poppins</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label">Text color</label>
+                  <div class="color-row">
+                    <input type="color" id="textColor" value="#FFFFFF" />
+                    <span class="color-hex" id="textColorHex">#FFFFFF</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Mute during render</label>
+                  <div class="checkbox-row" style="margin-top:.35rem">
+                    <input type="checkbox" id="muteRender" />
+                    <span>Mute speakers</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-label">
+            <span id="progressLabel">Preparing…</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-time" id="progressTime">—</div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+          <div class="result-head">
+            <div class="result-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h3>Waveform video ready</h3>
+              <p>Your video has been rendered locally and is ready to download.</p>
+            </div>
+          </div>
+          <div class="result-meta">
+            <div><strong id="resultFormat">—</strong>format</div>
+            <div><strong id="resultSize">—</strong>size</div>
+            <div><strong id="resultDuration">—</strong>duration</div>
+          </div>
+          <button class="btn btn-primary" id="downloadBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download video
+          </button>
+        </div>
+
+        <div class="action-bar" id="actionBar" style="display:none">
+          <div class="action-info" id="actionInfo">Load an audio file to begin.</div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="renderBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Render video
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use Waveform Maker</h2>
+        <p>Five simple steps — your audio is processed entirely in your browser. Nothing is uploaded.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h4>Drop your audio</h4>
+            <p>Drag-and-drop an MP3, WAV, OGG, M4A, AAC, or FLAC file onto the dropzone, or click to browse. The file is decoded locally with the Web Audio API.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h4>Customize the look</h4>
+            <p>Pick an aspect ratio (9:16 / 1:1 / 16:9), a waveform style (bars / line / mirror / radial), colors, position, size, background image, and optional text overlay.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h4>Preview the animation</h4>
+            <p>Press play in the audio bar — the live preview canvas renders the waveform scrolling in sync with playback so you can see exactly what you'll get.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <h4>Render the video</h4>
+            <p>Click <strong>Render video</strong>. The app records the canvas + audio in real time using MediaRecorder. A 60-second clip takes ~60 seconds to render. Watch the progress bar for elapsed/remaining time.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <h4>Download &amp; post</h4>
+            <p>When rendering finishes, click <strong>Download video</strong> to save a WebM file. Upload directly to TikTok, Reels, or Shorts — they all accept WebM. Need MP4? Convert with HandBrake or ffmpeg.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Truly private</h4>
+            <p>Your audio is decoded in your browser. It is never uploaded to a server, never stored, never logged. Verify it in your DevTools Network tab.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <h4>Four waveform styles</h4>
+            <p>Choose bars, smooth filled line, symmetric mirror, or radial circular waveform. Each works with solid or gradient color, and any position.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h4>Three aspect ratios</h4>
+            <p>9:16 for TikTok and Reels, 1:1 for Instagram feed, 16:9 for YouTube Shorts. Switch instantly — the canvas resizes and the preview updates.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <h4>Custom background</h4>
+            <p>Upload any JPG or PNG as the background — it's cover-fit to the frame. Add a dark overlay slider for text readability. No image? Use a solid color.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></div>
+            <h4>Native browser APIs</h4>
+            <p>Built on Web Audio API for decoding, Canvas API for rendering, and MediaRecorder API for capture. Zero external libraries — works offline after first load.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <h4>Live preview &amp; real-time render</h4>
+            <p>Watch the waveform animate in sync with playback before you commit to a render. Rendering records in real time, so 1 minute of audio = 1 minute of render.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is my audio uploaded to a server? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>No. Waveform Maker runs entirely in your browser. Your audio file is read into memory, decoded with the Web Audio API, and the rendered video is offered as a download — it never touches any server. Verify by opening DevTools → Network tab while you load a file: no audio data leaves your device.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Why does rendering take as long as the audio? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Waveform Maker uses the MediaRecorder API to capture the canvas + audio in real time. This is the only native browser API that produces a video file from a canvas without external libraries. A 60-second clip takes ~60 seconds to record. There is no faster native approach in a single self-contained HTML file.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Why is the output WebM and not MP4? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The MediaRecorder API in Chrome, Firefox, and Edge reliably supports WebM (VP9 + Opus). MP4 recording is not yet consistently supported across browsers. TikTok, Instagram Reels, and YouTube Shorts all accept WebM uploads natively. If you specifically need an MP4, convert the WebM with HandBrake, ffmpeg, or any online converter.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Which audio formats are supported? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Any format your browser can decode through <code>AudioContext.decodeAudioData</code> — typically MP3, WAV, OGG/Vorbis, M4A/AAC, and FLAC. Format support varies slightly by browser: Chrome and Firefox support all of the above; Safari has some gaps with OGG. If a file fails to load, try converting it to MP3 or WAV first.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Is there a file size or duration limit? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>There is no artificial limit. The practical constraint is your device's memory: decoding a 10-minute audio file into PCM samples can use a few hundred MB of RAM. Very large files (over ~50 MB or 30 minutes) may slow down or fail on low-memory devices. For best results, keep clips under 5 minutes — which is plenty for short-form content.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Does it work on Safari? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>Partial. Safari 14+ supports Web Audio API and Canvas, and recent versions support MediaRecorder with MP4 (H.264 + AAC) output. However, Safari's MediaRecorder implementation has historically been experimental and may produce files without audio, or fail outright. For reliable results, use Chrome, Firefox, or Edge on desktop.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Can I render with no audio in the video? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>By default the audio is included in the output video. Use the <strong>Mute during render</strong> checkbox to silence your speakers while still recording audio into the file. There is currently no option to omit the audio track entirely — use a video editor to remove it if needed.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button">Why does the preview look slightly choppy? <span class="chev">⌄</span></button>
+          <div class="faq-a"><p>The preview runs at the browser's animation frame rate (usually 60 fps) using pre-computed audio peaks. If your device is busy, frames may drop. The final rendered video is captured at a steady 30 fps via <code>canvas.captureStream(30)</code>, so it will look smoother than the live preview.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
+        Powered by Web Audio API + Canvas + MediaRecorder ·
+        <span id="footerYear">2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
+        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function(){
+    'use strict';
+    var doc = document;
+
+    // ----- State -----
+    var state = {
+      audioFile: null,
+      audioBuffer: null,
+      audioEl: null,
+      sourceNode: null,
+      streamDest: null,
+      peaks: [],
+      peaksPerSec: 50,
+      windowSize: 96,        // peaks shown at once (scrolling window)
+      isPlaying: false,
+      isRendering: false,
+      rafId: null,
+      renderedBlobUrl: null,
+      renderedMeta: null,
+      settings: {
+        aspect: '9:16',
+        style: 'bars',
+        position: 'center',
+        size: 70,
+        colorMode: 'solid',
+        color1: '#DC2626',
+        color2: '#F59E0B',
+        bgColor: '#0F172A',
+        bgImage: null,       // HTMLImageElement
+        bgImageName: '',
+        overlay: 30,
+        title: '',
+        subtitle: '',
+        font: 'Inter, system-ui, sans-serif',
+        textColor: '#FFFFFF',
+        muteRender: false
+      }
+    };
+
+    var ASPECT_DIMS = {
+      '9:16':  { w: 540, h: 960,  label: '540 × 960' },
+      '1:1':   { w: 720, h: 720,  label: '720 × 720' },
+      '16:9':  { w: 960, h: 540,  label: '960 × 540' }
+    };
+
+    // ----- DOM refs -----
+    var dropzone       = doc.getElementById('dropzone');
+    var fileInput      = doc.getElementById('fileInput');
+    var audioInfo      = doc.getElementById('audioInfo');
+    var aiName         = doc.getElementById('aiName');
+    var aiMeta         = doc.getElementById('aiMeta');
+    var replaceBtn     = doc.getElementById('replaceBtn');
+    var previewPlayBtn = doc.getElementById('previewPlayBtn');
+    var seekBar        = doc.getElementById('seekBar');
+    var seekCur        = doc.getElementById('seekCur');
+    var seekDur        = doc.getElementById('seekDur');
+    var workspace      = doc.getElementById('workspace');
+    var canvas         = doc.getElementById('previewCanvas');
+    var ctx            = canvas.getContext('2d');
+    var resolutionLabel= doc.getElementById('resolutionLabel');
+    var previewHint    = doc.getElementById('previewHint');
+
+    var aspectSeg      = doc.getElementById('aspectSeg');
+    var styleSeg       = doc.getElementById('styleSeg');
+    var positionSeg    = doc.getElementById('positionSeg');
+    var positionHint   = doc.getElementById('positionHint');
+    var sizeSlider     = doc.getElementById('sizeSlider');
+    var sizeVal        = doc.getElementById('sizeVal');
+    var colorModeSeg   = doc.getElementById('colorModeSeg');
+    var color1         = doc.getElementById('color1');
+    var color1Hex      = doc.getElementById('color1Hex');
+    var color1Label    = doc.getElementById('color1Label');
+    var color2Field    = doc.getElementById('color2Field');
+    var color2         = doc.getElementById('color2');
+    var color2Hex      = doc.getElementById('color2Hex');
+    var bgUploadBtn    = doc.getElementById('bgUploadBtn');
+    var bgClearBtn     = doc.getElementById('bgClearBtn');
+    var bgFilename     = doc.getElementById('bgFilename');
+    var bgFileInput    = doc.getElementById('bgFileInput');
+    var bgColor        = doc.getElementById('bgColor');
+    var bgColorHex     = doc.getElementById('bgColorHex');
+    var overlaySlider  = doc.getElementById('overlaySlider');
+    var overlayVal     = doc.getElementById('overlayVal');
+    var titleText      = doc.getElementById('titleText');
+    var subtitleText   = doc.getElementById('subtitleText');
+    var fontSelect     = doc.getElementById('fontSelect');
+    var textColor      = doc.getElementById('textColor');
+    var textColorHex   = doc.getElementById('textColorHex');
+    var muteRender     = doc.getElementById('muteRender');
+
+    var actionBar      = doc.getElementById('actionBar');
+    var actionInfo     = doc.getElementById('actionInfo');
+    var renderBtn      = doc.getElementById('renderBtn');
+    var progressWrap   = doc.getElementById('progressWrap');
+    var progressLabel  = doc.getElementById('progressLabel');
+    var progressPct    = doc.getElementById('progressPct');
+    var progressFill   = doc.getElementById('progressFill');
+    var progressTime   = doc.getElementById('progressTime');
+    var resultCard     = doc.getElementById('resultCard');
+    var downloadBtn    = doc.getElementById('downloadBtn');
+    var toast          = doc.getElementById('toast');
+
+    // ----- Theme toggle -----
+    var themeToggle = doc.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function(){
+      var current = doc.documentElement.getAttribute('data-theme') || 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      doc.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('waveform-theme', next);
+      // Redraw preview if idle so theme-dependent elements (if any) update
+      if (!state.isPlaying && !state.isRendering && state.audioBuffer) {
+        drawIdleFrame();
+      }
+    });
+
+    // ----- Toast -----
+    var toastTimer = null;
+    function showToast(msg, isError, isSuccess){
+      toast.textContent = msg;
+      toast.className = 'toast show' + (isError ? ' error' : (isSuccess ? ' success' : ''));
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){
+        toast.className = 'toast';
+      }, 3400);
+    }
+
+    // ----- Utilities -----
+    function formatBytes(b){
+      if (b < 1024) return b + ' B';
+      if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+      return (b/1024/1024).toFixed(2) + ' MB';
+    }
+    function formatTime(s){
+      if (!isFinite(s) || s < 0) s = 0;
+      var m = Math.floor(s / 60);
+      var sec = Math.floor(s % 60);
+      var ms = Math.floor((s - Math.floor(s)) * 10);
+      return m + ':' + String(sec).padStart(2,'0');
+    }
+    function formatTimeMs(s){
+      if (!isFinite(s) || s < 0) s = 0;
+      var m = Math.floor(s / 60);
+      var sec = Math.floor(s % 60);
+      return m + ':' + String(sec).padStart(2,'0');
+    }
+    function pad2(n){ return String(n).padStart(2,'0'); }
+
+    // ----- AudioContext (lazy) -----
+    var audioCtx = null;
+    function getAudioContext(){
+      if (!audioCtx){
+        var AC = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AC();
+      }
+      return audioCtx;
+    }
+
+    // ----- File input + dropzone -----
+    fileInput.addEventListener('change', function(){
+      if (fileInput.files && fileInput.files[0]){
+        loadAudioFile(fileInput.files[0]);
+        fileInput.value = '';
+      }
+    });
+    dropzone.addEventListener('dragover', function(e){
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+    dropzone.addEventListener('dragleave', function(){
+      dropzone.classList.remove('dragover');
+    });
+    dropzone.addEventListener('drop', function(e){
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+        loadAudioFile(e.dataTransfer.files[0]);
+      }
+    });
+    replaceBtn.addEventListener('click', function(){
+      fileInput.click();
+    });
+
+    // ----- Load audio file: decode + compute peaks -----
+    function loadAudioFile(file){
+      var okExt = /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name);
+      if (!okExt && !/^audio\//.test(file.type) && file.type !== ''){
+        showToast('Unsupported file type. Use MP3, WAV, OGG, M4A, AAC, or FLAC.', true);
+        return;
+      }
+      showToast('Decoding audio…');
+      var ctx0 = getAudioContext();
+      // Decode for peaks
+      file.arrayBuffer().then(function(buf){
+        // decodeAudioData needs its own copy in some browsers
+        return ctx0.decodeAudioData(buf.slice(0));
+      }).then(function(audioBuf){
+        state.audioFile = file;
+        state.audioBuffer = audioBuf;
+        state.peaks = computePeaks(audioBuf);
+        // Set up audio element for playback
+        setupAudioElement(file);
+        // Update UI
+        showAudioInfo(file, audioBuf);
+        workspace.style.display = 'grid';
+        actionBar.style.display = 'flex';
+        actionInfo.innerHTML = 'Audio loaded — <strong>' + formatTime(audioBuf.duration) + '</strong> · ready to preview and render.';
+        renderBtn.disabled = false;
+        previewPlayBtn.disabled = false;
+        seekBar.disabled = false;
+        // Resize canvas to aspect
+        applyAspect();
+        drawIdleFrame();
+        showToast('Audio loaded: ' + truncate(file.name, 40), false, true);
+      }).catch(function(err){
+        console.error(err);
+        var msg = (err && err.message) ? err.message : 'Unknown error';
+        showToast('Could not decode audio: ' + msg + '. Try MP3 or WAV.', true);
+      });
+    }
+
+    function truncate(s, n){ return s.length > n ? s.slice(0, n-1) + '…' : s; }
+
+    function computePeaks(audioBuf){
+      var channel = audioBuf.getChannelData(0);
+      var totalPeaks = Math.min(5000, Math.max(200, Math.floor(audioBuf.duration * state.peaksPerSec)));
+      var block = Math.floor(channel.length / totalPeaks);
+      if (block < 1) block = 1;
+      var peaks = [];
+      var maxPeak = 0.001;
+      for (var i = 0; i < totalPeaks; i++){
+        var max = 0;
+        var start = i * block;
+        var end = Math.min(start + block, channel.length);
+        for (var j = start; j < end; j++){
+          var v = channel[j];
+          if (v < 0) v = -v;
+          if (v > max) max = v;
+        }
+        if (max > maxPeak) maxPeak = max;
+        peaks.push(max);
+      }
+      // Normalize to 0..1
+      var norm = [];
+      for (var k = 0; k < peaks.length; k++){
+        norm.push(Math.min(1, peaks[k] / maxPeak));
+      }
+      return norm;
+    }
+
+    function setupAudioElement(file){
+      // Tear down previous
+      if (state.audioEl){
+        try { state.audioEl.pause(); } catch(e){}
+        state.audioEl.src = '';
+      }
+      if (state.sourceNode){
+        try { state.sourceNode.disconnect(); } catch(e){}
+        state.sourceNode = null;
+      }
+      var url = URL.createObjectURL(file);
+      var el = new Audio();
+      el.src = url;
+      el.preload = 'auto';
+      el.crossOrigin = 'anonymous';
+      state.audioEl = el;
+
+      el.addEventListener('loadedmetadata', function(){
+        seekDur.textContent = formatTime(el.duration);
+        seekBar.max = Math.floor(el.duration * 100);
+      });
+      el.addEventListener('timeupdate', function(){
+        seekCur.textContent = formatTime(el.currentTime);
+        if (!seekBar.dataset.dragging){
+          seekBar.value = Math.floor(el.currentTime * 100);
+        }
+        if (state.isPlaying && !state.isRendering){
+          // rAF handles drawing; nothing extra here
+        }
+      });
+      el.addEventListener('ended', function(){
+        state.isPlaying = false;
+        setPlayIcon(false);
+        if (state.isRendering){
+          // Recording will be stopped by render loop watchdog as well
+        } else {
+          previewHint.textContent = 'Reached end — press play to hear it again.';
+          drawIdleFrame();
+        }
+      });
+      el.addEventListener('error', function(){
+        showToast('Audio element error — the file may be unsupported by your browser.', true);
+      });
+    }
+
+    function showAudioInfo(file, audioBuf){
+      audioInfo.classList.add('active');
+      aiName.textContent = file.name;
+      var sr = (audioBuf.sampleRate / 1000).toFixed(1) + ' kHz';
+      var ch = audioBuf.numberOfChannels === 1 ? 'Mono' : (audioBuf.numberOfChannels + ' channels');
+      aiMeta.innerHTML =
+        '<span><strong>' + formatTime(audioBuf.duration) + '</strong> duration</span>' +
+        '<span><strong>' + sr + '</strong> sample rate</span>' +
+        '<span><strong>' + ch + '</strong></span>' +
+        '<span><strong>' + formatBytes(file.size) + '</strong> size</span>';
+    }
+
+    // ----- Play / pause / seek (preview) -----
+    previewPlayBtn.addEventListener('click', function(){
+      if (!state.audioEl) return;
+      if (state.isRendering){
+        showToast('Cannot preview while rendering', true);
+        return;
+      }
+      if (state.isPlaying){
+        pausePreview();
+      } else {
+        playPreview();
+      }
+    });
+
+    function playPreview(){
+      var ctx0 = getAudioContext();
+      if (ctx0.state === 'suspended') ctx0.resume();
+      // Create MediaElementSource on first play (only once per element)
+      if (!state.sourceNode){
+        try {
+          state.sourceNode = ctx0.createMediaElementSource(state.audioEl);
+          state.sourceNode.connect(ctx0.destination);
+        } catch(e){
+          console.error(e);
+          showToast('Could not set up audio playback in this browser.', true);
+          return;
+        }
+      }
+      state.audioEl.play().then(function(){
+        state.isPlaying = true;
+        setPlayIcon(true);
+        previewHint.textContent = 'Previewing — audio is playing.';
+        startRAF();
+      }).catch(function(err){
+        console.error(err);
+        showToast('Playback failed: ' + (err.message || err.name), true);
+      });
+    }
+
+    function pausePreview(){
+      if (!state.audioEl) return;
+      state.audioEl.pause();
+      state.isPlaying = false;
+      setPlayIcon(false);
+      previewHint.textContent = 'Paused — press play to resume.';
+      stopRAF();
+      drawIdleFrame();
+    }
+
+    function setPlayIcon(isPlaying){
+      if (isPlaying){
+        previewPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+        previewPlayBtn.setAttribute('aria-label', 'Pause preview');
+      } else {
+        previewPlayBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+        previewPlayBtn.setAttribute('aria-label', 'Play preview');
+      }
+    }
+
+    seekBar.addEventListener('input', function(){
+      seekBar.dataset.dragging = '1';
+      var t = parseInt(seekBar.value, 10) / 100;
+      seekCur.textContent = formatTime(t);
+      if (state.audioEl){
+        state.audioEl.currentTime = t;
+      }
+      // Update preview while dragging
+      drawFrameAt(t);
+    });
+    seekBar.addEventListener('change', function(){
+      delete seekBar.dataset.dragging;
+    });
+
+    // ----- Animation loop -----
+    function startRAF(){
+      stopRAF();
+      function tick(){
+        if (!state.isPlaying && !state.isRendering) return;
+        var t = state.audioEl ? state.audioEl.currentTime : 0;
+        drawFrameAt(t);
+        state.rafId = requestAnimationFrame(tick);
+      }
+      state.rafId = requestAnimationFrame(tick);
+    }
+    function stopRAF(){
+      if (state.rafId){
+        cancelAnimationFrame(state.rafId);
+        state.rafId = null;
+      }
+    }
+
+    // ----- Drawing helpers -----
+    function applyAspect(){
+      var dim = ASPECT_DIMS[state.settings.aspect];
+      canvas.width = dim.w;
+      canvas.height = dim.h;
+      resolutionLabel.textContent = dim.label;
+    }
+
+    function drawIdleFrame(){
+      // Draw a static frame at current seek position (or 0)
+      var t = state.audioEl ? state.audioEl.currentTime : 0;
+      drawFrameAt(t);
+    }
+
+    function drawFrameAt(currentTime){
+      var w = canvas.width;
+      var h = canvas.height;
+      // 1. Background
+      drawBackground(ctx, w, h);
+      // 2. Overlay
+      var overlayAlpha = state.settings.overlay / 100;
+      if (overlayAlpha > 0){
+        ctx.fillStyle = 'rgba(0,0,0,' + overlayAlpha + ')';
+        ctx.fillRect(0, 0, w, h);
+      }
+      // 3. Waveform
+      var windowPeaks = getWindowPeaks(currentTime);
+      drawWaveform(ctx, windowPeaks, w, h);
+      // 4. Text overlay
+      drawTextOverlay(ctx, w, h);
+    }
+
+    function drawBackground(c, w, h){
+      if (state.settings.bgImage){
+        // Cover-fit
+        var img = state.settings.bgImage;
+        var iw = img.naturalWidth || img.width;
+        var ih = img.naturalHeight || img.height;
+        if (iw && ih){
+          var scale = Math.max(w / iw, h / ih);
+          var dw = iw * scale;
+          var dh = ih * scale;
+          var dx = (w - dw) / 2;
+          var dy = (h - dh) / 2;
+          c.drawImage(img, dx, dy, dw, dh);
+          return;
+        }
+      }
+      // Solid color fallback
+      c.fillStyle = state.settings.bgColor;
+      c.fillRect(0, 0, w, h);
+    }
+
+    function getWindowPeaks(currentTime){
+      var totalPeaks = state.peaks.length;
+      if (totalPeaks === 0) return [];
+      var duration = state.audioBuffer ? state.audioBuffer.duration : 0;
+      if (duration <= 0) return state.peaks.slice(0, state.windowSize);
+      var currentIdx = (currentTime / duration) * totalPeaks;
+      var half = state.windowSize / 2;
+      var startIdx = Math.floor(currentIdx - half);
+      // Center window on playhead; pad with zeros if needed
+      var out = [];
+      for (var i = 0; i < state.windowSize; i++){
+        var idx = startIdx + i;
+        if (idx < 0 || idx >= totalPeaks) out.push(0);
+        else out.push(state.peaks[idx]);
+      }
+      return out;
+    }
+
+    function drawWaveform(c, peaks, w, h){
+      if (!peaks.length) return;
+      var s = state.settings;
+      var n = peaks.length;
+      var sizeHeight = h * (s.size / 100);
+
+      // Baseline Y
+      var baseY;
+      var isRadial = (s.style === 'radial');
+      if (isRadial){
+        baseY = h / 2;
+      } else if (s.position === 'top'){
+        baseY = h * 0.12;
+      } else if (s.position === 'bottom'){
+        baseY = h - h * 0.12;
+      } else {
+        baseY = h / 2;
+      }
+
+      // Fill / stroke style
+      var useGrad = (s.colorMode === 'gradient');
+      if (useGrad){
+        var grad;
+        if (isRadial){
+          grad = c.createLinearGradient(0, 0, w, h);
+        } else {
+          grad = c.createLinearGradient(0, baseY - sizeHeight/2, 0, baseY + sizeHeight/2);
+        }
+        grad.addColorStop(0, s.color1);
+        grad.addColorStop(1, s.color2);
+        c.fillStyle = grad;
+        c.strokeStyle = grad;
+      } else {
+        c.fillStyle = s.color1;
+        c.strokeStyle = s.color1;
+      }
+
+      if (s.style === 'bars'){
+        var barWidth = w / n;
+        var gap = Math.max(1.5, barWidth * 0.22);
+        var bw = Math.max(1, barWidth - gap);
+        if (s.position === 'center'){
+          for (var i = 0; i < n; i++){
+            var bh = Math.max(2, peaks[i] * sizeHeight);
+            c.fillRect(i * barWidth + gap/2, baseY - bh/2, bw, bh);
+          }
+        } else {
+          for (var j = 0; j < n; j++){
+            var bh2 = Math.max(2, peaks[j] * sizeHeight);
+            var y = s.position === 'top' ? baseY : baseY - bh2;
+            c.fillRect(j * barWidth + gap/2, y, bw, bh2);
+          }
+        }
+      } else if (s.style === 'mirror'){
+        // Symmetric bars from center (always)
+        var mbw = w / n;
+        var mgap = Math.max(1.5, mbw * 0.22);
+        var mbw2 = Math.max(1, mbw - mgap);
+        var mcy = h / 2;
+        for (var k = 0; k < n; k++){
+          var mbh = Math.max(2, peaks[k] * sizeHeight);
+          c.fillRect(k * mbw + mgap/2, mcy - mbh/2, mbw2, mbh);
+        }
+      } else if (s.style === 'line'){
+        // Filled waveform shape (top + bottom mirrored around baseY)
+        c.beginPath();
+        for (var li = 0; li < n; li++){
+          var lx = (li / (n - 1)) * w;
+          var ly = baseY - (peaks[li] * sizeHeight) / 2;
+          if (li === 0) c.moveTo(lx, ly);
+          else c.lineTo(lx, ly);
+        }
+        for (var lj = n - 1; lj >= 0; lj--){
+          var lx2 = (lj / (n - 1)) * w;
+          var ly2 = baseY + (peaks[lj] * sizeHeight) / 2;
+          c.lineTo(lx2, ly2);
+        }
+        c.closePath();
+        c.fill();
+      } else if (s.style === 'radial'){
+        var cx = w / 2;
+        var cy = h / 2;
+        var innerR = Math.min(w, h) * 0.16;
+        var maxLen = Math.min(w, h) * 0.28 * (s.size / 100);
+        var arcLen = (2 * Math.PI * innerR) / n;
+        c.lineWidth = Math.max(2, arcLen * 0.6);
+        c.lineCap = 'round';
+        for (var ri = 0; ri < n; ri++){
+          var ang = (ri / n) * Math.PI * 2 - Math.PI / 2;
+          var r1 = innerR;
+          var r2 = innerR + peaks[ri] * maxLen;
+          c.beginPath();
+          c.moveTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
+          c.lineTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
+          c.stroke();
+        }
+      }
+    }
+
+    function drawTextOverlay(c, w, h){
+      var s = state.settings;
+      var title = (s.title || '').trim();
+      var sub = (s.subtitle || '').trim();
+      if (!title && !sub) return;
+      c.fillStyle = s.textColor;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      // Title at top
+      if (title){
+        var tSize = Math.round(w * 0.06);
+        c.font = '700 ' + tSize + 'px ' + s.font;
+        // Text shadow for readability
+        c.shadowColor = 'rgba(0,0,0,0.55)';
+        c.shadowBlur = tSize * 0.25;
+        c.shadowOffsetY = tSize * 0.04;
+        var titleY = h * 0.08;
+        // Wrap if too long
+        wrapText(c, title, w/2, titleY, w * 0.86, tSize * 1.15, 2);
+        c.shadowColor = 'transparent';
+        c.shadowBlur = 0;
+        c.shadowOffsetY = 0;
+      }
+      // Subtitle at bottom
+      if (sub){
+        var sSize = Math.round(w * 0.042);
+        c.font = '500 ' + sSize + 'px ' + s.font;
+        c.shadowColor = 'rgba(0,0,0,0.55)';
+        c.shadowBlur = sSize * 0.25;
+        c.shadowOffsetY = sSize * 0.04;
+        var subY = h - h * 0.06;
+        c.fillText(sub, w/2, subY, w * 0.86);
+        c.shadowColor = 'transparent';
+        c.shadowBlur = 0;
+        c.shadowOffsetY = 0;
+      }
+    }
+
+    function wrapText(c, text, x, y, maxW, lineH, maxLines){
+      var words = text.split(/\s+/);
+      var lines = [];
+      var line = '';
+      for (var i = 0; i < words.length; i++){
+        var test = line ? line + ' ' + words[i] : words[i];
+        if (c.measureText(test).width > maxW && line){
+          lines.push(line);
+          line = words[i];
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      if (lines.length > maxLines) lines = lines.slice(0, maxLines);
+      var startY = y - ((lines.length - 1) * lineH) / 2;
+      for (var j = 0; j < lines.length; j++){
+        c.fillText(lines[j], x, startY + j * lineH, maxW);
+      }
+    }
+
+    // ----- Settings UI handlers -----
+    function bindSeg(containerId, key, onChange){
+      var seg = doc.getElementById(containerId);
+      seg.addEventListener('click', function(e){
+        var btn = e.target.closest('.seg-btn');
+        if (!btn) return;
+        var val = btn.dataset.val;
+        seg.querySelectorAll('.seg-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.settings[key] = val;
+        if (onChange) onChange(val);
+        if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+      });
+    }
+
+    bindSeg('aspectSeg', 'aspect', function(){
+      applyAspect();
+      drawIdleFrame();
+    });
+    bindSeg('styleSeg', 'style', function(){
+      // If radial, force position center
+      if (state.settings.style === 'radial'){
+        positionSeg.querySelectorAll('.seg-btn').forEach(function(b){
+          b.classList.toggle('active', b.dataset.val === 'center');
+        });
+        state.settings.position = 'center';
+        positionHint.style.display = '';
+      }
+      drawIdleFrame();
+    });
+    bindSeg('positionSeg', 'position', function(){
+      drawIdleFrame();
+    });
+    bindSeg('colorModeSeg', 'colorMode', function(val){
+      color2Field.style.display = (val === 'gradient') ? '' : 'none';
+      color1Label.textContent = (val === 'gradient') ? 'Gradient stop 1' : 'Waveform color';
+      drawIdleFrame();
+    });
+
+    // Show position hint always (subtle)
+    positionHint.style.color = 'var(--muted)';
+    positionHint.style.fontSize = '.76rem';
+    positionHint.style.marginTop = '.3rem';
+
+    // Sliders
+    sizeSlider.addEventListener('input', function(){
+      state.settings.size = parseInt(sizeSlider.value, 10);
+      sizeVal.textContent = state.settings.size + '%';
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    overlaySlider.addEventListener('input', function(){
+      state.settings.overlay = parseInt(overlaySlider.value, 10);
+      overlayVal.textContent = state.settings.overlay + '%';
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+
+    // Color pickers
+    color1.addEventListener('input', function(){
+      state.settings.color1 = color1.value;
+      color1Hex.textContent = color1.value.toUpperCase();
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    color2.addEventListener('input', function(){
+      state.settings.color2 = color2.value;
+      color2Hex.textContent = color2.value.toUpperCase();
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    bgColor.addEventListener('input', function(){
+      state.settings.bgColor = bgColor.value;
+      bgColorHex.textContent = bgColor.value.toUpperCase();
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    textColor.addEventListener('input', function(){
+      state.settings.textColor = textColor.value;
+      textColorHex.textContent = textColor.value.toUpperCase();
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+
+    // Text inputs
+    titleText.addEventListener('input', function(){
+      state.settings.title = titleText.value;
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    subtitleText.addEventListener('input', function(){
+      state.settings.subtitle = subtitleText.value;
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    fontSelect.addEventListener('change', function(){
+      state.settings.font = fontSelect.value;
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+    });
+    muteRender.addEventListener('change', function(){
+      state.settings.muteRender = muteRender.checked;
+    });
+
+    // ----- Background image upload -----
+    bgUploadBtn.addEventListener('click', function(){
+      bgFileInput.click();
+    });
+    bgFileInput.addEventListener('change', function(){
+      if (bgFileInput.files && bgFileInput.files[0]){
+        loadBgImage(bgFileInput.files[0]);
+        bgFileInput.value = '';
+      }
+    });
+    bgClearBtn.addEventListener('click', function(){
+      state.settings.bgImage = null;
+      state.settings.bgImageName = '';
+      bgFilename.textContent = 'No image — using solid color below';
+      bgClearBtn.style.display = 'none';
+      if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+      showToast('Background image removed');
+    });
+
+    function loadBgImage(file){
+      if (!/^image\//.test(file.type) && !/\.(jpg|jpeg|png)$/i.test(file.name)){
+        showToast('Background must be a JPG or PNG image', true);
+        return;
+      }
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function(){
+        state.settings.bgImage = img;
+        state.settings.bgImageName = file.name;
+        bgFilename.textContent = file.name;
+        bgClearBtn.style.display = '';
+        if (state.audioBuffer && !state.isPlaying && !state.isRendering) drawIdleFrame();
+        showToast('Background image loaded', false, true);
+      };
+      img.onerror = function(){
+        showToast('Could not load that image', true);
+      };
+      img.src = url;
+    }
+
+    // ----- Render video -----
+    renderBtn.addEventListener('click', function(){
+      if (!state.audioBuffer || !state.audioEl){
+        showToast('Load an audio file first', true);
+        return;
+      }
+      if (state.isRendering) return;
+      if (state.isPlaying) pausePreview();
+      startRender();
+    });
+
+    function pickMimeType(){
+      var candidates = [
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm',
+        'video/mp4'  // Safari fallback
+      ];
+      for (var i = 0; i < candidates.length; i++){
+        if (window.MediaRecorder && MediaRecorder.isTypeSupported(candidates[i])){
+          return candidates[i];
+        }
+      }
+      return '';
+    }
+
+    function startRender(){
+      var ctx0 = getAudioContext();
+      if (ctx0.state === 'suspended') ctx0.resume();
+
+      // Reset audio to start
+      state.audioEl.currentTime = 0;
+      seekBar.value = 0;
+
+      // Ensure source node exists (must connect to streamDest too)
+      if (!state.sourceNode){
+        try {
+          state.sourceNode = ctx0.createMediaElementSource(state.audioEl);
+        } catch(e){
+          console.error(e);
+          showToast('Could not initialize audio for recording', true);
+          return;
+        }
+      }
+      // Disconnect from destination if mute requested; always connect to streamDest
+      try { state.sourceNode.disconnect(); } catch(e){}
+      if (!state.settings.muteRender){
+        state.sourceNode.connect(ctx0.destination);
+      }
+      state.streamDest = ctx0.createMediaStreamDestination();
+      state.sourceNode.connect(state.streamDest);
+
+      // Set up canvas stream
+      var canvasStream = canvas.captureStream(30);
+      var audioTracks = state.streamDest.stream.getAudioTracks();
+      var combined = new MediaStream(
+        canvasStream.getVideoTracks().concat(audioTracks)
+      );
+
+      var mimeType = pickMimeType();
+      if (!window.MediaRecorder || !mimeType){
+        showToast('MediaRecorder is not supported in this browser. Try Chrome or Firefox.', true);
+        return;
+      }
+
+      var isMP4 = /^video\/mp4/.test(mimeType);
+      var options = { mimeType: mimeType, videoBitsPerSecond: 4_000_000, audioBitsPerSecond: 128_000 };
+      var recorder;
+      try {
+        recorder = new MediaRecorder(combined, options);
+      } catch(e){
+        console.error(e);
+        try { recorder = new MediaRecorder(combined); } catch(e2){
+          showToast('Could not start MediaRecorder: ' + (e2.message || e2.name), true);
+          return;
+        }
+      }
+      var chunks = [];
+      recorder.ondataavailable = function(e){
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+      recorder.onerror = function(e){
+        console.error('Recorder error', e);
+        showToast('Recording error: ' + (e.error && e.error.name || 'unknown'), true);
+      };
+      recorder.onstop = function(){
+        var type = isMP4 ? 'video/mp4' : 'video/webm';
+        var blob = new Blob(chunks, { type: type });
+        if (state.renderedBlobUrl) URL.revokeObjectURL(state.renderedBlobUrl);
+        state.renderedBlobUrl = URL.createObjectURL(blob);
+        state.renderedMeta = {
+          format: isMP4 ? 'MP4' : 'WebM',
+          size: blob.size,
+          duration: state.audioBuffer.duration
+        };
+        showResult(state.renderedMeta);
+        // Cleanup stream destination
+        try { state.sourceNode.disconnect(state.streamDest); } catch(e){}
+        state.streamDest = null;
+        // Restore full speaker connection (in case we muted)
+        try { state.sourceNode.disconnect(); } catch(e){}
+        state.sourceNode.connect(ctx0.destination);
+        state.isRendering = false;
+        renderBtn.disabled = false;
+        previewPlayBtn.disabled = false;
+        seekBar.disabled = false;
+        progressWrap.classList.remove('active');
+        progressFill.style.width = '0%';
+        showToast('Render complete — ' + formatBytes(blob.size), false, true);
+      };
+
+      // UI
+      state.isRendering = true;
+      renderBtn.disabled = true;
+      previewPlayBtn.disabled = true;
+      seekBar.disabled = true;
+      resultCard.classList.remove('active');
+      progressWrap.classList.add('active');
+      progressFill.style.width = '0%';
+      progressPct.textContent = '0%';
+      progressLabel.textContent = 'Rendering in real time — keep this tab focused';
+      progressTime.textContent = 'Starting…';
+
+      var startTime = performance.now();
+      var duration = state.audioBuffer.duration;
+      var endedHandled = false;
+
+      function onEnded(){
+        if (endedHandled) return;
+        endedHandled = true;
+        // Allow last frames to flush
+        setTimeout(function(){
+          if (recorder.state !== 'inactive'){
+            try { recorder.stop(); } catch(e){}
+          }
+        }, 250);
+      }
+      state.audioEl.addEventListener('ended', onEnded, { once: true });
+
+      // Watchdog: stop if currentTime exceeds duration (safety)
+      var watchdog = null;
+
+      // Start playback + recorder
+      try {
+        recorder.start(200); // collect every 200ms
+      } catch(e){
+        showToast('Could not start recorder: ' + (e.message || e.name), true);
+        state.isRendering = false;
+        renderBtn.disabled = false;
+        previewPlayBtn.disabled = false;
+        seekBar.disabled = false;
+        progressWrap.classList.remove('active');
+        return;
+      }
+
+      state.audioEl.play().then(function(){
+        previewHint.textContent = 'Rendering — keep this tab focused for best results.';
+        // RAF loop draws frames + updates progress
+        function tick(){
+          if (!state.isRendering) return;
+          var t = state.audioEl.currentTime;
+          drawFrameAt(t);
+          // Progress
+          var pct = Math.min(100, (t / duration) * 100);
+          progressFill.style.width = pct.toFixed(1) + '%';
+          progressPct.textContent = Math.floor(pct) + '%';
+          var elapsed = (performance.now() - startTime) / 1000;
+          var remaining = Math.max(0, duration - t);
+          progressTime.textContent = 'Elapsed ' + formatTimeMs(elapsed) + ' · ~' + formatTimeMs(remaining) + ' remaining';
+          // Safety: if we've passed duration + 1s, force stop
+          if (t >= duration - 0.05){
+            onEnded();
+            return;
+          }
+          state.rafId = requestAnimationFrame(tick);
+        }
+        state.rafId = requestAnimationFrame(tick);
+        showToast('Render started — recording in real time');
+      }).catch(function(err){
+        console.error(err);
+        showToast('Playback failed during render: ' + (err.message || err.name), true);
+        state.isRendering = false;
+        renderBtn.disabled = false;
+        previewPlayBtn.disabled = false;
+        seekBar.disabled = false;
+        progressWrap.classList.remove('active');
+        try { if (recorder.state !== 'inactive') recorder.stop(); } catch(e){}
+      });
+    }
+
+    function showResult(meta){
+      doc.getElementById('resultFormat').textContent = meta.format;
+      doc.getElementById('resultSize').textContent = formatBytes(meta.size);
+      doc.getElementById('resultDuration').textContent = formatTime(meta.duration);
+      resultCard.classList.add('active');
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    downloadBtn.addEventListener('click', function(){
+      if (!state.renderedBlobUrl) return;
+      var a = doc.createElement('a');
+      a.href = state.renderedBlobUrl;
+      var ts = new Date();
+      var ext = state.renderedMeta.format === 'MP4' ? 'mp4' : 'webm';
+      var name = 'waveform-' + ts.getFullYear() + pad2(ts.getMonth()+1) + pad2(ts.getDate()) + '-' + pad2(ts.getHours()) + pad2(ts.getMinutes()) + pad2(ts.getSeconds()) + '.' + ext;
+      a.download = name;
+      doc.body.appendChild(a);
+      a.click();
+      doc.body.removeChild(a);
+      showToast('Download started: ' + name);
+    });
+
+    // ----- FAQ accordions -----
+    doc.querySelectorAll('.faq-q').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var item = btn.closest('.faq-item');
+        var wasOpen = item.classList.contains('open');
+        doc.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ----- Footer year -----
+    doc.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ----- Initial canvas state -----
+    applyAspect();
+    // Draw a placeholder frame so the canvas isn't black
+    function drawPlaceholder(){
+      var w = canvas.width;
+      var h = canvas.height;
+      ctx.fillStyle = '#0F172A';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(220,38,38,0.85)';
+      ctx.font = '700 ' + Math.round(w * 0.045) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Load an audio file to begin', w/2, h/2);
+      // Decorative bars
+      var n = 40;
+      var bw = w / n;
+      for (var i = 0; i < n; i++){
+        var peak = 0.15 + 0.25 * Math.abs(Math.sin(i * 0.4));
+        var bh = peak * h * 0.18;
+        ctx.fillStyle = 'rgba(220,38,38,' + (0.3 + 0.3 * peak) + ')';
+        ctx.fillRect(i * bw + bw*0.15, h/2 + h*0.2 - bh/2, bw*0.7, bh);
+      }
+    }
+    drawPlaceholder();
+
+    // Redraw placeholder if user changes aspect before loading audio
+    aspectSeg.addEventListener('click', function(e){
+      if (!state.audioBuffer && e.target.closest('.seg-btn')){
+        setTimeout(drawPlaceholder, 0);
+      }
+    });
+
+  })();
+  </script>
+</body>
+</html>
