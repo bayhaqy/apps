@@ -2,732 +2,1012 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="21 free, privacy-first web tools by Achmad Bayhaqy. PDF merger, code formatter, text diff, OCR, image optimizer, loan calculator, password vault, QR studio, and more. All run locally in your browser — no uploads, no tracking. Includes a public no-token JavaScript API." />
-  <meta name="keywords" content="browser tools, privacy tools, offline web apps, PDF merger, code formatter, text diff, OCR, image optimizer, loan calculator, password manager, QR generator, BayMerge, Achmad Bayhaqy" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bayhaqy Apps — a curated collection of 31 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
   <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="theme-color" content="#0F172A" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Apps — Free Browser-Based Tools by Achmad Bayhaqy" />
-  <meta property="og:description" content="21 privacy-first web tools. All run locally in your browser — no uploads, no tracking. Includes a public JavaScript API." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
-  <meta property="og:site_name" content="Apps by Achmad Bayhaqy" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="id_ID" />
-  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Apps — Free Browser-Based Tools by Achmad Bayhaqy" />
-  <meta name="twitter:description" content="21 privacy-first web tools. All run locally. No uploads, no tracking." />
-  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta name="keywords" content="Bayhaqy Apps, web tools, developer tools, network tools, security tools, DevOps, DNS lookup, IP finder, subnet calculator, JWT decoder, password generator, hash generator, certificate decoder, base64 encoder, Unix timestamp" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="theme-color" content="#B91C1C" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%230F172A'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
-  <link rel="apple-touch-icon" href="/apps/icons/icon-192.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Bayhaqy Apps — 31 Browser-Based Developer & IT Tools" />
+  <meta property="og:description" content="A curated collection of fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bayhaqy Apps — 31 Browser-Based Tools" />
+  <meta name="twitter:description" content="Fast, private, browser-based tools for developers, IT pros, and creators." />
+  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+
+  <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
+  <link rel="apple-touch-icon" href="/apps/icons/logo.png" />
   <link rel="manifest" href="/apps/manifest.json" />
-  <title>Apps — 21 Free Browser-Based Tools by Achmad Bayhaqy</title>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
-      --fg:#0F172A;--muted:#64748B;--muted-2:#94A3B8;
-      --accent:#0F766E;--accent-hover:#115E59;--accent-bg:rgba(15,118,110,0.08);
-      --red:#DC2626;
-      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.18);
-      --radius:8px;--radius-sm:6px;
-    }
-    [data-theme="dark"]{
-      --bg:#0B1120;--bg-2:#111827;--bg-3:#1E293B;
-      --fg:#F1F5F9;--muted:#94A3B8;--muted-2:#64748B;
-      --accent:#14B8A6;--accent-hover:#2DD4BF;--accent-bg:rgba(20,184,166,0.12);
-      --card-bg:#111827;--card-border:rgba(241,245,249,0.08);--card-border-hover:rgba(241,245,249,0.2);
-    }
-    body{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-      background:var(--bg);color:var(--fg);line-height:1.55;font-size:15px;
-    }
-    .container{max-width:1120px;margin:0 auto;padding:0 1.5rem}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    /* Header */
-    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--card-border)}
-    [data-theme="dark"] header.site-header{background:rgba(11,17,32,0.85)}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.8rem 0;gap:1rem}
-    .brand{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1rem}
-    .brand-mark{width:28px;height:28px;border-radius:6px;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
-    [data-theme="dark"] .brand-mark{background:var(--fg);color:var(--bg)}
-    .header-links{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
-    .header-links a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500;padding:.35rem .55rem;border-radius:6px;transition:color .15s,background .15s}
-    .header-links a:hover{color:var(--fg);background:var(--bg-2)}
-    .lang-toggle{display:inline-flex;align-items:center;border:1px solid var(--card-border);background:var(--bg-2);border-radius:999px;padding:2px;gap:0}
-    .lang-toggle button{background:transparent;border:none;cursor:pointer;color:var(--muted);padding:.25rem .55rem;border-radius:999px;font-size:.78rem;font-weight:600;font-family:inherit}
-    .lang-toggle button.active{background:var(--fg);color:var(--bg)}
-    .theme-toggle{width:32px;height:32px;border-radius:6px;border:1px solid var(--card-border);background:var(--bg-2);color:var(--fg);cursor:pointer;font-size:.95rem;font-family:inherit}
-    .theme-toggle:hover{background:var(--card-border-hover)}
-    .icon-sun{display:none}
-    [data-theme="dark"] .icon-sun{display:inline}
-    [data-theme="dark"] .icon-moon{display:none}
+  <title>Bayhaqy Apps — 31 Browser-Based Developer &amp; IT Tools</title>
 
-    /* Hero — minimal, no gradients, no emoji */
-    .hero{padding:2.5rem 0 1.75rem;border-bottom:1px solid var(--card-border)}
-    .hero-inner{max-width:760px}
-    .hero h1{font-size:clamp(1.75rem,4vw,2.25rem);line-height:1.15;letter-spacing:-.02em;font-weight:700;margin-bottom:.65rem}
-    .hero h1 .accent{color:var(--accent)}
-    .hero p.sub{font-size:1.02rem;color:var(--muted);margin-bottom:1.25rem}
-    .hero-stats{display:flex;flex-wrap:wrap;gap:1.5rem;font-size:.82rem;color:var(--muted)}
-    .hero-stat{display:flex;align-items:baseline;gap:.3rem}
-    .hero-stat-num{font-size:1.05rem;font-weight:700;color:var(--fg);font-family:ui-monospace,Menlo,Consolas,monospace}
-    .api-link{display:inline-flex;align-items:center;gap:.4rem;background:var(--accent-bg);color:var(--accent);padding:.4rem .8rem;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600;margin-top:1rem;border:1px solid transparent}
-    .api-link:hover{border-color:var(--accent)}
-    .api-link code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em}
-
-    /* Mobile banner — flat, no gradients */
-    .mobile-banner{background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius);padding:.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1.25rem 0 0}
-    .mobile-banner-text{font-size:.88rem;color:var(--fg);font-weight:500}
-    .mobile-banner-text strong{font-weight:600}
-    .mobile-banner-actions{display:flex;gap:.4rem;flex-wrap:wrap}
-    .mb-btn{display:inline-flex;align-items:center;background:var(--fg);color:var(--bg);text-decoration:none;padding:.45rem .9rem;border-radius:6px;font-size:.82rem;font-weight:600;border:none;cursor:pointer;font-family:inherit}
-    .mb-btn:hover{opacity:.88}
-    .mb-btn.secondary{background:transparent;color:var(--fg);border:1px solid var(--card-border)}
-
-    /* Search & filters — utilitarian */
-    .search-section{padding:1.5rem 0 1rem}
-    .search-wrap{position:relative;margin-bottom:1rem}
-    .search-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted-2);pointer-events:none}
-    .search-icon svg{width:16px;height:16px;display:block}
-    #searchInput{width:100%;padding:.7rem .85rem .7rem 2.5rem;border:1px solid var(--card-border);border-radius:var(--radius);background:var(--card-bg);color:var(--fg);font-size:.92rem;font-family:inherit;transition:border-color .15s}
-    #searchInput:focus{outline:none;border-color:var(--accent)}
-    #searchInput::placeholder{color:var(--muted-2)}
-    .tag-filters{display:flex;flex-wrap:wrap;gap:.35rem}
-    .tag-filter{display:inline-flex;align-items:center;gap:.25rem;background:var(--bg-2);border:1px solid var(--card-border);color:var(--muted);padding:.25rem .65rem;border-radius:999px;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
-    .tag-filter:hover{border-color:var(--card-border-hover);color:var(--fg)}
-    .tag-filter.active{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-    .tag-filter .count{font-size:.7rem;opacity:.7}
-
-    /* Recently Used */
-    .recently-used{margin-bottom:1.5rem;display:none}
-    .recently-used.has-items{display:block}
-    .recently-used-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-    .recently-used-head .clear-btn{margin-left:auto;font-size:.75rem;font-weight:500;color:var(--muted);background:transparent;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;text-transform:none;letter-spacing:0}
-    .recently-used-head .clear-btn:hover{color:var(--accent)}
-    .recent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem}
-    .recent-card{display:flex;align-items:center;gap:.65rem;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.6rem .8rem;text-decoration:none;color:var(--fg);transition:border-color .15s}
-    .recent-card:hover{border-color:var(--accent)}
-    .recent-icon{width:30px;height:30px;border-radius:6px;background:var(--bg-3);color:var(--fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7rem;flex-shrink:0;font-family:ui-monospace,Menlo,Consolas,monospace}
-    .recent-card h4{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .recent-card small{color:var(--muted);font-size:.72rem}
-
-    /* Category sections */
-    .category{padding:1.25rem 0}
-    .category-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:1rem;flex-wrap:wrap}
-    .category-head h2{font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
-    .category-head p{font-size:.82rem;color:var(--muted)}
-    .app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.85rem}
-    .app-card{display:flex;flex-direction:column;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.1rem;text-decoration:none;color:var(--fg);transition:border-color .15s}
-    .app-card:hover{border-color:var(--accent)}
-    .app-card-top{display:flex;align-items:center;gap:.65rem;margin-bottom:.6rem}
-    .app-icon{width:32px;height:32px;border-radius:6px;background:var(--bg-3);color:var(--fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;font-family:ui-monospace,Menlo,Consolas,monospace;flex-shrink:0;border:1px solid var(--card-border)}
-    .app-card h3{font-size:.98rem;font-weight:600;margin:0}
-    .app-card p{color:var(--muted);font-size:.83rem;line-height:1.5;margin-bottom:.7rem;flex:1}
-    .app-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.5rem}
-    .app-tag{font-size:.68rem;font-weight:600;color:var(--accent);background:var(--accent-bg);padding:.15rem .45rem;border-radius:4px;letter-spacing:.02em;font-family:ui-monospace,Menlo,Consolas,monospace}
-    .app-card .arrow{display:inline-block;color:var(--accent);font-size:.8rem;font-weight:600;font-family:ui-monospace,Menlo,Consolas,monospace}
-
-    /* Request a Tool card — dashed, minimal */
-    .request-card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:transparent;border:1px dashed var(--card-border-hover);border-radius:var(--radius);padding:1.5rem 1rem;text-decoration:none;color:var(--muted);transition:border-color .15s,color .15s;min-height:180px}
-    .request-card:hover{border-color:var(--accent);color:var(--accent)}
-    .request-card h3{font-size:.95rem;margin-bottom:.35rem;color:inherit;font-weight:600}
-    .request-card p{font-size:.8rem;line-height:1.45;color:inherit;max-width:200px;margin-bottom:.6rem}
-    .request-card .arrow{font-size:.78rem;font-weight:600;color:inherit;font-family:ui-monospace,Menlo,Consolas,monospace}
-
-    .no-results{display:none;text-align:center;padding:2.5rem 1rem;color:var(--muted)}
-    .no-results.show{display:block}
-    .no-results h3{font-size:1rem;color:var(--fg);margin-bottom:.3rem;font-weight:600}
-    .no-results p{font-size:.85rem;margin-bottom:.85rem}
-    .no-results button{background:var(--fg);color:var(--bg);border:none;padding:.45rem 1rem;border-radius:6px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.85rem}
-
-    /* Footer */
-    footer.site-footer{border-top:1px solid var(--card-border);padding:1.75rem 0;margin-top:2rem}
-    .footer-inner{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
-    .footer-text{font-size:.82rem;color:var(--muted)}
-    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
-    .footer-text a:hover{text-decoration:underline}
-    .footer-links{display:flex;gap:.85rem;flex-wrap:wrap}
-    .footer-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500}
-    .footer-links a:hover{color:var(--fg)}
-    .footer-privacy{font-size:.76rem;color:var(--muted);text-align:center;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--card-border)}
-
-    .hidden{display:none !important}
-
-    @media(max-width:640px){
-      .header-links a:not(.lang-toggle):not(.theme-toggle){display:none}
-      .hero{padding:2rem 0 1.25rem}
-      .mobile-banner{flex-direction:column;align-items:flex-start;gap:.65rem}
-      .mobile-banner-text{width:100%}
-      .category{padding:1rem 0}
-    }
-  </style>
+  <!-- Prevent theme flash -->
   <script>
-    (function(){
-      var saved = localStorage.getItem('apps-theme') || localStorage.getItem('bayhaqy-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
-      var savedLang = localStorage.getItem('apps-lang') || 'en';
-      document.documentElement.setAttribute('lang', savedLang);
+    (function() {
+      try {
+        var saved = localStorage.getItem('bayhaqy-apps-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.setAttribute('data-theme', saved);
+        } else {
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        }
+      } catch (e) {}
     })();
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Apps by Achmad Bayhaqy",
-    "url": "https://bayhaqy.my.id/apps/",
-    "description": "21 free, privacy-first web tools. All run locally in your browser — no uploads, no tracking. Includes a public JavaScript API.",
-    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Apps by Achmad Bayhaqy",
-    "url": "https://bayhaqy.my.id/apps/",
-    "numberOfItems": 21,
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "BayMerge", "url": "https://bayhaqy.my.id/apps/baymerge/" },
-      { "@type": "ListItem", "position": 2, "name": "PDF Anonymizer", "url": "https://bayhaqy.my.id/apps/pdf-anonymizer/" },
-      { "@type": "ListItem", "position": 3, "name": "CSV Formatter", "url": "https://bayhaqy.my.id/apps/csv-formatter/" },
-      { "@type": "ListItem", "position": 4, "name": "AI Context Packer", "url": "https://bayhaqy.my.id/apps/ai-context-packer/" },
-      { "@type": "ListItem", "position": 5, "name": "Anti-AI Text Humanizer", "url": "https://bayhaqy.my.id/apps/text-humanizer/" },
-      { "@type": "ListItem", "position": 6, "name": "AI Prompt Formatter", "url": "https://bayhaqy.my.id/apps/prompt-formatter/" },
-      { "@type": "ListItem", "position": 7, "name": "Local OCR Extractor", "url": "https://bayhaqy.my.id/apps/ocr-extractor/" },
-      { "@type": "ListItem", "position": 8, "name": "Bulk Image Optimizer", "url": "https://bayhaqy.my.id/apps/image-optimizer/" },
-      { "@type": "ListItem", "position": 9, "name": "Carousel Generator", "url": "https://bayhaqy.my.id/apps/carousel-generator/" },
-      { "@type": "ListItem", "position": 10, "name": "Waveform Maker", "url": "https://bayhaqy.my.id/apps/waveform-maker/" },
-      { "@type": "ListItem", "position": 11, "name": "Link-in-Bio Builder", "url": "https://bayhaqy.my.id/apps/link-in-bio/" },
-      { "@type": "ListItem", "position": 12, "name": "Code Formatter", "url": "https://bayhaqy.my.id/apps/code-formatter/" },
-      { "@type": "ListItem", "position": 13, "name": "Text Diff Checker", "url": "https://bayhaqy.my.id/apps/text-diff/" },
-      { "@type": "ListItem", "position": 14, "name": "CSS Playground", "url": "https://bayhaqy.my.id/apps/css-playground/" },
-      { "@type": "ListItem", "position": 15, "name": "Timezone Slider", "url": "https://bayhaqy.my.id/apps/timezone-slider/" },
-      { "@type": "ListItem", "position": 16, "name": "Date & Age Calculator", "url": "https://bayhaqy.my.id/apps/date-calculator/" },
-      { "@type": "ListItem", "position": 17, "name": "Pomodoro Studio", "url": "https://bayhaqy.my.id/apps/pomodoro/" },
-      { "@type": "ListItem", "position": 18, "name": "Loan Calculator", "url": "https://bayhaqy.my.id/apps/loan-calculator/" },
-      { "@type": "ListItem", "position": 19, "name": "Unit & Currency Converter", "url": "https://bayhaqy.my.id/apps/converter/" },
-      { "@type": "ListItem", "position": 20, "name": "Password Vault", "url": "https://bayhaqy.my.id/apps/password-vault/" },
-      { "@type": "ListItem", "position": 21, "name": "QR Code Studio", "url": "https://bayhaqy.my.id/apps/qr-studio/" }
-    ]
-  }
-  </script>
+
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    /* Landing-page-specific styles layered on top of theme.css */
+    .apps-hero {
+      position: relative;
+      padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 4vw, 3rem);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .apps-hero::before {
+      content: "";
+      position: absolute; top: 0; right: 0; bottom: 0; width: 55%;
+      background: radial-gradient(circle at 80% 25%, rgba(185, 28, 28, 0.07), transparent 65%);
+      pointer-events: none;
+    }
+    .apps-hero-inner {
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(260px, 360px);
+      gap: 3rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 820px) {
+      .apps-hero-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+    .hero-eyebrow {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red-700);
+      margin: 0 0 0.8em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .hero-eyebrow::before {
+      content: "";
+      width: 28px; height: 2px;
+      background: var(--red-700);
+    }
+    .hero-title {
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      margin: 0 0 0.6rem;
+      color: var(--ink);
+    }
+    .hero-title .accent { color: var(--red-700); }
+    .hero-sub {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      color: var(--ink-soft);
+      max-width: 60ch;
+      margin: 0 0 1.5rem;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.25rem;
+    }
+    @media (max-width: 560px) {
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat .num {
+      font-size: var(--fs-xl);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+    .stat .num::after {
+      content: "";
+      display: block;
+      width: 16px; height: 2px;
+      background: var(--red-700);
+      margin-top: 0.3rem;
+    }
+    .stat .lbl {
+      font-size: var(--fs-xs);
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.3rem;
+      line-height: 1.4;
+    }
+
+    /* Hero side card (APK install) */
+    .hero-side {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--red-700);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .hero-side h3 {
+      font-size: var(--fs-md);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 0.5rem;
+    }
+    .hero-side p {
+      font-size: var(--fs-sm);
+      color: var(--ink-soft);
+      margin: 0 0 1rem;
+    }
+    .hero-side .install-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .hero-side .install-row .btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 0.65rem 0.9rem;
+      font-size: var(--fs-sm);
+    }
+    .hero-side .platform-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .hero-side .platform-row .pill {
+      background: var(--line-soft);
+      color: var(--ink-soft);
+      border-color: var(--line);
+    }
+
+    /* Search + filter */
+    .toolbar {
+      max-width: var(--container);
+      margin: 2.25rem auto 0;
+      padding-inline: 1.5rem;
+    }
+    .search-wrap {
+      position: relative;
+      max-width: 520px;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      color: var(--ink-mute);
+      pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding-left: 2.5rem;
+      font-size: var(--fs-base);
+      border-radius: 999px;
+      border-color: var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow-sm);
+    }
+    .search-wrap input:focus {
+      box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.12);
+      border-color: var(--red-700);
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all .15s var(--ease);
+      user-select: none;
+    }
+    .tag-pill:hover { border-color: var(--ink-faint); color: var(--ink); }
+    .tag-pill.active {
+      background: var(--red-700);
+      border-color: var(--red-700);
+      color: #FFFFFF;
+    }
+    .tag-pill .count {
+      font-size: 10px;
+      opacity: 0.7;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+    }
+    .tag-pill.active .count { background: rgba(255,255,255,0.2); opacity: 1; }
+
+    /* Apps grid */
+    .apps-section {
+      max-width: var(--container);
+      margin: 1.5rem auto 4rem;
+      padding-inline: 1.5rem;
+    }
+    .cat-section { margin-bottom: 2.5rem; }
+    .cat-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .cat-head h2 {
+      font-size: var(--fs-lg);
+      font-weight: 700;
+      margin: 0;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .cat-head h2 .num {
+      font-size: var(--fs-sm);
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+    .cat-head .cat-desc {
+      font-size: var(--fs-sm);
+      color: var(--ink-mute);
+      margin: 0;
+      text-align: right;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all .2s var(--ease);
+      position: relative;
+    }
+    .app-card:hover {
+      border-color: var(--red-700);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .app-card:hover .app-card-arrow { transform: translate(2px, -2px); color: var(--red-700); }
+    .app-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    .app-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--red-50);
+      color: var(--red-700);
+      flex-shrink: 0;
+      border: 1px solid rgba(185, 28, 28, 0.15);
+    }
+    .app-icon svg { width: 20px; height: 20px; }
+    .app-card h3 {
+      font-size: var(--fs-base);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 0.1rem;
+      line-height: 1.3;
+    }
+    .app-card .cat {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .app-card p {
+      font-size: var(--fs-sm);
+      color: var(--ink-soft);
+      margin: 0 0 0.6rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .app-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .app-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .app-card .tag {
+      font-size: 10px;
+      color: var(--ink-mute);
+      background: var(--line-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .app-card-arrow {
+      color: var(--ink-mute);
+      transition: transform .2s var(--ease), color .2s var(--ease);
+      flex-shrink: 0;
+    }
+    .app-card-arrow svg { width: 16px; height: 16px; }
+    .app-card.recent::before {
+      content: "Recently used";
+      position: absolute;
+      top: 0.6rem; right: 0.7rem;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--red-700);
+      background: var(--red-50);
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+    .request-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: transparent;
+      border: 1.5px dashed var(--line);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--ink-mute);
+      transition: all .2s var(--ease);
+    }
+    .request-card:hover {
+      border-color: var(--red-700);
+      color: var(--red-700);
+      transform: translateY(-2px);
+    }
+    .request-card svg { width: 28px; height: 28px; margin-bottom: 0.5rem; }
+    .request-card h3 { font-size: var(--fs-sm); margin: 0 0 0.25rem; color: inherit; }
+    .request-card p { font-size: var(--fs-xs); margin: 0; color: inherit; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--ink-mute);
+    }
+    .empty-state svg { width: 48px; height: 48px; margin: 0 auto 0.5rem; opacity: 0.5; }
+
+    /* Recently used section */
+    .recent-section {
+      max-width: var(--container);
+      margin: 1.5rem auto 0;
+      padding-inline: 1.5rem;
+    }
+    .recent-section h2 {
+      font-size: var(--fs-md);
+      font-weight: 700;
+      margin: 0 0 0.75rem;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .recent-section h2 svg { width: 18px; height: 18px; color: var(--red-700); }
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+    .recent-card {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 0.85rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: inherit;
+      transition: all .15s var(--ease);
+    }
+    .recent-card:hover {
+      border-color: var(--red-700);
+      transform: translateX(2px);
+    }
+    .recent-card .app-icon { width: 28px; height: 28px; }
+    .recent-card .app-icon svg { width: 15px; height: 15px; }
+    .recent-card .name {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Header (overrides for landing) */
+    .landing-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--header-bg);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .25s var(--ease), background .25s var(--ease);
+    }
+    .landing-header.scrolled { border-bottom-color: var(--line); background: var(--header-bg-scrolled); }
+    .landing-header-inner {
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      height: 64px;
+    }
+    .landing-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .landing-brand img {
+      height: 36px;
+      border-radius: 6px;
+      transition: transform .2s var(--ease);
+    }
+    .landing-brand:hover img { transform: translateY(-1px); }
+    .landing-brand .text { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; }
+    .landing-brand .text .sep { color: var(--ink-faint); margin: 0 0.35rem; font-weight: 400; }
+    .landing-brand .text .app-name { color: var(--red-700); }
+    .landing-nav { display: flex; align-items: center; gap: 0.25rem; }
+    .landing-nav a {
+      color: var(--ink-soft);
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
+      transition: color .2s var(--ease), background .2s var(--ease);
+      text-decoration: none;
+    }
+    .landing-nav a:hover { color: var(--ink); background: var(--line-soft); }
+
+    @media (max-width: 560px) {
+      .landing-brand .text .sep, .landing-brand .text .label { display: none; }
+      .landing-nav .hide-mobile { display: none; }
+    }
+
+    /* Landing footer (reuses .app-footer from theme.css) */
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="brand">
-        <span class="brand-mark">A</span>
-        <span>Apps</span>
+  <!-- Header -->
+  <header class="landing-header" id="landingHeader">
+    <div class="landing-header-inner">
+      <a class="landing-brand" href="/apps/" aria-label="Bayhaqy Apps — Home">
+        <img src="/apps/icons/logo.png" alt="Bayhaqy" />
+        <span class="text">
+          <span class="label">Bayhaqy</span>
+          <span class="sep">·</span>
+          <span class="app-name">Apps</span>
+        </span>
       </a>
-      <nav class="header-links">
-        <a href="https://bayhaqy.my.id/" data-i18n="back_portfolio">← Portfolio</a>
-        <a href="https://bayhaqy.my.id/games" data-i18n="games">Games</a>
-        <a href="/apps/api/" data-i18n="api">API</a>
-        <div class="lang-toggle" role="group" aria-label="Language switcher">
-          <button type="button" data-lang="en" class="active">EN</button>
-          <button type="button" data-lang="id">ID</button>
-        </div>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <span class="icon-moon">☾</span>
-          <span class="icon-sun">☀</span>
+      <nav class="landing-nav" aria-label="Primary">
+        <a href="https://bayhaqy.my.id/" class="hide-mobile">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games/" class="hide-mobile">Games</a>
+        <a href="/apps/get-app/" class="hide-mobile">Get the App</a>
+        <a href="https://github.com/bayhaqy/apps" class="hide-mobile">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="1.5" x2="12" y2="3.5"/><line x1="12" y1="20.5" x2="12" y2="22.5"/><line x1="4.22" y1="4.22" x2="5.64"  y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1.5" y1="12" x2="3.5" y2="12"/><line x1="20.5" y1="12" x2="22.5" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         </button>
       </nav>
     </div>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-inner">
-        <h1 data-i18n-html="hero_title">Small tools, <span class="accent">built right</span></h1>
-        <p class="sub" data-i18n="hero_sub">21 focused, privacy-first web tools. No tracking, no uploads, no accounts — everything runs in your browser.</p>
-        <div class="hero-stats">
-          <div class="hero-stat"><span class="hero-stat-num">21</span> <span data-i18n="stat_apps">apps</span></div>
-          <div class="hero-stat"><span class="hero-stat-num">100%</span> <span data-i18n="stat_client">client-side</span></div>
-          <div class="hero-stat"><span class="hero-stat-num">0</span> <span data-i18n="stat_uploads">uploads</span></div>
-          <div class="hero-stat"><span class="hero-stat-num">0</span> <span data-i18n="stat_trackers">trackers</span></div>
+  <main>
+    <!-- Hero -->
+    <section class="apps-hero">
+      <div class="apps-hero-inner">
+        <div class="hero-content">
+          <p class="hero-eyebrow">Browser-based tools · No sign-up</p>
+          <h1 class="hero-title">
+            Developer &amp; IT tools<br />
+            that just <span class="accent">work</span>.
+          </h1>
+          <p class="hero-sub">
+            A curated collection of 31 fast, private tools for developers, IT pros, and creators.
+            Network diagnostics, security utilities, DevOps helpers, and productivity boosters —
+            all running entirely in your browser, no installs, no accounts, no tracking.
+          </p>
+          <div class="hero-actions">
+            <a href="#apps" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              Browse all 31 tools
+            </a>
+            <a href="/apps/get-app/" class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Get the mobile app
+            </a>
+          </div>
+          <ul class="hero-stats">
+            <li class="stat"><span class="num">31</span><span class="lbl">Live tools</span></li>
+            <li class="stat"><span class="num">4</span><span class="lbl">Categories</span></li>
+            <li class="stat"><span class="num">0</span><span class="lbl">Sign-ups</span></li>
+            <li class="stat"><span class="num">100%</span><span class="lbl">Free</span></li>
+          </ul>
         </div>
-        <a class="api-link" href="/apps/api/"><code>{ }</code> <span data-i18n="api_link">Use these tools as a public, no-token JavaScript API</span> →</a>
-      </div>
-
-      <!-- Mobile / PWA banner -->
-      <div class="mobile-banner">
-        <div class="mobile-banner-text">
-          <strong data-i18n="mobile_banner_text">Install on your phone. Works offline.</strong>
-        </div>
-        <div class="mobile-banner-actions">
-          <a class="mb-btn" href="/apps/get-app/" data-i18n="get_app">Get the app</a>
-          <a class="mb-btn secondary" href="#install-guide" data-i18n="install_guide">Install guide</a>
-        </div>
+        <aside class="hero-side">
+          <h3>Get the mobile app</h3>
+          <p>Install Bayhaqy Apps as a full-screen app on your phone — direct access to all 31 tools without a browser tab.</p>
+          <div class="install-row">
+            <a href="/apps/get-app/" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download APK
+            </a>
+            <a href="/apps/get-app/" class="btn btn-ghost">iOS</a>
+          </div>
+          <div class="platform-row">
+            <span class="pill">Android 8+</span>
+            <span class="pill">iOS 12+</span>
+            <span class="pill">Fullscreen</span>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <!-- Search & filter -->
-    <section class="search-section">
+    <!-- Search + filters -->
+    <section class="toolbar">
       <div class="search-wrap">
-        <span class="search-icon">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="7" cy="7" r="5"/>
-            <line x1="11" y1="11" x2="14" y2="14" stroke-linecap="round"/>
-          </svg>
-        </span>
-        <input type="search" id="searchInput" placeholder="Search by name, tag, or description…" autocomplete="off" data-i18n-placeholder="search_placeholder" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="searchInput" placeholder="Search 31 tools by name, tag, or keyword…" aria-label="Search apps" />
       </div>
-      <div class="tag-filters" id="tagFilters"></div>
+      <div class="tag-row" id="tagRow"></div>
     </section>
 
-    <!-- Recently Used -->
-    <div class="recently-used" id="recentlyUsed">
-      <div class="recently-used-head">
-        <span data-i18n="recently_used">Recently used</span>
-        <button class="clear-btn" id="clearRecent" data-i18n="clear_history">Clear</button>
-      </div>
+    <!-- Recently used -->
+    <section class="recent-section" id="recentSection" style="display:none;">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Recently used
+      </h2>
       <div class="recent-grid" id="recentGrid"></div>
-    </div>
-
-    <div id="appsContainer"></div>
-
-    <div class="no-results" id="noResults">
-      <h3 data-i18n="no_results_title">No tools found</h3>
-      <p data-i18n="no_results_text">Try a different keyword or clear filters.</p>
-      <button id="clearSearch" data-i18n="clear_filters">Clear filters</button>
-    </div>
-
-    <!-- Install guide (hidden by default) -->
-    <section class="hidden" id="install-guide" style="margin:1.5rem 0 2rem;padding:1.25rem 1.5rem;background:var(--bg-2);border:1px solid var(--card-border);border-radius:8px">
-      <h3 style="font-size:1rem;font-weight:700;margin-bottom:.85rem" data-i18n="install_title">Install as a mobile app</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;font-size:.88rem;color:var(--muted);line-height:1.7">
-        <div>
-          <strong style="color:var(--fg);display:block;margin-bottom:.3rem" data-i18n="android_title">Android (Chrome / Edge)</strong>
-          <ol style="padding-left:1.25rem">
-            <li data-i18n="android_step1">Open this page in Chrome or Edge.</li>
-            <li data-i18n="android_step2">Tap the three-dot menu → <strong>Install app</strong>.</li>
-            <li data-i18n="android_step3">Confirm. Works offline after first load.</li>
-          </ol>
-        </div>
-        <div>
-          <strong style="color:var(--fg);display:block;margin-bottom:.3rem" data-i18n="ios_title">iOS (Safari)</strong>
-          <ol style="padding-left:1.25rem">
-            <li data-i18n="ios_step1">Open this page in Safari.</li>
-            <li data-i18n="ios_step2">Tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.</li>
-            <li data-i18n="ios_step3">Tap <strong>Add</strong>. Works offline.</li>
-          </ol>
-        </div>
-      </div>
-      <p style="margin-top:.85rem;font-size:.8rem;color:var(--muted)">
-        <span data-i18n="apk_alt">Need a real .apk file? See the</span>
-        <a href="/apps/get-app/" style="color:var(--accent);text-decoration:none;font-weight:500" data-i18n="apk_link">Get the app page</a>.
-      </p>
     </section>
+
+    <!-- Apps by category -->
+    <section class="apps-section" id="apps"></section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-text">
-        <span data-i18n="built_by">Built by</span> <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
-        <span id="year">2026</span>
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener" data-i18n="source">Source</a>
-        <a href="/apps/api/" data-i18n="api_footer">API</a>
-        <a href="https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md&title=%5BTool+Idea%5D" target="_blank" rel="noopener" data-i18n="request_tool">Request a tool</a>
-        <a href="https://bayhaqy.my.id/" data-i18n="portfolio">Portfolio</a>
-      </div>
-    </div>
-    <div class="container footer-privacy">
-      <span data-i18n="privacy_note">All tools run 100% locally in your browser. Files never leave your device. No cookies, no analytics, no tracking — ever.</span>
+  <!-- Footer (reuses .app-footer from theme.css) -->
+  <footer class="app-footer">
+    <div class="app-footer-inner">
+      <span class="brand-mini">
+        <img src="/apps/icons/logo.png" alt="Bayhaqy" />
+        <span>Bayhaqy Apps</span>
+      </span>
+      <span class="copy">© <span id="year">2026</span> Achmad Bayhaqy · <a href="https://bayhaqy.my.id/">bayhaqy.my.id</a></span>
+      <span class="links">
+        <a href="https://bayhaqy.my.id/">Portfolio</a>
+        <a href="https://bayhaqy.my.id/games/">Games</a>
+        <a href="https://github.com/bayhaqy/apps">GitHub</a>
+      </span>
     </div>
   </footer>
 
   <script>
-    /* ============================================================ i18n */
-    var I18N = {
-      en: {
-        back_portfolio: "← Portfolio",
-        games: "Games",
-        api: "API",
-        hero_title: 'Small tools, <span class="accent">built right</span>',
-        hero_sub: "21 focused, privacy-first web tools. No tracking, no uploads, no accounts — everything runs in your browser.",
-        stat_apps: "apps", stat_client: "client-side", stat_uploads: "uploads", stat_trackers: "trackers",
-        api_link: "Use these tools as a public, no-token JavaScript API",
-        mobile_banner_text: "Install on your phone. Works offline.",
-        get_app: "Get the app",
-        install_guide: "Install guide",
-        search_placeholder: "Search by name, tag, or description…",
-        recently_used: "Recently used",
-        clear_history: "Clear",
-        no_results_title: "No tools found",
-        no_results_text: "Try a different keyword or clear filters.",
-        clear_filters: "Clear filters",
-        install_title: "Install as a mobile app",
-        android_title: "Android (Chrome / Edge)",
-        android_step1: "Open this page in Chrome or Edge.",
-        android_step2: "Tap the three-dot menu → <strong>Install app</strong>.",
-        android_step3: "Confirm. Works offline after first load.",
-        ios_title: "iOS (Safari)",
-        ios_step1: "Open this page in Safari.",
-        ios_step2: "Tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.",
-        ios_step3: "Tap <strong>Add</strong>. Works offline.",
-        apk_alt: "Need a real .apk file? See the",
-        apk_link: "Get the app page",
-        built_by: "Built by", source: "Source", api_footer: "API",
-        request_tool: "Request a tool", portfolio: "Portfolio",
-        privacy_note: "All tools run 100% locally in your browser. Files never leave your device. No cookies, no analytics, no tracking — ever.",
-        cat_file: "File utilities", cat_file_sub: "PDF and document tools",
-        cat_ai: "AI workflow & data", cat_ai_sub: "Tools for working with AI and data",
-        cat_media: "Image & media", cat_media_sub: "Optimize, convert, create visuals",
-        cat_brand: "Personal branding", cat_brand_sub: "Build your online presence",
-        cat_dev: "Developer tools", cat_dev_sub: "Code formatting, diffing, and CSS experimentation",
-        cat_time: "Time & productivity", cat_time_sub: "Timezones, dates, and focus",
-        cat_math: "Math & finance", cat_math_sub: "Loans, units, and currency",
-        cat_security: "Security & utilities", cat_security_sub: "Password vault and QR codes",
-        request_title: "Have a tool idea?",
-        request_body: "Submit it on GitHub Issues.",
-        request_cta: "Suggest on GitHub →"
-      },
-      id: {
-        back_portfolio: "← Portofolio",
-        games: "Game",
-        api: "API",
-        hero_title: 'Alat kecil, <span class="accent">dibuat dengan benar</span>',
-        hero_sub: "21 alat web terfokus yang mengutamakan privasi. Tanpa pelacakan, tanpa unggahan, tanpa akun — semuanya berjalan di browser Anda.",
-        stat_apps: "aplikasi", stat_client: "sisi klien", stat_uploads: "unggahan", stat_trackers: "pelacak",
-        api_link: "Gunakan alat ini sebagai API JavaScript publik tanpa token",
-        mobile_banner_text: "Pasang di ponsel Anda. Berjalan luring.",
-        get_app: "Dapatkan aplikasi",
-        install_guide: "Panduan pasang",
-        search_placeholder: "Cari berdasarkan nama, tag, atau deskripsi…",
-        recently_used: "Baru saya pakai",
-        clear_history: "Hapus",
-        no_results_title: "Tidak ada alat ditemukan",
-        no_results_text: "Coba kata kunci lain atau hapus filter.",
-        clear_filters: "Hapus filter",
-        install_title: "Pasang sebagai aplikasi mobile",
-        android_title: "Android (Chrome / Edge)",
-        android_step1: "Buka halaman ini di Chrome atau Edge.",
-        android_step2: "Ketuk menu tiga titik → <strong>Pasang aplikasi</strong>.",
-        android_step3: "Konfirmasi. Bekerja luring setelah dimuat pertama kali.",
-        ios_title: "iOS (Safari)",
-        ios_step1: "Buka halaman ini di Safari.",
-        ios_step2: "Ketuk <strong>Bagikan</strong> → <strong>Tambahkan ke Layar Utama</strong>.",
-        ios_step3: "Ketuk <strong>Tambah</strong>. Bekerja luring.",
-        apk_alt: "Butuh file .apk asli? Lihat",
-        apk_link: "halaman Dapatkan aplikasi",
-        built_by: "Dibuat oleh", source: "Kode sumber", api_footer: "API",
-        request_tool: "Ajukan alat", portfolio: "Portofolio",
-        privacy_note: "Semua alat berjalan 100% lokal di browser Anda. File tidak pernah meninggalkan perangkat. Tanpa cookie, tanpa analitik, tanpa pelacakan — selamanya.",
-        cat_file: "Utilitas berkas", cat_file_sub: "Alat PDF dan dokumen",
-        cat_ai: "Alur kerja AI & data", cat_ai_sub: "Alat untuk bekerja dengan AI dan data",
-        cat_media: "Gambar & media", cat_media_sub: "Optimalkan, konversi, buat visual",
-        cat_brand: "Personal branding", cat_brand_sub: "Bangun kehadiran online Anda",
-        cat_dev: "Alat pengembang", cat_dev_sub: "Format kode, diffing, dan eksperimen CSS",
-        cat_time: "Waktu & produktivitas", cat_time_sub: "Zona waktu, tanggal, dan fokus",
-        cat_math: "Matematika & keuangan", cat_math_sub: "Pinjaman, satuan, dan mata uang",
-        cat_security: "Keamanan & utilitas", cat_security_sub: "Brankas kata sandi dan kode QR",
-        request_title: "Punya ide alat?",
-        request_body: "Kirim di GitHub Issues.",
-        request_cta: "Sarankan di GitHub →"
+    (function () {
+      // ---------- Theme toggle ----------
+      var btn = document.getElementById('themeToggle');
+      if (btn) {
+        btn.addEventListener('click', function () {
+          var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+          var next = cur === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('bayhaqy-apps-theme', next); } catch (e) {}
+        });
       }
-    };
+      // Header scrolled state.
+      var header = document.getElementById('landingHeader');
+      var lastY = 0;
+      function onScroll() {
+        var y = window.scrollY || window.pageYOffset;
+        if (y > 4 && lastY <= 4) header.classList.add('scrolled');
+        else if (y <= 4 && lastY > 4) header.classList.remove('scrolled');
+        lastY = y;
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
 
-    /* ============================================================ Apps catalog */
-    var APPS = [
-      // File utilities
-      { id:"baymerge", cat:"file", icon:"BM", name:"BayMerge",
-        desc:{en:"Merge multiple PDF files into one — directly in your browser. Files never leave your device. Works offline.",
-              id:"Gabungkan banyak file PDF menjadi satu — langsung di browser. File tidak meninggalkan perangkat."},
-        tags:["PDF","Offline","Private"], url:"/apps/baymerge/" },
-      { id:"pdf-anonymizer", cat:"file", icon:"PA", name:"PDF Anonymizer",
-        desc:{en:"Redact emails, NIK, phone numbers, NPWP, and credit cards from PDFs before sharing. Auto-detect or manual.",
-              id:"Redaksi email, NIK, nomor telepon, NPWP, dan kartu kredit dari PDF sebelum dibagikan."},
-        tags:["PDF","Redaction","Privacy"], url:"/apps/pdf-anonymizer/" },
-      { id:"csv-formatter", cat:"file", icon:"CF", name:"CSV Formatter",
-        desc:{en:"Clean messy spreadsheets — trim whitespace, dedupe rows, split names, normalize dates. Export CSV/JSON/XLSX.",
-              id:"Bersihkan spreadsheet berantakan — pangkas spasi, hapus duplikat, pisahkan nama, normalkan tanggal."},
-        tags:["CSV","Excel","JSON"], url:"/apps/csv-formatter/" },
-      // AI workflow
-      { id:"ai-context-packer", cat:"ai", icon:"CP", name:"AI Context Packer",
-        desc:{en:"Combine project files into one Markdown file ready to paste into ChatGPT/Claude/DeepSeek. Token counter included.",
-              id:"Gabungkan file proyek menjadi satu file Markdown siap tempel ke ChatGPT/Claude/DeepSeek."},
-        tags:["AI","Markdown","Developer"], url:"/apps/ai-context-packer/" },
-      { id:"text-humanizer", cat:"ai", icon:"TH", name:"Text Humanizer",
-        desc:{en:"Detect AI cliché phrases (Indonesian + English) in real-time and replace with natural alternatives in one click.",
-              id:"Deteksi frasa klise AI (Indonesia + Inggris) real-time dan ganti dengan alternatif natural sekali klik."},
-        tags:["AI","Writing","Bilingual"], url:"/apps/text-humanizer/" },
-      { id:"prompt-formatter", cat:"ai", icon:"PF", name:"Prompt Formatter",
-        desc:{en:"Build mega-prompts using CARE, PREP, RACE, STAR, or CRISPE frameworks. Persona selector, live preview, favorites.",
-              id:"Bangun mega-prompt dengan kerangka CARE, PREP, RACE, STAR, atau CRISPE."},
-        tags:["AI","Prompts","Templates"], url:"/apps/prompt-formatter/" },
-      { id:"ocr-extractor", cat:"ai", icon:"OE", name:"OCR Extractor",
-        desc:{en:"Extract text from images (receipts, book pages, notes) using Tesseract.js. Indonesian + English, fully offline.",
-              id:"Ekstrak teks dari gambar (struk, halaman buku, catatan) dengan Tesseract.js. Indonesia + Inggris, luring."},
-        tags:["OCR","Tesseract","Offline"], url:"/apps/ocr-extractor/" },
-      // Image & media
-      { id:"image-optimizer", cat:"media", icon:"IO", name:"Image Optimizer",
-        desc:{en:"Compress and convert many JPG/PNG images to WebP in parallel. Quality control, max dimensions, ZIP download.",
-              id:"Kompres dan konversi banyak gambar JPG/PNG ke WebP secara paralel. Unduh ZIP."},
-        tags:["WebP","Compress","Bulk"], url:"/apps/image-optimizer/" },
-      { id:"carousel-generator", cat:"media", icon:"CG", name:"Carousel Generator",
-        desc:{en:"Turn Markdown bullets into polished social media carousel slides for LinkedIn, Instagram, and X. PNG export.",
-              id:"Ubah poin Markdown menjadi slide carousel media sosial untuk LinkedIn, Instagram, dan X."},
-        tags:["Social","Markdown","PNG"], url:"/apps/carousel-generator/" },
-      { id:"waveform-maker", cat:"media", icon:"WM", name:"Waveform Maker",
-        desc:{en:"Create animated waveform videos from audio for TikTok, Reels, and Shorts. Custom background, text overlay.",
-              id:"Buat video bentuk gelombang animasi dari audio untuk TikTok, Reels, dan Shorts."},
-        tags:["Audio","Video","Waveform"], url:"/apps/waveform-maker/" },
-      // Personal branding
-      { id:"link-in-bio", cat:"brand", icon:"LB", name:"Link-in-Bio",
-        desc:{en:"Build a custom Linktree alternative and export as a single HTML file. Themes, animations, self-host on GitHub Pages.",
-              id:"Bangun alternatif Linktree kustom dan ekspor sebagai satu file HTML."},
-        tags:["Linktree","HTML","Self-host"], url:"/apps/link-in-bio/" },
-      // Developer tools
-      { id:"code-formatter", cat:"dev", icon:"CF", name:"Code Formatter",
-        desc:{en:"Beautify SQL, Python, HTML, CSS, and JavaScript. Tab/spaces, case conversion, instant copy. Load sample button.",
-              id:"Rapikan SQL, Python, HTML, CSS, dan JavaScript. Tab/spasi, konversi huruf, salin instan."},
-        tags:["Code","SQL","Python"], url:"/apps/code-formatter/" },
-      { id:"text-diff", cat:"dev", icon:"TD", name:"Text Diff",
-        desc:{en:"Split-screen word/line/char diff with green/red highlighting. Includes text cleanup utility (trim, dedupe, smart quotes).",
-              id:"Diff kata/baris/karakter layar terbagi. Termasuk utilitas pembersih teks."},
-        tags:["Diff","Text","Compare"], url:"/apps/text-diff/" },
-      { id:"css-playground", cat:"dev", icon:"PG", name:"CSS Playground",
-        desc:{en:"Visual Grid & Flexbox editor. Drag, align, tweak gap/justify/align, copy generated CSS live. Great for learning.",
-              id:"Editor visual Grid & Flexbox. Seret, sejajarkan, atur gap/justify/align, salin CSS yang dihasilkan."},
-        tags:["CSS","Grid","Flexbox"], url:"/apps/css-playground/" },
-      // Time & productivity
-      { id:"timezone-slider", cat:"time", icon:"TZ", name:"Timezone Slider",
-        desc:{en:"Drag one slider, see the time across world cities simultaneously. Business-hours indicator for meeting planning.",
-              id:"Geser satu slider, lihat waktu di berbagai kota dunia sekaligus. Indikator jam kerja."},
-        tags:["Timezone","Meeting","World"], url:"/apps/timezone-slider/" },
-      { id:"date-calculator", cat:"time", icon:"DC", name:"Date & Age Calculator",
-        desc:{en:"Date diff, add/subtract days, workday exclusion (skip weekends + Indonesian holidays), age in years/months/days.",
-              id:"Selisih tanggal, tambah/kurangi hari, eksklusi hari kerja, usia dalam tahun/bulan/hari."},
-        tags:["Date","Age","Workday"], url:"/apps/date-calculator/" },
-      { id:"pomodoro", cat:"time", icon:"PM", name:"Pomodoro Studio",
-        desc:{en:"Focus timer with procedurally-generated ambient sounds (rain, cafe, ocean, white noise). Mixable volumes. No audio files.",
-              id:"Pengatur fokus dengan suara ambient yang dihasilkan prosedural (hujan, kafe, ombak, white noise)."},
-        tags:["Pomodoro","Focus","Audio"], url:"/apps/pomodoro/" },
-      // Math & finance
-      { id:"loan-calculator", cat:"math", icon:"LN", name:"Loan Calculator",
-        desc:{en:"KPR, vehicle loan, flat vs annuity vs descending interest. Full amortization table + SVG chart. CSV export.",
-              id:"KPR, pinjaman kendaraan, bunga flat vs anuitas vs menurun. Tabel amortisasi + grafik SVG."},
-        tags:["Loan","Mortgage","Finance"], url:"/apps/loan-calculator/" },
-      { id:"converter", cat:"math", icon:"CV", name:"Unit & Currency",
-        desc:{en:"9 unit categories (length, mass, temp, volume, area, speed, time, storage, shoe size) + offline-cached currency rates.",
-              id:"9 kategori satuan + kurs mata uang dengan cache luring."},
-        tags:["Units","Currency","Offline"], url:"/apps/converter/" },
-      // Security & utilities
-      { id:"password-vault", cat:"security", icon:"PV", name:"Password Vault",
-        desc:{en:"AES-256 encrypted local password manager. Master password + PBKDF2 key derivation. Includes strong generator.",
-              id:"Brankas kata sandi lokal terenkripsi AES-256. Master password + turunan kunci PBKDF2."},
-        tags:["Password","AES-256","Crypto"], url:"/apps/password-vault/" },
-      { id:"qr-studio", cat:"security", icon:"QR", name:"QR Code Studio",
-        desc:{en:"Generate QR for text/URL/Wi-Fi/email/vCard with custom colors. Camera scanner for decoding QR codes from webcam.",
-              id:"Buat QR untuk teks/URL/Wi-Fi/email/vCard dengan warna kustom. Pemindai kamera untuk dekode."},
-        tags:["QR","Wi-Fi","Camera"], url:"/apps/qr-studio/" }
-    ];
+      // Year in footer.
+      document.getElementById('year').textContent = new Date().getFullYear();
 
-    var CATEGORIES = [
-      { id:"file", titleKey:"cat_file", subKey:"cat_file_sub" },
-      { id:"ai", titleKey:"cat_ai", subKey:"cat_ai_sub" },
-      { id:"dev", titleKey:"cat_dev", subKey:"cat_dev_sub" },
-      { id:"media", titleKey:"cat_media", subKey:"cat_media_sub" },
-      { id:"time", titleKey:"cat_time", subKey:"cat_time_sub" },
-      { id:"math", titleKey:"cat_math", subKey:"cat_math_sub" },
-      { id:"security", titleKey:"cat_security", subKey:"cat_security_sub" },
-      { id:"brand", titleKey:"cat_brand", subKey:"cat_brand_sub" }
-    ];
+      // ---------- App catalog ----------
+      var ICONS = {
+        pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+        file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>',
+        ai: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0-3 3v1H3v4h1v1a3 3 0 0 0 3 3h2v1a3 3 0 0 0 6 0v-1h2a3 3 0 0 0 3-3v-1h1v-4h-1V9a3 3 0 0 0-3-3h-2V5a3 3 0 0 0-3-3z"/></svg>',
+        image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+        audio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-7h3zM3 19a2 2 0 0 0 2 2h1v-7H3z"/></svg>',
+        csv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
+        link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+        code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+        diff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="6 8 3 11 6 14"/><polyline points="18 8 21 11 18 14"/></svg>',
+        css: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+        clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        pomodoro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3l2 2"/><path d="M19 3l-2 2"/></svg>',
+        money: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+        convert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+        vault: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+        qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>',
+        dns: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+        ip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+        subnet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
+        url: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+        hash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>',
+        jwt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
+        lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+        cert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+        base64: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+        timestamp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'
+      };
 
-    var currentLang = localStorage.getItem('apps-lang') || 'en';
-    var activeTag = null;
-    var searchQuery = '';
+      var APPS = [
+        // Category: Network & DNS
+        { id: 'dns-lookup', cat: 'network', icon: 'dns', name: 'DNS Lookup',
+          desc: 'Query A, AAAA, CNAME, MX, NS, TXT, SOA, CAA records via DNS-over-HTTPS.',
+          tags: ['dns', 'network', 'doh', 'records'] },
+        { id: 'ip-finder', cat: 'network', icon: 'ip', name: 'IP Location Finder',
+          desc: 'Auto-detect your IP or look up any IPv4/IPv6 to see country, city, ISP, ASN, and a map pin.',
+          tags: ['ip', 'geoip', 'network', 'map'] },
+        { id: 'subnet-calc', cat: 'network', icon: 'subnet', name: 'Subnet Calculator',
+          desc: 'IPv4/IPv6 CIDR → network, broadcast, mask, host range, total hosts. Pure bitwise math.',
+          tags: ['ipv4', 'ipv6', 'cidr', 'subnet', 'network'] },
+        { id: 'url-parser', cat: 'network', icon: 'url', name: 'URL Parser',
+          desc: 'Break any URL into protocol, host, port, path, query params. Optional HTTP header fetch.',
+          tags: ['url', 'http', 'headers', 'network'] },
 
-    function applyI18n(){
-      var dict = I18N[currentLang] || I18N.en;
-      document.querySelectorAll('[data-i18n]').forEach(function(el){
-        var key = el.getAttribute('data-i18n');
-        if (dict[key] !== undefined) el.innerHTML = dict[key];
-      });
-      document.querySelectorAll('[data-i18n-html]').forEach(function(el){
-        var key = el.getAttribute('data-i18n-html');
-        if (dict[key] !== undefined) el.innerHTML = dict[key];
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
-        var key = el.getAttribute('data-i18n-placeholder');
-        if (dict[key] !== undefined) el.placeholder = dict[key];
-      });
-      document.querySelectorAll('.lang-toggle button').forEach(function(b){
-        b.classList.toggle('active', b.getAttribute('data-lang') === currentLang);
-      });
-      document.documentElement.setAttribute('lang', currentLang);
-      renderApps();
-      renderTagFilters();
-      renderRecentlyUsed();
-    }
-    function setLang(lang){ currentLang = lang; localStorage.setItem('apps-lang', lang); applyI18n(); }
+        // Category: Security & Crypto
+        { id: 'hash-generator', cat: 'security', icon: 'hash', name: 'Hash Generator',
+          desc: 'Compute MD5, SHA-1, SHA-256, SHA-384, SHA-512 from text or files. Native Web Crypto API.',
+          tags: ['hash', 'md5', 'sha256', 'sha512', 'crypto'] },
+        { id: 'jwt-decoder', cat: 'security', icon: 'jwt', name: 'JWT Decoder',
+          desc: 'Decode JWT header and payload, with expiry detection. Tokens never leave your browser.',
+          tags: ['jwt', 'token', 'auth', 'security'] },
+        { id: 'password-tools', cat: 'security', icon: 'lock', name: 'Password Tools',
+          desc: 'Generate cryptographically secure passwords and score their entropy in bits.',
+          tags: ['password', 'generator', 'entropy', 'security'] },
+        { id: 'cert-decoder', cat: 'security', icon: 'cert', name: 'Certificate Decoder',
+          desc: 'Inspect PEM-encoded X.509 SSL certificates — subject, issuer, validity, SANs, fingerprints.',
+          tags: ['ssl', 'cert', 'x509', 'pem', 'security'] },
 
-    function computeTagCounts(){
-      var counts = {};
-      APPS.forEach(function(a){ a.tags.forEach(function(t){ counts[t] = (counts[t]||0)+1; }); });
-      return counts;
-    }
+        // Category: DevOps & SysAdmin
+        { id: 'base64-hex', cat: 'devops', icon: 'base64', name: 'Base64 & Hex Encoder',
+          desc: 'Convert text ⇄ Base64 ⇄ Hex, inspect files as Base64 or hex dumps.',
+          tags: ['base64', 'hex', 'encoding', 'devops'] },
+        { id: 'timestamp-converter', cat: 'devops', icon: 'timestamp', name: 'Timestamp Converter',
+          desc: 'Unix epoch seconds/ms ⇄ human dates in local, UTC, ISO, and relative formats.',
+          tags: ['unix', 'epoch', 'time', 'date', 'devops'] },
 
-    function renderTagFilters(){
-      var counts = computeTagCounts();
-      var container = document.getElementById('tagFilters');
-      container.innerHTML = '';
-      var allBtn = document.createElement('button');
-      allBtn.className = 'tag-filter' + (activeTag === null ? ' active' : '');
-      allBtn.innerHTML = '<span>' + (currentLang === 'id' ? 'Semua' : 'All') + '</span> <span class="count">' + APPS.length + '</span>';
-      allBtn.addEventListener('click', function(){ activeTag = null; renderTagFilters(); renderApps(); });
-      container.appendChild(allBtn);
-      Object.keys(counts).sort().forEach(function(tag){
-        var btn = document.createElement('button');
-        btn.className = 'tag-filter' + (activeTag === tag ? ' active' : '');
-        btn.innerHTML = '<span>#' + tag + '</span> <span class="count">' + counts[tag] + '</span>';
-        btn.addEventListener('click', function(){ activeTag = (activeTag === tag) ? null : tag; renderTagFilters(); renderApps(); });
-        container.appendChild(btn);
-      });
-    }
+        // Category: Files & Documents
+        { id: 'baymerge', cat: 'files', icon: 'pdf', name: 'BayMerge',
+          desc: 'Combine multiple PDF files into one. Reorder, preview, and merge entirely in your browser.',
+          tags: ['pdf', 'merge', 'files'] },
+        { id: 'pdf-anonymizer', cat: 'files', icon: 'pdf', name: 'PDF Anonymizer',
+          desc: 'Redact sensitive text (names, emails, phone numbers, IDs) in PDFs before sharing.',
+          tags: ['pdf', 'redact', 'privacy', 'files'] },
+        { id: 'csv-formatter', cat: 'files', icon: 'csv', name: 'CSV Formatter',
+          desc: 'Clean CSV/Excel data, convert to JSON, sort, filter, and deduplicate rows.',
+          tags: ['csv', 'excel', 'json', 'data', 'files'] },
 
-    function filterApps(){
-      var q = searchQuery.toLowerCase().trim();
-      return APPS.filter(function(a){
-        var matchesTag = !activeTag || a.tags.indexOf(activeTag) !== -1;
-        var matchesQuery = !q ||
-          a.name.toLowerCase().indexOf(q) !== -1 ||
-          a.desc.en.toLowerCase().indexOf(q) !== -1 ||
-          a.desc.id.toLowerCase().indexOf(q) !== -1 ||
-          a.tags.some(function(t){ return t.toLowerCase().indexOf(q) !== -1; });
-        return matchesTag && matchesQuery;
-      });
-    }
+        // Category: AI & Text
+        { id: 'ai-context-packer', cat: 'ai', icon: 'ai', name: 'AI Context Packer',
+          desc: 'Combine multiple files into a single prompt for AI assistants like Claude or ChatGPT.',
+          tags: ['ai', 'prompt', 'context', 'llm'] },
+        { id: 'text-humanizer', cat: 'ai', icon: 'ai', name: 'Text Humanizer',
+          desc: 'Detect and rewrite AI-style clichés to make text sound more natural and human.',
+          tags: ['ai', 'writing', 'cliché', 'text'] },
+        { id: 'prompt-formatter', cat: 'ai', icon: 'ai', name: 'Prompt Formatter',
+          desc: 'Build structured AI prompts with role, context, examples, and constraints.',
+          tags: ['ai', 'prompt', 'llm', 'template'] },
+        { id: 'ocr-extractor', cat: 'ai', icon: 'file', name: 'OCR Extractor',
+          desc: 'Extract text from images using Tesseract.js. Supports 100+ languages.',
+          tags: ['ocr', 'tesseract', 'image', 'text'] },
 
-    function renderApps(){
-      var filtered = filterApps();
-      var container = document.getElementById('appsContainer');
-      container.innerHTML = '';
-      var noResults = document.getElementById('noResults');
-      if (filtered.length === 0){ noResults.classList.add('show'); return; }
-      noResults.classList.remove('show');
-      var dict = I18N[currentLang] || I18N.en;
-      CATEGORIES.forEach(function(cat){
-        var catApps = filtered.filter(function(a){ return a.cat === cat.id; });
-        if (catApps.length === 0) return;
-        var section = document.createElement('div');
-        section.className = 'category';
-        section.innerHTML = '<div class="category-head"><h2>' + dict[cat.titleKey] + '</h2><p>' + dict[cat.subKey] + '</p></div>';
-        var grid = document.createElement('div');
-        grid.className = 'app-grid';
-        catApps.forEach(function(a){ grid.appendChild(buildAppCard(a)); });
-        // Add request card to the last visible category
-        if (cat === CATEGORIES[CATEGORIES.length-1] || catApps.length > 0) {
-          // Only add to the truly last category with apps
-          var lastCatWithApps = CATEGORIES.slice().reverse().find(function(c){ return filtered.some(function(a){ return a.cat === c.id; }); });
-          if (cat === lastCatWithApps) grid.appendChild(buildRequestCard());
+        // Category: Media
+        { id: 'image-optimizer', cat: 'media', icon: 'image', name: 'Image Optimizer',
+          desc: 'Compress and convert images to WebP, JPEG, or PNG. Bulk processing supported.',
+          tags: ['image', 'compress', 'webp', 'optimize'] },
+        { id: 'carousel-generator', cat: 'media', icon: 'image', name: 'Carousel Generator',
+          desc: 'Turn Markdown into social-media carousel slides. Export as PNG or PDF.',
+          tags: ['carousel', 'social', 'slides', 'image'] },
+        { id: 'waveform-maker', cat: 'media', icon: 'audio', name: 'Waveform Maker',
+          desc: 'Generate audio waveform videos with custom colors and background music.',
+          tags: ['audio', 'waveform', 'video', 'ffmpeg'] },
+
+        // Category: Dev & Design
+        { id: 'code-formatter', cat: 'dev', icon: 'code', name: 'Code Formatter',
+          desc: 'Beautify SQL, Python, HTML, CSS, JavaScript. Powered by Prettier & sql-formatter.',
+          tags: ['code', 'format', 'sql', 'prettier'] },
+        { id: 'text-diff', cat: 'dev', icon: 'diff', name: 'Text Diff',
+          desc: 'Compare two text snippets side-by-side with highlighted additions and deletions.',
+          tags: ['diff', 'compare', 'text', 'dev'] },
+        { id: 'css-playground', cat: 'dev', icon: 'css', name: 'CSS Playground',
+          desc: 'Visual builder for CSS Grid and Flexbox layouts. Live preview as you tweak.',
+          tags: ['css', 'grid', 'flexbox', 'design'] },
+        { id: 'qr-studio', cat: 'dev', icon: 'qr', name: 'QR Studio',
+          desc: 'Generate custom QR codes with logos, colors, and scan tracking. Scan via camera.',
+          tags: ['qr', 'qr-code', 'scan'] },
+
+        // Category: Time & Productivity
+        { id: 'timezone-slider', cat: 'productivity', icon: 'clock', name: 'Timezone Slider',
+          desc: 'Find a meeting time that works across multiple timezones with a visual slider.',
+          tags: ['timezone', 'meeting', 'time', 'productive'] },
+        { id: 'date-calculator', cat: 'productivity', icon: 'calendar', name: 'Date Calculator',
+          desc: 'Calculate date differences, add/subtract days, and compute age from birthdate.',
+          tags: ['date', 'calendar', 'age', 'diff'] },
+        { id: 'pomodoro', cat: 'productivity', icon: 'pomodoro', name: 'Pomodoro Tracker',
+          desc: 'Focus timer with ambient sound studio. Tracks daily sessions and streaks.',
+          tags: ['pomodoro', 'focus', 'timer', 'ambient'] },
+
+        // Category: Math & Finance
+        { id: 'loan-calculator', cat: 'finance', icon: 'money', name: 'Loan Calculator',
+          desc: 'Mortgage, auto, and personal loan calculator with amortization schedule and charts.',
+          tags: ['loan', 'mortgage', 'interest', 'finance'] },
+        { id: 'converter', cat: 'finance', icon: 'convert', name: 'Unit & Currency Converter',
+          desc: 'Convert length, mass, temperature, and 30+ currencies with cached rates.',
+          tags: ['convert', 'currency', 'units', 'finance'] },
+
+        // Category: Security (vault)
+        { id: 'password-vault', cat: 'security', icon: 'vault', name: 'Password Vault',
+          desc: 'Encrypted password manager using AES-256. Master-key based, no cloud sync.',
+          tags: ['password', 'vault', 'aes', 'encrypt'] },
+
+        // Category: Brand
+        { id: 'link-in-bio', cat: 'brand', icon: 'link', name: 'Link-in-Bio Builder',
+          desc: 'Create a Linktree-style page with avatar, links, themes, and analytics.',
+          tags: ['linktree', 'bio', 'social', 'brand'] }
+      ];
+
+      var CATS = [
+        { id: 'network',      name: 'Network & DNS',     desc: 'Diagnose connectivity, DNS, IPs' },
+        { id: 'security',     name: 'Security & Crypto', desc: 'Hashes, JWTs, certs, passwords' },
+        { id: 'devops',       name: 'DevOps & SysAdmin', desc: 'Encoding, timestamps, encoders' },
+        { id: 'files',        name: 'Files & Documents', desc: 'PDF, CSV, redaction' },
+        { id: 'ai',           name: 'AI & Text',         desc: 'Prompt tools, OCR, humanizer' },
+        { id: 'media',        name: 'Media',             desc: 'Images, audio, carousels' },
+        { id: 'dev',          name: 'Dev & Design',      desc: 'Code, diff, CSS, QR' },
+        { id: 'productivity', name: 'Productivity',      desc: 'Time, dates, focus' },
+        { id: 'finance',      name: 'Math & Finance',    desc: 'Loans, currency, units' },
+        { id: 'brand',        name: 'Brand',             desc: 'Link-in-bio, social' }
+      ];
+
+      // ---------- State ----------
+      var activeTag = null;
+      var searchQuery = '';
+      var recentIds = loadRecent();
+
+      function loadRecent() {
+        try { return JSON.parse(localStorage.getItem('apps-recently-used') || '[]'); }
+        catch (e) { return []; }
+      }
+      function saveRecent() {
+        try { localStorage.setItem('apps-recently-used', JSON.stringify(recentIds.slice(0, 8))); } catch (e) {}
+      }
+      function recordUse(id) {
+        recentIds = [id].concat(recentIds.filter(function (x) { return x !== id; })).slice(0, 8);
+        saveRecent();
+        renderRecent();
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+        });
+      }
+
+      // ---------- Render tags ----------
+      function buildTags() {
+        var counts = {};
+        APPS.forEach(function (a) {
+          a.tags.forEach(function (t) {
+            counts[t] = (counts[t] || 0) + 1;
+          });
+        });
+        // Show top tags + category ids
+        var tagList = Object.keys(counts).sort(function (a, b) {
+          return counts[b] - counts[a];
+        }).slice(0, 18);
+        // Add category tags.
+        CATS.forEach(function (c) { tagList.unshift(c.id); });
+        var html = tagList.map(function (t) {
+          var label = t.charAt(0).toUpperCase() + t.slice(1);
+          return '<button class="tag-pill" data-tag="' + escapeHtml(t) + '" type="button">' +
+            escapeHtml(label) + ' <span class="count">' + (counts[t] || APPS.filter(function (a) { return a.cat === t; }).length) + '</span></button>';
+        }).join('');
+        document.getElementById('tagRow').innerHTML = html;
+        document.getElementById('tagRow').addEventListener('click', function (e) {
+          var btn = e.target.closest('.tag-pill');
+          if (!btn) return;
+          var t = btn.getAttribute('data-tag');
+          if (activeTag === t) { activeTag = null; }
+          else { activeTag = t; }
+          document.querySelectorAll('.tag-pill').forEach(function (el) {
+            el.classList.toggle('active', el.getAttribute('data-tag') === activeTag);
+          });
+          renderApps();
+        });
+      }
+
+      // ---------- Render recent ----------
+      function renderRecent() {
+        var section = document.getElementById('recentSection');
+        var grid = document.getElementById('recentGrid');
+        if (recentIds.length === 0) { section.style.display = 'none'; return; }
+        var html = recentIds.slice(0, 6).map(function (id) {
+          var a = APPS.find(function (x) { return x.id === id; });
+          if (!a) return '';
+          return '<a class="recent-card" href="/apps/' + a.id + '/" data-app-id="' + a.id + '">' +
+            '<span class="app-icon">' + (ICONS[a.icon] || ICONS.file) + '</span>' +
+            '<span class="name">' + escapeHtml(a.name) + '</span>' +
+          '</a>';
+        }).join('');
+        grid.innerHTML = html;
+        section.style.display = 'block';
+      }
+
+      // ---------- Render apps ----------
+      function matches(a) {
+        if (activeTag) {
+          // Match category id OR tag.
+          if (a.cat !== activeTag && a.tags.indexOf(activeTag) === -1) return false;
         }
-        section.appendChild(grid);
-        container.appendChild(section);
+        if (searchQuery) {
+          var q = searchQuery.toLowerCase();
+          var hay = (a.name + ' ' + a.desc + ' ' + a.tags.join(' ') + ' ' + a.cat).toLowerCase();
+          if (hay.indexOf(q) === -1) return false;
+        }
+        return true;
+      }
+
+      function appCard(a) {
+        var isRecent = recentIds.indexOf(a.id) !== -1;
+        var tagsHtml = a.tags.slice(0, 3).map(function (t) {
+          return '<span class="tag">' + escapeHtml(t) + '</span>';
+        }).join('');
+        return '<a class="app-card' + (isRecent ? ' recent' : '') + '" href="/apps/' + a.id + '/" data-app-id="' + a.id + '">' +
+          '<div class="app-card-head">' +
+            '<span class="app-icon">' + (ICONS[a.icon] || ICONS.file) + '</span>' +
+            '<div>' +
+              '<h3>' + escapeHtml(a.name) + '</h3>' +
+              '<span class="cat">' + escapeHtml(catName(a.cat)) + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<p>' + escapeHtml(a.desc) + '</p>' +
+          '<div class="app-card-foot">' +
+            '<div class="tags">' + tagsHtml + '</div>' +
+            '<span class="app-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>' +
+          '</div>' +
+        '</a>';
+      }
+
+      function catName(id) {
+        var c = CATS.find(function (x) { return x.id === id; });
+        return c ? c.name : id;
+      }
+
+      function renderApps() {
+        var container = document.getElementById('apps');
+        var html = '';
+        var totalShown = 0;
+        CATS.forEach(function (c) {
+          var apps = APPS.filter(function (a) { return a.cat === c.id && matches(a); });
+          if (apps.length === 0) return;
+          totalShown += apps.length;
+          html += '<div class="cat-section">' +
+            '<div class="cat-head">' +
+              '<h2>' + escapeHtml(c.name) + ' <span class="num">(' + apps.length + ')</span></h2>' +
+              '<p class="cat-desc">' + escapeHtml(c.desc) + '</p>' +
+            '</div>' +
+            '<div class="apps-grid">' +
+              apps.map(appCard).join('') +
+              // Request-a-tool card at the end of the first category.
+              (c.id === 'network' ? '<a class="request-card" href="https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md" target="_blank" rel="noopener">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+                '<h3>Request a tool</h3><p>Missing something? Tell us.</p></a>' : '') +
+            '</div>' +
+          '</div>';
+        });
+        if (totalShown === 0) {
+          html = '<div class="empty-state">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+            '<p>No tools match your search. Try a different keyword or clear the filters.</p>' +
+          '</div>';
+        }
+        container.innerHTML = html;
+
+        // Track clicks for recently used.
+        container.querySelectorAll('a[data-app-id]').forEach(function (el) {
+          el.addEventListener('click', function () {
+            recordUse(el.getAttribute('data-app-id'));
+          });
+        });
+      }
+
+      // ---------- Search ----------
+      var searchInput = document.getElementById('searchInput');
+      var searchTimer = null;
+      searchInput.addEventListener('input', function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
+          searchQuery = searchInput.value.trim();
+          renderApps();
+        }, 120);
       });
-    }
 
-    function buildAppCard(a){
-      var card = document.createElement('a');
-      card.className = 'app-card';
-      card.href = a.url;
-      card.setAttribute('data-app-id', a.id);
-      card.addEventListener('click', function(){ recordUse(a.id); });
-      var tagsHtml = a.tags.map(function(t){ return '<span class="app-tag">' + t + '</span>'; }).join('');
-      card.innerHTML =
-        '<div class="app-card-top"><div class="app-icon">' + a.icon + '</div><h3>' + a.name + '</h3></div>' +
-        '<p>' + a.desc[currentLang] + '</p>' +
-        '<div class="app-tags">' + tagsHtml + '</div>' +
-        '<span class="arrow">→</span>';
-      return card;
-    }
-
-    function buildRequestCard(){
-      var dict = I18N[currentLang] || I18N.en;
-      var card = document.createElement('a');
-      card.className = 'request-card';
-      card.href = 'https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md&title=%5BTool+Idea%5D';
-      card.target = '_blank';
-      card.rel = 'noopener';
-      card.innerHTML = '<h3>' + dict.request_title + '</h3><p>' + dict.request_body + '</p><span class="arrow">' + dict.request_cta + '</span>';
-      return card;
-    }
-
-    /* Recently Used */
-    var RECENT_KEY = 'apps-recently-used';
-    var RECENT_MAX = 6;
-    function getRecent(){ try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e){ return []; } }
-    function recordUse(id){
-      var list = getRecent().filter(function(x){ return x !== id; });
-      list.unshift(id);
-      list = list.slice(0, RECENT_MAX);
-      try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch(e){}
-    }
-    function renderRecentlyUsed(){
-      var list = getRecent();
-      var container = document.getElementById('recentlyUsed');
-      var grid = document.getElementById('recentGrid');
-      grid.innerHTML = '';
-      if (list.length === 0){ container.classList.remove('has-items'); return; }
-      container.classList.add('has-items');
-      list.forEach(function(id){
-        var a = APPS.find(function(x){ return x.id === id; });
-        if (!a) return;
-        var card = document.createElement('a');
-        card.className = 'recent-card';
-        card.href = a.url;
-        card.addEventListener('click', function(){ recordUse(a.id); });
-        card.innerHTML = '<div class="recent-icon">' + a.icon + '</div><div><h4>' + a.name + '</h4><small>→</small></div>';
-        grid.appendChild(card);
-      });
-    }
-
-    /* Wire-up */
-    document.getElementById('themeToggle').addEventListener('click', function(){
-      var cur = document.documentElement.getAttribute('data-theme') || 'light';
-      var next = cur === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('apps-theme', next);
-    });
-    document.querySelectorAll('.lang-toggle button').forEach(function(b){
-      b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
-    });
-    document.getElementById('searchInput').addEventListener('input', function(e){
-      searchQuery = e.target.value;
+      // ---------- Init ----------
+      buildTags();
+      renderRecent();
       renderApps();
-    });
-    document.getElementById('clearSearch').addEventListener('click', function(){
-      searchQuery = '';
-      activeTag = null;
-      document.getElementById('searchInput').value = '';
-      renderTagFilters();
-      renderApps();
-    });
-    document.getElementById('clearRecent').addEventListener('click', function(){
-      try { localStorage.removeItem(RECENT_KEY); } catch(e){}
-      renderRecentlyUsed();
-    });
-    document.querySelector('a[href="#install-guide"]').addEventListener('click', function(e){
-      e.preventDefault();
-      var target = document.getElementById('install-guide');
-      target.classList.toggle('hidden');
-      if (!target.classList.contains('hidden')) target.scrollIntoView({ behavior:'smooth', block:'start' });
-    });
-    document.getElementById('year').textContent = new Date().getFullYear();
 
-    applyI18n();
-
-    if ('serviceWorker' in navigator){
-      window.addEventListener('load', function(){
-        navigator.serviceWorker.register('/apps/service-worker.js').catch(function(){});
-      });
-    }
+      // ---------- PWA service worker ----------
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/apps/service-worker.js').catch(function () {});
+        });
+      }
+    })();
   </script>
 </body>
 </html>
