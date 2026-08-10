@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Pomodoro focus timer with a procedural ambient sound studio. Focus 25 / Short Break 5 / Long Break 15, configurable, with rain, cafe, ocean, white noise and birds generated live in your browser via the Web Audio API. No audio files, no uploads, no tracking." />
-<meta name="keywords" content="pomodoro, focus timer, ambient sound, white noise, rain sounds, study timer, productivity, web audio, offline" />
-<meta name="author" content="Achmad Bayhaqy" />
-<meta name="theme-color" content="#DC2626" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Pomodoro Tracker with Ambient Sound Studio" />
-<meta property="og:description" content="Focus timer with a procedural ambient sound mixer. All sounds generated live in-browser via Web Audio API." />
-<meta property="og:url" content="https://bayhaqy.my.id/apps/pomodoro/" />
-<meta name="twitter:card" content="summary" />
-<title>Pomodoro + Ambient Sound Studio — Bayhaqy Apps</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Pomodoro focus timer with a procedural ambient sound studio. Focus 25 / Short Break 5 / Long Break 15, configurable, with rain, cafe, ocean, white noise and birds generated live in your browser via the Web Audio API. No audio files, no uploads, no tracking." name="description"/>
+<meta content="pomodoro, focus timer, ambient sound, white noise, rain sounds, study timer, productivity, web audio, offline" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Pomodoro Tracker with Ambient Sound Studio" property="og:title"/>
+<meta content="Focus timer with a procedural ambient sound mixer. All sounds generated live in-browser via Web Audio API." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/pomodoro/" property="og:url"/>
+<meta content="summary" name="twitter:card"/>
+<title>Pomodoro + Ambient Sound Studio — Bayhaqy Apps</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E" rel="icon"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
   --fg:#0F172A;--muted:#64748B;
-  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --accent:#B91C1C;--accent-dim:#FEE2E2;
   --green:#0F766E;--green-dim:rgba(15,118,110,0.10);
   --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
   --chip-bg:#F1F5F9;
@@ -29,7 +29,7 @@
 [data-theme="dark"]{
   --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
   --fg:#F1F5F9;--muted:#94A3B8;
-  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --accent:#B91C1C;--accent-dim:rgba(239,68,68,0.18);
   --green:#14B8A6;--green-dim:rgba(20,184,166,0.14);
   --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
   --chip-bg:rgba(30,41,59,0.6);
@@ -229,8 +229,8 @@ footer.site-footer a:hover{text-decoration:underline}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
-</head>
-<body>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Pomodoro">
 <script>
 (function(){
   var t = localStorage.getItem('apps-theme');
@@ -239,156 +239,127 @@ footer.site-footer a:hover{text-decoration:underline}
 })();
 </script>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a href="/apps/" class="back-link">&larr; All apps</a>
-    <span class="app-title">Pomodoro + Sound Studio</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="icon-moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
-    </button>
-  </div>
-</header>
-
 <main class="container">
-  <section class="hero">
-    <span class="hero-eyebrow">Focus timer &middot; Procedural audio</span>
-    <h1>Pomodoro Tracker + Ambient Sound Studio</h1>
-    <p class="sub">A configurable focus timer with a built-in ambient sound mixer. Five sounds — rain, cafe, ocean, white noise and birds — are generated live in your browser through the Web Audio API. No audio files, no network requests, no tracking.</p>
-  </section>
-
-  <div class="workspace">
-    <!-- Timer -->
-    <div class="timer-card">
-      <div class="mode-row" id="modeRow">
-        <button class="mode-btn active" data-mode="focus">Focus 25</button>
-        <button class="mode-btn" data-mode="short">Short Break 5</button>
-        <button class="mode-btn" data-mode="long">Long Break 15</button>
-      </div>
-      <div class="ring-wrap">
-        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
-          <circle class="ring-track" cx="120" cy="120" r="110"></circle>
-          <circle class="ring-fill" id="ringFill" cx="120" cy="120" r="110"
-            stroke-dasharray="691.15" stroke-dashoffset="0"></circle>
-        </svg>
-        <div class="ring-center">
-          <div class="ring-time" id="ringTime">25:00</div>
-          <div class="ring-mode" id="ringMode">Focus</div>
-          <div class="ring-session">Today: <strong id="sessionCount">0</strong> sessions</div>
-        </div>
-      </div>
-      <div class="ctrl-row">
-        <button class="btn btn-primary" id="startBtn">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          <span id="startLabel">Start</span>
-        </button>
-        <button class="btn btn-ghost" id="resetBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+<section class="hero">
+<span class="hero-eyebrow">Focus timer · Procedural audio</span>
+<h1>Pomodoro Tracker + Ambient Sound Studio</h1>
+<p class="sub">A configurable focus timer with a built-in ambient sound mixer. Five sounds — rain, cafe, ocean, white noise and birds — are generated live in your browser through the Web Audio API. No audio files, no network requests, no tracking.</p>
+</section>
+<div class="workspace">
+<!-- Timer -->
+<div class="timer-card">
+<div class="mode-row" id="modeRow">
+<button class="mode-btn active" data-mode="focus">Focus 25</button>
+<button class="mode-btn" data-mode="short">Short Break 5</button>
+<button class="mode-btn" data-mode="long">Long Break 15</button>
+</div>
+<div class="ring-wrap">
+<svg aria-hidden="true" class="ring-svg" viewbox="0 0 240 240">
+<circle class="ring-track" cx="120" cy="120" r="110"></circle>
+<circle class="ring-fill" cx="120" cy="120" id="ringFill" r="110" stroke-dasharray="691.15" stroke-dashoffset="0"></circle>
+</svg>
+<div class="ring-center">
+<div class="ring-time" id="ringTime">25:00</div>
+<div class="ring-mode" id="ringMode">Focus</div>
+<div class="ring-session">Today: <strong id="sessionCount">0</strong> sessions</div>
+</div>
+</div>
+<div class="ctrl-row">
+<button class="btn btn-primary" id="startBtn">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+<span id="startLabel">Start</span>
+</button>
+<button class="btn btn-ghost" id="resetBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
           Reset
         </button>
-        <button class="btn btn-ghost btn-sm" id="skipBtn">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+<button class="btn btn-ghost btn-sm" id="skipBtn">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
           Skip
         </button>
-      </div>
-      <div class="status-line" id="statusLine">Press Start to begin a focus session.</div>
-    </div>
-
-    <!-- Sound mixer -->
-    <div class="mixer-card">
-      <div class="mixer-head">
-        <h2>Ambient mixer</h2>
-        <span class="hint">Procedural &middot; Web Audio</span>
-      </div>
-      <div class="mixer-master">
-        <span>Master</span>
-        <input type="range" id="masterVol" min="0" max="100" value="70" aria-label="Master volume" />
-        <span class="sound-vol-label" id="masterVolLabel">70%</span>
-      </div>
-      <div class="mixer-list" id="mixerList">
-        <!-- sound rows injected by JS -->
-      </div>
-      <div class="s-actions" style="margin-top:1rem">
-        <button class="btn btn-ghost btn-sm" id="loadSample">Load sample preset</button>
-        <button class="btn btn-ghost btn-sm" id="stopAll">Stop all sounds</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Settings -->
-  <div class="settings-card" id="settingsCard">
-    <div class="settings-head" id="settingsHead">
-      <h2>Settings</h2>
-      <span class="settings-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span>
-    </div>
-    <div class="settings-body">
-      <div class="settings-grid">
-        <div class="s-field"><label for="setFocus">Focus duration (min)</label><input type="number" id="setFocus" min="1" max="120" value="25"></div>
-        <div class="s-field"><label for="setShort">Short break (min)</label><input type="number" id="setShort" min="1" max="60" value="5"></div>
-        <div class="s-field"><label for="setLong">Long break (min)</label><input type="number" id="setLong" min="1" max="60" value="15"></div>
-        <div class="s-field"><label for="setLongEvery">Long break after N focus</label><input type="number" id="setLongEvery" min="2" max="12" value="4"></div>
-      </div>
-      <div class="s-toggles">
-        <label class="s-check"><input type="checkbox" id="setAutoBreak"> Auto-start breaks after focus</label>
-        <label class="s-check"><input type="checkbox" id="setAutoFocus"> Auto-start next focus after break</label>
-        <label class="s-check"><input type="checkbox" id="setSoundComplete" checked> Play chime on session complete</label>
-        <label class="s-check"><input type="checkbox" id="setNotify"> Show browser notification on complete</label>
-      </div>
-      <div class="s-field" style="max-width:240px;margin-top:.85rem">
-        <label for="setChimeVol">Chime volume</label>
-        <input type="range" id="setChimeVol" min="0" max="100" value="60" aria-label="Chime volume" style="accent-color:var(--accent)">
-      </div>
-      <div class="s-actions">
-        <button class="btn btn-ghost btn-sm" id="saveSettings">Save settings</button>
-        <button class="btn btn-ghost btn-sm" id="resetSettings">Reset to defaults</button>
-        <button class="btn btn-ghost btn-sm" id="resetSessions">Reset today's count</button>
-      </div>
-    </div>
-  </div>
-
-  <section class="section" id="how-to-use">
-    <h2>How to use</h2>
-    <p>Five steps from cold start to a finished focus block.</p>
-    <ol class="steps">
-      <li><strong>Press Start</strong> — the timer begins counting down from the focus duration (default 25 min). The ring depletes as time passes.</li>
-      <li><strong>Optionally enable ambient sounds</strong> — click any sound toggle in the mixer (rain, cafe, ocean, white noise, birds). Adjust each volume independently; multiple sounds layer.</li>
-      <li><strong>When focus ends</strong> — a chime plays and a short break starts (auto or manual). The session counter increments by one.</li>
-      <li><strong>After every N focus sessions</strong> (default 4) — a long break replaces the short break. Use Reset to restart the current mode, or Skip to advance immediately.</li>
-      <li><strong>Customize in Settings</strong> — change durations, toggle auto-start, enable browser notifications, or press Load sample preset to try 50/10/30 with rain + cafe.</li>
-    </ol>
-  </section>
-
-  <section class="section">
-    <h2>What it does</h2>
-    <div class="features-grid">
-      <div class="feature"><h4>Configurable timer</h4><p>Focus, short break and long break durations are all editable. Long break triggers after every N focus sessions you complete.</p></div>
-      <div class="feature"><h4>Procedural ambient audio</h4><p>Rain, ocean, cafe, white noise and birds are synthesized live with the Web Audio API — no audio files, no downloads, fully offline.</p></div>
-      <div class="feature"><h4>Daily session counter</h4><p>Tracks completed focus sessions per calendar day, persisted in localStorage. Resets automatically when the date changes.</p></div>
-      <div class="feature"><h4>Notifications &amp; chimes</h4><p>Optional browser notification and a synthesized bell chime on session complete. Both can be toggled in settings.</p></div>
-      <div class="feature"><h4>Dark mode</h4><p>Light/dark theme toggle persisted in localStorage under <code>apps-theme</code>. Respects system preference on first visit.</p></div>
-      <div class="feature"><h4>Zero dependencies</h4><p>Single HTML file, ~45 KB. No external scripts, no fonts, no audio assets, no analytics.</p></div>
-    </div>
-  </section>
+</div>
+<div class="status-line" id="statusLine">Press Start to begin a focus session.</div>
+</div>
+<!-- Sound mixer -->
+<div class="mixer-card">
+<div class="mixer-head">
+<h2>Ambient mixer</h2>
+<span class="hint">Procedural · Web Audio</span>
+</div>
+<div class="mixer-master">
+<span>Master</span>
+<input aria-label="Master volume" id="masterVol" max="100" min="0" type="range" value="70"/>
+<span class="sound-vol-label" id="masterVolLabel">70%</span>
+</div>
+<div class="mixer-list" id="mixerList">
+<!-- sound rows injected by JS -->
+</div>
+<div class="s-actions" style="margin-top:1rem">
+<button class="btn btn-ghost btn-sm" id="loadSample">Load sample preset</button>
+<button class="btn btn-ghost btn-sm" id="stopAll">Stop all sounds</button>
+</div>
+</div>
+</div>
+<!-- Settings -->
+<div class="settings-card" id="settingsCard">
+<div class="settings-head" id="settingsHead">
+<h2>Settings</h2>
+<span class="settings-chev"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+</div>
+<div class="settings-body">
+<div class="settings-grid">
+<div class="s-field"><label for="setFocus">Focus duration (min)</label><input id="setFocus" max="120" min="1" type="number" value="25"/></div>
+<div class="s-field"><label for="setShort">Short break (min)</label><input id="setShort" max="60" min="1" type="number" value="5"/></div>
+<div class="s-field"><label for="setLong">Long break (min)</label><input id="setLong" max="60" min="1" type="number" value="15"/></div>
+<div class="s-field"><label for="setLongEvery">Long break after N focus</label><input id="setLongEvery" max="12" min="2" type="number" value="4"/></div>
+</div>
+<div class="s-toggles">
+<label class="s-check"><input id="setAutoBreak" type="checkbox"/> Auto-start breaks after focus</label>
+<label class="s-check"><input id="setAutoFocus" type="checkbox"/> Auto-start next focus after break</label>
+<label class="s-check"><input checked="" id="setSoundComplete" type="checkbox"/> Play chime on session complete</label>
+<label class="s-check"><input id="setNotify" type="checkbox"/> Show browser notification on complete</label>
+</div>
+<div class="s-field" style="max-width:240px;margin-top:.85rem">
+<label for="setChimeVol">Chime volume</label>
+<input aria-label="Chime volume" id="setChimeVol" max="100" min="0" style="accent-color:var(--accent)" type="range" value="60"/>
+</div>
+<div class="s-actions">
+<button class="btn btn-ghost btn-sm" id="saveSettings">Save settings</button>
+<button class="btn btn-ghost btn-sm" id="resetSettings">Reset to defaults</button>
+<button class="btn btn-ghost btn-sm" id="resetSessions">Reset today's count</button>
+</div>
+</div>
+</div>
+<section class="section" id="how-to-use">
+<h2>How to use</h2>
+<p>Five steps from cold start to a finished focus block.</p>
+<ol class="steps">
+<li><strong>Press Start</strong> — the timer begins counting down from the focus duration (default 25 min). The ring depletes as time passes.</li>
+<li><strong>Optionally enable ambient sounds</strong> — click any sound toggle in the mixer (rain, cafe, ocean, white noise, birds). Adjust each volume independently; multiple sounds layer.</li>
+<li><strong>When focus ends</strong> — a chime plays and a short break starts (auto or manual). The session counter increments by one.</li>
+<li><strong>After every N focus sessions</strong> (default 4) — a long break replaces the short break. Use Reset to restart the current mode, or Skip to advance immediately.</li>
+<li><strong>Customize in Settings</strong> — change durations, toggle auto-start, enable browser notifications, or press Load sample preset to try 50/10/30 with rain + cafe.</li>
+</ol>
+</section>
+<section class="section">
+<h2>What it does</h2>
+<div class="features-grid">
+<div class="feature"><h4>Configurable timer</h4><p>Focus, short break and long break durations are all editable. Long break triggers after every N focus sessions you complete.</p></div>
+<div class="feature"><h4>Procedural ambient audio</h4><p>Rain, ocean, cafe, white noise and birds are synthesized live with the Web Audio API — no audio files, no downloads, fully Browser-based.</p></div>
+<div class="feature"><h4>Daily session counter</h4><p>Tracks completed focus sessions per calendar day, persisted in localStorage. Resets automatically when the date changes.</p></div>
+<div class="feature"><h4>Notifications &amp; chimes</h4><p>Optional browser notification and a synthesized bell chime on session complete. Both can be toggled in settings.</p></div>
+<div class="feature"><h4>Dark mode</h4><p>Light/dark theme toggle persisted in localStorage under <code>apps-theme</code>. Respects system preference on first visit.</p></div>
+<div class="feature"><h4>Zero dependencies</h4><p>Single HTML file, ~45 KB. No external scripts, no fonts, no audio assets, no analytics.</p></div>
+</div>
+</section>
 </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
-  </div>
-</footer>
-
 <div class="toast" id="toast"></div>
-
 <script>
 (function(){
 'use strict';
 
 // ===== Theme =====
-document.getElementById('themeToggle').addEventListener('click', function(){
-  var cur = document.documentElement.getAttribute('data-theme');
-  var next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('apps-theme', next);
-});
 
 // ===== Toast =====
 var toastEl = document.getElementById('toast');
@@ -1059,5 +1030,5 @@ window.__pomodoro = { SoundEngine: SoundEngine, getSettings: function(){ return 
 
 })();
 </script>
-</body>
+<script data-app-name="Pomodoro" src="/apps/assets/app-shell.js"></script></body>
 </html>
