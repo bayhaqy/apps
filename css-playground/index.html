@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A live, no-nonsense playground for CSS Grid and Flexbox. Tweak properties, watch the layout update, copy the generated CSS. 100% in your browser." />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="CSS Grid & Flexbox Playground" />
-  <meta property="og:description" content="A live playground for CSS Grid and Flexbox. Tweak properties, watch the layout update, copy the generated CSS." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/css-playground/" />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/css-playground/" />
-  <title>CSS Grid & Flexbox Playground — Live Layout Builder</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='64' font-family='Arial,sans-serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3ECSS%3C/text%3E%3C/svg%3E" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="A live, no-nonsense playground for CSS Grid and Flexbox. Tweak properties, watch the layout update, copy the generated CSS. 100% in your browser." name="description"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="CSS Grid &amp; Flexbox Playground" property="og:title"/>
+<meta content="A live playground for CSS Grid and Flexbox. Tweak properties, watch the layout update, copy the generated CSS." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/css-playground/" property="og:url"/>
+<link href="https://bayhaqy.my.id/apps/css-playground/" rel="canonical"/>
+<title>CSS Grid &amp; Flexbox Playground — Live Layout Builder</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='64' font-family='Arial,sans-serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3ECSS%3C/text%3E%3C/svg%3E" rel="icon"/>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--muted:#64748B;--muted-2:#94A3B8;
-      --accent:#DC2626;--accent-hover:#B91C1C;
+      --accent:#B91C1C;--accent-hover:#B91C1C;
       --green:#15803D;--amber:#B45309;
       --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.10);
       --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.10);
@@ -29,7 +29,7 @@
     [data-theme="dark"]{
       --bg:#0B1220;--bg-2:#111A2C;--bg-3:#1A2740;
       --fg:#E2E8F0;--muted:#94A3B8;--muted-2:#64748B;
-      --accent:#EF4444;--accent-hover:#DC2626;
+      --accent:#B91C1C;--accent-hover:#B91C1C;
       --green:#22C55E;--amber:#F59E0B;
       --card-bg:#111A2C;--card-border:rgba(226,232,240,0.10);
       --chip-bg:#1A2740;--chip-border:rgba(226,232,240,0.10);
@@ -223,206 +223,183 @@
       .control-pair{grid-template-columns:1fr}
     }
   </style>
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="back-link">← All apps</a>
-      <span class="app-title">CSS Playground</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
-      </button>
-    </div>
-  </header>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="CSS Playground">
 
-  <main class="container">
-    <section class="hero">
-      <h1>CSS Grid &amp; Flexbox Playground</h1>
-      <p class="sub">A live workbench for two of CSS's most useful layout systems. Adjust the controls, watch the layout move, and copy the generated CSS into your own project. No frameworks, no fluff.</p>
-    </section>
+<main class="container">
+<section class="hero">
+<h1>CSS Grid &amp; Flexbox Playground</h1>
+<p class="sub">A live workbench for two of CSS's most useful layout systems. Adjust the controls, watch the layout move, and copy the generated CSS into your own project. No frameworks, no fluff.</p>
+</section>
+<div class="toolbar">
+<div aria-label="Layout mode" class="seg" id="modeSeg" role="tablist">
+<button aria-selected="true" class="active" data-mode="grid" role="tab">Grid</button>
+<button aria-selected="false" data-mode="flex" role="tab">Flexbox</button>
+</div>
+<span class="spacer"></span>
+<button class="btn" id="sampleBtn" type="button">Load sample</button>
+<button class="btn" id="resetBtn" type="button">Reset</button>
+</div>
+<div class="playground">
+<section aria-label="Live preview" class="panel preview-wrap">
+<div class="panel-title">
+<span>Preview</span>
+<span class="meta" id="previewMeta">grid · 6 children</span>
+</div>
+<div class="preview-stage">
+<div class="container-box" id="containerBox"></div>
+</div>
+</section>
+<aside aria-label="Layout controls" class="panel">
+<div class="panel-title">Controls</div>
+<div class="controls">
+<div class="control">
+<label for="childCount">Children <span class="val" id="childCountVal">6</span></label>
+<input id="childCount" max="20" min="1" type="range" value="6"/>
+</div>
+<!-- Grid controls -->
+<div class="control-group active" data-group="grid" id="gridControls">
+<div class="control">
+<label for="gCols">grid-template-columns</label>
+<input autocomplete="off" id="gCols" spellcheck="false" type="text" value="repeat(3, 1fr)"/>
+<div class="help-text">e.g. <code>1fr 1fr 1fr</code> or <code>repeat(3, minmax(0, 1fr))</code></div>
+</div>
+<div class="control">
+<label for="gRows">grid-template-rows</label>
+<input autocomplete="off" id="gRows" spellcheck="false" type="text" value="auto"/>
+<div class="help-text">e.g. <code>100px 100px</code> or <code>auto</code></div>
+</div>
+<div class="control">
+<label for="gGapNum">gap <span class="val" id="gGapVal">8px</span></label>
+<div class="control-row">
+<input id="gGapNum" max="48" min="0" type="range" value="8"/>
+<select id="gGapUnit">
+<option selected="" value="px">px</option>
+<option value="rem">rem</option>
+<option value="em">em</option>
+</select>
+</div>
+</div>
+<div class="control-pair">
+<div class="control">
+<label for="gJustifyItems">justify-items</label>
+<select id="gJustifyItems">
+<option>stretch</option><option>start</option><option>end</option><option>center</option>
+</select>
+</div>
+<div class="control">
+<label for="gAlignItems">align-items</label>
+<select id="gAlignItems">
+<option>stretch</option><option>start</option><option>end</option><option>center</option>
+</select>
+</div>
+</div>
+<div class="control-pair">
+<div class="control">
+<label for="gJustifyContent">justify-content</label>
+<select id="gJustifyContent">
+<option>start</option><option>end</option><option>center</option>
+<option>space-between</option><option>space-around</option><option>space-evenly</option>
+</select>
+</div>
+<div class="control">
+<label for="gAlignContent">align-content</label>
+<select id="gAlignContent">
+<option>start</option><option>end</option><option>center</option>
+<option>space-between</option><option>space-around</option><option>space-evenly</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Flex controls -->
+<div class="control-group" data-group="flex" id="flexControls">
+<div class="control-pair">
+<div class="control">
+<label for="fDirection">flex-direction</label>
+<select id="fDirection">
+<option value="row">row</option>
+<option value="row-reverse">row-reverse</option>
+<option value="column">column</option>
+<option value="column-reverse">column-reverse</option>
+</select>
+</div>
+<div class="control">
+<label for="fWrap">flex-wrap</label>
+<select id="fWrap">
+<option value="nowrap">nowrap</option>
+<option value="wrap">wrap</option>
+<option value="wrap-reverse">wrap-reverse</option>
+</select>
+</div>
+</div>
+<div class="control-pair">
+<div class="control">
+<label for="fJustifyContent">justify-content</label>
+<select id="fJustifyContent">
+<option value="flex-start">flex-start</option>
+<option value="flex-end">flex-end</option>
+<option value="center">center</option>
+<option value="space-between">space-between</option>
+<option value="space-around">space-around</option>
+<option value="space-evenly">space-evenly</option>
+</select>
+</div>
+<div class="control">
+<label for="fAlignItems">align-items</label>
+<select id="fAlignItems">
+<option value="stretch">stretch</option>
+<option value="flex-start">flex-start</option>
+<option value="flex-end">flex-end</option>
+<option value="center">center</option>
+<option value="baseline">baseline</option>
+</select>
+</div>
+</div>
+<div class="control">
+<label for="fGapNum">gap <span class="val" id="fGapVal">8px</span></label>
+<div class="control-row">
+<input id="fGapNum" max="48" min="0" type="range" value="8"/>
+<select id="fGapUnit">
+<option selected="" value="px">px</option>
+<option value="rem">rem</option>
+<option value="em">em</option>
+</select>
+</div>
+</div>
+<div class="control">
+<label for="fFlex">flex (per child)</label>
+<input autocomplete="off" id="fFlex" spellcheck="false" type="text" value="0 1 auto"/>
+<div class="scope-toggle" id="flexScope">
+<button class="active" data-scope="all" type="button">All children</button>
+<button data-scope="selected" type="button">Selected only</button>
+</div>
+<div class="help-text">Click a child box to select it. Selected children get the value above; others stay at default.</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<section aria-label="Generated CSS" class="code-panel">
+<div class="code-head">
+<span class="panel-title">Generated CSS</span>
+<button class="copy-btn" id="copyBtn" type="button">Copy</button>
+</div>
+<pre class="code-body"><code id="codeOut"></code></pre>
+</section>
+<section class="howto">
+<h2>How to use</h2>
+<ol>
+<li>Pick a layout mode at the top — <code>Grid</code> for 2D row/column layouts, <code>Flexbox</code> for 1D distributions.</li>
+<li>Drag the <code>Children</code> slider to add or remove numbered boxes from the preview. In Flexbox mode, click a box to select it for per-child styling.</li>
+<li>Adjust properties in the right panel. The preview updates instantly and the generated CSS at the bottom reflects every change.</li>
+<li>Hit <code>Load sample</code> to try a preset layout — a 3-column card grid for Grid mode, or a navbar pattern for Flexbox mode.</li>
+<li>Use <code>Copy</code> to grab the CSS and paste it into your own stylesheet. Reset clears everything back to defaults.</li>
+</ol>
+</section>
+</main>
 
-    <div class="toolbar">
-      <div class="seg" id="modeSeg" role="tablist" aria-label="Layout mode">
-        <button data-mode="grid" class="active" role="tab" aria-selected="true">Grid</button>
-        <button data-mode="flex" role="tab" aria-selected="false">Flexbox</button>
-      </div>
-      <span class="spacer"></span>
-      <button class="btn" id="sampleBtn" type="button">Load sample</button>
-      <button class="btn" id="resetBtn" type="button">Reset</button>
-    </div>
-
-    <div class="playground">
-      <section class="panel preview-wrap" aria-label="Live preview">
-        <div class="panel-title">
-          <span>Preview</span>
-          <span class="meta" id="previewMeta">grid · 6 children</span>
-        </div>
-        <div class="preview-stage">
-          <div class="container-box" id="containerBox"></div>
-        </div>
-      </section>
-
-      <aside class="panel" aria-label="Layout controls">
-        <div class="panel-title">Controls</div>
-        <div class="controls">
-          <div class="control">
-            <label for="childCount">Children <span class="val" id="childCountVal">6</span></label>
-            <input type="range" id="childCount" min="1" max="20" value="6" />
-          </div>
-
-          <!-- Grid controls -->
-          <div class="control-group active" id="gridControls" data-group="grid">
-            <div class="control">
-              <label for="gCols">grid-template-columns</label>
-              <input type="text" id="gCols" value="repeat(3, 1fr)" spellcheck="false" autocomplete="off" />
-              <div class="help-text">e.g. <code>1fr 1fr 1fr</code> or <code>repeat(3, minmax(0, 1fr))</code></div>
-            </div>
-            <div class="control">
-              <label for="gRows">grid-template-rows</label>
-              <input type="text" id="gRows" value="auto" spellcheck="false" autocomplete="off" />
-              <div class="help-text">e.g. <code>100px 100px</code> or <code>auto</code></div>
-            </div>
-            <div class="control">
-              <label for="gGapNum">gap <span class="val" id="gGapVal">8px</span></label>
-              <div class="control-row">
-                <input type="range" id="gGapNum" min="0" max="48" value="8" />
-                <select id="gGapUnit">
-                  <option value="px" selected>px</option>
-                  <option value="rem">rem</option>
-                  <option value="em">em</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-pair">
-              <div class="control">
-                <label for="gJustifyItems">justify-items</label>
-                <select id="gJustifyItems">
-                  <option>stretch</option><option>start</option><option>end</option><option>center</option>
-                </select>
-              </div>
-              <div class="control">
-                <label for="gAlignItems">align-items</label>
-                <select id="gAlignItems">
-                  <option>stretch</option><option>start</option><option>end</option><option>center</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-pair">
-              <div class="control">
-                <label for="gJustifyContent">justify-content</label>
-                <select id="gJustifyContent">
-                  <option>start</option><option>end</option><option>center</option>
-                  <option>space-between</option><option>space-around</option><option>space-evenly</option>
-                </select>
-              </div>
-              <div class="control">
-                <label for="gAlignContent">align-content</label>
-                <select id="gAlignContent">
-                  <option>start</option><option>end</option><option>center</option>
-                  <option>space-between</option><option>space-around</option><option>space-evenly</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Flex controls -->
-          <div class="control-group" id="flexControls" data-group="flex">
-            <div class="control-pair">
-              <div class="control">
-                <label for="fDirection">flex-direction</label>
-                <select id="fDirection">
-                  <option value="row">row</option>
-                  <option value="row-reverse">row-reverse</option>
-                  <option value="column">column</option>
-                  <option value="column-reverse">column-reverse</option>
-                </select>
-              </div>
-              <div class="control">
-                <label for="fWrap">flex-wrap</label>
-                <select id="fWrap">
-                  <option value="nowrap">nowrap</option>
-                  <option value="wrap">wrap</option>
-                  <option value="wrap-reverse">wrap-reverse</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-pair">
-              <div class="control">
-                <label for="fJustifyContent">justify-content</label>
-                <select id="fJustifyContent">
-                  <option value="flex-start">flex-start</option>
-                  <option value="flex-end">flex-end</option>
-                  <option value="center">center</option>
-                  <option value="space-between">space-between</option>
-                  <option value="space-around">space-around</option>
-                  <option value="space-evenly">space-evenly</option>
-                </select>
-              </div>
-              <div class="control">
-                <label for="fAlignItems">align-items</label>
-                <select id="fAlignItems">
-                  <option value="stretch">stretch</option>
-                  <option value="flex-start">flex-start</option>
-                  <option value="flex-end">flex-end</option>
-                  <option value="center">center</option>
-                  <option value="baseline">baseline</option>
-                </select>
-              </div>
-            </div>
-            <div class="control">
-              <label for="fGapNum">gap <span class="val" id="fGapVal">8px</span></label>
-              <div class="control-row">
-                <input type="range" id="fGapNum" min="0" max="48" value="8" />
-                <select id="fGapUnit">
-                  <option value="px" selected>px</option>
-                  <option value="rem">rem</option>
-                  <option value="em">em</option>
-                </select>
-              </div>
-            </div>
-            <div class="control">
-              <label for="fFlex">flex (per child)</label>
-              <input type="text" id="fFlex" value="0 1 auto" spellcheck="false" autocomplete="off" />
-              <div class="scope-toggle" id="flexScope">
-                <button type="button" data-scope="all" class="active">All children</button>
-                <button type="button" data-scope="selected">Selected only</button>
-              </div>
-              <div class="help-text">Click a child box to select it. Selected children get the value above; others stay at default.</div>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
-
-    <section class="code-panel" aria-label="Generated CSS">
-      <div class="code-head">
-        <span class="panel-title">Generated CSS</span>
-        <button class="copy-btn" id="copyBtn" type="button">Copy</button>
-      </div>
-      <pre class="code-body"><code id="codeOut"></code></pre>
-    </section>
-
-    <section class="howto">
-      <h2>How to use</h2>
-      <ol>
-        <li>Pick a layout mode at the top — <code>Grid</code> for 2D row/column layouts, <code>Flexbox</code> for 1D distributions.</li>
-        <li>Drag the <code>Children</code> slider to add or remove numbered boxes from the preview. In Flexbox mode, click a box to select it for per-child styling.</li>
-        <li>Adjust properties in the right panel. The preview updates instantly and the generated CSS at the bottom reflects every change.</li>
-        <li>Hit <code>Load sample</code> to try a preset layout — a 3-column card grid for Grid mode, or a navbar pattern for Flexbox mode.</li>
-        <li>Use <code>Copy</code> to grab the CSS and paste it into your own stylesheet. Reset clears everything back to defaults.</li>
-      </ol>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script>
   (function(){
     "use strict";
     var $ = function(id){ return document.getElementById(id); };
@@ -462,7 +439,7 @@
     // ---- Theme ----
     function applyTheme(t){
       document.documentElement.setAttribute("data-theme", t);
-      try{ localStorage.setItem("apps-theme", t); }catch(e){}
+      try{ }catch(e){}
     }
     (function initTheme(){
       var saved = null;
@@ -470,10 +447,6 @@
       if(saved){ applyTheme(saved); }
       else if(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches){ applyTheme("dark"); }
     })();
-    $("themeToggle").addEventListener("click", function(){
-      var cur = document.documentElement.getAttribute("data-theme");
-      applyTheme(cur === "dark" ? "light" : "dark");
-    });
 
     // ---- Toast ----
     var toastTimer = null;
@@ -816,5 +789,5 @@
     render();
   })();
   </script>
-</body>
+<script data-app-name="CSS Playground" src="/apps/assets/app-shell.js"></script></body>
 </html>
