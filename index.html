@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Bayhaqy Apps — a curated collection of 31 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
+  <meta name="description" content="Bayhaqy Apps — a curated collection of 41 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
   <meta name="author" content="Achmad Bayhaqy" />
   <meta name="keywords" content="Bayhaqy Apps, web tools, developer tools, network tools, security tools, DevOps, DNS lookup, IP finder, subnet calculator, JWT decoder, password generator, hash generator, certificate decoder, base64 encoder, Unix timestamp" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -12,7 +12,7 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Bayhaqy Apps — 31 Browser-Based Developer & IT Tools" />
+  <meta property="og:title" content="Bayhaqy Apps — 41 Browser-Based Developer & IT Tools" />
   <meta property="og:description" content="A curated collection of fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
   <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
@@ -21,7 +21,7 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Bayhaqy Apps — 31 Browser-Based Tools" />
+  <meta name="twitter:title" content="Bayhaqy Apps — 41 Browser-Based Tools" />
   <meta name="twitter:description" content="Fast, private, browser-based tools for developers, IT pros, and creators." />
   <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
 
@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <title>Bayhaqy Apps — 31 Browser-Based Developer &amp; IT Tools</title>
+  <title>Bayhaqy Apps — 41 Browser-Based Developer &amp; IT Tools</title>
 
   <!-- Prevent theme flash -->
   <script>
@@ -302,6 +302,7 @@
       gap: 1rem;
     }
     .app-card {
+      position: relative;
       display: flex;
       flex-direction: column;
       background: var(--paper);
@@ -311,7 +312,32 @@
       text-decoration: none;
       color: inherit;
       transition: all .2s var(--ease);
-      position: relative;
+    }
+    .app-card .badge-row {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      display: flex;
+      gap: 6px;
+    }
+    .app-card .offline-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 7px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #15803d;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 99px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+    [data-theme="dark"] .app-card .offline-badge {
+      color: #86efac;
+      background: rgba(34,197,94,0.12);
+      border-color: rgba(34,197,94,0.3);
     }
     .app-card:hover {
       border-color: var(--red-700);
@@ -535,13 +561,8 @@
   <!-- Header -->
   <header class="landing-header" id="landingHeader">
     <div class="landing-header-inner">
-      <a class="landing-brand" href="/apps/" aria-label="Bayhaqy Apps — Home">
+      <a class="landing-brand" href="/apps/" aria-label="Bayhaqy — Apps home">
         <img src="/apps/icons/logo.png" alt="Bayhaqy" />
-        <span class="text">
-          <span class="label">Bayhaqy</span>
-          <span class="sep">·</span>
-          <span class="app-name">Apps</span>
-        </span>
       </a>
       <nav class="landing-nav" aria-label="Primary">
         <a href="https://bayhaqy.my.id/" class="hide-mobile">Portfolio</a>
@@ -567,14 +588,14 @@
             that just <span class="accent">work</span>.
           </h1>
           <p class="hero-sub">
-            A curated collection of 31 fast, private tools for developers, IT pros, and creators.
+            A curated collection of 41 fast, private tools for developers, IT pros, and creators.
             Network diagnostics, security utilities, DevOps helpers, and productivity boosters —
             all running entirely in your browser, no installs, no accounts, no tracking.
           </p>
           <div class="hero-actions">
             <a href="#apps" class="btn btn-primary">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              Browse all 31 tools
+              Browse all 41 tools
             </a>
             <a href="/apps/get-app/" class="btn btn-ghost">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -582,7 +603,7 @@
             </a>
           </div>
           <ul class="hero-stats">
-            <li class="stat"><span class="num">31</span><span class="lbl">Live tools</span></li>
+            <li class="stat"><span class="num">41</span><span class="lbl">Live tools</span></li>
             <li class="stat"><span class="num">4</span><span class="lbl">Categories</span></li>
             <li class="stat"><span class="num">0</span><span class="lbl">Sign-ups</span></li>
             <li class="stat"><span class="num">100%</span><span class="lbl">Free</span></li>
@@ -590,7 +611,7 @@
         </div>
         <aside class="hero-side">
           <h3>Get the mobile app</h3>
-          <p>Install Bayhaqy Apps as a full-screen app on your phone — direct access to all 31 tools without a browser tab.</p>
+          <p>Install Bayhaqy Apps as a full-screen app on your phone — direct access to all 41 tools without a browser tab.</p>
           <div class="install-row">
             <a href="/apps/get-app/" class="btn btn-primary">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -611,7 +632,7 @@
     <section class="toolbar">
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="searchInput" placeholder="Search 31 tools by name, tag, or keyword…" aria-label="Search apps" />
+        <input type="search" id="searchInput" placeholder="Search 41 tools by name, tag, or keyword…" aria-label="Search apps" />
       </div>
       <div class="tag-row" id="tagRow"></div>
     </section>
@@ -632,10 +653,9 @@
   <!-- Footer (reuses .app-footer from theme.css) -->
   <footer class="app-footer">
     <div class="app-footer-inner">
-      <span class="brand-mini">
+      <a class="brand-mini" href="/apps/" aria-label="Bayhaqy — Apps home">
         <img src="/apps/icons/logo.png" alt="Bayhaqy" />
-        <span>Bayhaqy Apps</span>
-      </span>
+      </a>
       <span class="copy">© <span id="year">2026</span> Achmad Bayhaqy · <a href="https://bayhaqy.my.id/">bayhaqy.my.id</a></span>
       <span class="links">
         <a href="https://bayhaqy.my.id/">Portfolio</a>
@@ -817,16 +837,56 @@
         // Category: Brand
         { id: 'link-in-bio', cat: 'brand', icon: 'link', name: 'Link-in-Bio Builder',
           desc: 'Create a Linktree-style page with avatar, links, themes, and analytics.',
-          tags: ['linktree', 'bio', 'social', 'brand'] }
+          tags: ['linktree', 'bio', 'social', 'brand'], offline: true },
+
+        // Category: PDF Editor (new)
+        { id: 'pdf-signer', cat: 'pdf', icon: 'pdf', name: 'PDF Signer & Stamp',
+          desc: 'Draw a signature with mouse/finger or upload a stamp image. Drag, resize, and place on any page.',
+          tags: ['pdf', 'sign', 'signature', 'stamp', 'pdf-lib'], offline: true },
+        { id: 'pdf-annotator', cat: 'pdf', icon: 'pdf', name: 'PDF Annotator & Highlighter',
+          desc: 'Highlight text passages and add colored text annotations. Export the marked-up PDF.',
+          tags: ['pdf', 'annotate', 'highlight', 'note', 'pdf-lib'], offline: true },
+        { id: 'pdf-organizer', cat: 'pdf', icon: 'pdf', name: 'PDF Page Organizer',
+          desc: 'Delete, rotate, and reorder PDF pages visually with drag-and-drop thumbnails.',
+          tags: ['pdf', 'organize', 'reorder', 'rotate', 'delete'], offline: true },
+        { id: 'pdf-redactor', cat: 'pdf', icon: 'pdf', name: 'PDF Redactor',
+          desc: 'Extract text and permanently redact emails, phones, NIK, cards, IBAN with black boxes.',
+          tags: ['pdf', 'redact', 'extract', 'pii', 'regex'], offline: true },
+        { id: 'pdf-watermark', cat: 'pdf', icon: 'pdf', name: 'PDF Watermark & Page Numbers',
+          desc: 'Add diagonal text watermarks (CONFIDENTIAL, DRAFT) and automatic page numbers.',
+          tags: ['pdf', 'watermark', 'page numbers', 'stamp'], offline: true },
+
+        // Category: Media & AI (new)
+        { id: 'bg-remover', cat: 'media', icon: 'image', name: 'AI Background Remover',
+          desc: 'Remove image backgrounds 100% locally via Transformers.js + WebGPU. No upload, no quota.',
+          tags: ['image', 'ai', 'webgpu', 'remove bg', 'transformers'], offline: true },
+        { id: 'file-to-pdf', cat: 'files', icon: 'pdf', name: 'File-to-PDF Converter',
+          desc: 'Convert images (JPG, PNG, WebP) and text files into a single PDF. Reorder, set page size.',
+          tags: ['pdf', 'convert', 'jpg', 'png', 'image to pdf'], offline: true },
+
+        // Category: Music Utilities (new)
+        { id: 'instrument-tuner', cat: 'music', icon: 'audio', name: 'Instrument Tuner',
+          desc: 'Chromatic tuner using your microphone. Real-time pitch detection via FFT for guitar, bass, violin.',
+          tags: ['tuner', 'guitar', 'music', 'pitch', 'fft', 'microphone'], offline: true },
+        { id: 'metronome', cat: 'music', icon: 'audio', name: 'Metronome & Tap Tempo',
+          desc: 'Precision metronome with microsecond timing. Tap tempo, time signatures, accented downbeats.',
+          tags: ['metronome', 'bpm', 'tap tempo', 'music', 'rhythm'], offline: true },
+
+        // Category: Security (new)
+        { id: 'text-encryptor', cat: 'security', icon: 'lock', name: 'Text Encryptor (AES-256)',
+          desc: 'Client-side AES-GCM 256-bit authenticated encryption. Your password never leaves your device.',
+          tags: ['encrypt', 'aes', 'crypto', 'security', 'password'], offline: true }
       ];
 
       var CATS = [
         { id: 'network',      name: 'Network & DNS',     desc: 'Diagnose connectivity, DNS, IPs' },
-        { id: 'security',     name: 'Security & Crypto', desc: 'Hashes, JWTs, certs, passwords' },
+        { id: 'security',     name: 'Security & Crypto', desc: 'Hashes, JWTs, certs, passwords, encryption' },
         { id: 'devops',       name: 'DevOps & SysAdmin', desc: 'Encoding, timestamps, encoders' },
-        { id: 'files',        name: 'Files & Documents', desc: 'PDF, CSV, redaction' },
+        { id: 'files',        name: 'Files & Documents', desc: 'PDF, CSV, file conversion' },
+        { id: 'pdf',          name: 'PDF Editor',        desc: 'Sign, annotate, redact, watermark, organize' },
         { id: 'ai',           name: 'AI & Text',         desc: 'Prompt tools, OCR, humanizer' },
-        { id: 'media',        name: 'Media',             desc: 'Images, audio, carousels' },
+        { id: 'media',        name: 'Media',             desc: 'Images, audio, AI background remover' },
+        { id: 'music',        name: 'Music Utilities',   desc: 'Tuner, metronome, tap tempo' },
         { id: 'dev',          name: 'Dev & Design',      desc: 'Code, diff, CSS, QR' },
         { id: 'productivity', name: 'Productivity',      desc: 'Time, dates, focus' },
         { id: 'finance',      name: 'Math & Finance',    desc: 'Loans, currency, units' },
@@ -926,7 +986,11 @@
         var tagsHtml = a.tags.slice(0, 3).map(function (t) {
           return '<span class="tag">' + escapeHtml(t) + '</span>';
         }).join('');
+        var offlineBadge = a.offline
+          ? '<span class="offline-badge" title="Runs entirely in your browser — no internet needed after first load"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Offline OK</span>'
+          : '';
         return '<a class="app-card' + (isRecent ? ' recent' : '') + '" href="/apps/' + a.id + '/" data-app-id="' + a.id + '">' +
+          (offlineBadge ? '<div class="badge-row">' + offlineBadge + '</div>' : '') +
           '<div class="app-card-head">' +
             '<span class="app-icon">' + (ICONS[a.icon] || ICONS.file) + '</span>' +
             '<div>' +
