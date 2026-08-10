@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Documentation — Apps by Achmad Bayhaqy</title>
+  <meta name="description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230F172A'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;
+      --accent:#0F766E;--accent-2:#0F172A;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
+      --code-bg:#0F172A;--code-fg:#E2E8F0;
+      --radius:8px;
+    }
+    [data-theme="dark"]{
+      --bg:#0B1120;--bg-2:#111827;--bg-3:#1E293B;
+      --fg:#F1F5F9;--muted:#94A3B8;
+      --card-bg:#111827;--card-border:rgba(241,245,249,0.07);
+      --code-bg:#0B1120;--code-fg:#E2E8F0;
+    }
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.6;font-size:15px;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--card-border)}
+    [data-theme="dark"] header.site-header{background:rgba(11,17,32,0.9)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1rem}
+    .brand-mark{width:28px;height:28px;border-radius:6px;background:#0F172A;color:white;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;font-weight:700}
+    [data-theme="dark"] .brand-mark{background:#F1F5F9;color:#0F172A}
+    .header-links{display:flex;align-items:center;gap:1rem}
+    .header-links a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500}
+    .header-links a:hover{color:var(--fg)}
+    .theme-toggle{background:var(--bg-2);border:1px solid var(--card-border);border-radius:6px;width:32px;height:32px;cursor:pointer;color:var(--fg);font-size:.95rem}
+
+    .hero{padding:3rem 0 2rem;border-bottom:1px solid var(--card-border)}
+    .hero h1{font-size:2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem}
+    .hero h1 .mono{font-family:ui-monospace,Menlo,monospace;color:var(--accent)}
+    .hero p.lead{color:var(--muted);font-size:1.05rem;max-width:680px;margin-bottom:1rem}
+    .hero .badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+    .badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--bg-2);border:1px solid var(--card-border);padding:.3rem .7rem;border-radius:999px;font-size:.78rem;color:var(--muted);font-weight:500}
+    .badge strong{color:var(--fg)}
+
+    .section{padding:2rem 0;border-bottom:1px solid var(--card-border)}
+    .section h2{font-size:1.35rem;font-weight:700;margin-bottom:.5rem;letter-spacing:-.01em}
+    .section h3{font-size:1.05rem;font-weight:600;margin-top:1.5rem;margin-bottom:.5rem}
+    .section p{color:var(--muted);margin-bottom:.75rem}
+    .section code.inline{background:var(--bg-2);padding:.1rem .35rem;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;color:var(--accent)}
+
+    pre{background:var(--code-bg);color:var(--code-fg);padding:1rem 1.25rem;border-radius:var(--radius);overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;line-height:1.55;margin:.75rem 0 1rem}
+    pre .k{color:#7DD3FC} /* keyword */
+    pre .s{color:#FCD34D} /* string */
+    pre .c{color:#64748B;font-style:italic} /* comment */
+    pre .n{color:#86EFAC} /* number/boolean */
+    pre .f{color:#C4B5FD} /* function */
+
+    .endpoint-table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .endpoint-table th,.endpoint-table td{padding:.6rem .75rem;text-align:left;border-bottom:1px solid var(--card-border)}
+    .endpoint-table th{font-weight:600;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;background:var(--bg-2)}
+    .endpoint-table td code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg-2);padding:.1rem .35rem;border-radius:3px;font-size:.82em}
+    .endpoint-table tr:hover{background:var(--bg-2)}
+
+    .playground{background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.25rem;margin:1rem 0}
+    .playground-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+    .playground-title{font-weight:600;font-size:.95rem}
+    .playground select,.playground input,.playground textarea{font-family:inherit;font-size:.9rem;padding:.5rem .65rem;border:1px solid var(--card-border);border-radius:6px;background:var(--bg);color:var(--fg);width:100%}
+    .playground textarea{font-family:ui-monospace,Menlo,Consolas,monospace;min-height:80px;resize:vertical}
+    .playground label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;font-weight:500}
+    .playground .field{margin-bottom:.75rem}
+    .playground .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .playground button{background:var(--accent);color:white;border:none;padding:.55rem 1.1rem;border-radius:6px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.88rem}
+    .playground button:hover{opacity:.9}
+    .playground .output{background:var(--code-bg);color:var(--code-fg);padding:.85rem 1rem;border-radius:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;white-space:pre-wrap;word-break:break-word;min-height:60px;max-height:300px;overflow:auto;margin-top:.5rem}
+
+    .footer-note{padding:1.5rem 0;color:var(--muted);font-size:.85rem;text-align:center}
+
+    @media(max-width:640px){
+      .playground .grid-2{grid-template-columns:1fr}
+    }
+  </style>
+  <script>(function(){var t=localStorage.getItem('apps-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/" class="brand">
+        <span class="brand-mark">{}</span>
+        <span>Apps API</span>
+      </a>
+      <nav class="header-links">
+        <a href="/apps/">← All apps</a>
+        <a href="https://github.com/bayhaqy/apps/tree/main/api">Source</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Public <span class="mono">no-token</span> API for every tool</h1>
+      <p class="lead">Every tool's core logic is also exposed as a standalone JavaScript module. Import the function, call it with input, get the output — no credentials, no API key, no server round-trip.</p>
+      <div class="badges">
+        <span class="badge"><strong>0</strong> tokens</span>
+        <span class="badge"><strong>0</strong> cookies</span>
+        <span class="badge"><strong>0</strong> servers (runs in your browser)</span>
+        <span class="badge"><strong>MIT</strong> licensed</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Two ways to use the API</h2>
+      <p>Pick whichever fits your use case. Both expose the exact same functions and parameters.</p>
+
+      <h3>Option 1 — Import as an ES module (recommended for websites)</h3>
+      <p>Load the function directly from the CDN. Works in any modern browser and Node 18+.</p>
+<pre><span class="c">// Format SQL from any webpage</span>
+<span class="k">import</span> { formatCode } <span class="k">from</span> <span class="s">'https://bayhaqy.my.id/apps/api/code-formatter.js'</span>;
+
+<span class="k">const</span> result = <span class="f">formatCode</span>({
+  language: <span class="s">'sql'</span>,
+  code: <span class="s">'select * from users where id=1'</span>,
+  indent: <span class="s">'  '</span>,
+  keywordCase: <span class="s">'upper'</span>
+});
+console.<span class="f">log</span>(result);
+<span class="c">// → "SELECT\n    *\nFROM\n    users\nWHERE\n    id = 1"</span></pre>
+
+      <h3>Option 2 — Deploy as a REST API (for non-browser clients)</h3>
+      <p>Wrap the modules in a Cloudflare Worker (free tier, 100k req/day) to get a public HTTPS endpoint with rate limiting. The full template is in <code class="inline">worker-template.js</code>.</p>
+<pre><span class="c"># Install wrangler (Cloudflare CLI)</span>
+npm install -g wrangler
+
+<span class="c"># Clone the repo and deploy</span>
+git clone https://github.com/bayhaqy/apps.git
+cd apps/api
+wrangler deploy
+
+<span class="c"># Your API is now live at:</span>
+<span class="c"># https://bayhaqy-api.&lt;your-subdomain&gt;.workers.dev/api/...</span></pre>
+
+<pre><span class="c"># Call it from anywhere — curl, Python, Go, anything</span>
+curl <span class="s">"https://your-worker.workers.dev/api/code-formatter?language=sql&code=select%20*%20from%20users&keywordCase=upper"</span>
+
+<span class="c"># Response:</span>
+<span class="c">// "SELECT\n    *\nFROM\n    users"</span></pre>
+    </section>
+
+    <section class="section">
+      <h2>Available endpoints</h2>
+      <p>Every endpoint accepts both GET (query params) and POST (JSON body). Response is always JSON.</p>
+      <table class="endpoint-table">
+        <thead>
+          <tr><th>Endpoint</th><th>Parameters</th><th>Returns</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>/api/code-formatter</code></td><td>language, code, indent, keywordCase</td><td>Formatted code string</td></tr>
+          <tr><td><code>/api/text-diff</code></td><td>original, modified, mode, ignoreCase, ignoreWhitespace</td><td>Diff ops, stats, HTML</td></tr>
+          <tr><td><code>/api/text-clean</code></td><td>text, rules{trimLines, collapseSpaces, removeEmptyLines, ...}</td><td>Cleaned text</td></tr>
+          <tr><td><code>/api/date-diff</code></td><td>from, to (YYYY-MM-DD), excludeWeekends, excludeHolidays</td><td>Years/months/days + totals</td></tr>
+          <tr><td><code>/api/date-add</code></td><td>date, amount, unit (days/weeks/months/years)</td><td>Resulting date + day of week</td></tr>
+          <tr><td><code>/api/age</code></td><td>birthDate, asOf</td><td>Age breakdown + next birthday</td></tr>
+          <tr><td><code>/api/workday</code></td><td>startDate, workdays, excludeHolidays</td><td>End date after N workdays</td></tr>
+          <tr><td><code>/api/timezone/list</code></td><td>—</td><td>Array of IANA timezone names</td></tr>
+          <tr><td><code>/api/timezone/convert</code></td><td>fromCity, hour, targetCity</td><td>Hour, dayOffset, businessHours flag</td></tr>
+          <tr><td><code>/api/timezone/meeting</code></td><td>fromCity, targetCities[]</td><td>Best hour + per-city results</td></tr>
+          <tr><td><code>/api/loan</code></td><td>principal, annualRate, termMonths, interestType, startDate</td><td>Monthly payment, totals, full schedule</td></tr>
+          <tr><td><code>/api/convert</code></td><td>value, from, to, category</td><td>Converted value + factor</td></tr>
+          <tr><td><code>/api/currency/rates</code></td><td>base, apiSource</td><td>Live currency rates</td></tr>
+          <tr><td><code>/api/currency/convert</code></td><td>amount, from, to, rates, base</td><td>Converted amount + rate</td></tr>
+          <tr><td><code>/api/qr/wifi</code></td><td>ssid, password, encryption, hidden</td><td>WIFI: QR string</td></tr>
+          <tr><td><code>/api/qr/email</code></td><td>to, subject, body</td><td>mailto: QR string</td></tr>
+          <tr><td><code>/api/qr/vcard</code></td><td>name, phone, email, org, url</td><td>vCard 3.0 QR string</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Live playground</h2>
+      <p>Try the API directly in your browser. Pick an endpoint, fill in the params, hit "Run".</p>
+
+      <div class="playground">
+        <div class="playground-head">
+          <span class="playground-title">Try it</span>
+          <select id="endpointSelect">
+            <option value="code-formatter">code-formatter (SQL/Python/HTML/CSS/JS)</option>
+            <option value="text-diff">text-diff</option>
+            <option value="date-diff">date-diff</option>
+            <option value="age">age calculator</option>
+            <option value="timezone/convert">timezone/convert</option>
+            <option value="loan">loan calculator</option>
+            <option value="convert">unit convert</option>
+            <option value="qr/wifi">qr/wifi</option>
+          </select>
+        </div>
+        <div id="paramFields"></div>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button id="runBtn">Run</button>
+          <button id="sampleBtn" style="background:var(--bg-3);color:var(--fg)">Load sample</button>
+        </div>
+        <div class="output" id="output">// Output will appear here</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Rate limiting & fair use</h2>
+      <p><strong>Browser module (Option 1):</strong> No rate limit — the code runs in your own browser. Use it as much as you want.</p>
+      <p><strong>REST API (Option 2):</strong> Default <code class="inline">60 requests/minute per IP</code>. The included Cloudflare Worker template uses a token-bucket limiter. For higher limits, deploy your own Worker — the free tier gives 100k requests/day.</p>
+      <p>All endpoints are stateless. No data is logged, stored, or tracked. The Worker template doesn't even use a database — rate limit buckets live in-memory and reset on cold start.</p>
+    </section>
+
+    <section class="section">
+      <h2>Available modules</h2>
+      <table class="endpoint-table">
+        <thead><tr><th>Module</th><th>Functions</th><th>Size</th></tr></thead>
+        <tbody>
+          <tr><td><code>code-formatter.js</code></td><td>formatCode, formatSql, formatPython, formatHtml, formatCss, formatJs</td><td>~5 KB</td></tr>
+          <tr><td><code>text-diff.js</code></td><td>diffText, cleanText, diffChars, diffWords, diffLines</td><td>~5 KB</td></tr>
+          <tr><td><code>date-calculator.js</code></td><td>dateDifference, addDays, calculateAge, workdayCalculator</td><td>~5 KB</td></tr>
+          <tr><td><code>timezone-slider.js</code></td><td>convertTimezone, listTimezones, findMeetingTime</td><td>~4 KB</td></tr>
+          <tr><td><code>loan-calculator.js</code></td><td>calculateLoan</td><td>~4 KB</td></tr>
+          <tr><td><code>converter.js</code></td><td>convertUnit, convertTemperature, convertShoeSize, fetchCurrencyRates, convertCurrency</td><td>~6 KB</td></tr>
+          <tr><td><code>qr-studio.js</code></td><td>formatWifi, formatEmail, formatSms, formatPhone, formatVCard, generateQrDataUrl</td><td>~3 KB</td></tr>
+          <tr><td><code>worker-template.js</code></td><td>Cloudflare Worker with all endpoints + rate limiter</td><td>~6 KB</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="footer-note">Built by <a href="https://bayhaqy.my.id/" style="color:var(--accent);text-decoration:none">Achmad Bayhaqy</a> · <a href="https://github.com/bayhaqy/apps" style="color:var(--accent);text-decoration:none">Source on GitHub</a> · MIT licensed</p>
+  </main>
+
+  <script type="module">
+    // Live playground implementation
+    const SAMPLES = {
+      'code-formatter': { language: 'sql', code: 'select u.id,u.name from users u join orders o on u.id=o.user_id where o.total>100', indent: '  ', keywordCase: 'upper' },
+      'text-diff': { original: 'The quick brown fox jumps over the lazy dog.', modified: 'The quick red fox leaps over the sleeping dog.', mode: 'word' },
+      'date-diff': { from: '2025-01-01', to: '2025-12-31', excludeWeekends: true, excludeHolidays: false },
+      'age': { birthDate: '1995-06-15' },
+      'timezone/convert': { fromCity: 'Asia/Jakarta', hour: 14, targetCity: 'America/New_York' },
+      'loan': { principal: 500000000, annualRate: 8.5, termMonths: 120, interestType: 'annuity', startDate: '2026-01-01' },
+      'convert': { value: 1, from: 'm', to: 'ft', category: 'length' },
+      'qr/wifi': { ssid: 'MyHomeWiFi', password: 'Welcome2024', encryption: 'WPA', hidden: false }
+    };
+
+    const FIELDS = {
+      'code-formatter': [
+        { name: 'language', type: 'select', options: ['sql','python','html','css','javascript'] },
+        { name: 'code', type: 'textarea' },
+        { name: 'indent', type: 'text', placeholder: '  ' },
+        { name: 'keywordCase', type: 'select', options: ['upper','lower','preserve'] }
+      ],
+      'text-diff': [
+        { name: 'original', type: 'textarea' },
+        { name: 'modified', type: 'textarea' },
+        { name: 'mode', type: 'select', options: ['word','line','char'] },
+        { name: 'ignoreCase', type: 'checkbox' },
+        { name: 'ignoreWhitespace', type: 'checkbox' }
+      ],
+      'date-diff': [
+        { name: 'from', type: 'date' },
+        { name: 'to', type: 'date' },
+        { name: 'excludeWeekends', type: 'checkbox' },
+        { name: 'excludeHolidays', type: 'checkbox' }
+      ],
+      'age': [{ name: 'birthDate', type: 'date' }],
+      'timezone/convert': [
+        { name: 'fromCity', type: 'text', placeholder: 'Asia/Jakarta' },
+        { name: 'hour', type: 'number', placeholder: '14' },
+        { name: 'targetCity', type: 'text', placeholder: 'America/New_York' }
+      ],
+      'loan': [
+        { name: 'principal', type: 'number', placeholder: '500000000' },
+        { name: 'annualRate', type: 'number', placeholder: '8.5' },
+        { name: 'termMonths', type: 'number', placeholder: '120' },
+        { name: 'interestType', type: 'select', options: ['flat','annuity','descending'] },
+        { name: 'startDate', type: 'date' }
+      ],
+      'convert': [
+        { name: 'value', type: 'number', placeholder: '1' },
+        { name: 'from', type: 'text', placeholder: 'm' },
+        { name: 'to', type: 'text', placeholder: 'ft' },
+        { name: 'category', type: 'select', options: ['length','mass','volume','area','speed','time','storage','temperature','shoe'] }
+      ],
+      'qr/wifi': [
+        { name: 'ssid', type: 'text', placeholder: 'MyHomeWiFi' },
+        { name: 'password', type: 'text', placeholder: 'Welcome2024' },
+        { name: 'encryption', type: 'select', options: ['WPA','WEP','None'] },
+        { name: 'hidden', type: 'checkbox' }
+      ]
+    };
+
+    const MODULES = {
+      'code-formatter': 'code-formatter.js',
+      'text-diff': 'text-diff.js',
+      'date-diff': 'date-calculator.js',
+      'age': 'date-calculator.js',
+      'timezone/convert': 'timezone-slider.js',
+      'loan': 'loan-calculator.js',
+      'convert': 'converter.js',
+      'qr/wifi': 'qr-studio.js'
+    };
+
+    const FN_NAMES = {
+      'code-formatter': { fn: 'formatCode' },
+      'text-diff': { fn: 'diffText' },
+      'date-diff': { fn: 'dateDifference' },
+      'age': { fn: 'calculateAge' },
+      'timezone/convert': { fn: 'convertTimezone' },
+      'loan': { fn: 'calculateLoan' },
+      'convert': { fn: 'convertUnit' },
+      'qr/wifi': { fn: 'formatWifi' }
+    };
+
+    const loadedModules = {};
+
+    async function loadModule(endpoint) {
+      const file = MODULES[endpoint];
+      if (!loadedModules[file]) {
+        const url = '/apps/api/' + file;
+        loadedModules[file] = await import(url);
+      }
+      return loadedModules[file];
+    }
+
+    function renderFields(endpoint) {
+      const fields = FIELDS[endpoint] || [];
+      const container = document.getElementById('paramFields');
+      container.innerHTML = '';
+      fields.forEach(f => {
+        const wrap = document.createElement('div');
+        wrap.className = 'field';
+        let input;
+        if (f.type === 'select') {
+          input = '<select name="' + f.name + '">' + f.options.map(o => '<option value="' + o + '"' + (o === 'upper' || o === 'word' || o === 'annuity' || o === 'length' || o === 'WPA' ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>';
+        } else if (f.type === 'checkbox') {
+          input = '<input type="checkbox" name="' + f.name + '" />';
+        } else if (f.type === 'textarea') {
+          input = '<textarea name="' + f.name + '" placeholder="' + (f.placeholder || '') + '"></textarea>';
+        } else {
+          input = '<input type="' + f.type + '" name="' + f.name + '" placeholder="' + (f.placeholder || '') + '" />';
+        }
+        wrap.innerHTML = '<label>' + f.name + '</label>' + input;
+        container.appendChild(wrap);
+      });
+    }
+
+    function getParams() {
+      const params = {};
+      document.querySelectorAll('#paramFields input, #paramFields select, #paramFields textarea').forEach(el => {
+        if (el.type === 'checkbox') params[el.name] = el.checked;
+        else if (el.type === 'number') params[el.name] = el.value === '' ? undefined : parseFloat(el.value);
+        else params[el.name] = el.value;
+      });
+      return params;
+    }
+
+    function loadSample() {
+      const endpoint = document.getElementById('endpointSelect').value;
+      const sample = SAMPLES[endpoint] || {};
+      renderFields(endpoint);
+      Object.keys(sample).forEach(key => {
+        const el = document.querySelector('#paramFields [name="' + key + '"]');
+        if (el) {
+          if (el.type === 'checkbox') el.checked = sample[key];
+          else el.value = sample[key];
+        }
+      });
+    }
+
+    async function run() {
+      const endpoint = document.getElementById('endpointSelect').value;
+      const params = getParams();
+      const output = document.getElementById('output');
+      output.textContent = 'Running...';
+      try {
+        const mod = await loadModule(endpoint);
+        const fnName = FN_NAMES[endpoint].fn;
+        const result = await mod[fnName](params);
+        output.textContent = JSON.stringify(result, null, 2);
+      } catch (e) {
+        output.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    document.getElementById('endpointSelect').addEventListener('change', e => renderFields(e.target.value));
+    document.getElementById('sampleBtn').addEventListener('click', loadSample);
+    document.getElementById('runBtn').addEventListener('click', run);
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('apps-theme', next);
+    });
+
+    // Initialize
+    renderFields('code-formatter');
+    loadSample();
+  </script>
+</body>
+</html>
