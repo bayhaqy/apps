@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Free advanced date & age calculator. Compute date differences (with weekend and Indonesian holiday exclusions), add/subtract days/weeks/months/years, calculate age and next birthday countdown, and project workday schedules. 100% in-browser." />
+<meta name="keywords" content="date calculator, age calculator, date difference, workday calculator, Indonesian holidays, add days to date, business days, countdown, birthday calculator" />
+<meta name="author" content="Achmad Bayhaqy" />
+<meta name="theme-color" content="#DC2626" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Advanced Date & Age Calculator" />
+<meta property="og:description" content="Compute date differences, add/subtract time, calculate age and project workdays. 100% in-browser." />
+<meta property="og:url" content="https://bayhaqy.my.id/apps/date-calculator/" />
+<meta name="twitter:card" content="summary" />
+<title>Advanced Date & Age Calculator — Bayhaqy Apps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EDC%3C/text%3E%3C/svg%3E" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+  --fg:#0F172A;--muted:#64748B;
+  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
+  --chip-bg:#F1F5F9;
+  --radius:10px;--radius-sm:6px;
+  --max-w:920px;
+}
+[data-theme="dark"]{
+  --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+  --fg:#F1F5F9;--muted:#94A3B8;
+  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
+  --chip-bg:rgba(30,41,59,0.6);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+  transition:background-color .2s,color .2s;
+}
+code,pre,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+/* Header */
+header.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+[data-theme="dark"] header.site-header{background:rgba(15,23,42,0.92)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:1rem}
+.back-link{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;white-space:nowrap}
+.back-link:hover{color:var(--fg)}
+.app-title{font-weight:700;font-size:1rem;color:var(--fg);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.theme-toggle{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+  background:var(--chip-bg);color:var(--fg);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:background .15s,border-color .15s;
+}
+.theme-toggle:hover{border-color:var(--border-strong)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+/* Hero */
+.hero{padding:2.5rem 0 1.25rem}
+.hero-eyebrow{
+  display:inline-block;color:var(--accent);font-size:.78rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:.7rem;
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.15;letter-spacing:-.01em;font-weight:800;margin-bottom:.6rem}
+.hero p.sub{font-size:1rem;color:var(--muted);max-width:640px}
+
+/* Tabs */
+.tabbar{
+  display:flex;gap:.25rem;border-bottom:1px solid var(--border);
+  margin-top:1.25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.tab-btn{
+  appearance:none;background:none;border:none;cursor:pointer;
+  padding:.7rem .9rem;font-size:.9rem;font-weight:600;color:var(--muted);
+  font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .15s,border-color .15s;margin-bottom:-1px;
+}
+.tab-btn:hover{color:var(--fg)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Card */
+.card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.card-head h2{font-size:1.05rem;font-weight:700}
+.card-head .hint{font-size:.82rem;color:var(--muted)}
+
+/* Form */
+.form-grid{display:grid;gap:1rem}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.9rem}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.field input[type=date],
+.field input[type=number],
+.field select{
+  font-family:inherit;font-size:.95rem;color:var(--fg);
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.55rem .7rem;width:100%;transition:border-color .15s;
+}
+.field input[type=date]:focus,
+.field input[type=number]:focus,
+.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.field input[type=number]{max-width:140px}
+.field-row-inline{display:flex;align-items:center;gap:.5rem}
+.field-row-inline select{flex:1}
+
+/* Checkboxes */
+.checks{display:flex;flex-direction:column;gap:.55rem;margin-top:.3rem}
+.check{display:flex;align-items:flex-start;gap:.55rem;cursor:pointer;font-size:.9rem}
+.check input{margin-top:.15rem;width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.check-text{display:flex;flex-direction:column;gap:.1rem}
+.check-text strong{font-weight:600;color:var(--fg)}
+.check-text small{font-size:.78rem;color:var(--muted)}
+
+/* Buttons */
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem .9rem;border-radius:var(--radius-sm);border:1px solid transparent;
+  font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;
+  font-family:inherit;transition:background .15s,border-color .15s,opacity .15s;
+}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover:not(:disabled){background:#b91c1c}
+[data-theme="dark"] .btn-primary:hover:not(:disabled){background:#dc2626}
+.btn-ghost{background:var(--bg);color:var(--fg);border-color:var(--border)}
+.btn-ghost:hover:not(:disabled){border-color:var(--border-strong);background:var(--bg-2)}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+
+/* Output */
+.output{margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid var(--border)}
+.output-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem}
+.output-head h3{font-size:.95rem;font-weight:700}
+.out-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem}
+.out-cell{
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:.7rem .8rem;
+}
+.out-cell .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:.15rem}
+.out-cell .val{font-size:1.35rem;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+.out-cell .val .unit{font-size:.8rem;color:var(--muted);font-weight:500;margin-left:.15rem}
+.out-cell.highlight{background:var(--accent-dim);border-color:var(--accent)}
+.out-cell.highlight .val{color:var(--accent)}
+.out-text{
+  font-size:1rem;font-weight:600;color:var(--fg);
+  padding:.85rem 1rem;border-radius:var(--radius-sm);
+  background:var(--bg-2);border:1px solid var(--border);
+}
+.out-text .big{font-size:1.5rem;font-weight:800;color:var(--accent);display:block;margin-bottom:.15rem}
+.out-text small{display:block;font-weight:500;color:var(--muted);font-size:.85rem;margin-top:.2rem}
+.placeholder{color:var(--muted);font-size:.9rem;font-style:italic;padding:.85rem 1rem;background:var(--bg-2);border:1px dashed var(--border);border-radius:var(--radius-sm)}
+
+/* How to use */
+.section{padding:2.5rem 0 1rem}
+.section h2{font-size:1.35rem;margin-bottom:.5rem;letter-spacing:-.01em}
+.section > .container > p{color:var(--muted);margin-bottom:1.25rem;max-width:640px;font-size:.95rem}
+.steps{counter-reset:step;list-style:none;padding:0;display:grid;gap:.6rem;max-width:640px}
+.steps li{
+  counter-increment:step;position:relative;padding:.7rem .8rem .7rem 2.6rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.9rem;line-height:1.5;
+}
+.steps li::before{
+  content:counter(step);position:absolute;left:.7rem;top:50%;transform:translateY(-50%);
+  width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;
+}
+.steps li strong{color:var(--fg)}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.feature{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.feature h4{font-size:.95rem;margin-bottom:.3rem;font-weight:700}
+.feature p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* Footer */
+footer.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem}
+footer.site-footer p{font-size:.85rem;color:var(--muted);text-align:center}
+footer.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+footer.site-footer a:hover{text-decoration:underline}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(150%);
+  background:var(--fg);color:var(--bg);padding:.7rem 1.2rem;border-radius:var(--radius-sm);
+  font-size:.88rem;font-weight:500;box-shadow:0 6px 20px -4px rgba(0,0,0,0.25);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:200;max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .hero{padding:1.75rem 0 .75rem}
+  .card{padding:1.1rem}
+  .header-inner{padding:.55rem 0}
+  .app-title{font-size:.92rem}
+  .back-link{font-size:.82rem}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var t = localStorage.getItem('apps-theme');
+  if(!t){ t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/apps/" class="back-link">&larr; All apps</a>
+    <span class="app-title">Date &amp; Age Calculator</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="icon-moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <span class="hero-eyebrow">Date math &middot; Age &middot; Workdays</span>
+    <h1>Advanced Date &amp; Age Calculator</h1>
+    <p class="sub">Four focused tools for date arithmetic: difference between two dates, add or subtract time, age and birthday countdown, and workday projection with weekend and Indonesian holiday exclusions. All math runs locally with the native <code>Date</code> object — no libraries, no uploads.</p>
+  </section>
+
+  <section class="container">
+    <div class="tabbar" role="tablist" id="tabbar">
+      <button class="tab-btn active" role="tab" data-tab="diff">Date Difference</button>
+      <button class="tab-btn" role="tab" data-tab="addsub">Add / Subtract</button>
+      <button class="tab-btn" role="tab" data-tab="age">Age Calculator</button>
+      <button class="tab-btn" role="tab" data-tab="workday">Workday Projector</button>
+    </div>
+
+    <!-- TAB 1: Date Difference -->
+    <div class="card" data-panel="diff">
+      <div class="card-head">
+        <h2>Date Difference</h2>
+        <span class="hint">From / To &middot; optional exclusions</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="field">
+            <label for="diffFrom">From date</label>
+            <input type="date" id="diffFrom" />
+          </div>
+          <div class="field">
+            <label for="diffTo">To date</label>
+            <input type="date" id="diffTo" />
+          </div>
+        </div>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="diffSkipWeekends"><span class="check-text"><strong>Exclude weekends</strong><small>Count only Monday through Friday</small></span></label>
+          <label class="check"><input type="checkbox" id="diffSkipHolidays"><span class="check-text"><strong>Exclude Indonesian public holidays</strong><small>Fixed-date holidays for 2025–2026 (New Year, Independence Day, Christmas, etc.)</small></span></label>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="diffCalc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/></svg>
+          Calculate
+        </button>
+        <button class="btn btn-ghost" id="diffSample">Load sample</button>
+        <button class="btn btn-ghost" id="diffCopy" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy results
+        </button>
+      </div>
+      <div class="output" id="diffOut">
+        <div class="placeholder">Pick two dates and press Calculate.</div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Add / Subtract -->
+    <div class="card" data-panel="addsub" style="display:none">
+      <div class="card-head">
+        <h2>Add or Subtract Time</h2>
+        <span class="hint">Project a date forward or backward</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="addStartDate">Start date</label>
+          <input type="date" id="addStartDate" />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="addAmount">Amount</label>
+            <input type="number" id="addAmount" value="30" />
+          </div>
+          <div class="field">
+            <label for="addUnit">Unit</label>
+            <select id="addUnit">
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+              <option value="years">Years</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="addDir">Direction</label>
+            <select id="addDir">
+              <option value="add">Add (+)</option>
+              <option value="sub">Subtract (&minus;)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="addCalc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/></svg>
+          Calculate
+        </button>
+        <button class="btn btn-ghost" id="addSample">Load sample</button>
+        <button class="btn btn-ghost" id="addCopy" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy results
+        </button>
+      </div>
+      <div class="output" id="addOut">
+        <div class="placeholder">Enter a start date, amount and unit, then press Calculate.</div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Age -->
+    <div class="card" data-panel="age" style="display:none">
+      <div class="card-head">
+        <h2>Age Calculator</h2>
+        <span class="hint">Years, months, days + next birthday</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="ageBirth">Birth date</label>
+          <input type="date" id="ageBirth" />
+        </div>
+        <div class="field">
+          <label for="ageAt">Age at date (default today)</label>
+          <input type="date" id="ageAt" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="ageCalc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/></svg>
+          Calculate
+        </button>
+        <button class="btn btn-ghost" id="ageSample">Load sample</button>
+        <button class="btn btn-ghost" id="ageCopy" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy results
+        </button>
+      </div>
+      <div class="output" id="ageOut">
+        <div class="placeholder">Pick a birth date and press Calculate.</div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Workday Projector -->
+    <div class="card" data-panel="workday" style="display:none">
+      <div class="card-head">
+        <h2>Workday Projector</h2>
+        <span class="hint">Skip weekends and Indonesian holidays</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="field">
+            <label for="workStart">Start date</label>
+            <input type="date" id="workStart" />
+          </div>
+          <div class="field">
+            <label for="workDays">Workdays to add</label>
+            <input type="number" id="workDays" value="10" min="1" />
+          </div>
+        </div>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="workSkipHolidays" checked><span class="check-text"><strong>Exclude Indonesian public holidays</strong><small>Same fixed-date list for 2025–2026</small></span></label>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="workCalc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/></svg>
+          Calculate
+        </button>
+        <button class="btn btn-ghost" id="workSample">Load sample</button>
+        <button class="btn btn-ghost" id="workCopy" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy results
+        </button>
+      </div>
+      <div class="output" id="workOut">
+        <div class="placeholder">Enter a start date and number of workdays, then press Calculate.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="how-to-use">
+    <h2>How to use</h2>
+    <p>Pick the tab that matches your task, fill in the dates, and press Calculate. Each tab has a Load sample button that fills realistic example data so you can see the math immediately.</p>
+    <ol class="steps">
+      <li><strong>Choose a tab</strong> — Date Difference, Add / Subtract, Age Calculator or Workday Projector.</li>
+      <li><strong>Fill the inputs</strong> — type or pick dates; toggle exclusions like weekends or holidays if relevant.</li>
+      <li><strong>Press Calculate</strong> — results render in a grid with the high-value number highlighted in red.</li>
+      <li><strong>Load sample</strong> — instantly fills realistic example data (e.g. birth date 1995-06-15) if you want to see the math first.</li>
+      <li><strong>Copy results</strong> — copies a plain-text summary to your clipboard so you can paste it anywhere.</li>
+    </ol>
+  </section>
+
+  <section class="section container">
+    <h2>What it computes</h2>
+    <div class="features-grid">
+      <div class="feature"><h4>Date Difference</h4><p>Years, months, days, total days, weeks, hours and minutes between two dates. Optional weekend and Indonesian holiday exclusions.</p></div>
+      <div class="feature"><h4>Add / Subtract</h4><p>Project any date forward or backward by days, weeks, months or years. Handles month-end clamping (e.g. Jan 31 + 1 month = Feb 28).</p></div>
+      <div class="feature"><h4>Age &amp; Birthday</h4><p>Exact age in years/months/days, day of week born, total days and hours lived, plus next-birthday countdown.</p></div>
+      <div class="feature"><h4>Workday Projector</h4><p>Add N business days to a start date, skipping Saturdays and Sundays and the bundled Indonesian public holiday list.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+// ===== Theme toggle =====
+var themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', function(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('apps-theme', next);
+});
+
+// ===== Toast =====
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+}
+
+// ===== Tab switching =====
+var tabBtns = document.querySelectorAll('.tab-btn');
+var panels = document.querySelectorAll('[data-panel]');
+tabBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var tab = btn.dataset.tab;
+    tabBtns.forEach(function(b){ b.classList.toggle('active', b === btn); });
+    panels.forEach(function(p){ p.style.display = (p.dataset.panel === tab) ? '' : 'none'; });
+  });
+});
+
+// ===== Indonesian public holidays (fixed-date, 2025-2026) =====
+// Format: YYYY-MM-DD (ISO). Only fixed-date holidays are included; religious
+// holidays like Eid or Nyepi vary each year and are intentionally omitted
+// because they require lunar-calendar computation beyond a static list.
+var HOLIDAYS = [
+  '2025-01-01','2025-08-17','2025-12-25',
+  '2026-01-01','2026-08-17','2026-12-25'
+];
+var HOLIDAY_SET = {};
+HOLIDAYS.forEach(function(d){ HOLIDAY_SET[d] = true; });
+
+function isHoliday(date){
+  var y = date.getFullYear();
+  var m = String(date.getMonth()+1).padStart(2,'0');
+  var d = String(date.getDate()).padStart(2,'0');
+  return !!HOLIDAY_SET[y+'-'+m+'-'+d];
+}
+
+// ===== Date helpers =====
+function parseISO(s){
+  if(!s) return null;
+  var parts = s.split('-');
+  if(parts.length !== 3) return null;
+  var y = +parts[0], m = +parts[1], d = +parts[2];
+  if(!y || !m || !d) return null;
+  return new Date(y, m-1, d);
+}
+function toISO(date){
+  var y = date.getFullYear();
+  var m = String(date.getMonth()+1).padStart(2,'0');
+  var d = String(date.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+d;
+}
+function fmtLong(date){
+  return date.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+function startOfDay(d){
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function isWeekend(d){
+  var day = d.getDay();
+  return day === 0 || day === 6;
+}
+function daysBetween(a, b){
+  var MS = 86400000;
+  var a0 = startOfDay(a), b0 = startOfDay(b);
+  return Math.round((b0 - a0) / MS);
+}
+
+// ===== TAB 1: Date Difference =====
+function calcDiff(){
+  var from = parseISO(document.getElementById('diffFrom').value);
+  var to = parseISO(document.getElementById('diffTo').value);
+  var skipW = document.getElementById('diffSkipWeekends').checked;
+  var skipH = document.getElementById('diffSkipHolidays').checked;
+  var out = document.getElementById('diffOut');
+  var copyBtn = document.getElementById('diffCopy');
+  if(!from || !to){
+    out.innerHTML = '<div class="placeholder">Pick both dates first.</div>';
+    copyBtn.disabled = true;
+    return;
+  }
+  var swap = false;
+  if(from > to){ var t = from; from = to; to = t; swap = true; }
+  // Calendar breakdown (years, months, days)
+  var y = to.getFullYear() - from.getFullYear();
+  var m = to.getMonth() - from.getMonth();
+  var d = to.getDate() - from.getDate();
+  if(d < 0){
+    m--;
+    var prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+    d += prevMonth.getDate();
+  }
+  if(m < 0){ y--; m += 12; }
+  var totalDays = daysBetween(from, to);
+  // Exclusive counting adjustments for weekdays
+  var workDays = 0;
+  if(skipW || skipH){
+    var cur = startOfDay(from);
+    var end = startOfDay(to);
+    while(cur <= end){
+      if(!isWeekend(cur) && !(skipH && isHoliday(cur))){ workDays++; }
+      cur.setDate(cur.getDate()+1);
+    }
+  }
+  var totalHours = Math.abs(totalDays) * 24;
+  var totalMins = totalHours * 60;
+  var totalWeeks = (totalDays / 7).toFixed(2);
+  var label = swap ? 'From → To (swapped for math)' : 'From → To';
+  var html = '<div class="output-head"><h3>Result</h3><span class="hint">'+label+'</span></div>';
+  html += '<div class="out-grid">';
+  html += cell('Calendar', y+'<span class="unit">y</span> '+m+'<span class="unit">m</span> '+d+'<span class="unit">d</span>', true);
+  html += cell('Total days', totalDays.toLocaleString());
+  html += cell('Total weeks', totalWeeks);
+  html += cell('Total hours', totalHours.toLocaleString());
+  html += cell('Total minutes', totalMins.toLocaleString());
+  if(skipW || skipH){
+    var lbl = skipW && skipH ? 'Workdays (Mon–Fri, no holidays)' : (skipW ? 'Weekdays (Mon–Fri)' : 'Non-holiday days');
+    html += cell(lbl, workDays.toLocaleString(), true);
+  }
+  html += '</div>';
+  html += '<div class="out-text" style="margin-top:.75rem"><span class="big">'+y+' years, '+m+' months, '+d+' days</span>Between <strong>'+fmtLong(from)+'</strong> and <strong>'+fmtLong(to)+'</strong>.<small>'+(skipW||skipH ? ('Excluded: '+(skipW?'weekends':'')+(skipW&&skipH?' + ':'')+(skipH?'Indonesian holidays':'')+'.'):'Inclusive of all days.')+'</small></div>';
+  out.innerHTML = html;
+  copyBtn.disabled = false;
+  out._copyText = buildDiffCopy(from, to, y, m, d, totalDays, totalWeeks, totalHours, totalMins, workDays, skipW, skipH, swap);
+}
+function buildDiffCopy(from, to, y, m, d, td, tw, th, tm, wd, sw, sh, swap){
+  var lines = [];
+  lines.push('Date Difference');
+  lines.push('From: '+fmtLong(from));
+  lines.push('To:   '+fmtLong(to));
+  if(swap) lines.push('(dates swapped for math)');
+  lines.push('');
+  lines.push('Calendar:   '+y+' years, '+m+' months, '+d+' days');
+  lines.push('Total days: '+td.toLocaleString());
+  lines.push('Total weeks: '+tw);
+  lines.push('Total hours: '+th.toLocaleString());
+  lines.push('Total minutes: '+tm.toLocaleString());
+  if(sw || sh){
+    lines.push('Workdays: '+wd.toLocaleString()+' ('+(sw&&sh?'Mon-Fri excluding holidays':(sw?'Mon-Fri':'excluding holidays'))+')');
+  }
+  return lines.join('\n');
+}
+
+// ===== TAB 2: Add / Subtract =====
+function calcAdd(){
+  var start = parseISO(document.getElementById('addStartDate').value);
+  var amount = parseInt(document.getElementById('addAmount').value, 10);
+  var unit = document.getElementById('addUnit').value;
+  var dir = document.getElementById('addDir').value;
+  var out = document.getElementById('addOut');
+  var copyBtn = document.getElementById('addCopy');
+  if(!start || isNaN(amount)){
+    out.innerHTML = '<div class="placeholder">Enter a start date and amount.</div>';
+    copyBtn.disabled = true;
+    return;
+  }
+  var sign = (dir === 'sub') ? -1 : 1;
+  var n = sign * amount;
+  var result = new Date(start);
+  if(unit === 'days'){
+    result.setDate(result.getDate() + n);
+  } else if(unit === 'weeks'){
+    result.setDate(result.getDate() + n*7);
+  } else if(unit === 'months'){
+    // Month-end clamping: if original day exceeds target month length, clamp to last day
+    var targetMonth = result.getMonth() + n;
+    var targetYear = result.getFullYear() + Math.floor(targetMonth / 12);
+    targetMonth = ((targetMonth % 12) + 12) % 12;
+    var origDay = start.getDate();
+    var daysInTarget = new Date(targetYear, targetMonth+1, 0).getDate();
+    var newDay = Math.min(origDay, daysInTarget);
+    result = new Date(targetYear, targetMonth, newDay);
+  } else if(unit === 'years'){
+    var targetY = result.getFullYear() + n;
+    var month = result.getMonth();
+    var origDay = start.getDate();
+    var daysInFeb = (((targetY % 4 === 0 && targetY % 100 !== 0) || targetY % 400 === 0) && month === 1) ? 29 : 28;
+    var daysInTargetMonth = (month === 1) ? daysInFeb : new Date(targetY, month+1, 0).getDate();
+    var newDay2 = Math.min(origDay, daysInTargetMonth);
+    result = new Date(targetY, month, newDay2);
+  }
+  var totalDays = daysBetween(start, result);
+  var html = '<div class="output-head"><h3>Result</h3><span class="hint">'+(sign>0?'Added':'Subtracted')+' '+Math.abs(amount)+' '+unit+'</span></div>';
+  html += '<div class="out-text"><span class="big">'+fmtLong(result)+'</span>That is a '+toISO(result)+' ('+result.toLocaleDateString('en-US',{weekday:'short'})+').<small>'+Math.abs(totalDays).toLocaleString()+' days from start. Start was '+fmtLong(start)+'.</small></div>';
+  html += '<div class="out-grid" style="margin-top:.75rem">';
+  html += cell('Resulting date', toISO(result));
+  html += cell('Day of week', result.toLocaleDateString('en-US',{weekday:'long'}));
+  html += cell('Days moved', (totalDays>=0?'+':'')+totalDays.toLocaleString());
+  html += '</div>';
+  out.innerHTML = html;
+  copyBtn.disabled = false;
+  out._copyText = 'Add/Subtract\nStart: '+fmtLong(start)+'\nOp:    '+(sign>0?'+':'-')+Math.abs(amount)+' '+unit+'\nResult: '+fmtLong(result)+' ('+toISO(result)+')\nDays moved: '+(totalDays>=0?'+':'')+totalDays.toLocaleString();
+}
+
+// ===== TAB 3: Age =====
+function calcAge(){
+  var birth = parseISO(document.getElementById('ageBirth').value);
+  var atStr = document.getElementById('ageAt').value;
+  var at = atStr ? parseISO(atStr) : new Date();
+  at = startOfDay(at);
+  var out = document.getElementById('ageOut');
+  var copyBtn = document.getElementById('ageCopy');
+  if(!birth){
+    out.innerHTML = '<div class="placeholder">Pick a birth date.</div>';
+    copyBtn.disabled = true;
+    return;
+  }
+  if(birth > at){
+    out.innerHTML = '<div class="placeholder">Birth date must be on or before the target date.</div>';
+    copyBtn.disabled = true;
+    return;
+  }
+  var y = at.getFullYear() - birth.getFullYear();
+  var m = at.getMonth() - birth.getMonth();
+  var d = at.getDate() - birth.getDate();
+  if(d < 0){
+    m--;
+    var prev = new Date(at.getFullYear(), at.getMonth(), 0);
+    d += prev.getDate();
+  }
+  if(m < 0){ y--; m += 12; }
+  // Next birthday
+  var nextBday = new Date(at.getFullYear(), birth.getMonth(), birth.getDate());
+  if(nextBday < at){ nextBday.setFullYear(nextBday.getFullYear()+1); }
+  var daysToBday = daysBetween(at, nextBday);
+  var totalDays = daysBetween(birth, at);
+  var totalHours = totalDays * 24;
+  var bornDow = birth.toLocaleDateString('en-US',{weekday:'long'});
+  var html = '<div class="output-head"><h3>Age result</h3><span class="hint">At '+fmtLong(at)+'</span></div>';
+  html += '<div class="out-text"><span class="big">'+y+' years, '+m+' months, '+d+' days</span>Born on a '+bornDow+'.<small>Next birthday in '+daysToBday+' day'+(daysToBday===1?'':'s')+' ('+fmtLong(nextBday)+').</small></div>';
+  html += '<div class="out-grid" style="margin-top:.75rem">';
+  html += cell('Years', y, true);
+  html += cell('Months (total)', (y*12+m).toLocaleString());
+  html += cell('Total days lived', totalDays.toLocaleString());
+  html += cell('Total hours lived', totalHours.toLocaleString());
+  html += cell('Days to next birthday', daysToBday, true);
+  html += cell('Day of week born', bornDow);
+  html += '</div>';
+  out.innerHTML = html;
+  copyBtn.disabled = false;
+  out._copyText = 'Age Calculator\nBirth: '+fmtLong(birth)+'\nAt:    '+fmtLong(at)+'\n\nAge: '+y+'y '+m+'m '+d+'d\nBorn on: '+bornDow+'\nTotal days lived: '+totalDays.toLocaleString()+'\nTotal hours lived: '+totalHours.toLocaleString()+'\nNext birthday: '+fmtLong(nextBday)+' ('+daysToBday+' days away)';
+}
+
+// ===== TAB 4: Workday Projector =====
+function calcWork(){
+  var start = parseISO(document.getElementById('workStart').value);
+  var n = parseInt(document.getElementById('workDays').value, 10);
+  var skipH = document.getElementById('workSkipHolidays').checked;
+  var out = document.getElementById('workOut');
+  var copyBtn = document.getElementById('workCopy');
+  if(!start || isNaN(n) || n < 1){
+    out.innerHTML = '<div class="placeholder">Enter a valid start date and number of workdays (&ge; 1).</div>';
+    copyBtn.disabled = true;
+    return;
+  }
+  var cur = startOfDay(start);
+  var count = 0;
+  var skippedWeekend = 0, skippedHoliday = 0;
+  // If start itself is a weekend/holiday, advance to first workday
+  while(isWeekend(cur) || (skipH && isHoliday(cur))){ 
+    if(isWeekend(cur)) skippedWeekend++; else skippedHoliday++;
+    cur.setDate(cur.getDate()+1);
+  }
+  // Now cur is first workday. Add n-1 more workdays (start counts as day 1).
+  count = 1;
+  while(count < n){
+    cur.setDate(cur.getDate()+1);
+    if(isWeekend(cur)){ skippedWeekend++; continue; }
+    if(skipH && isHoliday(cur)){ skippedHoliday++; continue; }
+    count++;
+  }
+  var totalCalendarDays = daysBetween(start, cur);
+  var html = '<div class="output-head"><h3>End date</h3><span class="hint">+'+n+' workday'+(n===1?'':'s')+'</span></div>';
+  html += '<div class="out-text"><span class="big">'+fmtLong(cur)+'</span>That is '+toISO(cur)+' ('+cur.toLocaleDateString('en-US',{weekday:'short'})+').<small>'+totalCalendarDays.toLocaleString()+' calendar days from start. Skipped '+skippedWeekend+' weekend day'+(skippedWeekend===1?'':'s')+(skipH?(' and '+skippedHoliday+' holiday'+(skippedHoliday===1?'':'s')):'')+'.</small></div>';
+  html += '<div class="out-grid" style="margin-top:.75rem">';
+  html += cell('End date', toISO(cur), true);
+  html += cell('Day of week', cur.toLocaleDateString('en-US',{weekday:'long'}));
+  html += cell('Calendar days', totalCalendarDays.toLocaleString());
+  html += cell('Workdays added', n);
+  html += '</div>';
+  out.innerHTML = html;
+  copyBtn.disabled = false;
+  out._copyText = 'Workday Projector\nStart: '+fmtLong(start)+'\nWorkdays to add: '+n+'\nEnd:   '+fmtLong(cur)+' ('+toISO(cur)+')\nCalendar days: '+totalCalendarDays.toLocaleString()+'\nSkipped weekends: '+skippedWeekend+(skipH?('\nSkipped holidays: '+skippedHoliday):'');
+}
+
+function cell(label, value, highlight){
+  return '<div class="out-cell'+(highlight?' highlight':'')+'"><div class="lbl">'+label+'</div><div class="val">'+value+'</div></div>';
+}
+
+// ===== Copy helpers =====
+function wireCopy(btnId, outId){
+  document.getElementById(btnId).addEventListener('click', function(){
+    var out = document.getElementById(outId);
+    if(!out._copyText) return;
+    copyText(out._copyText);
+  });
+}
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast('Copied to clipboard'); }, function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Copied to clipboard'); }catch(e){ toast('Copy failed'); }
+  document.body.removeChild(ta);
+}
+
+// ===== Sample data =====
+function todayISO(){ return toISO(new Date()); }
+function isoOffset(days){
+  var d = new Date();
+  d.setDate(d.getDate()+days);
+  return toISO(d);
+}
+function loadDiffSample(){
+  document.getElementById('diffFrom').value = '2025-01-01';
+  document.getElementById('diffTo').value = todayISO();
+  document.getElementById('diffSkipWeekends').checked = false;
+  document.getElementById('diffSkipHolidays').checked = true;
+  calcDiff();
+  toast('Sample loaded');
+}
+function loadAddSample(){
+  document.getElementById('addStartDate').value = todayISO();
+  document.getElementById('addAmount').value = 45;
+  document.getElementById('addUnit').value = 'days';
+  document.getElementById('addDir').value = 'add';
+  calcAdd();
+  toast('Sample loaded');
+}
+function loadAgeSample(){
+  document.getElementById('ageBirth').value = '1995-06-15';
+  document.getElementById('ageAt').value = todayISO();
+  calcAge();
+  toast('Sample loaded');
+}
+function loadWorkSample(){
+  document.getElementById('workStart').value = todayISO();
+  document.getElementById('workDays').value = 10;
+  document.getElementById('workSkipHolidays').checked = true;
+  calcWork();
+  toast('Sample loaded');
+}
+
+// ===== Wire up events =====
+document.getElementById('diffCalc').addEventListener('click', calcDiff);
+document.getElementById('addCalc').addEventListener('click', calcAdd);
+document.getElementById('ageCalc').addEventListener('click', calcAge);
+document.getElementById('workCalc').addEventListener('click', calcWork);
+document.getElementById('diffSample').addEventListener('click', loadDiffSample);
+document.getElementById('addSample').addEventListener('click', loadAddSample);
+document.getElementById('ageSample').addEventListener('click', loadAgeSample);
+document.getElementById('workSample').addEventListener('click', loadWorkSample);
+wireCopy('diffCopy','diffOut');
+wireCopy('addCopy','addOut');
+wireCopy('ageCopy','ageOut');
+wireCopy('workCopy','workOut');
+
+// Recompute on input change for live feel (debounced via direct calls)
+['diffFrom','diffTo','diffSkipWeekends','diffSkipHolidays'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', calcDiff);
+});
+['addStartDate','addAmount','addUnit','addDir'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', calcAdd);
+});
+['ageBirth','ageAt'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', calcAge);
+});
+['workStart','workDays','workSkipHolidays'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', calcWork);
+});
+
+// Auto-load sample on first visit so the page is not empty
+(function(){
+  var seen = localStorage.getItem('dc-seen');
+  if(!seen){
+    loadDiffSample();
+    localStorage.setItem('dc-seen','1');
+  }
+})();
+
+})();
+</script>
+</body>
+</html>
