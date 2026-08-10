@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PDF Page Organizer · Bayhaqy Apps</title>
+  <meta name="description" content="Delete, rotate, and reorder PDF pages with drag-and-drop thumbnails. 100% client-side via pdf-lib + SortableJS." />
+  <meta name="keywords" content="pdf, organize, reorder, rotate, delete, pages, pdf-lib" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/pdf-organizer/" />
+  <meta property="og:title" content="PDF Page Organizer — Delete, Rotate, Reorder" />
+  <meta property="og:description" content="Visually reorder PDF pages with drag-and-drop thumbnails. Delete, rotate 90°, and export." />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/pdf-organizer/" />
+  <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
+  <link rel="stylesheet" href="/apps/assets/theme.css" />
+  <script src="/apps/lib/pdf-lib.min.js"></script>
+  <script src="/apps/lib/sortable.min.js"></script>
+  <script src="/apps/lib/pdfjs.min.js"></script>
+  <style>
+    .app-main { max-width: 1100px; margin: 0 auto; padding: 96px 20px 60px; }
+    .page-head { margin-bottom: 24px; }
+    .page-head h1 { font-size: var(--fs-2xl); margin: 0 0 6px; color: var(--ink); }
+    .page-head p { color: var(--ink-mute); margin: 0; font-size: var(--fs-md); }
+
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+             box-shadow: var(--shadow-sm); padding: 22px 24px; margin-bottom: 18px; }
+    .panel h2 { font-size: var(--fs-md); margin: 0 0 14px; color: var(--ink-soft); font-weight: 600; }
+
+    .drop-zone { border: 2px dashed var(--line); border-radius: var(--radius); padding: 36px 24px;
+                 text-align: center; cursor: pointer; transition: all 0.15s; background: var(--paper-alt); }
+    .drop-zone:hover, .drop-zone.dragging { border-color: var(--red-700); background: var(--red-50); }
+    .drop-zone svg { color: var(--ink-mute); margin-bottom: 8px; }
+    .drop-zone p { margin: 4px 0; color: var(--ink-mute); font-size: var(--fs-sm); }
+    .drop-zone strong { color: var(--ink); font-size: var(--fs-md); }
+
+    .pages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px;
+                  padding: 8px 0; }
+    .page-card { background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius);
+                 overflow: hidden; cursor: grab; position: relative; transition: border-color 0.15s, transform 0.1s; }
+    .page-card:hover { border-color: var(--red-700); }
+    .page-card.dragging { opacity: 0.5; }
+    .page-card.deleted { opacity: 0.3; pointer-events: none; filter: grayscale(100%); }
+    .page-card .thumb-wrap { background: #fff; padding: 6px; min-height: 160px; display: flex;
+                              align-items: center; justify-content: center; }
+    .page-card .thumb-wrap canvas { max-width: 100%; height: auto; }
+    .page-card .page-label { padding: 6px 8px; font-size: var(--fs-xs); color: var(--ink-mute);
+                              border-top: 1px solid var(--line); display: flex; justify-content: space-between;
+                              align-items: center; background: var(--paper-alt); }
+    .page-card .page-label strong { color: var(--ink); }
+    .page-card .actions { position: absolute; top: 4px; right: 4px; display: flex; gap: 4px; }
+    .page-card .actions button { width: 28px; height: 28px; border-radius: 6px; border: none;
+                                  background: rgba(17,17,17,0.85); color: #fff; cursor: pointer;
+                                  display: flex; align-items: center; justify-content: center;
+                                  transition: background 0.15s; }
+    .page-card .actions button:hover { background: var(--red-700); }
+    .page-card .actions button.restore { background: #16a34a; }
+    .page-card .rotate-badge { position: absolute; top: 4px; left: 4px; background: var(--ink); color: #fff;
+                                font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 12px 22px; border-radius: var(--radius);
+           font-size: var(--fs-base); font-weight: 600; cursor: pointer; border: 1px solid transparent;
+           transition: all 0.15s; font-family: inherit; }
+    .btn-primary { background: var(--red-700); color: #fff; }
+    .btn-primary:hover { background: var(--red-800); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--line-soft); }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+    .progress { height: 6px; background: var(--line-soft); border-radius: 3px; overflow: hidden; margin-top: 14px; display: none; }
+    .progress.active { display: block; }
+    .progress-bar { height: 100%; background: var(--red-700); width: 0; transition: width 0.2s; }
+    .alert { padding: 10px 14px; border-radius: var(--radius); font-size: var(--fs-sm); margin-top: 14px; display: none; }
+    .alert-error { background: var(--red-50); color: var(--red-900); border: 1px solid #fecaca; }
+    .alert-success { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
+    [data-theme="dark"] .alert-success { background: rgba(34,197,94,0.12); color: #86efac; border-color: rgba(34,197,94,0.3); }
+    .info { font-size: var(--fs-xs); color: var(--ink-faint); margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); }
+    .stat-row { display: flex; gap: 16px; font-size: var(--fs-sm); color: var(--ink-mute); margin-top: 10px; }
+    .stat-row strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <main class="app-main">
+    <div class="page-head">
+      <h1>PDF Page Organizer</h1>
+      <p>Delete, rotate, and reorder pages visually. Drag thumbnails to rearrange. 100% client-side.</p>
+    </div>
+
+    <div class="panel">
+      <h2>1. Upload PDF</h2>
+      <label class="drop-zone" id="dropZone" for="fileInput">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p><strong>Drop a PDF here</strong> or click to browse</p>
+      </label>
+      <input type="file" id="fileInput" accept="application/pdf" hidden />
+      <div class="stat-row" id="statRow" style="display:none;">
+        <span><strong id="totalCount">0</strong> total pages</span>
+        <span><strong id="keepCount">0</strong> to keep</span>
+        <span><strong id="deleteCount">0</strong> marked for deletion</span>
+      </div>
+    </div>
+
+    <div class="panel" id="organizePanel" style="display:none;">
+      <h2>2. Organize pages</h2>
+      <div class="pages-grid" id="pagesGrid"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="exportBtn" data-primary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export organized PDF
+        </button>
+        <button class="btn btn-ghost" id="resetBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="alert alert-error" id="alertError"></div>
+    <div class="alert alert-success" id="alertSuccess"></div>
+
+    <div class="info">
+      <p>Powered by <code>pdf-lib</code> + <code>pdfjs-dist</code> + <code>SortableJS</code> (all self-hosted). PDFs never leave your browser.</p>
+      <p style="margin-top:8px"><strong>Tip:</strong> Drag page cards to reorder them. Click the rotate (↻) or delete (🗑) icons on each thumbnail.</p>
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="PDF Organizer"></script>
+  <script>
+    'use strict';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/apps/lib/pdfjs.worker.min.js';
+
+    var $ = function (s) { return document.querySelector(s); };
+    var { PDFDocument, degrees } = PDFLib;
+
+    var pdfFile = null;
+    var pages = [];  // { originalIndex, rotation, deleted }
+
+    $('#dropZone').addEventListener('click', function () { $('#fileInput').click(); });
+    $('#dropZone').addEventListener('dragover', function (e) { e.preventDefault(); this.classList.add('dragging'); });
+    $('#dropZone').addEventListener('dragleave', function () { this.classList.remove('dragging'); });
+    $('#dropZone').addEventListener('drop', function (e) {
+      e.preventDefault(); this.classList.remove('dragging');
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    $('#fileInput').addEventListener('change', function (e) { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+    async function handleFile(f) {
+      if (f.type !== 'application/pdf') { window.showToast('Please select a PDF'); return; }
+      pdfFile = f;
+      var bytes = await f.arrayBuffer();
+      var pdfjsBuffer = bytes.slice(0);
+      var doc = await pdfjsLib.getDocument({ data: pdfjsBuffer }).promise;
+      pages = [];
+      $('#pagesGrid').innerHTML = '';
+      $('#progress').classList.add('active');
+      $('#progressBar').style.width = '5%';
+
+      for (var i = 1; i <= doc.numPages; i++) {
+        var page = await doc.getPage(i);
+        var viewport = page.getViewport({ scale: 0.5 });
+        var canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        var ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        pages.push({ originalIndex: i - 1, rotation: 0, deleted: false, thumb: dataUrl });
+        $('#progressBar').style.width = (5 + Math.round(i / doc.numPages * 85)) + '%';
+      }
+
+      renderPages();
+      $('#progressBar').style.width = '100%';
+      setTimeout(function () { $('#progress').classList.remove('active'); $('#progressBar').style.width = '0'; }, 1000);
+      $('#organizePanel').style.display = 'block';
+      $('#statRow').style.display = 'flex';
+      updateStats();
+      $('#organizePanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function renderPages() {
+      var grid = $('#pagesGrid');
+      grid.innerHTML = '';
+      pages.forEach(function (p, i) {
+        var card = document.createElement('div');
+        card.className = 'page-card' + (p.deleted ? ' deleted' : '');
+        card.setAttribute('data-index', i);
+        card.innerHTML =
+          '<div class="thumb-wrap"><img src="' + p.thumb + '" alt="Page ' + (p.originalIndex + 1) + '" style="transform: rotate(' + p.rotation + 'deg); max-width:100%;" /></div>' +
+          '<div class="page-label"><span>Page <strong>' + (p.originalIndex + 1) + '</strong></span>' +
+            '<span>pos ' + (i + 1) + '</span></div>' +
+          (p.rotation !== 0 ? '<div class="rotate-badge">' + p.rotation + '°</div>' : '') +
+          '<div class="actions">' +
+            (p.deleted
+              ? '<button class="restore" data-action="restore" data-i="' + i + '" title="Restore"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>'
+              : '<button data-action="rotate" data-i="' + i + '" title="Rotate 90°"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>' +
+                '<button data-action="delete" data-i="' + i + '" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>') +
+          '</div>';
+        grid.appendChild(card);
+      });
+
+      // Wire up action buttons.
+      grid.querySelectorAll('button[data-action]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var i = parseInt(btn.getAttribute('data-i'), 10);
+          var action = btn.getAttribute('data-action');
+          if (action === 'rotate') {
+            pages[i].rotation = (pages[i].rotation + 90) % 360;
+          } else if (action === 'delete') {
+            pages[i].deleted = true;
+          } else if (action === 'restore') {
+            pages[i].deleted = false;
+          }
+          renderPages();
+          updateStats();
+        });
+      });
+
+      // Sortable for drag-reorder.
+      Sortable.create(grid, {
+        animation: 150,
+        ghostClass: 'dragging',
+        onEnd: function (evt) {
+          var moved = pages.splice(evt.oldIndex, 1)[0];
+          pages.splice(evt.newIndex, 0, moved);
+          renderPages();
+          updateStats();
+        }
+      });
+    }
+
+    function updateStats() {
+      $('#totalCount').textContent = pages.length;
+      $('#keepCount').textContent = pages.filter(function (p) { return !p.deleted; }).length;
+      $('#deleteCount').textContent = pages.filter(function (p) { return p.deleted; }).length;
+    }
+
+    $('#resetBtn').addEventListener('click', function () {
+      pages.sort(function (a, b) { return a.originalIndex - b.originalIndex; });
+      pages.forEach(function (p) { p.rotation = 0; p.deleted = false; });
+      renderPages();
+      updateStats();
+      window.showToast('Reset to original order');
+    });
+
+    $('#exportBtn').addEventListener('click', async function () {
+      if (!pdfFile) return;
+      $('#progress').classList.add('active');
+      $('#progressBar').style.width = '10%';
+      try {
+        var bytes = await pdfFile.arrayBuffer();
+        var srcDoc = await PDFDocument.load(bytes);
+        var newDoc = await PDFDocument.create();
+        var kept = pages.filter(function (p) { return !p.deleted; });
+        $('#progressBar').style.width = '30%';
+
+        for (var i = 0; i < kept.length; i++) {
+          var p = kept[i];
+          var [copied] = await newDoc.copyPages(srcDoc, [p.originalIndex]);
+          if (p.rotation !== 0) {
+            copied.setRotation(degrees(p.rotation));
+          }
+          newDoc.addPage(copied);
+          $('#progressBar').style.width = (30 + Math.round((i + 1) / kept.length * 60)) + '%';
+        }
+
+        var out = await newDoc.save();
+        var blob = new Blob([out], { type: 'application/pdf' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = pdfFile.name.replace(/\.pdf$/i, '') + '-organized.pdf';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 200);
+        $('#progressBar').style.width = '100%';
+        $('#alertSuccess').style.display = 'block';
+        $('#alertSuccess').textContent = 'Exported ' + kept.length + ' page' + (kept.length > 1 ? 's' : '') + ' successfully.';
+        window.showToast('PDF exported ✓');
+        setTimeout(function () { $('#progress').classList.remove('active'); $('#progressBar').style.width = '0'; }, 2000);
+      } catch (e) {
+        $('#progress').classList.remove('active');
+        $('#alertError').style.display = 'block';
+        $('#alertError').textContent = 'Export failed: ' + (e.message || e);
+      }
+    });
+  </script>
+</body>
+</html>
