@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Free in-browser text diff checker and text cleaner. Word, line, and character diff with similarity stats, plus a text-cleaning utility. Powered by diff-match-patch. 100% client-side." />
-<meta name="keywords" content="text diff, diff checker, word diff, line diff, character diff, text cleaner, normalize text, strip smart quotes, diff-match-patch" />
-<meta name="author" content="Achmad Bayhaqy" />
-<meta name="theme-color" content="#DC2626" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Text Diff Checker & Text Clean Utility" />
-<meta property="og:description" content="Word, line, and character diff with similarity stats, plus a text-cleaning utility. Runs 100% in your browser." />
-<meta property="og:url" content="https://bayhaqy.my.id/apps/text-diff/" />
-<meta name="twitter:card" content="summary" />
-<title>Text Diff Checker &amp; Clean Utility — Bayhaqy Apps</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='68' font-family='ui-monospace,monospace' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3E%CE%94%3C/text%3E%3C/svg%3E" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Free in-browser text diff checker and text cleaner. Word, line, and character diff with similarity stats, plus a text-cleaning utility. Powered by diff-match-patch. 100% client-side." name="description"/>
+<meta content="text diff, diff checker, word diff, line diff, character diff, text cleaner, normalize text, strip smart quotes, diff-match-patch" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Text Diff Checker &amp; Text Clean Utility" property="og:title"/>
+<meta content="Word, line, and character diff with similarity stats, plus a text-cleaning utility. Runs 100% in your browser." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/text-diff/" property="og:url"/>
+<meta content="summary" name="twitter:card"/>
+<title>Text Diff Checker &amp; Clean Utility — Bayhaqy Apps</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='68' font-family='ui-monospace,monospace' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3E%CE%94%3C/text%3E%3C/svg%3E" rel="icon"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
   --fg:#0F172A;--muted:#64748B;
-  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --accent:#B91C1C;--accent-dim:#FEE2E2;
   --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
   --chip-bg:#F1F5F9;
   --add-bg:#DCFCE7;--add-fg:#166534;
@@ -31,7 +31,7 @@
 [data-theme="dark"]{
   --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
   --fg:#F1F5F9;--muted:#94A3B8;
-  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --accent:#B91C1C;--accent-dim:rgba(239,68,68,0.18);
   --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
   --chip-bg:rgba(30,41,59,0.6);
   --add-bg:rgba(34,197,94,0.22);--add-fg:#86EFAC;
@@ -256,8 +256,8 @@ footer.site-footer a:hover{text-decoration:underline}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
-</head>
-<body>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Text Diff">
 <script>
 (function(){
   var t = localStorage.getItem('apps-theme');
@@ -266,202 +266,164 @@ footer.site-footer a:hover{text-decoration:underline}
 })();
 </script>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a href="/apps/" class="back-link">&larr; All apps</a>
-    <span class="app-title">Text Diff &amp; Clean</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="icon-moon">&#9790;</span><span class="icon-sun">&#9728;</span>
-    </button>
-  </div>
-</header>
-
 <main>
-  <section class="hero container">
-    <span class="hero-eyebrow">Word &middot; Line &middot; Character diff</span>
-    <h1>Text Diff Checker &amp; Clean Utility</h1>
-    <p class="sub">Compare two pieces of text side by side with word, line, or character diff highlighting, then normalize whitespace and punctuation with the bundled text cleaner. Powered by diff-match-patch &mdash; everything runs locally in your browser.</p>
-  </section>
-
-  <section class="container">
-    <div class="tabbar" role="tablist" id="tabbar">
-      <button class="tab-btn active" role="tab" data-tab="diff">Diff Checker</button>
-      <button class="tab-btn" role="tab" data-tab="clean">Text Clean</button>
-    </div>
-
-    <!-- TAB: Diff -->
-    <div class="card" data-panel="diff">
-      <div class="card-head">
-        <h2>Compare two texts</h2>
-        <span class="hint">Auto-runs as you type &middot; 300&nbsp;ms debounce</span>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-row">
-          <div class="field">
-            <label for="mode">Diff mode</label>
-            <select id="mode">
-              <option value="word">Word diff</option>
-              <option value="line">Line diff</option>
-              <option value="char">Character diff</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Options</label>
-            <div class="checks inline">
-              <label class="check"><input type="checkbox" id="ignoreWs"> Ignore whitespace</label>
-              <label class="check"><input type="checkbox" id="ignoreCase"> Ignore case</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="editor-grid">
-        <div class="editor-col">
-          <div class="editor-label">
-            <span>Original</span>
-            <span class="mini" id="origStats">0 words &middot; 0 chars</span>
-          </div>
-          <textarea class="editor" id="original" spellcheck="false" placeholder="Paste the original text here, or press Load sample."></textarea>
-        </div>
-        <div class="editor-col">
-          <div class="editor-label">
-            <span>Modified</span>
-            <span class="mini" id="modStats">0 words &middot; 0 chars</span>
-          </div>
-          <textarea class="editor" id="modified" spellcheck="false" placeholder="Paste the modified text here."></textarea>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="diffBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+<section class="hero container">
+<span class="hero-eyebrow">Word · Line · Character diff</span>
+<h1>Text Diff Checker &amp; Clean Utility</h1>
+<p class="sub">Compare two pieces of text side by side with word, line, or character diff highlighting, then normalize whitespace and punctuation with the bundled text cleaner. Powered by diff-match-patch — everything runs locally in your browser.</p>
+</section>
+<section class="container">
+<div class="tabbar" id="tabbar" role="tablist">
+<button class="tab-btn active" data-tab="diff" role="tab">Diff Checker</button>
+<button class="tab-btn" data-tab="clean" role="tab">Text Clean</button>
+</div>
+<!-- TAB: Diff -->
+<div class="card" data-panel="diff">
+<div class="card-head">
+<h2>Compare two texts</h2>
+<span class="hint">Auto-runs as you type · 300 ms debounce</span>
+</div>
+<div class="form-grid">
+<div class="form-row">
+<div class="field">
+<label for="mode">Diff mode</label>
+<select id="mode">
+<option value="word">Word diff</option>
+<option value="line">Line diff</option>
+<option value="char">Character diff</option>
+</select>
+</div>
+<div class="field">
+<label>Options</label>
+<div class="checks inline">
+<label class="check"><input id="ignoreWs" type="checkbox"/> Ignore whitespace</label>
+<label class="check"><input id="ignoreCase" type="checkbox"/> Ignore case</label>
+</div>
+</div>
+</div>
+</div>
+<div class="editor-grid">
+<div class="editor-col">
+<div class="editor-label">
+<span>Original</span>
+<span class="mini" id="origStats">0 words · 0 chars</span>
+</div>
+<textarea class="editor" id="original" placeholder="Paste the original text here, or press Load sample." spellcheck="false"></textarea>
+</div>
+<div class="editor-col">
+<div class="editor-label">
+<span>Modified</span>
+<span class="mini" id="modStats">0 words · 0 chars</span>
+</div>
+<textarea class="editor" id="modified" placeholder="Paste the modified text here." spellcheck="false"></textarea>
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" id="diffBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"></path></svg>
           Run diff
         </button>
-        <button class="btn btn-ghost" id="sampleBtn">Load sample</button>
-        <button class="btn btn-ghost" id="swapBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+<button class="btn btn-ghost" id="sampleBtn">Load sample</button>
+<button class="btn btn-ghost" id="swapBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
           Swap left &amp; right
         </button>
-        <button class="btn btn-ghost" id="clearBtn">Clear</button>
-        <span class="btn-spacer"></span>
-        <button class="btn btn-ghost" id="copyBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<button class="btn btn-ghost" id="clearBtn">Clear</button>
+<span class="btn-spacer"></span>
+<button class="btn btn-ghost" disabled="" id="copyBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Copy diff
         </button>
-      </div>
-
-      <div class="banner" id="banner"></div>
-
-      <div class="stats-grid">
-        <div class="stat-cell add"><div class="lbl">Words added</div><div class="val" id="statAdd">0</div></div>
-        <div class="stat-cell del"><div class="lbl">Words removed</div><div class="val" id="statDel">0</div></div>
-        <div class="stat-cell"><div class="lbl">Equal words</div><div class="val" id="statEq">0</div></div>
-        <div class="stat-cell sim"><div class="lbl">Similarity</div><div class="val" id="statSim">—</div></div>
-      </div>
-
-      <div class="diff-out">
-        <div class="diff-toolbar">
-          <div class="diff-legend">
-            <span class="lg"><span class="sw add"></span>added</span>
-            <span class="lg"><span class="sw del"></span>removed</span>
-            <span class="lg"><span class="sw eq"></span>unchanged</span>
-          </div>
-          <span id="diffModeLabel">Word diff</span>
-        </div>
-        <div class="diff-body" id="diffBody"><span class="eq">Diff output appears here. Press Load sample to see it in action.</span></div>
-      </div>
-    </div>
-
-    <!-- TAB: Clean -->
-    <div class="card" data-panel="clean" style="display:none">
-      <div class="card-head">
-        <h2>Clean text</h2>
-        <span class="hint">Toggle rules, then press Clean</span>
-      </div>
-
-      <div class="checks">
-        <label class="check"><input type="checkbox" id="cTrim" checked> Trim leading / trailing whitespace per line</label>
-        <label class="check"><input type="checkbox" id="cCollapse" checked> Collapse multiple spaces to single</label>
-        <label class="check"><input type="checkbox" id="cEmpty" checked> Remove empty lines</label>
-        <label class="check"><input type="checkbox" id="cLF" checked> Normalize line endings to LF</label>
-        <label class="check"><input type="checkbox" id="cPunct"> Remove duplicate trailing punctuation (e.g. <code>,,</code> &rarr; <code>,</code>)</label>
-        <label class="check"><input type="checkbox" id="cQuotes"> Strip smart quotes (curly &rarr; straight)</label>
-      </div>
-
-      <div class="clean-grid" style="margin-top:1rem">
-        <div class="editor-col">
-          <div class="editor-label"><span>Input</span><span class="mini" id="cleanInStats">0 lines &middot; 0 chars</span></div>
-          <textarea class="editor" id="cleanInput" spellcheck="false" placeholder="Paste text to clean, or press Load sample."></textarea>
-        </div>
-        <div class="editor-col">
-          <div class="editor-label"><span>Output</span><span class="mini" id="cleanOutStats">0 lines &middot; 0 chars</span></div>
-          <textarea class="editor" id="cleanOutput" readonly spellcheck="false" placeholder="Cleaned text appears here."></textarea>
-        </div>
-      </div>
-
-      <div class="clean-actions">
-        <button class="btn btn-primary" id="cleanBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+</div>
+<div class="banner" id="banner"></div>
+<div class="stats-grid">
+<div class="stat-cell add"><div class="lbl">Words added</div><div class="val" id="statAdd">0</div></div>
+<div class="stat-cell del"><div class="lbl">Words removed</div><div class="val" id="statDel">0</div></div>
+<div class="stat-cell"><div class="lbl">Equal words</div><div class="val" id="statEq">0</div></div>
+<div class="stat-cell sim"><div class="lbl">Similarity</div><div class="val" id="statSim">—</div></div>
+</div>
+<div class="diff-out">
+<div class="diff-toolbar">
+<div class="diff-legend">
+<span class="lg"><span class="sw add"></span>added</span>
+<span class="lg"><span class="sw del"></span>removed</span>
+<span class="lg"><span class="sw eq"></span>unchanged</span>
+</div>
+<span id="diffModeLabel">Word diff</span>
+</div>
+<div class="diff-body" id="diffBody"><span class="eq">Diff output appears here. Press Load sample to see it in action.</span></div>
+</div>
+</div>
+<!-- TAB: Clean -->
+<div class="card" data-panel="clean" style="display:none">
+<div class="card-head">
+<h2>Clean text</h2>
+<span class="hint">Toggle rules, then press Clean</span>
+</div>
+<div class="checks">
+<label class="check"><input checked="" id="cTrim" type="checkbox"/> Trim leading / trailing whitespace per line</label>
+<label class="check"><input checked="" id="cCollapse" type="checkbox"/> Collapse multiple spaces to single</label>
+<label class="check"><input checked="" id="cEmpty" type="checkbox"/> Remove empty lines</label>
+<label class="check"><input checked="" id="cLF" type="checkbox"/> Normalize line endings to LF</label>
+<label class="check"><input id="cPunct" type="checkbox"/> Remove duplicate trailing punctuation (e.g. <code>,,</code> → <code>,</code>)</label>
+<label class="check"><input id="cQuotes" type="checkbox"/> Strip smart quotes (curly → straight)</label>
+</div>
+<div class="clean-grid" style="margin-top:1rem">
+<div class="editor-col">
+<div class="editor-label"><span>Input</span><span class="mini" id="cleanInStats">0 lines · 0 chars</span></div>
+<textarea class="editor" id="cleanInput" placeholder="Paste text to clean, or press Load sample." spellcheck="false"></textarea>
+</div>
+<div class="editor-col">
+<div class="editor-label"><span>Output</span><span class="mini" id="cleanOutStats">0 lines · 0 chars</span></div>
+<textarea class="editor" id="cleanOutput" placeholder="Cleaned text appears here." readonly="" spellcheck="false"></textarea>
+</div>
+</div>
+<div class="clean-actions">
+<button class="btn btn-primary" id="cleanBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"></path></svg>
           Clean text
         </button>
-        <button class="btn btn-ghost" id="cleanSampleBtn">Load sample</button>
-        <button class="btn btn-ghost" id="cleanClearBtn">Clear</button>
-        <span class="btn-spacer"></span>
-        <button class="btn btn-ghost" id="cleanCopyBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<button class="btn btn-ghost" id="cleanSampleBtn">Load sample</button>
+<button class="btn btn-ghost" id="cleanClearBtn">Clear</button>
+<span class="btn-spacer"></span>
+<button class="btn btn-ghost" disabled="" id="cleanCopyBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Copy output
         </button>
-      </div>
-    </div>
-  </section>
-
-  <section class="section container" id="how-to-use">
-    <h2>How to use</h2>
-    <p>Two tabs: <strong>Diff Checker</strong> compares two texts and shows inline highlights; <strong>Text Clean</strong> normalizes whitespace, line endings, and punctuation. Each tab has a Load sample button.</p>
-    <ol class="steps">
-      <li><strong>Choose a tab</strong> &mdash; Diff Checker for comparing two texts, Text Clean for normalizing one text.</li>
-      <li><strong>Load sample or paste</strong> &mdash; press <em>Load sample</em> to fill both panes (Diff) or the input pane (Clean) with realistic example data.</li>
-      <li><strong>Pick options</strong> &mdash; in Diff: mode (word / line / character), ignore whitespace, ignore case; in Clean: toggle the six normalization rules.</li>
-      <li><strong>Run</strong> &mdash; Diff auto-runs 300&nbsp;ms after you stop typing; press <em>Swap left &amp; right</em> to flip original and modified. Clean runs on button click.</li>
-      <li><strong>Copy</strong> &mdash; press <em>Copy diff</em> to copy the highlighted diff as plain text with <code>+</code>/<code>-</code> markers, or <em>Copy output</em> for the cleaned text.</li>
-    </ol>
-  </section>
-
-  <section class="section container">
-    <h2>What it does</h2>
-    <div class="features-grid">
-      <div class="feature"><h4>Word diff</h4><p>Tokenizes both texts into words and whitespace, runs diff-match-patch, and reassembles with inline green additions and red strikethrough deletions.</p></div>
-      <div class="feature"><h4>Line diff</h4><p>Encodes each line as a single character, diffs the encoded strings, and renders one block per line with full-line green/red backgrounds.</p></div>
-      <div class="feature"><h4>Character diff</h4><p>Raw character-level diff with semantic cleanup. Best for spotting single-character edits inside words.</p></div>
-      <div class="feature"><h4>Similarity score</h4><p>Percentage of matching characters over the longer text. Updates live with the diff.</p></div>
-      <div class="feature"><h4>Text cleaner</h4><p>Six toggleable rules: trim per line, collapse spaces, drop empty lines, normalize CRLF to LF, dedupe trailing punctuation, and strip smart quotes.</p></div>
-      <div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is uploaded &mdash; verify in DevTools &rarr; Network. Only the diff-match-patch library loads from CDN on first visit.</p></div>
-    </div>
-  </section>
+</div>
+</div>
+</section>
+<section class="section container" id="how-to-use">
+<h2>How to use</h2>
+<p>Two tabs: <strong>Diff Checker</strong> compares two texts and shows inline highlights; <strong>Text Clean</strong> normalizes whitespace, line endings, and punctuation. Each tab has a Load sample button.</p>
+<ol class="steps">
+<li><strong>Choose a tab</strong> — Diff Checker for comparing two texts, Text Clean for normalizing one text.</li>
+<li><strong>Load sample or paste</strong> — press <em>Load sample</em> to fill both panes (Diff) or the input pane (Clean) with realistic example data.</li>
+<li><strong>Pick options</strong> — in Diff: mode (word / line / character), ignore whitespace, ignore case; in Clean: toggle the six normalization rules.</li>
+<li><strong>Run</strong> — Diff auto-runs 300 ms after you stop typing; press <em>Swap left &amp; right</em> to flip original and modified. Clean runs on button click.</li>
+<li><strong>Copy</strong> — press <em>Copy diff</em> to copy the highlighted diff as plain text with <code>+</code>/<code>-</code> markers, or <em>Copy output</em> for the cleaned text.</li>
+</ol>
+</section>
+<section class="section container">
+<h2>What it does</h2>
+<div class="features-grid">
+<div class="feature"><h4>Word diff</h4><p>Tokenizes both texts into words and whitespace, runs diff-match-patch, and reassembles with inline green additions and red strikethrough deletions.</p></div>
+<div class="feature"><h4>Line diff</h4><p>Encodes each line as a single character, diffs the encoded strings, and renders one block per line with full-line green/red backgrounds.</p></div>
+<div class="feature"><h4>Character diff</h4><p>Raw character-level diff with semantic cleanup. Best for spotting single-character edits inside words.</p></div>
+<div class="feature"><h4>Similarity score</h4><p>Percentage of matching characters over the longer text. Updates live with the diff.</p></div>
+<div class="feature"><h4>Text cleaner</h4><p>Six toggleable rules: trim per line, collapse spaces, drop empty lines, normalize CRLF to LF, dedupe trailing punctuation, and strip smart quotes.</p></div>
+<div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is uploaded — verify in DevTools → Network. Only the diff-match-patch library loads from CDN on first visit.</p></div>
+</div>
+</section>
 </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
-  </div>
-</footer>
-
 <div class="toast" id="toast"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.min.js"></script>
 <script>
 (function(){
 'use strict';
 
 // ===== Theme toggle =====
-var themeBtn = document.getElementById('themeToggle');
-themeBtn.addEventListener('click', function(){
-  var cur = document.documentElement.getAttribute('data-theme');
-  var next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('apps-theme', next);
-});
 
 // ===== Toast =====
 var toastEl = document.getElementById('toast');
@@ -950,5 +912,5 @@ updateCleanStats();
 checkReady();
 })();
 </script>
-</body>
+<script data-app-name="Text Diff" src="/apps/assets/app-shell.js"></script></body>
 </html>
