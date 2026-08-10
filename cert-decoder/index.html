@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Certificate Decoder — paste a PEM-encoded X.509 SSL certificate and inspect subject, issuer, validity, SANs, and key info. Fully client-side via node-forge." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Certificate Decoder — X.509 SSL Inspector" />
+  <meta property="og:description" content="Inspect PEM-encoded X.509 SSL certificates — subject, issuer, validity, SANs, key info." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/cert-decoder/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/cert-decoder/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Certificate Decoder — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Certificate Decoder">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Security · TLS</p>
+      <h1 class="app-title">Certificate <span class="accent">Decoder</span></h1>
+      <p class="app-subtitle">
+        Paste a PEM-encoded X.509 SSL certificate (or upload a <code>.crt</code> / <code>.pem</code> file)
+        and inspect subject, issuer, validity, Subject Alternative Names, and key info — fully in your browser via node-forge.
+      </p>
+    </header>
+
+    <section class="card">
+      <label class="field">
+        <span>PEM certificate</span>
+        <textarea id="pemInput" rows="8" placeholder="-----BEGIN CERTIFICATE-----
+MIIDazCCAlOgAwIBAgIUTJt2J5pT8pX...
+-----END CERTIFICATE-----" autocapitalize="none" spellcheck="false"></textarea>
+      </label>
+      <div class="flex-between">
+        <input type="file" id="fileInput" accept=".crt,.pem,.cer" />
+        <div class="btn-row">
+          <button class="btn btn-primary" id="decodeBtn" type="button">Decode</button>
+          <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+          <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+
+    <section class="card" id="resultCard" style="display:none;">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+        Certificate details
+      </h2>
+      <table class="data" id="resultTable"></table>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Certificate Decoder"></script>
+  <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var pemInput = $('#pemInput');
+      var fileInput = $('#fileInput');
+      var decodeBtn = $('#decodeBtn');
+      var sampleBtn = $('#sampleBtn');
+      var clearBtn = $('#clearBtn');
+      var errorCard = $('#errorCard');
+      var errorMsg = $('#errorMsg');
+      var resultCard = $('#resultCard');
+      var resultTable = $('#resultTable');
+
+      function clearOutput() { errorCard.style.display='none'; resultCard.style.display='none'; }
+      function showError(m) { clearOutput(); errorCard.style.display='block'; errorMsg.textContent = m; }
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+      function row(k, v, cls) { return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v' + (cls ? ' ' + cls : '') + '">' + escapeHtml(v) + '</td></tr>'; }
+
+      function fmtDate(d) {
+        if (!d) return '—';
+        // forge returns Date objects.
+        if (typeof d === 'string') return d;
+        return d.toLocaleString();
+      }
+
+      function decode() {
+        clearOutput();
+        var pem = pemInput.value.trim();
+        if (!pem) { showError('Paste a PEM certificate first.'); return; }
+        if (typeof forge === 'undefined') { showError('node-forge library failed to load. Check your network connection.'); return; }
+        try {
+          var cert = forge.pki.certificateFromPem(pem);
+          var rows = '';
+
+          // Subject.
+          var subjectAttrs = cert.subject.attributes;
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700;">Subject</td></tr>';
+          subjectAttrs.forEach(function (a) {
+            rows += row(a.name || a.shortName || a.type, a.value);
+          });
+
+          // Issuer.
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Issuer</td></tr>';
+          cert.issuer.attributes.forEach(function (a) {
+            rows += row(a.name || a.shortName || a.type, a.value);
+          });
+
+          // Validity.
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Validity</td></tr>';
+          var notBefore = cert.validity.notBefore;
+          var notAfter  = cert.validity.notAfter;
+          rows += row('Not before', fmtDate(notBefore));
+          rows += row('Not after',  fmtDate(notAfter));
+          var now = new Date();
+          var expired = notAfter && notAfter < now;
+          var notYetValid = notBefore && notBefore > now;
+          var status = notYetValid ? '<span class="pill">not yet valid</span>' : (expired ? '<span class="pill">expired</span>' : '<span class="pill green">valid</span>');
+          var daysLeft = expired ? 0 : Math.round((notAfter - now) / 86400000);
+          rows += row('Status', status + ' ( ' + (expired ? 'expired ' + Math.round((now - notAfter) / 86400000) + ' days ago' : daysLeft + ' days remaining') + ' )');
+
+          // Serial.
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Identification</td></tr>';
+          rows += row('Serial number', cert.serialNumber);
+          rows += row('Version', (cert.version != null ? (cert.version + 1) : '—'));
+
+          // Public key.
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Public key</td></tr>';
+          var pub = cert.publicKey;
+          if (pub) {
+            if (pub.n && pub.e) {
+              rows += row('Algorithm', 'RSA');
+              rows += row('Key size', pub.n.bitLength() + ' bits');
+              rows += row('Exponent', pub.e.toString());
+              rows += row('Modulus', pub.n.toString(16).slice(0, 64) + '…');
+            } else if (pub.params && pub.params.name) {
+              rows += row('Algorithm', 'ECDSA / EC (' + (pub.params.name || 'unknown curve') + ')');
+            } else {
+              rows += row('Algorithm', 'Unknown');
+            }
+          }
+
+          // Signature.
+          rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Signature</td></tr>';
+          rows += row('Signature algorithm', cert.siginfo ? (cert.siginfo.algorithmOid || '—') : '—');
+          rows += row('Signature (hex)', cert.signature ? (cert.signature.toHex ? cert.signature.toHex().slice(0, 64) + '…' : String(cert.signature).slice(0, 64) + '…') : '—');
+
+          // SANs (Subject Alternative Names).
+          var sanExt = cert.getExtension('subjectAltName');
+          if (sanExt) {
+            rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Subject Alternative Names</td></tr>';
+            var alt = sanExt.altNames || [];
+            alt.forEach(function (n) {
+              var type = ({ 1: 'RFC822 (email)', 2: 'DNS', 6: 'URI', 7: 'IP', 8: 'RID' })[n.type] || ('Type ' + n.type);
+              rows += row(type, n.value);
+            });
+            if (alt.length === 0) rows += row('SANs', '(none)');
+          }
+
+          // Fingerprint (SHA-256 of DER).
+          try {
+            var der = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes();
+            var md = forge.md.sha256.create();
+            md.update(der);
+            rows += '<tr><td colspan="2" style="background:var(--paper-alt); font-weight:700; padding-top:1rem;">Fingerprints</td></tr>';
+            rows += row('SHA-256', md.toHex());
+            var md1 = forge.md.sha1.create(); md1.update(der);
+            rows += row('SHA-1', md1.toHex());
+            var md5 = forge.md.md5.create(); md5.update(der);
+            rows += row('MD5', md5.toHex());
+          } catch (e) {}
+
+          resultTable.innerHTML = '<tbody>' + rows + '</tbody>';
+          resultCard.style.display = 'block';
+        } catch (e) {
+          showError('Could not parse certificate: ' + (e.message || e) + '. Make sure the PEM is well-formed (BEGIN CERTIFICATE … END CERTIFICATE).');
+        }
+      }
+
+      decodeBtn.addEventListener('click', decode);
+      clearBtn.addEventListener('click', function () { pemInput.value=''; clearOutput(); });
+      fileInput.addEventListener('change', function (e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function () { pemInput.value = r.result; decode(); };
+        r.readAsText(f);
+      });
+
+      // Real self-signed test cert generated with node-forge (valid 2025-01-01 to 2027-12-31).
+      var SAMPLE = '-----BEGIN CERTIFICATE-----\nMIIDyTCCArGgAwIBAgIBATANBgkqhkiG9w0BAQsFADBoMR0wGwYDVQQDExRzYW1w\nbGUuYmF5aGFxeS5teS5pZDELMAkGA1UEBhMCSUQxEDAOBgNVBAgTB0pha2FydGEx\nFTATBgNVBAoTDEJheWhhcXkgQXBwczERMA8GA1UECxMIVGVzdCBMYWIwHhcNMjUw\nMTAxMDAwMDAwWhcNMjcxMjMxMDAwMDAwWjBoMR0wGwYDVQQDExRzYW1wbGUuYmF5\naGFxeS5teS5pZDELMAkGA1UEBhMCSUQxEDAOBgNVBAgTB0pha2FydGExFTATBgNV\nBAoTDEJheWhhcXkgQXBwczERMA8GA1UECxMIVGVzdCBMYWIwggEiMA0GCSqGSIb3\nDQEBAQUAA4IBDwAwggEKAoIBAQDmRzlCYmaQPV9ruKpDMJX84ZCT3JiubMRhtwOL\n0CVxX29ClWc3z/yiuzfNlckBCTIQ1pUtXWloJ23kKJ9jMKUF9wjpoX3xGQN1Gaj4\nmBH5W1L8Y0fXH5pu54g9SRvjhwkMmceewKJmzmFGCMnruhSPq8unp62CxFSTGYcS\n1W8+uPHiXFsE57LbuaC13S7VOa3L09uLx8RO0Aa0MAmFj5PwpC7yMZbgP8krUNO3\nMFcfow62vmlsuso5lryFQJZtzofmp4EOM8+r5aDY1KlfULrxzXosHXhSZsZNmYRe\nhvbmlW5yaPjYujon5W8/6Bze30+3mHgXnTyLlCRJL+lK5KXnAgMBAAGjfjB8MAwG\nA1UdEwQFMAMBAf8wCwYDVR0PBAQDAgL0MAkGA1UdJQQCMAAwVAYDVR0RBE0wS4IU\nc2FtcGxlLmJheWhhcXkubXkuaWSCGHd3dy5zYW1wbGUuYmF5aGFxeS5teS5pZIcE\nfwAAAYETYWRtaW5AYmF5aGFxeS5teS5pZDANBgkqhkiG9w0BAQsFAAOCAQEAqA3f\nAw/reRQqYUSa0MTdIDLCeFYtCKk+kRbA3hJy6Gr52IyQBSKC2++nu4sYBK5yZfEb\nZ0mhVvjgChxEWU5lDNyZx44rnw3GeF8kv865Q9AVB3+mii4F9bA0c03v3X0770WY\nbvhimTTkRKlNbJUkoe+a1K8gI5s2+4w13qIhQjffJ81tSZDaASMtELa9skjrvZny\nqRrS4jjzLSzl++Vg9N0X9jI9LQea/MZqvX39BX6rO1dPiNJ5xYxXZYNDC1d5M/WR\ngBYQzqlQTPbYF8+xh4NgZMsy3z1r3F03dqGNp5RbmjCbC2/NSsIA0BHtIkYjdB4u\nmKAD4YMm+8Ozn/G0Ng==\n-----END CERTIFICATE-----';
+      sampleBtn.addEventListener('click', function () { pemInput.value = SAMPLE; decode(); });
+    })();
+  </script>
+</body>
+</html>
