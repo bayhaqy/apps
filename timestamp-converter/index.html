@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Unix Timestamp Converter — convert epoch seconds/milliseconds to human-readable dates in local, UTC, ISO formats, plus relative time. Reverse direction supported too." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Unix Timestamp Converter" />
+  <meta property="og:description" content="Convert Unix epoch seconds/milliseconds to human dates in local, UTC, ISO, and relative formats." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/timestamp-converter/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/timestamp-converter/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Unix Timestamp Converter — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Timestamp Converter">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">DevOps · Time</p>
+      <h1 class="app-title">Unix <span class="accent">Timestamp Converter</span></h1>
+      <p class="app-subtitle">
+        Convert Unix epoch seconds or milliseconds to human-readable dates in local, UTC, and ISO 8601
+        formats, plus relative time ("3 hours ago"). Reverse direction (date → timestamp) supported too.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Current time
+      </h2>
+      <div class="flex-between">
+        <div>
+          <p class="text-mono text-sm" id="nowTs" style="font-size:1.4rem; font-weight:700; color:var(--ink);">—</p>
+          <p class="text-sm text-mute" id="nowDate">—</p>
+        </div>
+        <button class="btn btn-ghost" id="copyNowBtn" type="button">Copy timestamp</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+        Timestamp → Date
+      </h2>
+      <label class="field">
+        <span>Unix timestamp</span>
+        <input type="text" id="tsInput" placeholder="1773284400 or 1773284400000" autocapitalize="none" spellcheck="false" />
+        <span class="hint">Auto-detects seconds vs. milliseconds. Negative values are interpreted as pre-1970 dates.</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="tsConvertBtn" type="button">Convert</button>
+        <button class="btn btn-ghost" id="tsNowBtn" type="button">Use current time</button>
+      </div>
+      <table class="data mt-2" id="tsResult" style="display:none;"></table>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Date → Timestamp
+      </h2>
+      <label class="field">
+        <span>Date &amp; time (local)</span>
+        <input type="datetime-local" id="dateInput" />
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="dateConvertBtn" type="button">Convert</button>
+        <button class="btn btn-ghost" id="dateNowBtn" type="button">Use current time</button>
+      </div>
+      <table class="data mt-2" id="dateResult" style="display:none;"></table>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Timestamp Converter"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var nowTs = $('#nowTs');
+      var nowDate = $('#nowDate');
+      var copyNowBtn = $('#copyNowBtn');
+      var tsInput = $('#tsInput');
+      var tsConvertBtn = $('#tsConvertBtn');
+      var tsNowBtn = $('#tsNowBtn');
+      var tsResult = $('#tsResult');
+      var dateInput = $('#dateInput');
+      var dateConvertBtn = $('#dateConvertBtn');
+      var dateNowBtn = $('#dateNowBtn');
+      var dateResult = $('#dateResult');
+
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+      function row(k, v) { return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v">' + escapeHtml(v) + '</td></tr>'; }
+
+      function pad(n) { return n < 10 ? '0' + n : '' + n; }
+      function toLocalISO(d) {
+        // YYYY-MM-DD HH:mm:ss in the user's local timezone (not UTC).
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+          ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+
+      function relativeTime(d) {
+        var now = Date.now();
+        var diff = (d.getTime() - now) / 1000; // seconds, positive = future
+        var abs = Math.abs(diff);
+        var units = [
+          ['year',   31536000],
+          ['month',   2592000],
+          ['week',    604800],
+          ['day',      86400],
+          ['hour',      3600],
+          ['minute',      60],
+          ['second',       1]
+        ];
+        for (var i = 0; i < units.length; i++) {
+          var name = units[i][0], size = units[i][1];
+          if (abs >= size) {
+            var n = Math.floor(abs / size);
+            var label = n + ' ' + name + (n > 1 ? 's' : '');
+            if (diff > 0) return 'in ' + label;
+            if (n === 1 && name === 'second') return 'just now';
+            return label + ' ago';
+          }
+        }
+        return 'just now';
+      }
+
+      function tickNow() {
+        var now = new Date();
+        var ts = Math.floor(now.getTime() / 1000);
+        nowTs.textContent = ts;
+        nowDate.textContent = now.toUTCString() + ' · ' + relativeTime(now);
+      }
+
+      function detectAndConvert(raw) {
+        raw = String(raw).trim();
+        if (!raw) return null;
+        if (!/^-?\d+$/.test(raw)) return null;
+        // If 13 digits, treat as ms. If 10 digits, treat as seconds. Otherwise, heuristic.
+        var num = parseInt(raw, 10);
+        var ms;
+        if (raw.length >= 13) ms = num;
+        else if (raw.length >= 11) ms = num; // assume ms for 11-12 digit values
+        else if (raw.length === 10) ms = num * 1000;
+        else if (raw.length <= 9) ms = num * 1000; // small number — assume seconds
+        else ms = num;
+        // Sanity check: must be between year 1 and year 9999.
+        var d = new Date(ms);
+        if (isNaN(d.getTime())) return null;
+        // If the date is more than ~300 years in the future and we assumed seconds, maybe it's ms.
+        return d;
+      }
+
+      function convertTimestamp() {
+        var raw = tsInput.value.trim();
+        if (!raw) { tsResult.style.display = 'none'; return; }
+        var d = detectAndConvert(raw);
+        if (!d) {
+          tsResult.style.display = 'block';
+          tsResult.innerHTML = '<tbody><tr><td class="text-red">Invalid timestamp. Use digits only (e.g. 1773284400).</td></tr></tbody>';
+          return;
+        }
+        var tsSec = Math.floor(d.getTime() / 1000);
+        var tsMs  = d.getTime();
+        var rows = '';
+        rows += row('Detected unit', tsMs === tsSec * 1000 && String(raw).length <= 10 ? 'seconds' : 'milliseconds');
+        rows += row('Seconds', tsSec);
+        rows += row('Milliseconds', tsMs);
+        rows += row('Local time', toLocalISO(d) + ' (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')');
+        rows += row('UTC time', d.toUTCString());
+        rows += row('ISO 8601', d.toISOString());
+        rows += row('RFC 2822', d.toString());
+        rows += row('Relative', relativeTime(d));
+        tsResult.innerHTML = '<tbody>' + rows + '</tbody>';
+        tsResult.style.display = 'block';
+      }
+
+      function convertDate() {
+        var val = dateInput.value;
+        if (!val) { dateResult.style.display = 'none'; return; }
+        var d = new Date(val);
+        if (isNaN(d.getTime())) {
+          dateResult.innerHTML = '<tbody><tr><td class="text-red">Invalid date.</td></tr></tbody>';
+          dateResult.style.display = 'block';
+          return;
+        }
+        var tsSec = Math.floor(d.getTime() / 1000);
+        var tsMs = d.getTime();
+        var rows = '';
+        rows += row('Seconds', tsSec);
+        rows += row('Milliseconds', tsMs);
+        rows += row('Local time', toLocalISO(d) + ' (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')');
+        rows += row('UTC time', d.toUTCString());
+        rows += row('ISO 8601', d.toISOString());
+        rows += row('Relative', relativeTime(d));
+        dateResult.innerHTML = '<tbody>' + rows + '</tbody>';
+        dateResult.style.display = 'block';
+      }
+
+      function padLocal(n) { return (n < 10 ? '0' : '') + n; }
+      function setNowDateInput() {
+        var d = new Date();
+        var local = d.getFullYear() + '-' + padLocal(d.getMonth() + 1) + '-' + padLocal(d.getDate()) +
+          'T' + padLocal(d.getHours()) + ':' + padLocal(d.getMinutes());
+        dateInput.value = local;
+      }
+
+      copyNowBtn.addEventListener('click', function () {
+        window.copyText(nowTs.textContent).then(function (ok) { window.showToast(ok ? 'Copied' : 'Copy failed'); });
+      });
+      tsConvertBtn.addEventListener('click', convertTimestamp);
+      tsInput.addEventListener('input', convertTimestamp);
+      tsNowBtn.addEventListener('click', function () { tsInput.value = Math.floor(Date.now() / 1000); convertTimestamp(); });
+      dateConvertBtn.addEventListener('click', convertDate);
+      dateInput.addEventListener('input', convertDate);
+      dateNowBtn.addEventListener('click', function () { setNowDateInput(); convertDate(); });
+
+      // Init.
+      tickNow();
+      setInterval(tickNow, 1000);
+      tsInput.value = Math.floor(Date.now() / 1000);
+      convertTimestamp();
+      setNowDateInput();
+      convertDate();
+    })();
+  </script>
+</body>
+</html>
