@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Loan, mortgage and interest calculator. Compute monthly payments, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. Runs 100% in your browser." />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Loan, Mortgage & Interest Calculator" />
-  <meta property="og:description" content="Compute monthly payments and a full amortization schedule for flat, annuity and descending-interest loans. 100% client-side." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/loan-calculator/" />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/loan-calculator/" />
-  <title>Loan, Mortgage & Interest Calculator — Bayhaqy Apps</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ELC%3C/text%3E%3C/svg%3E" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="Loan, mortgage and interest calculator. Compute monthly payments, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. Runs 100% in your browser." name="description"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Loan, Mortgage &amp; Interest Calculator" property="og:title"/>
+<meta content="Compute monthly payments and a full amortization schedule for flat, annuity and descending-interest loans. 100% client-side." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/loan-calculator/" property="og:url"/>
+<link href="https://bayhaqy.my.id/apps/loan-calculator/" rel="canonical"/>
+<title>Loan, Mortgage &amp; Interest Calculator — Bayhaqy Apps</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ELC%3C/text%3E%3C/svg%3E" rel="icon"/>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;
@@ -22,7 +22,7 @@
       --fg:#0F172A;
       --muted:#64748B;
       --muted-2:#94A3B8;
-      --accent:#DC2626;
+      --accent:#B91C1C;
       --accent-ink:#FFFFFF;
       --border:rgba(15,23,42,0.10);
       --border-strong:rgba(15,23,42,0.16);
@@ -39,7 +39,7 @@
       --fg:#E2E8F0;
       --muted:#94A3B8;
       --muted-2:#64748B;
-      --accent:#DC2626;
+      --accent:#B91C1C;
       --accent-ink:#FFFFFF;
       --border:rgba(226,232,240,0.10);
       --border-strong:rgba(226,232,240,0.18);
@@ -181,182 +181,154 @@
     }
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   </style>
-</head>
-<body>
-  <script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Loan Calculator">
+<script>
     (function(){
       var saved = localStorage.getItem('apps-theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="back-link">← All apps</a>
-      <span class="app-title">Loan Calculator</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
-        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
-      </button>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="page-head">
-      <h1>Loan, Mortgage &amp; Interest Calculator</h1>
-      <p>Compute the monthly payment, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. All math runs locally in your browser — nothing is sent anywhere.</p>
-    </section>
-
-    <section class="layout">
-      <div class="panel input-panel">
-        <h2>Inputs</h2>
-        <form id="loanForm" autocomplete="off">
-          <div class="field">
-            <label for="amount">Loan amount</label>
-            <input type="number" id="amount" min="0" step="any" value="500000000" inputmode="decimal" />
-            <div class="hint" id="amountHint">Formatted: Rp 500.000.000</div>
-          </div>
-          <div class="field">
-            <label for="currency">Currency</label>
-            <select id="currency">
-              <option value="IDR" selected>IDR — Indonesian Rupiah</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="JPY">JPY — Japanese Yen</option>
-              <option value="SGD">SGD — Singapore Dollar</option>
-              <option value="custom">Custom (no symbol)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="rate">Annual interest rate (%)</label>
-            <input type="number" id="rate" min="0" step="any" value="8.5" inputmode="decimal" />
-          </div>
-          <div class="field">
-            <label>Loan term</label>
-            <div class="field-row" style="grid-template-columns:1fr 110px">
-              <input type="number" id="term" min="1" step="1" value="10" inputmode="numeric" />
-              <div class="seg" id="termUnit" role="group">
-                <button type="button" data-unit="years" class="active">Years</button>
-                <button type="button" data-unit="months">Months</button>
-              </div>
-            </div>
-          </div>
-          <div class="field">
-            <label>Interest type</label>
-            <div class="radio-group" id="interestType">
-              <label class="radio-opt">
-                <input type="radio" name="itype" value="annuity" checked />
-                <span><span class="ro-title">Effective (Annuity)</span><span class="ro-sub">Equal monthly payment. Most common for mortgages.</span></span>
-              </label>
-              <label class="radio-opt">
-                <input type="radio" name="itype" value="descending" />
-                <span><span class="ro-title">Effective (Descending)</span><span class="ro-sub">Fixed principal + interest on remaining balance.</span></span>
-              </label>
-              <label class="radio-opt">
-                <input type="radio" name="itype" value="flat" />
-                <span><span class="ro-title">Flat</span><span class="ro-sub">Interest charged on original principal throughout.</span></span>
-              </label>
-            </div>
-          </div>
-          <div class="field">
-            <label for="startDate">Start date</label>
-            <input type="date" id="startDate" />
-          </div>
-          <div class="actions">
-            <button type="submit" class="btn" id="calcBtn">Calculate</button>
-            <button type="button" class="btn secondary" id="sampleBtn">Load sample</button>
-          </div>
-        </form>
+<main class="container">
+<section class="page-head">
+<h1>Loan, Mortgage &amp; Interest Calculator</h1>
+<p>Compute the monthly payment, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. All math runs locally in your browser — nothing is sent anywhere.</p>
+</section>
+<section class="layout">
+<div class="panel input-panel">
+<h2>Inputs</h2>
+<form autocomplete="off" id="loanForm">
+<div class="field">
+<label for="amount">Loan amount</label>
+<input id="amount" inputmode="decimal" min="0" step="any" type="number" value="500000000"/>
+<div class="hint" id="amountHint">Formatted: Rp 500.000.000</div>
+</div>
+<div class="field">
+<label for="currency">Currency</label>
+<select id="currency">
+<option selected="" value="IDR">IDR — Indonesian Rupiah</option>
+<option value="USD">USD — US Dollar</option>
+<option value="EUR">EUR — Euro</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="SGD">SGD — Singapore Dollar</option>
+<option value="custom">Custom (no symbol)</option>
+</select>
+</div>
+<div class="field">
+<label for="rate">Annual interest rate (%)</label>
+<input id="rate" inputmode="decimal" min="0" step="any" type="number" value="8.5"/>
+</div>
+<div class="field">
+<label>Loan term</label>
+<div class="field-row" style="grid-template-columns:1fr 110px">
+<input id="term" inputmode="numeric" min="1" step="1" type="number" value="10"/>
+<div class="seg" id="termUnit" role="group">
+<button class="active" data-unit="years" type="button">Years</button>
+<button data-unit="months" type="button">Months</button>
+</div>
+</div>
+</div>
+<div class="field">
+<label>Interest type</label>
+<div class="radio-group" id="interestType">
+<label class="radio-opt">
+<input checked="" name="itype" type="radio" value="annuity"/>
+<span><span class="ro-title">Effective (Annuity)</span><span class="ro-sub">Equal monthly payment. Most common for mortgages.</span></span>
+</label>
+<label class="radio-opt">
+<input name="itype" type="radio" value="descending"/>
+<span><span class="ro-title">Effective (Descending)</span><span class="ro-sub">Fixed principal + interest on remaining balance.</span></span>
+</label>
+<label class="radio-opt">
+<input name="itype" type="radio" value="flat"/>
+<span><span class="ro-title">Flat</span><span class="ro-sub">Interest charged on original principal throughout.</span></span>
+</label>
+</div>
+</div>
+<div class="field">
+<label for="startDate">Start date</label>
+<input id="startDate" type="date"/>
+</div>
+<div class="actions">
+<button class="btn" id="calcBtn" type="submit">Calculate</button>
+<button class="btn secondary" id="sampleBtn" type="button">Load sample</button>
+</div>
+</form>
+</div>
+<div class="panel output-panel">
+<h2>Summary</h2>
+<div class="result-big">
+<span class="label">Monthly payment</span>
+<span class="value" id="outMonthly">—</span>
+</div>
+<div class="result-grid">
+<div class="result-cell"><span class="label">Total interest</span><span class="value" id="outInterest">—</span></div>
+<div class="result-cell"><span class="label">Total payment</span><span class="value" id="outTotal">—</span></div>
+<div class="result-cell"><span class="label">Payoff date</span><span class="value" id="outPayoff">—</span></div>
+<div class="result-cell"><span class="label">Effective annual rate</span><span class="value" id="outEAR">—</span><span class="sub" id="outEARSub">nominal: —</span></div>
+</div>
+<p class="note" id="outNote"></p>
+</div>
+</section>
+<section class="panel chart-panel" id="chartPanel" style="display:none">
+<div class="panel-head">
+<h2>Principal vs interest over time</h2>
+<div class="legend"><span><span class="dot principal"></span>Principal</span><span><span class="dot interest"></span>Interest</span></div>
+</div>
+<div class="chart-wrap" id="chartWrap"><div class="chart-empty">Run a calculation to see the chart.</div></div>
+</section>
+<section class="panel table-panel" id="tablePanel" style="display:none">
+<div class="panel-head">
+<h2>Amortization schedule</h2>
+<div class="table-toggles" id="tableToggles">
+<button class="active" data-view="first12" type="button">First 12</button>
+<button data-view="yearly" type="button">Yearly summary</button>
+<button data-view="all" type="button">All</button>
+<button class="ghost" id="printBtn" style="margin-left:.4rem" type="button">Print</button>
+<button id="csvBtn" type="button">Export CSV</button>
+</div>
+</div>
+<div class="table-scroll">
+<table id="amortTable">
+<thead>
+<tr><th>#</th><th>Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
+</thead>
+<tbody id="amortBody">
+<tr><td class="table-empty" colspan="6">Run a calculation to build the schedule.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="panel howto" id="how-to-use">
+<h2>How to use</h2>
+<ol>
+<li><strong>Enter the loan amount</strong> and pick a currency. The amount field accepts plain numbers (e.g. <code style="font-family:var(--mono)">500000000</code>); a formatted preview appears below it.</li>
+<li><strong>Set the annual interest rate</strong> as a percentage (e.g. <code style="font-family:var(--mono)">8.5</code> for 8.5%) and the loan term in years or months.</li>
+<li><strong>Choose the interest type.</strong> Annuity = equal payments (standard mortgage). Descending = fixed principal each month. Flat = interest on the original principal for the whole term.</li>
+<li><strong>Press Calculate</strong> to see the monthly payment, totals, payoff date, effective annual rate, a chart and the full amortization table. Toggle the table between first 12, yearly summary, and all rows.</li>
+<li><strong>Export</strong> the schedule as CSV for spreadsheets, or press <em>Print</em> for a paper copy.</li>
+</ol>
+<div class="formula">
+<strong style="color:var(--fg)">Formulas</strong> (r = annual rate / 12, n = total months):<br/>
+<code>Annuity</code>:  M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)<br/>
+<code>Descending</code>: principal = P/n, interest = balance · r<br/>
+<code>Flat</code>: M = P/n + P · r<br/>
+<code>Effective annual rate</code>: (1 + IRR<sub>monthly</sub>)<sup>12</sup> − 1, where IRR is solved from the payment cash flow.
       </div>
+<div class="actions">
+<button class="btn secondary" id="sampleBtn2" type="button">Load sample data</button>
+</div>
+</section>
+</main>
 
-      <div class="panel output-panel">
-        <h2>Summary</h2>
-        <div class="result-big">
-          <span class="label">Monthly payment</span>
-          <span class="value" id="outMonthly">—</span>
-        </div>
-        <div class="result-grid">
-          <div class="result-cell"><span class="label">Total interest</span><span class="value" id="outInterest">—</span></div>
-          <div class="result-cell"><span class="label">Total payment</span><span class="value" id="outTotal">—</span></div>
-          <div class="result-cell"><span class="label">Payoff date</span><span class="value" id="outPayoff">—</span></div>
-          <div class="result-cell"><span class="label">Effective annual rate</span><span class="value" id="outEAR">—</span><span class="sub" id="outEARSub">nominal: —</span></div>
-        </div>
-        <p class="note" id="outNote"></p>
-      </div>
-    </section>
-
-    <section class="panel chart-panel" id="chartPanel" style="display:none">
-      <div class="panel-head">
-        <h2>Principal vs interest over time</h2>
-        <div class="legend"><span><span class="dot principal"></span>Principal</span><span><span class="dot interest"></span>Interest</span></div>
-      </div>
-      <div class="chart-wrap" id="chartWrap"><div class="chart-empty">Run a calculation to see the chart.</div></div>
-    </section>
-
-    <section class="panel table-panel" id="tablePanel" style="display:none">
-      <div class="panel-head">
-        <h2>Amortization schedule</h2>
-        <div class="table-toggles" id="tableToggles">
-          <button type="button" data-view="first12" class="active">First 12</button>
-          <button type="button" data-view="yearly">Yearly summary</button>
-          <button type="button" data-view="all">All</button>
-          <button type="button" id="printBtn" class="ghost" style="margin-left:.4rem">Print</button>
-          <button type="button" id="csvBtn">Export CSV</button>
-        </div>
-      </div>
-      <div class="table-scroll">
-        <table id="amortTable">
-          <thead>
-            <tr><th>#</th><th>Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
-          </thead>
-          <tbody id="amortBody">
-            <tr><td colspan="6" class="table-empty">Run a calculation to build the schedule.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel howto" id="how-to-use">
-      <h2>How to use</h2>
-      <ol>
-        <li><strong>Enter the loan amount</strong> and pick a currency. The amount field accepts plain numbers (e.g. <code style="font-family:var(--mono)">500000000</code>); a formatted preview appears below it.</li>
-        <li><strong>Set the annual interest rate</strong> as a percentage (e.g. <code style="font-family:var(--mono)">8.5</code> for 8.5%) and the loan term in years or months.</li>
-        <li><strong>Choose the interest type.</strong> Annuity = equal payments (standard mortgage). Descending = fixed principal each month. Flat = interest on the original principal for the whole term.</li>
-        <li><strong>Press Calculate</strong> to see the monthly payment, totals, payoff date, effective annual rate, a chart and the full amortization table. Toggle the table between first 12, yearly summary, and all rows.</li>
-        <li><strong>Export</strong> the schedule as CSV for spreadsheets, or press <em>Print</em> for a paper copy.</li>
-      </ol>
-      <div class="formula">
-        <strong style="color:var(--fg)">Formulas</strong> (r = annual rate / 12, n = total months):<br>
-        <code>Annuity</code>:  M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)<br>
-        <code>Descending</code>: principal = P/n, interest = balance · r<br>
-        <code>Flat</code>: M = P/n + P · r<br>
-        <code>Effective annual rate</code>: (1 + IRR<sub>monthly</sub>)<sup>12</sup> − 1, where IRR is solved from the payment cash flow.
-      </div>
-      <div class="actions">
-        <button type="button" class="btn secondary" id="sampleBtn2">Load sample data</button>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
-    </div>
-  </footer>
-
-  <script>
+<script>
   (function(){
     'use strict';
     var $ = function(id){return document.getElementById(id);};
 
     /* ---------- Theme ---------- */
-    var themeToggle = $('themeToggle');
-    themeToggle.addEventListener('click', function(){
-      var cur = document.documentElement.getAttribute('data-theme');
-      var next = cur === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('apps-theme', next);
-    });
 
     /* ---------- State ---------- */
     var state = {
@@ -756,7 +728,7 @@
     $('csvBtn').addEventListener('click', exportCSV);
 
     // re-render chart on theme change (colors differ)
-    themeToggle.addEventListener('click', function(){
+    document.addEventListener('themechange', function(){
       if(lastSummary) setTimeout(function(){ renderChart(lastSummary); }, 50);
     });
 
@@ -768,5 +740,5 @@
     })();
   })();
   </script>
-</body>
+<script data-app-name="Loan Calculator" src="/apps/assets/app-shell.js"></script></body>
 </html>
