@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Unit and currency converter with offline cache. Convert length, mass, temperature, volume, area, speed, time, digital storage and shoe size; convert between 20 currencies using live rates cached in your browser. 100% client-side." />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Unit & Currency Converter with Offline Cache" />
-  <meta property="og:description" content="Convert units (length, mass, temperature, volume, area, speed, time, storage, shoe size) and 20 currencies with rates cached locally for offline use." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/converter/" />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/converter/" />
-  <title>Unit & Currency Converter — Bayhaqy Apps</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ECV%3C/text%3E%3C/svg%3E" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="Unit and currency converter with offline cache. Convert length, mass, temperature, volume, area, speed, time, digital storage and shoe size; convert between 20 currencies using live rates cached in your browser. 100% client-side." name="description"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Unit &amp; Currency Converter with Offline Cache" property="og:title"/>
+<meta content="Convert units (length, mass, temperature, volume, area, speed, time, storage, shoe size) and 20 currencies with rates cached locally for offline use." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/converter/" property="og:url"/>
+<link href="https://bayhaqy.my.id/apps/converter/" rel="canonical"/>
+<title>Unit &amp; Currency Converter — Bayhaqy Apps</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ECV%3C/text%3E%3C/svg%3E" rel="icon"/>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;
@@ -22,7 +22,7 @@
       --fg:#0F172A;
       --muted:#64748B;
       --muted-2:#94A3B8;
-      --accent:#DC2626;
+      --accent:#B91C1C;
       --accent-ink:#FFFFFF;
       --border:rgba(15,23,42,0.10);
       --border-strong:rgba(15,23,42,0.16);
@@ -40,7 +40,7 @@
       --fg:#E2E8F0;
       --muted:#94A3B8;
       --muted-2:#64748B;
-      --accent:#DC2626;
+      --accent:#B91C1C;
       --accent-ink:#FFFFFF;
       --border:rgba(226,232,240,0.10);
       --border-strong:rgba(226,232,240,0.18);
@@ -152,139 +152,110 @@
 
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   </style>
-</head>
-<body>
-  <script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Unit Converter">
+<script>
     (function(){
       var saved = localStorage.getItem('apps-theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="back-link">← All apps</a>
-      <span class="app-title">Converter</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
-        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
-      </button>
-    </div>
-  </header>
+<main class="container">
+<section class="page-head">
+<h1>Unit &amp; Currency Converter</h1>
+<p>Convert length, mass, temperature, volume, area, speed, time, digital storage and shoe sizes, plus 20 world currencies. Currency rates are fetched once and cached in your browser so the converter keeps working Browser-based.</p>
+</section>
+<div class="tabs" role="tablist">
+<button class="active" data-tab="units" id="tabUnits" role="tab">Units</button>
+<button data-tab="currency" id="tabCurrency" role="tab">Currency</button>
+</div>
+<!-- Units panel -->
+<section class="panel" id="unitsPanel">
+<div class="category-row">
+<label>Category</label>
+<div class="chips" id="catChips"></div>
+</div>
+<div class="conv-grid">
+<div class="field">
+<label for="uFromValue">From</label>
+<input id="uFromValue" inputmode="decimal" step="any" type="number" value="1"/>
+<select id="uFromUnit" style="margin-top:.5rem"></select>
+</div>
+<div class="swap-wrap">
+<button aria-label="Swap units" class="swap-btn" id="swapBtn" title="Swap">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+</button>
+</div>
+<div class="field">
+<label for="uToUnit">To</label>
+<input class="out" id="uToValue" readonly="" type="text"/>
+<select id="uToUnit" style="margin-top:.5rem"></select>
+</div>
+</div>
+<div class="formula-row" id="uFormula">—</div>
+<div class="actions">
+<button class="btn secondary" id="sampleUnitsBtn" type="button">Load sample (1 m → ft)</button>
+</div>
+</section>
+<!-- Currency panel -->
+<section class="panel" id="currencyPanel" style="display:none">
+<div class="cur-meta">
+<span class="status" id="curStatus"><span class="dot offline"></span> No rates loaded yet</span>
+<button class="refresh" id="refreshBtn" type="button">Refresh rates</button>
+</div>
+<div class="conv-grid">
+<div class="field">
+<label for="cFromValue">Amount</label>
+<input id="cFromValue" inputmode="decimal" step="any" type="number" value="100"/>
+<select id="cFromCur" style="margin-top:.5rem"></select>
+</div>
+<div class="swap-wrap">
+<button aria-label="Swap currencies" class="swap-btn" id="swapCurBtn" title="Swap">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+</button>
+</div>
+<div class="field">
+<label for="cToCur">Converted</label>
+<input class="out" id="cToValue" readonly="" type="text"/>
+<select id="cToCur" style="margin-top:.5rem"></select>
+</div>
+</div>
+<div class="rate-line" id="curRateLine">—</div>
+<div class="actions">
+<button class="btn secondary" id="sampleCurBtn" type="button">Load sample (100 USD → IDR)</button>
+</div>
+</section>
+<!-- History -->
+<section class="panel">
+<h2>Recent conversions (this session)</h2>
+<ul class="history-list" id="historyList">
+<li class="history-empty">No conversions yet — enter a value above or press a sample button.</li>
+</ul>
+</section>
+<section class="panel howto" id="how-to-use">
+<h2>How to use</h2>
+<ol>
+<li><strong>Units tab:</strong> pick a category (Length, Mass, Temperature, …), type a value, choose the “from” and “to” units. The result updates live and the formula or conversion factor is shown below.</li>
+<li><strong>Swap</strong> the two units instantly with the circular arrow button between them.</li>
+<li><strong>Currency tab:</strong> press <em>Refresh rates</em> once to fetch live exchange rates from a free public API. The rates and a timestamp are cached in your browser (localStorage) so conversions keep working when you go Browser-based.</li>
+<li><strong>Browser-based:</strong> if a refresh fails, the converter falls back to the last cached rates and shows how old they are (e.g. “cached 5 hours ago”).</li>
+<li><strong>History</strong> at the bottom keeps your last 10 conversions for the current tab session. It is not persisted — close the tab and it clears.</li>
+</ol>
+<p class="note">Shoe sizes use adult conversion tables (EU 38 ≈ US 6 ≈ UK 5 as the anchor). Temperature uses exact C/F/K formulas. Digital storage distinguishes decimal (KB = 1000 B) and binary (KiB = 1024 B) units.</p>
+<div class="actions">
+<button class="btn secondary" id="sampleBtnTop" type="button">Load sample data</button>
+</div>
+</section>
+</main>
 
-  <main class="container">
-    <section class="page-head">
-      <h1>Unit &amp; Currency Converter</h1>
-      <p>Convert length, mass, temperature, volume, area, speed, time, digital storage and shoe sizes, plus 20 world currencies. Currency rates are fetched once and cached in your browser so the converter keeps working offline.</p>
-    </section>
-
-    <div class="tabs" role="tablist">
-      <button role="tab" data-tab="units" class="active" id="tabUnits">Units</button>
-      <button role="tab" data-tab="currency" id="tabCurrency">Currency</button>
-    </div>
-
-    <!-- Units panel -->
-    <section class="panel" id="unitsPanel">
-      <div class="category-row">
-        <label>Category</label>
-        <div class="chips" id="catChips"></div>
-      </div>
-      <div class="conv-grid">
-        <div class="field">
-          <label for="uFromValue">From</label>
-          <input type="number" id="uFromValue" value="1" step="any" inputmode="decimal" />
-          <select id="uFromUnit" style="margin-top:.5rem"></select>
-        </div>
-        <div class="swap-wrap">
-          <button class="swap-btn" id="swapBtn" aria-label="Swap units" title="Swap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-          </button>
-        </div>
-        <div class="field">
-          <label for="uToUnit">To</label>
-          <input type="text" id="uToValue" class="out" readonly />
-          <select id="uToUnit" style="margin-top:.5rem"></select>
-        </div>
-      </div>
-      <div class="formula-row" id="uFormula">—</div>
-      <div class="actions">
-        <button type="button" class="btn secondary" id="sampleUnitsBtn">Load sample (1 m → ft)</button>
-      </div>
-    </section>
-
-    <!-- Currency panel -->
-    <section class="panel" id="currencyPanel" style="display:none">
-      <div class="cur-meta">
-        <span class="status" id="curStatus"><span class="dot offline"></span> No rates loaded yet</span>
-        <button type="button" class="refresh" id="refreshBtn">Refresh rates</button>
-      </div>
-      <div class="conv-grid">
-        <div class="field">
-          <label for="cFromValue">Amount</label>
-          <input type="number" id="cFromValue" value="100" step="any" inputmode="decimal" />
-          <select id="cFromCur" style="margin-top:.5rem"></select>
-        </div>
-        <div class="swap-wrap">
-          <button class="swap-btn" id="swapCurBtn" aria-label="Swap currencies" title="Swap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-          </button>
-        </div>
-        <div class="field">
-          <label for="cToCur">Converted</label>
-          <input type="text" id="cToValue" class="out" readonly />
-          <select id="cToCur" style="margin-top:.5rem"></select>
-        </div>
-      </div>
-      <div class="rate-line" id="curRateLine">—</div>
-      <div class="actions">
-        <button type="button" class="btn secondary" id="sampleCurBtn">Load sample (100 USD → IDR)</button>
-      </div>
-    </section>
-
-    <!-- History -->
-    <section class="panel">
-      <h2>Recent conversions (this session)</h2>
-      <ul class="history-list" id="historyList">
-        <li class="history-empty">No conversions yet — enter a value above or press a sample button.</li>
-      </ul>
-    </section>
-
-    <section class="panel howto" id="how-to-use">
-      <h2>How to use</h2>
-      <ol>
-        <li><strong>Units tab:</strong> pick a category (Length, Mass, Temperature, …), type a value, choose the “from” and “to” units. The result updates live and the formula or conversion factor is shown below.</li>
-        <li><strong>Swap</strong> the two units instantly with the circular arrow button between them.</li>
-        <li><strong>Currency tab:</strong> press <em>Refresh rates</em> once to fetch live exchange rates from a free public API. The rates and a timestamp are cached in your browser (localStorage) so conversions keep working when you go offline.</li>
-        <li><strong>Offline:</strong> if a refresh fails, the converter falls back to the last cached rates and shows how old they are (e.g. “cached 5 hours ago”).</li>
-        <li><strong>History</strong> at the bottom keeps your last 10 conversions for the current tab session. It is not persisted — close the tab and it clears.</li>
-      </ol>
-      <p class="note">Shoe sizes use adult conversion tables (EU 38 ≈ US 6 ≈ UK 5 as the anchor). Temperature uses exact C/F/K formulas. Digital storage distinguishes decimal (KB = 1000 B) and binary (KiB = 1024 B) units.</p>
-      <div class="actions">
-        <button type="button" class="btn secondary" id="sampleBtnTop">Load sample data</button>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
+<div class="toast" id="toast"></div>
+<script>
   (function(){
     'use strict';
     var $ = function(id){return document.getElementById(id);};
 
     /* ---------- Theme ---------- */
-    var themeToggle = $('themeToggle');
-    themeToggle.addEventListener('click', function(){
-      var cur = document.documentElement.getAttribute('data-theme');
-      var next = cur === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('apps-theme', next);
-    });
 
     function toast(msg){
       var t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -777,5 +748,5 @@
     }
   })();
   </script>
-</body>
+<script data-app-name="Unit Converter" src="/apps/assets/app-shell.js"></script></body>
 </html>
