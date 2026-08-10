@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A timezone slider for picking meeting times across cities. Drag the hour, see every city's local time, day shift, and business-hours suitability. DST-aware via Intl. 100% client-side." />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Timezone & Meeting Slider" />
-  <meta property="og:description" content="Drag an hour slider, see local time and business-hours status for cities worldwide. DST-aware." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/timezone-slider/" />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/timezone-slider/" />
-  <title>Timezone & Meeting Slider — Pick a Time Across Cities</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ETZ%3C/text%3E%3C/svg%3E" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="A timezone slider for picking meeting times across cities. Drag the hour, see every city's local time, day shift, and business-hours suitability. DST-aware via Intl. 100% client-side." name="description"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Timezone &amp; Meeting Slider" property="og:title"/>
+<meta content="Drag an hour slider, see local time and business-hours status for cities worldwide. DST-aware." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/timezone-slider/" property="og:url"/>
+<link href="https://bayhaqy.my.id/apps/timezone-slider/" rel="canonical"/>
+<title>Timezone &amp; Meeting Slider — Pick a Time Across Cities</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ETZ%3C/text%3E%3C/svg%3E" rel="icon"/>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--muted:#64748B;--muted-2:#94A3B8;
-      --accent:#DC2626;--accent-hover:#B91C1C;
+      --accent:#B91C1C;--accent-hover:#B91C1C;
       --green-bg:#DCFCE7;--green-fg:#15803D;--green-bd:#BBF7D0;
       --amber-bg:#FEF3C7;--amber-fg:#B45309;--amber-bd:#FDE68A;
       --gray-bg:#F1F5F9;--gray-fg:#475569;--gray-bd:#E2E8F0;
@@ -30,7 +30,7 @@
     [data-theme="dark"]{
       --bg:#0B1220;--bg-2:#111A2C;--bg-3:#1A2740;
       --fg:#E2E8F0;--muted:#94A3B8;--muted-2:#64748B;
-      --accent:#EF4444;--accent-hover:#DC2626;
+      --accent:#B91C1C;--accent-hover:#B91C1C;
       --green-bg:rgba(34,197,94,0.14);--green-fg:#86EFAC;--green-bd:rgba(34,197,94,0.3);
       --amber-bg:rgba(245,158,11,0.14);--amber-fg:#FCD34D;--amber-bd:rgba(245,158,11,0.3);
       --gray-bg:rgba(148,163,184,0.12);--gray-fg:#CBD5E1;--gray-bd:rgba(148,163,184,0.2);
@@ -223,76 +223,56 @@
       .hour-display{font-size:1rem}
     }
   </style>
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="back-link">← All apps</a>
-      <span class="app-title">Timezone Slider</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
-      </button>
-    </div>
-  </header>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Timezone Slider">
 
-  <main class="container">
-    <section class="hero">
-      <h1>Timezone &amp; Meeting Slider</h1>
-      <p class="sub">Pick a reference hour, see what the clock reads in cities around the world. DST is handled by your browser's timezone database — no hardcoded offsets, no stale tables.</p>
-    </section>
+<main class="container">
+<section class="hero">
+<h1>Timezone &amp; Meeting Slider</h1>
+<p class="sub">Pick a reference hour, see what the clock reads in cities around the world. DST is handled by your browser's timezone database — no hardcoded offsets, no stale tables.</p>
+</section>
+<section aria-label="Reference time controls" class="ref-panel">
+<div class="ref-top">
+<div class="ref-field">
+<label for="refCity">Reference city</label>
+<select id="refCity"></select>
+</div>
+<div class="ref-actions">
+<button class="btn" id="loadSampleBtn" type="button">Load sample</button>
+<button class="btn" id="copyBtn" type="button">Copy meeting time</button>
+</div>
+</div>
+<div class="slider-row">
+<span class="slider-label">Hour</span>
+<input aria-label="Reference hour" id="hourSlider" max="23" min="0" step="1" type="range" value="14"/>
+<span class="hour-display" id="hourDisplay">14:00</span>
+</div>
+<div class="ref-readout" id="refReadout"></div>
+</section>
+<div class="add-row">
+<input autocomplete="off" class="add-input" id="addInput" list="zoneList" placeholder="Add a city — type a city name or IANA zone (e.g. Bangkok, Asia/Bangkok, Europe/Berlin)" type="text"/>
+<button class="btn btn-primary" id="addBtn" type="button">Add</button>
+<datalist id="zoneList"></datalist>
+</div>
+<div class="cities-head">
+<h2>Cities</h2>
+<span class="count" id="cityCount"></span>
+</div>
+<div class="cities" id="cities"></div>
+<section class="howto">
+<h2>How to use</h2>
+<ol>
+<li>Drag the <code>Hour</code> slider to set the wall-clock time at your reference city. The reference city defaults to your browser's local timezone.</li>
+<li>Each city card shows the local time at that hour, the day shift relative to the reference (<code>Today</code>, <code>Tomorrow</code>, <code>Yesterday</code>), and a business-hours badge.</li>
+<li>Green badge = working hours (9am–6pm). Amber = early/late edge (7–9am or 6–8pm). Gray = outside working hours. Use it to spot a slot that works for everyone.</li>
+<li>Add more cities by typing a city name or IANA timezone (e.g. <code>Bangkok</code> or <code>Asia/Bangkok</code>) and pressing <code>Add</code>. Remove a city with the × on its card.</li>
+<li>Click <code>Copy meeting time</code> to copy a plain-text summary like <em>"Tuesday 2:00 PM Jakarta / Tuesday 3:00 AM New York"</em> to your clipboard.</li>
+</ol>
+</section>
+</main>
 
-    <section class="ref-panel" aria-label="Reference time controls">
-      <div class="ref-top">
-        <div class="ref-field">
-          <label for="refCity">Reference city</label>
-          <select id="refCity"></select>
-        </div>
-        <div class="ref-actions">
-          <button class="btn" id="loadSampleBtn" type="button">Load sample</button>
-          <button class="btn" id="copyBtn" type="button">Copy meeting time</button>
-        </div>
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Hour</span>
-        <input type="range" id="hourSlider" min="0" max="23" step="1" value="14" aria-label="Reference hour" />
-        <span class="hour-display" id="hourDisplay">14:00</span>
-      </div>
-      <div class="ref-readout" id="refReadout"></div>
-    </section>
-
-    <div class="add-row">
-      <input type="text" id="addInput" class="add-input" list="zoneList" placeholder="Add a city — type a city name or IANA zone (e.g. Bangkok, Asia/Bangkok, Europe/Berlin)" autocomplete="off" />
-      <button class="btn btn-primary" id="addBtn" type="button">Add</button>
-      <datalist id="zoneList"></datalist>
-    </div>
-
-    <div class="cities-head">
-      <h2>Cities</h2>
-      <span class="count" id="cityCount"></span>
-    </div>
-    <div class="cities" id="cities"></div>
-
-    <section class="howto">
-      <h2>How to use</h2>
-      <ol>
-        <li>Drag the <code>Hour</code> slider to set the wall-clock time at your reference city. The reference city defaults to your browser's local timezone.</li>
-        <li>Each city card shows the local time at that hour, the day shift relative to the reference (<code>Today</code>, <code>Tomorrow</code>, <code>Yesterday</code>), and a business-hours badge.</li>
-        <li>Green badge = working hours (9am–6pm). Amber = early/late edge (7–9am or 6–8pm). Gray = outside working hours. Use it to spot a slot that works for everyone.</li>
-        <li>Add more cities by typing a city name or IANA timezone (e.g. <code>Bangkok</code> or <code>Asia/Bangkok</code>) and pressing <code>Add</code>. Remove a city with the × on its card.</li>
-        <li>Click <code>Copy meeting time</code> to copy a plain-text summary like <em>"Tuesday 2:00 PM Jakarta / Tuesday 3:00 AM New York"</em> to your clipboard.</li>
-      </ol>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script>
   (function(){
     "use strict";
     var $ = function(id){ return document.getElementById(id); };
@@ -456,7 +436,7 @@
     // ---- Theme ----
     function applyTheme(t){
       document.documentElement.setAttribute("data-theme", t);
-      try{ localStorage.setItem("apps-theme", t); }catch(e){}
+      try{ }catch(e){}
     }
     (function initTheme(){
       var saved = null;
@@ -464,10 +444,6 @@
       if(saved){ applyTheme(saved); }
       else if(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches){ applyTheme("dark"); }
     })();
-    $("themeToggle").addEventListener("click", function(){
-      var cur = document.documentElement.getAttribute("data-theme");
-      applyTheme(cur === "dark" ? "light" : "dark");
-    });
 
     // ---- Toast ----
     var toastEl = $("toast"), toastTimer = null;
@@ -725,5 +701,5 @@
     render();
   })();
   </script>
-</body>
+<script data-app-name="Timezone Slider" src="/apps/assets/app-shell.js"></script></body>
 </html>
