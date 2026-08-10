@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JWT Decoder — paste a JSON Web Token and instantly inspect its header and payload as pretty-printed JSON, with expiry detection. Runs entirely in your browser." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="JWT Decoder — JSON Web Token Inspector" />
+  <meta property="og:description" content="Decode JWT header and payload locally, with expiry detection." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/jwt-decoder/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/jwt-decoder/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>JWT Decoder — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="JWT Decoder">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Security · Auth</p>
+      <h1 class="app-title">JWT <span class="accent">Decoder</span></h1>
+      <p class="app-subtitle">
+        Paste a JSON Web Token and instantly inspect its header and payload as pretty-printed JSON,
+        with expiry detection. Runs entirely in your browser — tokens never leave your machine.
+      </p>
+    </header>
+
+    <section class="card">
+      <label class="field">
+        <span>JWT token</span>
+        <textarea id="jwtInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" rows="4" autocapitalize="none" spellcheck="false"></textarea>
+        <span class="hint">A JWT has three Base64URL parts separated by dots: <span class="text-mono">header.payload.signature</span>.</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="decodeBtn" type="button">Decode</button>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+        <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+      </div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+
+    <section class="grid-2" id="resultGrid" style="display:none; margin-top:1.25rem;">
+      <section class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Header
+        </h2>
+        <pre class="code" id="headerOut"></pre>
+      </section>
+      <section class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Payload
+        </h2>
+        <pre class="code" id="payloadOut"></pre>
+      </section>
+    </section>
+
+    <section class="card" id="metaCard" style="display:none; margin-top:1.25rem;">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Token info
+      </h2>
+      <table class="data" id="metaTable"></table>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="JWT Decoder"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var jwtInput = $('#jwtInput');
+      var decodeBtn = $('#decodeBtn');
+      var sampleBtn = $('#sampleBtn');
+      var clearBtn = $('#clearBtn');
+      var errorCard = $('#errorCard');
+      var errorMsg = $('#errorMsg');
+      var resultGrid = $('#resultGrid');
+      var headerOut = $('#headerOut');
+      var payloadOut = $('#payloadOut');
+      var metaCard = $('#metaCard');
+      var metaTable = $('#metaTable');
+
+      function clearOutput() { errorCard.style.display='none'; resultGrid.style.display='none'; metaCard.style.display='none'; }
+      function showError(m) { clearOutput(); errorCard.style.display='block'; errorMsg.textContent = m; }
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+      function row(k, v) { return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v">' + escapeHtml(v) + '</td></tr>'; }
+
+      function base64UrlDecode(str) {
+        // Convert Base64URL → Base64, then decode as UTF-8.
+        str = str.replace(/-/g, '+').replace(/_/g, '/');
+        // Pad
+        var pad = str.length % 4;
+        if (pad) str += '='.repeat(4 - pad);
+        // atob → binary string → UTF-8 decode
+        var binary = atob(str);
+        var bytes = new Uint8Array(binary.length);
+        for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return new TextDecoder('utf-8').decode(bytes);
+      }
+
+      function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+          var cls = 'tok-num';
+          if (/^"/.test(match)) {
+            cls = /:$/.test(match) ? 'tok-key' : 'tok-str';
+          } else if (/true|false/.test(match)) {
+            cls = 'tok-num';
+          } else if (/null/.test(match)) {
+            cls = 'tok-num';
+          }
+          return '<span class="' + cls + '">' + match + '</span>';
+        });
+      }
+
+      function decode() {
+        clearOutput();
+        var token = jwtInput.value.trim();
+        if (!token) { showError('Paste a JWT first.'); return; }
+        try {
+          var parts = token.split('.');
+          if (parts.length < 2 || parts.length > 3) {
+            throw new Error('A JWT must have 2 or 3 parts separated by dots. Found ' + parts.length + '.');
+          }
+          var headerStr  = base64UrlDecode(parts[0]);
+          var payloadStr = base64UrlDecode(parts[1]);
+          var header, payload;
+          try { header  = JSON.parse(headerStr); }
+          catch (e) { throw new Error('Header is not valid JSON: ' + e.message); }
+          try { payload = JSON.parse(payloadStr); }
+          catch (e) { throw new Error('Payload is not valid JSON: ' + e.message); }
+
+          headerOut.innerHTML  = syntaxHighlight(JSON.stringify(header, null, 2));
+          payloadOut.innerHTML = syntaxHighlight(JSON.stringify(payload, null, 2));
+          resultGrid.style.display = 'grid';
+
+          // Metadata.
+          var rows = '';
+          rows += row('Algorithm', header.alg || '—');
+          rows += row('Type', header.typ || '—');
+          rows += row('Key ID (kid)', header.kid || '—');
+          rows += row('Signature', parts[2] ? parts[2].slice(0, 32) + (parts[2].length > 32 ? '…' : '') : '(unsigned)');
+
+          // Standard claims.
+          if (payload.iss)  rows += row('Issuer (iss)', payload.iss);
+          if (payload.sub)  rows += row('Subject (sub)', payload.sub);
+          if (payload.aud)  rows += row('Audience (aud)', payload.aud);
+          if (payload.jti)  rows += row('JWT ID (jti)', payload.jti);
+          if (payload.scope) rows += row('Scopes', payload.scope);
+
+          // Times.
+          var now = Math.floor(Date.now() / 1000);
+          if (payload.iat) {
+            var iatDate = new Date(payload.iat * 1000);
+            rows += row('Issued at (iat)', iatDate.toLocaleString() + '  ·  ' + (now - payload.iat) + 's ago');
+          }
+          if (payload.nbf) {
+            var nbfDate = new Date(payload.nbf * 1000);
+            var until = payload.nbf - now;
+            rows += row('Not before (nbf)', nbfDate.toLocaleString() + '  ·  ' + (until > 0 ? 'in ' + until + 's' : Math.abs(until) + 's ago'));
+          }
+          if (payload.exp) {
+            var expDate = new Date(payload.exp * 1000);
+            var diff = payload.exp - now;
+            var status = diff > 0 ? '<span class="pill green">valid for ' + diff + 's</span>' : '<span class="pill">expired ' + Math.abs(diff) + 's ago</span>';
+            rows += row('Expires (exp)', expDate.toLocaleString() + '  ·  ' + status);
+          } else {
+            rows += row('Expires (exp)', '<span class="pill muted">no exp claim</span>');
+          }
+
+          metaTable.innerHTML = '<tbody>' + rows + '</tbody>';
+          metaCard.style.display = 'block';
+        } catch (e) {
+          showError(e.message || String(e));
+        }
+      }
+
+      decodeBtn.addEventListener('click', decode);
+      jwtInput.addEventListener('input', function () { if (jwtInput.value.trim()) decode(); });
+      jwtInput.addEventListener('paste', function () { setTimeout(decode, 10); });
+      clearBtn.addEventListener('click', function () { jwtInput.value=''; clearOutput(); });
+
+      var samples = [
+        // JWT.io sample token (HS256)
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+        // Sample with exp claim in the future
+        'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiYXloYXF5Lm15LmlkIiwic3ViIjoiYmF5aGFxeSIsImF1ZCI6ImFwcHMiLCJpYXQiOjE3MzAwMDAwMDAsImV4cCI6OTk5OTk5OTk5OSwicm9sZSI6ImFkbWluIn0.signature',
+        // Sample expired token
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkV4cGlyZWQgVXNlciIsImlhdCI6MTUwMDAwMDAwMCwiZXhwIjoxNTAwMDAwMDAwfQ.abc'
+      ];
+      var si = 0;
+      sampleBtn.addEventListener('click', function () { si = (si + 1) % samples.length; jwtInput.value = samples[si]; decode(); });
+
+      setTimeout(decode, 150);
+    })();
+  </script>
+</body>
+</html>
