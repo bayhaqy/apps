@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Base64 & Hex Encoder/Decoder — convert text ⇄ Base64 ⇄ Hex, inspect files as Base64 or hex dumps. Pure browser, no uploads." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Base64 & Hex Encoder / Decoder" />
+  <meta property="og:description" content="Convert text ⇄ Base64 ⇄ Hex, inspect files as Base64 or hex dumps." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/base64-hex/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/base64-hex/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Base64 & Hex Encoder — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Base64 / Hex">
+  <main class="app-main">
+    <header class="app-hero">
+      <p class="app-eyebrow">DevOps · Encoding</p>
+      <h1 class="app-title">Base64 &amp; Hex <span class="accent">Encoder / Decoder</span></h1>
+      <p class="app-subtitle">
+        Convert text ⇄ Base64 ⇄ Hex, inspect files as Base64 or hex dumps, and URL-encode/decode
+        query parameters. Pure browser, no uploads.
+      </p>
+    </header>
+
+    <section class="card">
+      <div class="flex-between">
+        <span class="pill">Input</span>
+        <div class="radio-row">
+          <label><input type="radio" name="mode" value="text" checked /> Text</label>
+          <label><input type="radio" name="mode" value="file" /> File</label>
+        </div>
+      </div>
+
+      <div id="textMode" class="mt-2">
+        <label class="field">
+          <span>Text input</span>
+          <textarea id="textInput" rows="3" placeholder="Hello, world!" autocapitalize="none" spellcheck="false">Hello, world!</textarea>
+        </label>
+      </div>
+      <div id="fileMode" class="mt-2" style="display:none;">
+        <label class="field">
+          <span>File</span>
+          <input type="file" id="fileInput" />
+          <span class="hint">Files up to a few MB work well. Larger files may be slow.</span>
+        </label>
+        <p id="fileMeta" class="text-mute text-sm"></p>
+      </div>
+
+      <div class="flex-between">
+        <span class="text-sm text-mute">Live encoding (text mode)</span>
+        <label class="text-sm"><input type="checkbox" id="urlSafe" /> URL-safe Base64 (<code>-</code>/<code>_</code>)</label>
+      </div>
+    </section>
+
+    <div class="grid-2" style="margin-top:1.25rem;">
+      <section class="card">
+        <div class="flex-between">
+          <h2 class="card-title" style="margin:0;">Base64</h2>
+          <button class="btn btn-ghost" data-copy-target="b64Out" type="button" style="padding:0.3rem 0.7rem; font-size:0.8rem;">Copy</button>
+        </div>
+        <div class="output" id="b64Out">—</div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="b64DecodeBtn" type="button">Decode → text</button>
+        </div>
+      </section>
+      <section class="card">
+        <div class="flex-between">
+          <h2 class="card-title" style="margin:0;">Hex</h2>
+          <button class="btn btn-ghost" data-copy-target="hexOut" type="button" style="padding:0.3rem 0.7rem; font-size:0.8rem;">Copy</button>
+        </div>
+        <div class="output" id="hexOut">—</div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="hexDecodeBtn" type="button">Decode → text</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.25rem;">
+      <section class="card">
+        <div class="flex-between">
+          <h2 class="card-title" style="margin:0;">URL-encoded</h2>
+          <button class="btn btn-ghost" data-copy-target="urlOut" type="button" style="padding:0.3rem 0.7rem; font-size:0.8rem;">Copy</button>
+        </div>
+        <div class="output" id="urlOut">—</div>
+      </section>
+      <section class="card">
+        <div class="flex-between">
+          <h2 class="card-title" style="margin:0;">Hex dump (offsets)</h2>
+          <button class="btn btn-ghost" data-copy-target="dumpOut" type="button" style="padding:0.3rem 0.7rem; font-size:0.8rem;">Copy</button>
+        </div>
+        <pre class="code" id="dumpOut" style="max-height:300px; overflow:auto;">—</pre>
+      </section>
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Base64 / Hex"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var textMode = $('#textMode');
+      var fileMode = $('#fileMode');
+      var textInput = $('#textInput');
+      var fileInput = $('#fileInput');
+      var fileMeta = $('#fileMeta');
+      var urlSafe = $('#urlSafe');
+      var b64Out = $('#b64Out');
+      var hexOut = $('#hexOut');
+      var urlOut = $('#urlOut');
+      var dumpOut = $('#dumpOut');
+
+      document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+        r.addEventListener('change', function () {
+          var v = document.querySelector('input[name="mode"]:checked').value;
+          textMode.style.display = v === 'text' ? 'block' : 'none';
+          fileMode.style.display = v === 'file' ? 'block' : 'none';
+          if (v === 'text') update();
+        });
+      });
+
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+
+      function bytesToBase64(bytes, urlSafe) {
+        var binary = '';
+        for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        var b64 = btoa(binary);
+        if (urlSafe) b64 = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        return b64;
+      }
+      function base64ToBytes(b64) {
+        // Convert URL-safe → standard, pad.
+        b64 = b64.replace(/-/g, '+').replace(/_/g, '/');
+        var pad = b64.length % 4;
+        if (pad) b64 += '='.repeat(4 - pad);
+        var binary = atob(b64);
+        var bytes = new Uint8Array(binary.length);
+        for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+      function bytesToHex(bytes) {
+        var hex = '';
+        for (var i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
+        return hex;
+      }
+      function hexToBytes(hex) {
+        hex = hex.replace(/[^0-9a-fA-F]/g, '');
+        if (hex.length % 2) hex = '0' + hex;
+        var bytes = new Uint8Array(hex.length / 2);
+        for (var i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+        return bytes;
+      }
+      function bytesToDump(bytes) {
+        if (bytes.length === 0) return '';
+        var lines = [];
+        for (var off = 0; off < bytes.length; off += 16) {
+          var chunk = bytes.subarray(off, Math.min(off + 16, bytes.length));
+          var hexPart = '';
+          var ascii = '';
+          for (var i = 0; i < 16; i++) {
+            if (i < chunk.length) {
+              hexPart += chunk[i].toString(16).padStart(2, '0') + ' ';
+              var c = chunk[i];
+              ascii += (c >= 32 && c <= 126) ? String.fromCharCode(c) : '.';
+            } else {
+              hexPart += '   ';
+            }
+          }
+          lines.push(off.toString(16).padStart(8, '0') + '  ' + hexPart + ' |' + ascii + '|');
+        }
+        return lines.join('\n');
+      }
+      function bytesToText(bytes) {
+        return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+      }
+      function textToBytes(text) {
+        return new TextEncoder().encode(text);
+      }
+
+      function setOut(el, content, isError) {
+        el.textContent = content || '—';
+        el.classList.toggle('empty', !content);
+        el.classList.toggle('error', !!isError);
+      }
+
+      function update() {
+        var mode = document.querySelector('input[name="mode"]:checked').value;
+        if (mode === 'text') {
+          var text = textInput.value;
+          var bytes = textToBytes(text);
+          render(bytes);
+        }
+        // File mode handled by file change handler.
+      }
+
+      function render(bytes) {
+        setOut(b64Out, bytesToBase64(bytes, urlSafe.checked));
+        setOut(hexOut, bytesToHex(bytes));
+        try { setOut(urlOut, encodeURIComponent(bytesToText(bytes))); } catch (e) { setOut(urlOut, '(error)', true); }
+        dumpOut.textContent = bytesToDump(bytes) || '—';
+      }
+
+      textInput.addEventListener('input', update);
+      urlSafe.addEventListener('change', update);
+
+      fileInput.addEventListener('change', function (e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        fileMeta.textContent = f.name + ' · ' + f.size.toLocaleString() + ' bytes · ' + (f.type || 'unknown');
+        var r = new FileReader();
+        r.onload = function () { render(new Uint8Array(r.result)); };
+        r.readAsArrayBuffer(f);
+      });
+
+      // Decode buttons: take the corresponding output, decode → text input.
+      $('#b64DecodeBtn').addEventListener('click', function () {
+        try {
+          var bytes = base64ToBytes(b64Out.textContent.trim());
+          textInput.value = bytesToText(bytes);
+          document.querySelector('input[name="mode"][value="text"]').checked = true;
+          textMode.style.display = 'block'; fileMode.style.display = 'none';
+          update();
+          window.showToast('Decoded to text');
+        } catch (e) { window.showToast('Invalid Base64'); }
+      });
+      $('#hexDecodeBtn').addEventListener('click', function () {
+        try {
+          var bytes = hexToBytes(hexOut.textContent.trim());
+          textInput.value = bytesToText(bytes);
+          document.querySelector('input[name="mode"][value="text"]').checked = true;
+          textMode.style.display = 'block'; fileMode.style.display = 'none';
+          update();
+          window.showToast('Decoded to text');
+        } catch (e) { window.showToast('Invalid hex'); }
+      });
+
+      // Copy buttons.
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-copy-target]');
+        if (!btn) return;
+        var id = btn.getAttribute('data-copy-target');
+        var el = document.getElementById(id);
+        if (!el) return;
+        window.copyText(el.textContent).then(function (ok) { window.showToast(ok ? 'Copied' : 'Copy failed'); });
+      });
+
+      setTimeout(update, 150);
+    })();
+  </script>
+</body>
+</html>
