@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="QR Code Studio — generate QR codes for text, URLs, Wi-Fi, email, phone, SMS, and vCards with custom colors and error correction, and scan QR codes from your camera or an image. 100% client-side." />
+  <meta name="keywords" content="QR code generator, QR code scanner, wifi QR, vCard QR, email QR, SMS QR, phone QR, custom QR code, camera QR scanner, image QR scanner, offline QR" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="QR Code Studio — Generate & Scan QR Codes In Your Browser" />
+  <meta property="og:description" content="Generate QR codes for text, URL, Wi-Fi, email, phone, SMS, and vCard with custom colors. Scan QR codes from camera or image. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/qr-studio/" />
+  <meta property="og:site_name" content="QR Code Studio" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="QR Code Studio — Generate & Scan QR Codes" />
+  <meta name="twitter:description" content="Generate QR codes for any content type with custom colors. Scan QR codes from camera or image. 100% client-side." />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/qr-studio/" />
+  <title>QR Code Studio — Generate & Scan QR Codes In Your Browser</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EQR%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "QR Code Studio",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://bayhaqy.my.id/apps/qr-studio/",
+    "description": "Generate QR codes for text, URL, Wi-Fi, email, phone, SMS, and vCard with custom colors and error correction. Scan QR codes from your camera or an uploaded image. 100% client-side.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Achmad Bayhaqy", "url": "https://bayhaqy.my.id/" },
+    "featureList": [
+      "Generate QR codes for 7 content types: text, URL, Wi-Fi, email, phone, SMS, vCard",
+      "Custom foreground/background colors, size 128–1024px, L/M/Q/H error correction, 1–10 module margin",
+      "Live preview canvas, download as PNG or SVG, copy to clipboard",
+      "Scan QR codes from device camera with live overlay",
+      "Camera selector for front/back, plus image upload fallback",
+      "Session-only scan history (no persistence)"
+    ]
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--fg-2:#1E293B;--muted:#64748B;--muted-2:#94A3B8;
+      --accent:#DC2626;--accent-dark:#B91C1C;
+      --green:#059669;--amber:#D97706;
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.10);--card-border-hover:rgba(15,23,42,0.18);
+      --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.10);
+      --radius:10px;--radius-sm:8px;--radius-xs:6px;
+      --max-w:1040px;
+      --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    }
+    [data-theme="dark"]{
+      --bg:#0B1220;--bg-2:#111827;--bg-3:#1E293B;
+      --fg:#F1F5F9;--fg-2:#E2E8F0;--muted:#94A3B8;--muted-2:#64748B;
+      --accent:#EF4444;--accent-dark:#DC2626;
+      --green:#10B981;--amber:#F59E0B;
+      --card-bg:#111827;--card-border:rgba(241,245,249,0.08);--card-border-hover:rgba(241,245,249,0.18);
+      --chip-bg:rgba(30,41,59,0.7);--chip-border:rgba(241,245,249,0.08);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:var(--sans);
+      background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+      transition:background-color .2s ease,color .2s ease;
+      -webkit-font-smoothing:antialiased;
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--card-border);
+    }
+    [data-theme="dark"] header.site-header{background:rgba(11,18,32,0.92)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:1rem}
+    .back-link{
+      color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;
+      padding:.35rem .55rem;border-radius:var(--radius-xs);transition:color .15s,background .15s;
+    }
+    .back-link:hover{color:var(--fg);background:var(--chip-bg)}
+    .app-title{font-weight:700;font-size:1rem;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
+    .app-title .mono-badge{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:26px;height:26px;border-radius:6px;background:var(--accent);color:#fff;
+      font-size:.7rem;font-weight:700;letter-spacing:-.02em;
+    }
+    .theme-toggle{
+      width:34px;height:34px;border-radius:var(--radius-xs);border:1px solid var(--card-border);
+      background:var(--bg-2);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:1rem;transition:background .15s,border-color .15s;
+    }
+    .theme-toggle:hover{background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Hero */
+    .hero{padding:2rem 0 1rem}
+    .hero h1{font-size:1.65rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.4rem}
+    .hero p{color:var(--muted);font-size:.95rem;max-width:680px}
+
+    /* Tabs */
+    .tabs{
+      display:inline-flex;background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-xs);padding:3px;gap:2px;margin-bottom:1.25rem;
+    }
+    .tab{
+      padding:.45rem 1.1rem;border:none;background:transparent;cursor:pointer;
+      font-size:.88rem;font-weight:600;color:var(--muted);border-radius:5px;
+      font-family:inherit;transition:background .15s,color .15s;
+    }
+    .tab:hover{color:var(--fg)}
+    .tab.active{background:var(--card-bg);color:var(--fg);box-shadow:0 1px 2px rgba(15,23,42,0.08)}
+    [data-theme="dark"] .tab.active{background:var(--bg-3);box-shadow:0 1px 2px rgba(0,0,0,0.4)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* Layout */
+    .gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start}
+    @media(max-width:720px){.gen-grid{grid-template-columns:1fr}}
+
+    .card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.25rem;
+    }
+    .card h3{font-size:.95rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between}
+    .card h3 .pill{
+      font-size:.7rem;font-weight:600;color:var(--muted);background:var(--chip-bg);
+      padding:.2rem .5rem;border-radius:999px;letter-spacing:.03em;text-transform:uppercase;
+    }
+
+    .field{margin-bottom:.75rem}
+    .field label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+    .input,select.input,textarea.input{
+      width:100%;padding:.55rem .7rem;border:1px solid var(--card-border);border-radius:var(--radius-xs);
+      background:var(--bg);color:var(--fg);font-size:.9rem;font-family:inherit;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(220,38,38,0.12)}
+    .input.mono{font-family:var(--mono);font-size:.85rem}
+    textarea.input{resize:vertical;min-height:80px}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+    @media(max-width:540px){.field-row-3{grid-template-columns:1fr}}
+
+    .type-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:.4rem;margin-bottom:1rem;
+    }
+    .type-btn{
+      padding:.55rem .4rem;border:1px solid var(--card-border);background:var(--bg);
+      color:var(--muted);cursor:pointer;border-radius:var(--radius-xs);
+      font-size:.82rem;font-weight:600;font-family:inherit;
+      transition:background .15s,color .15s,border-color .15s;
+      display:flex;flex-direction:column;align-items:center;gap:.25rem;
+    }
+    .type-btn:hover{background:var(--chip-bg);color:var(--fg)}
+    .type-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .type-btn svg{width:18px;height:18px}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+      padding:.55rem .95rem;border-radius:var(--radius-xs);border:1px solid transparent;
+      font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;
+      transition:background .15s,border-color .15s,opacity .15s,transform .05s;
+      text-decoration:none;
+    }
+    .btn:active{transform:translateY(.5px)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover:not(:disabled){background:var(--accent-dark)}
+    .btn-ghost{background:var(--bg-2);color:var(--fg);border-color:var(--card-border)}
+    .btn-ghost:hover:not(:disabled){background:var(--chip-bg);border-color:var(--card-border-hover)}
+    .btn-subtle{background:transparent;color:var(--muted);border-color:transparent;font-size:.82rem;padding:.4rem .65rem}
+    .btn-subtle:hover:not(:disabled){color:var(--fg);background:var(--chip-bg)}
+    .btn svg{width:14px;height:14px;flex-shrink:0}
+    .btn-block{width:100%}
+    .btn-row{display:flex;gap:.4rem;flex-wrap:wrap}
+    .btn-row .btn{flex:1;min-width:90px}
+
+    /* Customize panel */
+    .custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem .6rem}
+    .color-field{display:flex;align-items:center;gap:.5rem}
+    .color-field input[type=color]{
+      width:36px;height:34px;border:1px solid var(--card-border);border-radius:var(--radius-xs);
+      background:transparent;cursor:pointer;padding:2px;
+    }
+    .color-field .hex{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+    .slider-field{display:flex;flex-direction:column;gap:.25rem}
+    .slider-row{display:flex;align-items:center;gap:.6rem}
+    .slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+    .slider-row .val{font-family:var(--mono);font-size:.82rem;color:var(--accent);font-weight:700;min-width:3ch;text-align:right}
+
+    /* Preview */
+    .preview-card{position:sticky;top:80px}
+    .preview-wrap{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius-xs);
+      padding:1.5rem;min-height:280px;
+    }
+    #previewCanvas{max-width:100%;height:auto;border-radius:4px;background:#fff;display:none}
+    .preview-placeholder{
+      color:var(--muted-2);font-size:.85rem;text-align:center;
+    }
+    .preview-placeholder svg{width:36px;height:36px;margin-bottom:.5rem;opacity:.6}
+    .preview-meta{
+      margin-top:.75rem;font-size:.78rem;color:var(--muted);text-align:center;font-family:var(--mono);
+      word-break:break-all;width:100%;
+    }
+    .preview-actions{display:flex;gap:.4rem;margin-top:.85rem;flex-wrap:wrap}
+    .preview-actions .btn{flex:1;min-width:80px}
+
+    /* Scan mode */
+    .scan-wrap{max-width:640px;margin:0 auto}
+    .scan-video-wrap{
+      position:relative;background:#000;border-radius:var(--radius);overflow:hidden;
+      aspect-ratio:1;max-width:480px;margin:0 auto;
+    }
+    .scan-video-wrap video{width:100%;height:100%;object-fit:cover;display:block}
+    .scan-overlay{
+      position:absolute;inset:0;pointer-events:none;
+    }
+    .scan-overlay::before{
+      content:"";position:absolute;top:12%;left:12%;right:12%;bottom:12%;
+      border:2px solid rgba(220,38,38,0.7);border-radius:8px;
+      box-shadow:0 0 0 9999px rgba(0,0,0,0.35);
+    }
+    .scan-overlay::after{
+      content:"";position:absolute;left:12%;right:12%;top:50%;height:2px;
+      background:var(--accent);animation:scanLine 2s ease-in-out infinite;
+    }
+    @keyframes scanLine{
+      0%,100%{transform:translateY(-120%);opacity:0}
+      50%{transform:translateY(120%);opacity:1}
+    }
+    .scan-state{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      flex-direction:column;color:#fff;background:rgba(0,0,0,0.5);padding:1.5rem;text-align:center;
+    }
+    .scan-state h4{font-size:1rem;margin-bottom:.35rem;font-weight:600}
+    .scan-state p{font-size:.82rem;opacity:.85;max-width:280px}
+    .scan-controls{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.85rem;align-items:center;justify-content:center}
+    .scan-controls select{
+      padding:.45rem .6rem;border-radius:var(--radius-xs);border:1px solid var(--card-border);
+      background:var(--bg);color:var(--fg);font-size:.82rem;font-family:inherit;
+    }
+    .scan-result{
+      margin-top:1rem;padding:.85rem 1rem;background:var(--bg-2);border:1px solid var(--card-border);
+      border-radius:var(--radius-xs);
+    }
+    .scan-result.none{display:none}
+    .scan-result .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;margin-bottom:.3rem}
+    .scan-result .value{
+      font-family:var(--mono);font-size:.85rem;word-break:break-all;line-height:1.5;color:var(--fg);
+      max-height:120px;overflow:auto;
+    }
+    .scan-result .actions{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap}
+
+    .scan-history{margin-top:1.25rem}
+    .scan-history h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;margin-bottom:.5rem}
+    .history-list{display:flex;flex-direction:column;gap:.4rem}
+    .history-item{
+      display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+      background:var(--bg-2);border:1px solid var(--card-border);
+      padding:.55rem .75rem;border-radius:var(--radius-xs);font-size:.82rem;
+    }
+    .history-item .text{font-family:var(--mono);word-break:break-all;color:var(--fg);flex:1;min-width:0}
+    .history-item .time{color:var(--muted-2);font-size:.72rem;flex-shrink:0}
+
+    /* How to use */
+    .howto{padding:2rem 0 3rem;border-top:1px solid var(--card-border);margin-top:2rem}
+    .howto h2{font-size:1.35rem;letter-spacing:-.01em;margin-bottom:.4rem;font-weight:700}
+    .howto > .container > p{color:var(--muted);margin-bottom:1.25rem;font-size:.92rem;max-width:640px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+    .step-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:var(--radius);padding:1.1rem;
+    }
+    .step-num{
+      width:26px;height:26px;border-radius:6px;background:var(--chip-bg);color:var(--accent);
+      font-weight:700;font-size:.82rem;font-family:var(--mono);
+      display:flex;align-items:center;justify-content:center;margin-bottom:.55rem;
+    }
+    .step-card h4{font-size:.92rem;margin-bottom:.3rem;font-weight:600}
+    .step-card p{font-size:.83rem;color:var(--muted);line-height:1.55}
+
+    /* Toast */
+    .toast{
+      position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(150%);
+      background:var(--fg);color:var(--bg);padding:.7rem 1.1rem;border-radius:var(--radius-xs);
+      font-size:.85rem;font-weight:500;box-shadow:0 8px 20px -6px rgba(0,0,0,0.3);
+      transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:300;max-width:90vw;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.error{background:var(--accent);color:#fff}
+    .toast.success{background:var(--green);color:#fff}
+
+    /* Footer */
+    footer.site-footer{border-top:1px solid var(--card-border);padding:1.5rem 0;margin-top:2rem}
+    .footer-text{font-size:.82rem;color:var(--muted);text-align:center}
+    .footer-text a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-text a:hover{text-decoration:underline}
+
+    @media(max-width:540px){
+      .hero{padding:1.25rem 0 .75rem}
+      .hero h1{font-size:1.35rem}
+      .preview-card{position:static}
+      .custom-grid{grid-template-columns:1fr}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <script>
+    (function(){
+      var saved = localStorage.getItem('apps-theme');
+      if (!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/" class="back-link">← All apps</a>
+      <span class="app-title"><span class="mono-badge">QR</span> QR Code Studio</span>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Generate &amp; scan QR codes</h1>
+      <p>Build QR codes for text, URLs, Wi-Fi, email, phone, SMS, or vCards with custom colors and error-correction levels. Or scan codes with your camera. Everything runs in your browser — no uploads, no API calls.</p>
+    </section>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="generate" role="tab">Generate</button>
+      <button class="tab" data-tab="scan" role="tab">Scan</button>
+    </div>
+
+    <!-- GENERATE PANEL -->
+    <section id="tab-generate" class="tab-panel active">
+      <div class="gen-grid">
+        <div class="card">
+          <h3>Content <button class="btn btn-subtle" id="sampleBtn">Load sample</button></h3>
+
+          <div class="type-grid" id="typeGrid">
+            <button class="type-btn active" data-type="text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              Text
+            </button>
+            <button class="type-btn" data-type="url">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              URL
+            </button>
+            <button class="type-btn" data-type="wifi">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              Wi-Fi
+            </button>
+            <button class="type-btn" data-type="email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email
+            </button>
+            <button class="type-btn" data-type="phone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Phone
+            </button>
+            <button class="type-btn" data-type="sms">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              SMS
+            </button>
+            <button class="type-btn" data-type="vcard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              vCard
+            </button>
+          </div>
+
+          <!-- Text -->
+          <div class="type-form" data-form="text">
+            <div class="field">
+              <label for="t-text">Text content</label>
+              <textarea id="t-text" class="input" rows="3" placeholder="Any text you want to encode…"></textarea>
+            </div>
+          </div>
+
+          <!-- URL -->
+          <div class="type-form" data-form="url" style="display:none">
+            <div class="field">
+              <label for="t-url">URL</label>
+              <input id="t-url" type="text" class="input" placeholder="https://example.com" />
+            </div>
+          </div>
+
+          <!-- Wi-Fi -->
+          <div class="type-form" data-form="wifi" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label for="wf-ssid">Network name (SSID)</label>
+                <input id="wf-ssid" type="text" class="input" placeholder="MyHomeWiFi" />
+              </div>
+              <div class="field">
+                <label for="wf-pass">Password</label>
+                <input id="wf-pass" type="text" class="input mono" placeholder="Welcome2024" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="wf-enc">Encryption</label>
+                <select id="wf-enc" class="input">
+                  <option value="WPA">WPA/WPA2</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">None (open)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="wf-hidden">Hidden network</label>
+                <select id="wf-hidden" class="input">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="type-form" data-form="email" style="display:none">
+            <div class="field">
+              <label for="em-to">To</label>
+              <input id="em-to" type="email" class="input" placeholder="friend@example.com" />
+            </div>
+            <div class="field">
+              <label for="em-subject">Subject</label>
+              <input id="em-subject" type="text" class="input" placeholder="Hello" />
+            </div>
+            <div class="field">
+              <label for="em-body">Body</label>
+              <textarea id="em-body" class="input" rows="3" placeholder="Message body…"></textarea>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="type-form" data-form="phone" style="display:none">
+            <div class="field">
+              <label for="ph-num">Phone number</label>
+              <input id="ph-num" type="tel" class="input mono" placeholder="+6281234567890" />
+            </div>
+          </div>
+
+          <!-- SMS -->
+          <div class="type-form" data-form="sms" style="display:none">
+            <div class="field">
+              <label for="sm-num">Phone number</label>
+              <input id="sm-num" type="tel" class="input mono" placeholder="+6281234567890" />
+            </div>
+            <div class="field">
+              <label for="sm-msg">Message</label>
+              <textarea id="sm-msg" class="input" rows="3" placeholder="Hey, scan this QR to text me!"></textarea>
+            </div>
+          </div>
+
+          <!-- vCard -->
+          <div class="type-form" data-form="vcard" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label for="vc-name">Full name</label>
+                <input id="vc-name" type="text" class="input" placeholder="Achmad Bayhaqy" />
+              </div>
+              <div class="field">
+                <label for="vc-org">Organization</label>
+                <input id="vc-org" type="text" class="input" placeholder="Company" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="vc-phone">Phone</label>
+                <input id="vc-phone" type="tel" class="input mono" placeholder="+6281234567890" />
+              </div>
+              <div class="field">
+                <label for="vc-email">Email</label>
+                <input id="vc-email" type="email" class="input" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="vc-url">URL</label>
+              <input id="vc-url" type="url" class="input" placeholder="https://bayhaqy.my.id" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Customization + Preview -->
+        <div>
+          <div class="card preview-card" style="margin-bottom:1rem">
+            <h3>Preview</h3>
+            <div class="preview-wrap">
+              <canvas id="previewCanvas" width="256" height="256"></canvas>
+              <div class="preview-placeholder" id="previewPlaceholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="14" y1="14" x2="14" y2="14.01"/><line x1="20" y1="14" x2="20" y2="14.01"/><line x1="17" y1="17" x2="17" y2="17.01"/><line x1="14" y1="20" x2="14" y2="20.01"/><line x1="20" y1="20" x2="20" y2="20.01"/></svg>
+                <div>Enter content to generate QR</div>
+              </div>
+            </div>
+            <div class="preview-meta" id="previewMeta"></div>
+            <div class="preview-actions">
+              <button class="btn btn-ghost" id="copyPngBtn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+              <button class="btn btn-ghost" id="downloadPngBtn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                PNG
+              </button>
+              <button class="btn btn-ghost" id="downloadSvgBtn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                SVG
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Customize</h3>
+            <div class="custom-grid">
+              <div class="field">
+                <label for="fgColor">Foreground</label>
+                <div class="color-field">
+                  <input type="color" id="fgColor" value="#000000" />
+                  <span class="hex" id="fgHex">#000000</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="bgColor">Background</label>
+                <div class="color-field">
+                  <input type="color" id="bgColor" value="#FFFFFF" />
+                  <span class="hex" id="bgHex">#FFFFFF</span>
+                </div>
+              </div>
+              <div class="field slider-field" style="grid-column:1/-1">
+                <label for="sizeRange">Size: <span class="val" id="sizeVal">256</span>px</label>
+                <div class="slider-row">
+                  <input type="range" id="sizeRange" min="128" max="1024" step="32" value="256" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="ecLevel">Error correction</label>
+                <select id="ecLevel" class="input">
+                  <option value="L">L — 7%</option>
+                  <option value="M" selected>M — 15%</option>
+                  <option value="Q">Q — 25%</option>
+                  <option value="H">H — 30%</option>
+                </select>
+              </div>
+              <div class="field slider-field">
+                <label for="marginRange">Margin: <span class="val" id="marginVal">2</span></label>
+                <div class="slider-row">
+                  <input type="range" id="marginRange" min="0" max="10" step="1" value="2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCAN PANEL -->
+    <section id="tab-scan" class="tab-panel">
+      <div class="scan-wrap">
+        <div class="card">
+          <h3>Scan QR from camera <span class="pill" id="scanPill">Idle</span></h3>
+          <div class="scan-video-wrap">
+            <video id="scanVideo" playsinline muted></video>
+            <div class="scan-overlay" id="scanOverlay" style="display:none"></div>
+            <div class="scan-state" id="scanState">
+              <h4>Camera is off</h4>
+              <p>Click "Start camera" below. You'll be asked for camera permission. The video feed never leaves your device.</p>
+            </div>
+          </div>
+          <div class="scan-controls">
+            <button class="btn btn-primary" id="startCamBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              Start camera
+            </button>
+            <button class="btn btn-ghost" id="stopCamBtn" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+              Stop
+            </button>
+            <select id="cameraSelect" aria-label="Choose camera" disabled>
+              <option value="">Default camera</option>
+            </select>
+            <button class="btn btn-ghost" id="uploadScanBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload image
+            </button>
+            <input type="file" id="scanFileInput" accept="image/*" style="display:none" />
+          </div>
+
+          <div class="scan-result none" id="scanResult">
+            <div class="label">Detected content</div>
+            <div class="value" id="scanValue"></div>
+            <div class="actions">
+              <button class="btn btn-ghost" id="copyScanBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+              <button class="btn btn-ghost" id="openScanBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Open
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="scan-history" id="scanHistory" style="display:none">
+          <h4>Recent scans (this session)</h4>
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO USE -->
+    <section class="howto" id="how-to-use">
+      <div class="container">
+        <h2>How to use</h2>
+        <p>Two modes: generate a QR code from your content, or scan one with your camera or an image file.</p>
+        <div class="steps-grid">
+          <div class="step-card"><div class="step-num">01</div><h4>Pick a content type</h4><p>Choose Text, URL, Wi-Fi, Email, Phone, SMS, or vCard from the row of buttons at the top.</p></div>
+          <div class="step-card"><div class="step-num">02</div><h4>Fill the form</h4><p>The input fields adapt to the type you chose. The preview updates live as you type.</p></div>
+          <div class="step-card"><div class="step-num">03</div><h4>Customize (optional)</h4><p>Change colors, size, error-correction level, and margin. Higher error correction lets the QR survive smudges.</p></div>
+          <div class="step-card"><div class="step-num">04</div><h4>Export</h4><p>Download as PNG or SVG, or copy the PNG to your clipboard to paste into a document or image editor.</p></div>
+          <div class="step-card"><div class="step-num">05</div><h4>Scan</h4><p>Switch to the Scan tab, allow camera access, point at a QR code. Or upload an image to scan instead.</p></div>
+        </div>
+        <div style="margin-top:1rem">
+          <button class="btn btn-ghost" id="howtoSampleBtn">Load Wi-Fi sample</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-text">Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <a id="downloadLink" style="display:none"></a>
+
+<script>
+"use strict";
+/* ============================================================
+   QR Code Studio — generate + scan, fully client-side.
+   Generation: qrcode@1.5.4 (CDN)
+   Scanning:   jsQR@1.4.0 (CDN) + getUserMedia camera loop
+   ============================================================ */
+
+var STATE = {
+  type: 'text',
+  fg: '#000000',
+  bg: '#FFFFFF',
+  size: 256,
+  ec: 'M',
+  margin: 2,
+  lastText: '',
+  scan: {
+    stream: null,
+    video: null,
+    canvas: null,
+    ctx: null,
+    raf: null,
+    running: false,
+    devices: [],
+    deviceId: '',
+    history: []
+  }
+};
+
+function $(id){ return document.getElementById(id); }
+function $$(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+
+/* ---------- content formatters ---------- */
+function escapeWifi(s){
+  // escape special chars per Wi-Fi QR spec (backslash, semicolon, comma, colon, quote)
+  return String(s||'').replace(/([\\;,:"])/g, '\\$1');
+}
+function escapeMailto(s){
+  return encodeURIComponent(String(s||''));
+}
+function escapeVcard(s){
+  return String(s||'').replace(/([\\;,])/g, '\\$1').replace(/\n/g,'\\n');
+}
+
+function buildContent(){
+  var t = STATE.type;
+  if (t === 'text'){
+    return $('t-text').value;
+  }
+  if (t === 'url'){
+    var u = $('t-url').value.trim();
+    return u;
+  }
+  if (t === 'wifi'){
+    var ssid = $('wf-ssid').value;
+    var pass = $('wf-pass').value;
+    var enc = $('wf-enc').value;
+    var hidden = $('wf-hidden').value;
+    // Per Wi-Fi QR format: WIFI:T:<enc>;S:<ssid>;P:<pass>;H:<hidden>;;
+    if (enc === 'nopass'){
+      return 'WIFI:T:nopass;S:'+escapeWifi(ssid)+';H:'+hidden+';;';
+    }
+    return 'WIFI:T:'+enc+';S:'+escapeWifi(ssid)+';P:'+escapeWifi(pass)+';H:'+hidden+';;';
+  }
+  if (t === 'email'){
+    var to = $('em-to').value.trim();
+    var subj = $('em-subject').value;
+    var body = $('em-body').value;
+    if (!to) return '';
+    var params = [];
+    if (subj) params.push('subject='+escapeMailto(subj));
+    if (body) params.push('body='+escapeMailto(body));
+    return 'mailto:'+escapeMailto(to) + (params.length ? '?'+params.join('&') : '');
+  }
+  if (t === 'phone'){
+    var num = $('ph-num').value.trim();
+    if (!num) return '';
+    return 'tel:'+num;
+  }
+  if (t === 'sms'){
+    var snum = $('sm-num').value.trim();
+    var smsg = $('sm-msg').value;
+    if (!snum) return '';
+    return 'smsto:'+snum+':'+smsg;
+  }
+  if (t === 'vcard'){
+    var name = $('vc-name').value;
+    var org = $('vc-org').value;
+    var phone = $('vc-phone').value;
+    var email = $('vc-email').value;
+    var url = $('vc-url').value.trim();
+    if (!name && !phone && !email) return '';
+    var lines = ['BEGIN:VCARD','VERSION:3.0'];
+    lines.push('FN:'+escapeVcard(name));
+    lines.push('N:'+escapeVcard(name)+';;;');
+    if (org) lines.push('ORG:'+escapeVcard(org));
+    if (phone) lines.push('TEL;TYPE=CELL:'+phone);
+    if (email) lines.push('EMAIL:'+email);
+    if (url) lines.push('URL:'+url);
+    lines.push('END:VCARD');
+    return lines.join('\n');
+  }
+  return '';
+}
+
+/* ---------- generation ---------- */
+function isHexLight(hex){
+  if (!hex || hex.length < 7) return false;
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  // relative luminance (approx)
+  return (0.299*r + 0.587*g + 0.114*b) > 180;
+}
+
+function renderQR(){
+  var text = buildContent();
+  STATE.lastText = text;
+  var canvas = $('previewCanvas');
+  var placeholder = $('previewPlaceholder');
+  var meta = $('previewMeta');
+  var downloadPng = $('downloadPngBtn');
+  var downloadSvg = $('downloadSvgBtn');
+  var copyPng = $('copyPngBtn');
+
+  if (!text || !text.trim()){
+    canvas.style.display = 'none';
+    placeholder.style.display = 'block';
+    meta.textContent = '';
+    downloadPng.disabled = downloadSvg.disabled = copyPng.disabled = true;
+    return;
+  }
+  if (typeof QRCode === 'undefined'){
+    meta.textContent = 'QR library failed to load. Check your network.';
+    return;
+  }
+  // QRCode.toCanvas uses width as the target pixel size of the canvas
+  var opts = {
+    errorCorrectionLevel: STATE.ec,
+    margin: STATE.margin,
+    width: STATE.size,
+    color: { dark: STATE.fg, light: STATE.bg }
+  };
+  QRCode.toCanvas(canvas, text, opts, function(err){
+    if (err){
+      canvas.style.display = 'none';
+      placeholder.style.display = 'block';
+      placeholder.querySelector('div').textContent = 'Cannot encode: ' + (err.message || 'input too long for this error-correction level');
+      meta.textContent = '';
+      downloadPng.disabled = downloadSvg.disabled = copyPng.disabled = true;
+      return;
+    }
+    canvas.style.display = 'block';
+    placeholder.style.display = 'none';
+    // adjust display size if canvas bigger than viewport
+    var displayMax = 320;
+    if (STATE.size > displayMax){
+      canvas.style.width = displayMax + 'px';
+      canvas.style.height = displayMax + 'px';
+    } else {
+      canvas.style.width = '';
+      canvas.style.height = '';
+    }
+    var len = text.length;
+    meta.textContent = len + ' chars · ' + STATE.size + '×' + STATE.size + ' · EC ' + STATE.ec;
+    downloadPng.disabled = downloadSvg.disabled = copyPng.disabled = false;
+  });
+}
+
+function downloadPng(){
+  if (!STATE.lastText) return;
+  var canvas = $('previewCanvas');
+  // render at full requested size to a temp canvas for crisp output
+  var tmp = document.createElement('canvas');
+  tmp.width = STATE.size; tmp.height = STATE.size;
+  var opts = {
+    errorCorrectionLevel: STATE.ec, margin: STATE.margin, width: STATE.size,
+    color: { dark: STATE.fg, light: STATE.bg }
+  };
+  QRCode.toCanvas(tmp, STATE.lastText, opts, function(err){
+    if (err) { showToast('Cannot generate PNG', 'error'); return; }
+    tmp.toBlob(function(blob){
+      var url = URL.createObjectURL(blob);
+      var a = $('downloadLink');
+      a.href = url; a.download = 'qr-' + Date.now() + '.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      showToast('PNG downloaded', 'success');
+    });
+  });
+}
+
+function downloadSvg(){
+  if (!STATE.lastText) return;
+  var opts = {
+    errorCorrectionLevel: STATE.ec, margin: STATE.margin,
+    color: { dark: STATE.fg, light: STATE.bg }
+  };
+  QRCode.toString(STATE.lastText, Object.assign({}, opts, { type: 'svg' }), function(err, svg){
+    if (err) { showToast('Cannot generate SVG', 'error'); return; }
+    var blob = new Blob([svg], { type: 'image/svg+xml' });
+    var url = URL.createObjectURL(blob);
+    var a = $('downloadLink');
+    a.href = url; a.download = 'qr-' + Date.now() + '.svg';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    showToast('SVG downloaded', 'success');
+  });
+}
+
+function copyPng(){
+  if (!STATE.lastText) return;
+  var canvas = $('previewCanvas');
+  var tmp = document.createElement('canvas');
+  tmp.width = STATE.size; tmp.height = STATE.size;
+  var opts = {
+    errorCorrectionLevel: STATE.ec, margin: STATE.margin, width: STATE.size,
+    color: { dark: STATE.fg, light: STATE.bg }
+  };
+  QRCode.toCanvas(tmp, STATE.lastText, opts, function(err){
+    if (err) { showToast('Cannot copy', 'error'); return; }
+    tmp.toBlob(function(blob){
+      if (!navigator.clipboard || !window.ClipboardItem){
+        // fallback: download instead
+        var url = URL.createObjectURL(blob);
+        var a = $('downloadLink');
+        a.href = url; a.download = 'qr-' + Date.now() + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        showToast('Clipboard not supported — downloaded instead', 'success');
+        return;
+      }
+      var item = new ClipboardItem({ 'image/png': blob });
+      navigator.clipboard.write([item]).then(function(){
+        showToast('QR copied to clipboard', 'success');
+      }).catch(function(e){
+        showToast('Copy failed: ' + e.message, 'error');
+      });
+    });
+  });
+}
+
+/* ---------- sample ---------- */
+function loadSample(){
+  // switch to wifi type
+  selectType('wifi');
+  $('wf-ssid').value = 'MyHomeWiFi';
+  $('wf-pass').value = 'Welcome2024';
+  $('wf-enc').value = 'WPA';
+  $('wf-hidden').value = 'false';
+  renderQR();
+  showToast('Wi-Fi sample loaded', 'success');
+}
+
+/* ---------- type switching ---------- */
+function selectType(t){
+  STATE.type = t;
+  $$('.type-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-type') === t); });
+  $$('.type-form').forEach(function(f){
+    f.style.display = f.getAttribute('data-form') === t ? '' : 'none';
+  });
+  renderQR();
+}
+
+/* ---------- scanning ---------- */
+async function startCamera(){
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showToast('Camera API not supported in this browser', 'error');
+    return;
+  }
+  if (typeof jsQR === 'undefined'){
+    showToast('jsQR library failed to load', 'error');
+    return;
+  }
+  var constraints = {
+    audio: false,
+    video: { facingMode: 'environment' }
+  };
+  if (STATE.scan.deviceId){
+    constraints.video = { deviceId: { exact: STATE.scan.deviceId } };
+  }
+  try {
+    var stream = await navigator.mediaDevices.getUserMedia(constraints);
+    STATE.scan.stream = stream;
+    var video = $('scanVideo');
+    video.srcObject = stream;
+    await video.play();
+    STATE.scan.video = video;
+    STATE.scan.canvas = document.createElement('canvas');
+    STATE.scan.ctx = STATE.scan.canvas.getContext('2d', { willReadFrequently: true });
+    STATE.scan.running = true;
+    $('scanState').style.display = 'none';
+    $('scanOverlay').style.display = 'block';
+    $('startCamBtn').disabled = true;
+    $('stopCamBtn').disabled = false;
+    $('scanPill').textContent = 'Scanning';
+    // enumerate cameras now that we have permission
+    enumerateCameras();
+    scanLoop();
+  } catch(e){
+    var msg = e.message || 'Permission denied';
+    $('scanState').querySelector('h4').textContent = 'Camera blocked';
+    $('scanState').querySelector('p').textContent = 'Allow camera access in your browser settings, then click Start camera again. ('+msg+')';
+    $('scanState').style.display = 'flex';
+    showToast('Camera error: ' + msg, 'error');
+  }
+}
+
+async function enumerateCameras(){
+  try {
+    var devices = await navigator.mediaDevices.enumerateDevices();
+    var videos = devices.filter(function(d){ return d.kind === 'videoinput'; });
+    STATE.scan.devices = videos;
+    var sel = $('cameraSelect');
+    sel.innerHTML = '<option value="">Default camera</option>' + videos.map(function(d, i){
+      var label = d.label || ('Camera ' + (i+1));
+      // strip long prefix like "camera 0, Facing back, Orientation..."
+      label = label.split(',')[0];
+      return '<option value="'+d.id+'">'+label+'</option>';
+    }).join('');
+    sel.disabled = videos.length < 2;
+  } catch(e){}
+}
+
+function stopCamera(){
+  if (STATE.scan.raf){ cancelAnimationFrame(STATE.scan.raf); STATE.scan.raf = null; }
+  STATE.scan.running = false;
+  if (STATE.scan.stream){
+    STATE.scan.stream.getTracks().forEach(function(t){ t.stop(); });
+    STATE.scan.stream = null;
+  }
+  var video = $('scanVideo');
+  video.srcObject = null;
+  video.pause();
+  $('scanOverlay').style.display = 'none';
+  $('scanState').style.display = 'flex';
+  $('scanState').querySelector('h4').textContent = 'Camera is off';
+  $('scanState').querySelector('p').textContent = 'Click "Start camera" below. You\'ll be asked for camera permission. The video feed never leaves your device.';
+  $('startCamBtn').disabled = false;
+  $('stopCamBtn').disabled = true;
+  $('scanPill').textContent = 'Idle';
+}
+
+function scanLoop(){
+  if (!STATE.scan.running) return;
+  var video = STATE.scan.video;
+  if (video && video.readyState === video.HAVE_ENOUGH_DATA){
+    var w = video.videoWidth, h = video.videoHeight;
+    if (w > 0 && h > 0){
+      // downscale large frames for performance
+      var maxDim = 640;
+      var scale = Math.min(1, maxDim / Math.max(w, h));
+      var cw = Math.max(1, Math.floor(w * scale));
+      var ch = Math.max(1, Math.floor(h * scale));
+      STATE.scan.canvas.width = cw;
+      STATE.scan.canvas.height = ch;
+      STATE.scan.ctx.drawImage(video, 0, 0, cw, ch);
+      try {
+        var img = STATE.scan.ctx.getImageData(0, 0, cw, ch);
+        var code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
+        if (code && code.data){
+          onScanDetected(code.data);
+        }
+      } catch(e){}
+    }
+  }
+  STATE.scan.raf = requestAnimationFrame(scanLoop);
+}
+
+var lastDetection = { text: '', time: 0 };
+function onScanDetected(text){
+  // debounce: same code within 1.5s = no re-trigger
+  var now = Date.now();
+  if (text === lastDetection.text && now - lastDetection.time < 1500) return;
+  lastDetection = { text: text, time: now };
+  showScanResult(text);
+  // optional haptic
+  if (navigator.vibrate) try { navigator.vibrate(100); } catch(e){}
+}
+
+function showScanResult(text){
+  var box = $('scanResult');
+  box.classList.remove('none');
+  $('scanValue').textContent = text;
+  // determine if openable as URL
+  var openBtn = $('openScanBtn');
+  if (/^(https?:\/\/|mailto:|tel:|smsto:|sms:|wifi:)/i.test(text)){
+    openBtn.style.display = '';
+    openBtn.onclick = function(){
+      if (/^wifi:/i.test(text)){
+        showToast('Wi-Fi QR — copy and paste into your phone\'s Wi-Fi settings', 'success');
+      } else if (/^smsto:/i.test(text)){
+        var parts = text.slice(6).split(':');
+        window.location.href = 'sms:' + (parts[0]||'') + (parts[1] ? '?body='+encodeURIComponent(parts[1]) : '');
+      } else {
+        window.open(text, '_blank', 'noopener');
+      }
+    };
+  } else {
+    openBtn.style.display = 'none';
+  }
+  // add to session history
+  STATE.scan.history.unshift({ text: text, time: new Date() });
+  if (STATE.scan.history.length > 10) STATE.scan.history.pop();
+  renderHistory();
+  // brief visual feedback on overlay
+  var overlay = $('scanOverlay');
+  overlay.style.opacity = '0.4';
+  setTimeout(function(){ overlay.style.opacity = '1'; }, 200);
+}
+
+function renderHistory(){
+  var box = $('scanHistory');
+  var list = $('historyList');
+  if (STATE.scan.history.length === 0){ box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  list.innerHTML = STATE.scan.history.map(function(item){
+    var t = item.time;
+    var ts = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0')+':'+t.getSeconds().toString().padStart(2,'0');
+    return '<div class="history-item"><span class="text">'+escapeHtml(item.text)+'</span><span class="time">'+ts+'</span></div>';
+  }).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+/* scan from image file */
+function scanImageFile(file){
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var canvas = document.createElement('canvas');
+      var maxDim = 1024;
+      var scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      canvas.width = Math.floor(img.width * scale);
+      canvas.height = Math.floor(img.height * scale);
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      try {
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var code = jsQR(data.data, data.width, data.height, { inversionAttempts: 'attemptBoth' });
+        if (code && code.data){
+          onScanDetected(code.data);
+          showToast('QR detected in image', 'success');
+        } else {
+          showToast('No QR code found in this image', 'error');
+        }
+      } catch(err){
+        showToast('Cannot read image: ' + err.message, 'error');
+      }
+    };
+    img.onerror = function(){ showToast('Cannot load image', 'error'); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---------- tabs ---------- */
+function switchTab(name){
+  $$('.tab').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-tab') === name); });
+  $$('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'tab-' + name); });
+  if (name !== 'scan' && STATE.scan.running){
+    stopCamera();
+  }
+}
+
+/* ---------- toast ---------- */
+var toastTimer = null;
+function showToast(msg, type){
+  var t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.className = 'toast'; }, 2800);
+}
+
+/* ---------- theme ---------- */
+function toggleTheme(){
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('apps-theme', next);
+}
+
+/* ---------- wire up ---------- */
+document.addEventListener('DOMContentLoaded', function(){
+  $('themeToggle').addEventListener('click', toggleTheme);
+
+  // tabs
+  $$('.tab').forEach(function(t){
+    t.addEventListener('click', function(){ switchTab(t.getAttribute('data-tab')); });
+  });
+
+  // type buttons
+  $$('.type-btn').forEach(function(b){
+    b.addEventListener('click', function(){ selectType(b.getAttribute('data-type')); });
+  });
+
+  // sample
+  $('sampleBtn').addEventListener('click', loadSample);
+  $('howtoSampleBtn').addEventListener('click', loadSample);
+
+  // all form inputs trigger re-render
+  var inputIds = ['t-text','t-url','wf-ssid','wf-pass','wf-enc','wf-hidden','em-to','em-subject','em-body','ph-num','sm-num','sm-msg','vc-name','vc-org','vc-phone','vc-email','vc-url'];
+  inputIds.forEach(function(id){
+    var el = $(id);
+    if (el){
+      el.addEventListener('input', renderQR);
+      el.addEventListener('change', renderQR);
+    }
+  });
+
+  // customization
+  $('fgColor').addEventListener('input', function(){
+    STATE.fg = this.value;
+    $('fgHex').textContent = this.value.toUpperCase();
+    renderQR();
+  });
+  $('bgColor').addEventListener('input', function(){
+    STATE.bg = this.value;
+    $('bgHex').textContent = this.value.toUpperCase();
+    renderQR();
+  });
+  $('sizeRange').addEventListener('input', function(){
+    STATE.size = parseInt(this.value, 10);
+    $('sizeVal').textContent = STATE.size;
+    renderQR();
+  });
+  $('marginRange').addEventListener('input', function(){
+    STATE.margin = parseInt(this.value, 10);
+    $('marginVal').textContent = STATE.margin;
+    renderQR();
+  });
+  $('ecLevel').addEventListener('change', function(){
+    STATE.ec = this.value;
+    renderQR();
+  });
+
+  // export
+  $('downloadPngBtn').addEventListener('click', downloadPng);
+  $('downloadSvgBtn').addEventListener('click', downloadSvg);
+  $('copyPngBtn').addEventListener('click', copyPng);
+
+  // scan controls
+  $('startCamBtn').addEventListener('click', startCamera);
+  $('stopCamBtn').addEventListener('click', stopCamera);
+  $('cameraSelect').addEventListener('change', function(){
+    STATE.scan.deviceId = this.value;
+    if (STATE.scan.running){
+      // restart with new camera
+      stopCamera();
+      setTimeout(startCamera, 150);
+    }
+  });
+  $('uploadScanBtn').addEventListener('click', function(){ $('scanFileInput').click(); });
+  $('scanFileInput').addEventListener('change', function(){
+    if (this.files && this.files[0]) scanImageFile(this.files[0]);
+    this.value = '';
+  });
+  $('copyScanBtn').addEventListener('click', function(){
+    var v = $('scanValue').textContent;
+    if (!v) return;
+    navigator.clipboard.writeText(v).then(function(){
+      showToast('Copied', 'success');
+    }).catch(function(){ showToast('Copy failed', 'error'); });
+  });
+
+  // initial render
+  renderQR();
+
+  // stop camera when leaving page
+  window.addEventListener('beforeunload', function(){
+    if (STATE.scan.running) stopCamera();
+  });
+  // pause scan loop when tab hidden
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden && STATE.scan.running){
+      // keep stream but pause loop
+      if (STATE.scan.raf){ cancelAnimationFrame(STATE.scan.raf); STATE.scan.raf = null; }
+    } else if (!document.hidden && STATE.scan.running && !STATE.scan.raf){
+      scanLoop();
+    }
+  });
+});
+</script>
+</body>
+</html>
