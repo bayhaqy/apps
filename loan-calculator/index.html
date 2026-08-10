@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Loan, mortgage and interest calculator. Compute monthly payments, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. Runs 100% in your browser." />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="theme-color" content="#DC2626" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Loan, Mortgage & Interest Calculator" />
+  <meta property="og:description" content="Compute monthly payments and a full amortization schedule for flat, annuity and descending-interest loans. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/loan-calculator/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/loan-calculator/" />
+  <title>Loan, Mortgage & Interest Calculator — Bayhaqy Apps</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='44' font-weight='bold' fill='white' text-anchor='middle'%3ELC%3C/text%3E%3C/svg%3E" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;
+      --bg-2:#F8FAFC;
+      --bg-3:#F1F5F9;
+      --fg:#0F172A;
+      --muted:#64748B;
+      --muted-2:#94A3B8;
+      --accent:#DC2626;
+      --accent-ink:#FFFFFF;
+      --border:rgba(15,23,42,0.10);
+      --border-strong:rgba(15,23,42,0.16);
+      --green:#0F766E;
+      --radius:10px;
+      --radius-sm:8px;
+      --max-w:1080px;
+      --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    }
+    [data-theme="dark"]{
+      --bg:#0B1220;
+      --bg-2:#111A2B;
+      --bg-3:#1A2538;
+      --fg:#E2E8F0;
+      --muted:#94A3B8;
+      --muted-2:#64748B;
+      --accent:#DC2626;
+      --accent-ink:#FFFFFF;
+      --border:rgba(226,232,240,0.10);
+      --border-strong:rgba(226,232,240,0.18);
+      --green:#14B8A6;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+      background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      transition:background-color .2s ease,color .2s ease;
+    }
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:var(--bg);
+      border-bottom:1px solid var(--border);
+    }
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 0}
+    .back-link{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500;padding:.35rem .1rem;white-space:nowrap}
+    .back-link:hover{color:var(--fg)}
+    .app-title{font-weight:700;font-size:.95rem;letter-spacing:-.01em;flex:1;text-align:center;color:var(--fg)}
+    .theme-toggle{
+      width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+      background:var(--bg-2);color:var(--fg);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:.95rem;line-height:1;transition:background .15s,border-color .15s;
+    }
+    .theme-toggle:hover{background:var(--bg-3);border-color:var(--border-strong)}
+    .theme-toggle .icon-sun{display:none}
+    [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+    [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+    /* Page head */
+    .page-head{padding:2rem 0 1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+    .page-head h1{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:.4rem}
+    .page-head p{color:var(--muted);font-size:.95rem;max-width:680px}
+
+    /* Layout */
+    .layout{display:grid;grid-template-columns:380px 1fr;gap:1.25rem;margin-bottom:1.25rem}
+    @media(max-width:820px){.layout{grid-template-columns:1fr}}
+
+    .panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.15rem;margin-bottom:1.25rem}
+    .panel h2{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.85rem}
+
+    /* Form fields */
+    .field{margin-bottom:.85rem}
+    .field label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+    .field .hint{font-size:.72rem;color:var(--muted-2);font-weight:400;margin-top:.25rem}
+    .field input[type=number],
+    .field input[type=date],
+    .field input[type=text],
+    .field select{
+      width:100%;padding:.55rem .65rem;border:1px solid var(--border);border-radius:var(--radius-sm);
+      background:var(--bg-2);color:var(--fg);font-size:.92rem;font-family:inherit;
+      transition:border-color .15s,background .15s;
+    }
+    .field input:focus,.field select:focus{outline:none;border-color:var(--accent);background:var(--bg)}
+    .field input[type=number]{font-family:var(--mono)}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg-2)}
+    .seg button{flex:1;background:transparent;border:none;color:var(--muted);padding:.5rem .7rem;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .12s,color .12s}
+    .seg button.active{background:var(--accent);color:var(--accent-ink)}
+    .radio-group{display:flex;flex-direction:column;gap:.4rem}
+    .radio-opt{display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .6rem;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:var(--bg-2);transition:border-color .12s,background .12s}
+    .radio-opt:hover{border-color:var(--border-strong)}
+    .radio-opt input{margin-top:.18rem;accent-color:var(--accent)}
+    .radio-opt .ro-title{font-size:.85rem;font-weight:600;display:block}
+    .radio-opt .ro-sub{font-size:.72rem;color:var(--muted-2);display:block;margin-top:.05rem}
+
+    .actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem .9rem;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);transition:background .12s,opacity .12s;text-decoration:none}
+    .btn:hover{background:#B91C1C;border-color:#B91C1C}
+    .btn.secondary{background:var(--bg-2);color:var(--fg);border-color:var(--border)}
+    .btn.secondary:hover{background:var(--bg-3);border-color:var(--border-strong)}
+    .btn.ghost{background:transparent;color:var(--fg);border-color:var(--border)}
+    .btn.ghost:hover{background:var(--bg-2)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+
+    /* Output */
+    .output-panel .result-big{padding:.85rem 0;border-bottom:1px solid var(--border);margin-bottom:.85rem}
+    .output-panel .result-big .label{display:block;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.2rem}
+    .output-panel .result-big .value{font-size:1.9rem;font-weight:700;letter-spacing:-.02em;font-family:var(--mono);color:var(--fg);word-break:break-word}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    @media(max-width:480px){.result-grid{grid-template-columns:1fr}}
+    .result-cell{padding:.65rem .7rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm)}
+    .result-cell .label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.15rem}
+    .result-cell .value{font-size:1rem;font-weight:600;font-family:var(--mono);color:var(--fg);word-break:break-word}
+    .result-cell .sub{font-size:.7rem;color:var(--muted-2);margin-top:.1rem}
+    .note{font-size:.72rem;color:var(--muted-2);margin-top:.7rem;line-height:1.45}
+    .note.warn{color:var(--accent)}
+
+    /* Chart */
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.85rem;flex-wrap:wrap}
+    .panel-head h2{margin-bottom:0}
+    .legend{display:inline-flex;align-items:center;gap:.8rem;font-size:.75rem;color:var(--muted)}
+    .legend .dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+    .legend .dot.principal{background:var(--accent)}
+    .legend .dot.interest{background:var(--muted-2)}
+    .chart-wrap{width:100%;overflow:hidden}
+    .chart-wrap svg{display:block;width:100%;height:auto}
+    .chart-empty{font-size:.85rem;color:var(--muted);padding:1.5rem 0;text-align:center}
+
+    /* Table */
+    .table-toggles{display:flex;gap:.35rem;flex-wrap:wrap}
+    .table-toggles button{padding:.35rem .6rem;font-size:.78rem;font-weight:600;border:1px solid var(--border);background:var(--bg-2);color:var(--muted);border-radius:6px;cursor:pointer;font-family:inherit;transition:background .12s,color .12s,border-color .12s}
+    .table-toggles button:hover{border-color:var(--border-strong);color:var(--fg)}
+    .table-toggles button.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+    .table-scroll{overflow:auto;max-height:480px;border:1px solid var(--border);border-radius:var(--radius-sm)}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    thead th{position:sticky;top:0;background:var(--bg-3);color:var(--muted);font-weight:600;text-align:right;padding:.5rem .65rem;border-bottom:1px solid var(--border);white-space:nowrap;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+    thead th:first-child{text-align:left}
+    tbody td{padding:.45rem .65rem;border-bottom:1px solid var(--border);text-align:right;font-family:var(--mono);white-space:nowrap}
+    tbody td:first-child{text-align:left;font-family:inherit;color:var(--muted)}
+    tbody tr:hover{background:var(--bg-2)}
+    tbody tr.summary-row td{font-weight:700;background:var(--bg-3);color:var(--fg)}
+    .table-empty{padding:1.5rem;text-align:center;color:var(--muted);font-size:.85rem}
+
+    /* How to use */
+    .howto ol{margin:.2rem 0 .9rem 1.1rem;color:var(--fg);font-size:.9rem;line-height:1.6}
+    .howto ol li{margin-bottom:.4rem}
+    .howto ol li strong{color:var(--fg)}
+    .howto .formula{font-family:var(--mono);font-size:.78rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .75rem;margin-top:.5rem;color:var(--muted);overflow-x:auto}
+    .howto .formula code{color:var(--fg)}
+
+    /* Footer */
+    footer.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:1.5rem}
+    .footer-inner{font-size:.8rem;color:var(--muted);text-align:center}
+    .footer-inner a{color:var(--accent);text-decoration:none;font-weight:500}
+    .footer-inner a:hover{text-decoration:underline}
+
+    @media print{
+      header.site-header,footer.site-footer,.actions,.table-toggles,.theme-toggle,.chart-panel,.howto,.page-head{display:none!important}
+      .panel{border:none;padding:0;margin-bottom:.5rem}
+      .table-scroll{max-height:none;border:none;overflow:visible}
+      body{background:#fff;color:#000}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <script>
+    (function(){
+      var saved = localStorage.getItem('apps-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/" class="back-link">← All apps</a>
+      <span class="app-title">Loan Calculator</span>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <h1>Loan, Mortgage &amp; Interest Calculator</h1>
+      <p>Compute the monthly payment, total interest, effective annual rate and a full amortization schedule for flat, annuity and descending-interest loans. All math runs locally in your browser — nothing is sent anywhere.</p>
+    </section>
+
+    <section class="layout">
+      <div class="panel input-panel">
+        <h2>Inputs</h2>
+        <form id="loanForm" autocomplete="off">
+          <div class="field">
+            <label for="amount">Loan amount</label>
+            <input type="number" id="amount" min="0" step="any" value="500000000" inputmode="decimal" />
+            <div class="hint" id="amountHint">Formatted: Rp 500.000.000</div>
+          </div>
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency">
+              <option value="IDR" selected>IDR — Indonesian Rupiah</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GBP">GBP — British Pound</option>
+              <option value="JPY">JPY — Japanese Yen</option>
+              <option value="SGD">SGD — Singapore Dollar</option>
+              <option value="custom">Custom (no symbol)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="rate">Annual interest rate (%)</label>
+            <input type="number" id="rate" min="0" step="any" value="8.5" inputmode="decimal" />
+          </div>
+          <div class="field">
+            <label>Loan term</label>
+            <div class="field-row" style="grid-template-columns:1fr 110px">
+              <input type="number" id="term" min="1" step="1" value="10" inputmode="numeric" />
+              <div class="seg" id="termUnit" role="group">
+                <button type="button" data-unit="years" class="active">Years</button>
+                <button type="button" data-unit="months">Months</button>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Interest type</label>
+            <div class="radio-group" id="interestType">
+              <label class="radio-opt">
+                <input type="radio" name="itype" value="annuity" checked />
+                <span><span class="ro-title">Effective (Annuity)</span><span class="ro-sub">Equal monthly payment. Most common for mortgages.</span></span>
+              </label>
+              <label class="radio-opt">
+                <input type="radio" name="itype" value="descending" />
+                <span><span class="ro-title">Effective (Descending)</span><span class="ro-sub">Fixed principal + interest on remaining balance.</span></span>
+              </label>
+              <label class="radio-opt">
+                <input type="radio" name="itype" value="flat" />
+                <span><span class="ro-title">Flat</span><span class="ro-sub">Interest charged on original principal throughout.</span></span>
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="startDate">Start date</label>
+            <input type="date" id="startDate" />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn" id="calcBtn">Calculate</button>
+            <button type="button" class="btn secondary" id="sampleBtn">Load sample</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel output-panel">
+        <h2>Summary</h2>
+        <div class="result-big">
+          <span class="label">Monthly payment</span>
+          <span class="value" id="outMonthly">—</span>
+        </div>
+        <div class="result-grid">
+          <div class="result-cell"><span class="label">Total interest</span><span class="value" id="outInterest">—</span></div>
+          <div class="result-cell"><span class="label">Total payment</span><span class="value" id="outTotal">—</span></div>
+          <div class="result-cell"><span class="label">Payoff date</span><span class="value" id="outPayoff">—</span></div>
+          <div class="result-cell"><span class="label">Effective annual rate</span><span class="value" id="outEAR">—</span><span class="sub" id="outEARSub">nominal: —</span></div>
+        </div>
+        <p class="note" id="outNote"></p>
+      </div>
+    </section>
+
+    <section class="panel chart-panel" id="chartPanel" style="display:none">
+      <div class="panel-head">
+        <h2>Principal vs interest over time</h2>
+        <div class="legend"><span><span class="dot principal"></span>Principal</span><span><span class="dot interest"></span>Interest</span></div>
+      </div>
+      <div class="chart-wrap" id="chartWrap"><div class="chart-empty">Run a calculation to see the chart.</div></div>
+    </section>
+
+    <section class="panel table-panel" id="tablePanel" style="display:none">
+      <div class="panel-head">
+        <h2>Amortization schedule</h2>
+        <div class="table-toggles" id="tableToggles">
+          <button type="button" data-view="first12" class="active">First 12</button>
+          <button type="button" data-view="yearly">Yearly summary</button>
+          <button type="button" data-view="all">All</button>
+          <button type="button" id="printBtn" class="ghost" style="margin-left:.4rem">Print</button>
+          <button type="button" id="csvBtn">Export CSV</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table id="amortTable">
+          <thead>
+            <tr><th>#</th><th>Date</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
+          </thead>
+          <tbody id="amortBody">
+            <tr><td colspan="6" class="table-empty">Run a calculation to build the schedule.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel howto" id="how-to-use">
+      <h2>How to use</h2>
+      <ol>
+        <li><strong>Enter the loan amount</strong> and pick a currency. The amount field accepts plain numbers (e.g. <code style="font-family:var(--mono)">500000000</code>); a formatted preview appears below it.</li>
+        <li><strong>Set the annual interest rate</strong> as a percentage (e.g. <code style="font-family:var(--mono)">8.5</code> for 8.5%) and the loan term in years or months.</li>
+        <li><strong>Choose the interest type.</strong> Annuity = equal payments (standard mortgage). Descending = fixed principal each month. Flat = interest on the original principal for the whole term.</li>
+        <li><strong>Press Calculate</strong> to see the monthly payment, totals, payoff date, effective annual rate, a chart and the full amortization table. Toggle the table between first 12, yearly summary, and all rows.</li>
+        <li><strong>Export</strong> the schedule as CSV for spreadsheets, or press <em>Print</em> for a paper copy.</li>
+      </ol>
+      <div class="formula">
+        <strong style="color:var(--fg)">Formulas</strong> (r = annual rate / 12, n = total months):<br>
+        <code>Annuity</code>:  M = P · r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)<br>
+        <code>Descending</code>: principal = P/n, interest = balance · r<br>
+        <code>Flat</code>: M = P/n + P · r<br>
+        <code>Effective annual rate</code>: (1 + IRR<sub>monthly</sub>)<sup>12</sup> − 1, where IRR is solved from the payment cash flow.
+      </div>
+      <div class="actions">
+        <button type="button" class="btn secondary" id="sampleBtn2">Load sample data</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    'use strict';
+    var $ = function(id){return document.getElementById(id);};
+
+    /* ---------- Theme ---------- */
+    var themeToggle = $('themeToggle');
+    themeToggle.addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('apps-theme', next);
+    });
+
+    /* ---------- State ---------- */
+    var state = {
+      amount: 500000000,
+      rate: 8.5,
+      term: 10,
+      termUnit: 'years',
+      itype: 'annuity',
+      startDate: new Date(),
+      currency: 'IDR'
+    };
+    var lastSchedule = null; // [{n,date,payment,principal,interest,balance}]
+    var lastSummary = null;
+
+    /* ---------- Currency formatting ---------- */
+    var LOCALE = {IDR:'id-ID',USD:'en-US',EUR:'de-DE',GBP:'en-GB',JPY:'ja-JP',SGD:'en-SG'};
+    function fmtMoney(v, cur, withSym){
+      if(cur === 'custom'){
+        var s = (Math.round(v*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+        return s;
+      }
+      var loc = LOCALE[cur] || 'en-US';
+      try{
+        return new Intl.NumberFormat(loc,{
+          style:'currency',
+          currency:cur,
+          minimumFractionDigits:(cur==='IDR'||cur==='JPY')?0:2,
+          maximumFractionDigits:(cur==='IDR'||cur==='JPY')?0:2
+        }).format(v);
+      }catch(e){
+        return (Math.round(v*100)/100).toLocaleString('en-US') + ' ' + cur;
+      }
+    }
+    function fmtNum(v, d){
+      if(!isFinite(v)) return '—';
+      return v.toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});
+    }
+    function fmtDate(d){
+      return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'2-digit'});
+    }
+    function addMonths(d, n){
+      var nd = new Date(d.getTime());
+      nd.setMonth(nd.getMonth()+n);
+      return nd;
+    }
+
+    /* ---------- Calculation ---------- */
+    function compute(){
+      var P = state.amount, annualRate = state.rate, n, itype = state.itype;
+      n = state.termUnit === 'years' ? state.term*12 : state.term;
+      if(!(P > 0) || !(n > 0) || n > 1200){ return null; }
+      var r = annualRate/100/12;
+      var schedule = [];
+      var totalInterest = 0, totalPayment = 0;
+      var balance = P;
+      var baseDate = state.startDate;
+
+      if(itype === 'annuity'){
+        var M;
+        if(r === 0){ M = P/n; }
+        else { M = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1); }
+        for(var i=1;i<=n;i++){
+          var interest = balance * r;
+          var principal = M - interest;
+          if(i === n){ principal = balance; } // adjust final
+          balance -= principal;
+          if(balance < 0.005) balance = 0;
+          schedule.push({n:i,date:addMonths(baseDate,i),payment:M,principal:principal,interest:interest,balance:balance});
+          totalInterest += interest; totalPayment += M;
+        }
+      } else if(itype === 'descending'){
+        var principalFix = P/n;
+        for(var i=1;i<=n;i++){
+          var interest = balance * r;
+          var principal = principalFix;
+          if(i === n){ principal = balance; }
+          var payment = principal + interest;
+          balance -= principal;
+          if(balance < 0.005) balance = 0;
+          schedule.push({n:i,date:addMonths(baseDate,i),payment:payment,principal:principal,interest:interest,balance:balance});
+          totalInterest += interest; totalPayment += payment;
+        }
+      } else { // flat
+        var monthlyInterest = P * r;
+        var principalFix2 = P/n;
+        var M2 = principalFix2 + monthlyInterest;
+        for(var i=1;i<=n;i++){
+          var principal = principalFix2;
+          var interest = monthlyInterest;
+          if(i === n){ principal = balance; }
+          var balanceAfter = balance - principal;
+          if(balanceAfter < 0.005) balanceAfter = 0;
+          schedule.push({n:i,date:addMonths(baseDate,i),payment:M2,principal:principal,interest:interest,balance:balanceAfter});
+          balance = balanceAfter;
+          totalInterest += interest; totalPayment += M2;
+        }
+      }
+
+      // Effective annual rate via IRR of cash flow [+P, -M1, -M2, ...]
+      var irr = computeIRR(P, schedule);
+      var ear = Math.pow(1+irr,12)-1;
+      var payoffDate = schedule.length ? schedule[schedule.length-1].date : null;
+
+      return {
+        schedule: schedule,
+        monthly: schedule.length ? schedule[0].payment : 0,
+        totalInterest: totalInterest,
+        totalPayment: totalPayment,
+        payoffDate: payoffDate,
+        ear: ear,
+        nominalEAR: Math.pow(1+r,12)-1,
+        n: n,
+        itype: itype
+      };
+    }
+    // bisection IRR for cash flow [P, -M1, -M2, ...]
+    // npv(rate) = P - sum(M_i/(1+rate)^i) is monotonically increasing in rate,
+    // so we maintain the invariant npv(lo) < 0 < npv(hi).
+    function computeIRR(P, schedule){
+      var n = schedule.length;
+      function npv(rate){
+        var sum = P;
+        for(var i=0;i<n;i++){ sum -= schedule[i].payment / Math.pow(1+rate, i+1); }
+        return sum;
+      }
+      var lo = -0.99, hi = 10;
+      if(npv(lo) * npv(hi) > 0){
+        // no sign change — fall back to nominal monthly rate
+        return state.rate/100/12;
+      }
+      for(var k=0;k<200;k++){
+        var mid = (lo+hi)/2;
+        var v = npv(mid);
+        if(Math.abs(v) < 1e-3) return mid;
+        if(v > 0){ hi = mid; } else { lo = mid; }
+      }
+      return (lo+hi)/2;
+    }
+
+    /* ---------- Render ---------- */
+    function render(){
+      var s = compute();
+      lastSchedule = s;
+      if(!s){
+        $('outMonthly').textContent = '—';
+        $('outInterest').textContent = '—';
+        $('outTotal').textContent = '—';
+        $('outPayoff').textContent = '—';
+        $('outEAR').textContent = '—';
+        $('outEARSub').textContent = 'nominal: —';
+        $('outNote').textContent = 'Enter valid amount, rate and term to calculate.';
+        $('chartPanel').style.display = 'none';
+        $('tablePanel').style.display = 'none';
+        return;
+      }
+      lastSummary = s;
+      var cur = state.currency;
+      $('outMonthly').textContent = fmtMoney(s.monthly, cur);
+      $('outInterest').textContent = fmtMoney(s.totalInterest, cur);
+      $('outTotal').textContent = fmtMoney(s.totalPayment, cur);
+      $('outPayoff').textContent = s.payoffDate ? fmtDate(s.payoffDate) : '—';
+      $('outEAR').textContent = (s.ear*100).toFixed(3) + '%';
+      $('outEARSub').textContent = 'nominal EAR: ' + (s.nominalEAR*100).toFixed(3) + '%';
+      var note = '';
+      if(s.itype === 'flat'){
+        note = 'Flat interest keeps the interest charge fixed on the original principal, so the effective annual rate is higher than the nominal rate.';
+      } else if(s.itype === 'annuity'){
+        note = 'Annuity: equal monthly payments; the effective rate matches the nominal compounding.';
+      } else {
+        note = 'Descending: payments start high and decrease as the balance drops.';
+      }
+      $('outNote').textContent = note;
+      $('outNote').className = 'note';
+
+      renderChart(s);
+      renderTable(s);
+      $('chartPanel').style.display = 'block';
+      $('tablePanel').style.display = 'block';
+    }
+
+    /* ---------- Chart (SVG stacked bars) ---------- */
+    function renderChart(s){
+      var wrap = $('chartWrap');
+      var schedule = s.schedule;
+      var n = schedule.length;
+      // sample to max 60 bars for readability
+      var step = 1;
+      if(n > 60) step = Math.ceil(n/60);
+      var bars = [];
+      for(var i=0;i<n;i+=step){
+        bars.push(schedule[i]);
+      }
+      // ensure last bar included
+      if(bars[bars.length-1].n !== schedule[n-1].n) bars.push(schedule[n-1]);
+
+      var W = 760, H = 220, padL = 56, padR = 12, padT = 12, padB = 28;
+      var plotW = W - padL - padR, plotH = H - padT - padB;
+      var maxPay = 0;
+      for(var i=0;i<bars.length;i++){ if(bars[i].payment > maxPay) maxPay = bars[i].payment; }
+      if(maxPay === 0) maxPay = 1;
+      var barGap = bars.length > 1 ? 1.5 : 0;
+      var barW = (plotW - barGap*(bars.length-1)) / bars.length;
+      if(barW > 14) barW = 14;
+
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      var principalColor = '#DC2626';
+      var interestColor = isDark ? '#475569' : '#CBD5E1';
+      var axisColor = isDark ? '#334155' : '#E2E8F0';
+      var textColor = isDark ? '#94A3B8' : '#64748B';
+
+      var yTicks = 4;
+      var parts = [];
+      parts.push('<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Stacked bar chart of principal vs interest per month">');
+      // gridlines + y labels
+      for(var t=0;t<=yTicks;t++){
+        var yv = maxPay * t/yTicks;
+        var y = padT + plotH - (plotH * t/yTicks);
+        parts.push('<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+'" stroke="'+axisColor+'" stroke-width="1"/>');
+        parts.push('<text x="'+(padL-6)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end" font-size="10" fill="'+textColor+'" font-family="ui-monospace,monospace">'+shortNum(yv)+'</text>');
+      }
+      // bars
+      var x = padL;
+      for(var i=0;i<bars.length;i++){
+        var b = bars[i];
+        var pH = (b.principal/maxPay)*plotH;
+        var iH = (b.interest/maxPay)*plotH;
+        var yP = padT + plotH - pH;
+        var yI = yP - iH;
+        if(pH > 0.3) parts.push('<rect x="'+x.toFixed(1)+'" y="'+yP.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+pH.toFixed(1)+'" fill="'+principalColor+'"/>');
+        if(iH > 0.3) parts.push('<rect x="'+x.toFixed(1)+'" y="'+yI.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+iH.toFixed(1)+'" fill="'+interestColor+'"/>');
+        x += barW + barGap;
+      }
+      // x labels (first, middle, last month)
+      var labelPts = [0, Math.floor((bars.length-1)/2), bars.length-1];
+      var seen = {};
+      for(var li=0;li<labelPts.length;li++){
+        var idx = labelPts[li];
+        if(seen[idx]) continue; seen[idx] = 1;
+        var bx = padL + idx*(barW+barGap) + barW/2;
+        parts.push('<text x="'+bx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="'+textColor+'">M'+bars[idx].n+'</text>');
+      }
+      // y axis title
+      parts.push('<text x="14" y="'+(padT+plotH/2)+'" text-anchor="middle" font-size="10" fill="'+textColor+'" transform="rotate(-90 14 '+(padT+plotH/2)+')">payment</text>');
+      parts.push('</svg>');
+      wrap.innerHTML = parts.join('');
+    }
+    function shortNum(v){
+      if(v >= 1e9) return (v/1e9).toFixed(1)+'B';
+      if(v >= 1e6) return (v/1e6).toFixed(1)+'M';
+      if(v >= 1e3) return (v/1e3).toFixed(0)+'K';
+      return Math.round(v).toString();
+    }
+
+    /* ---------- Table ---------- */
+    var tableView = 'first12';
+    function renderTable(s){
+      var body = $('amortBody');
+      var cur = state.currency;
+      var rows = s.schedule;
+      var html = '';
+      if(tableView === 'first12'){
+        var limit = Math.min(12, rows.length);
+        for(var i=0;i<limit;i++){
+          var r = rows[i];
+          html += rowHtml(r, cur);
+        }
+        if(rows.length > 12){
+          html += '<tr class="summary-row"><td colspan="6">+'+(rows.length-12)+' more rows — switch to “All” or “Yearly summary” to view.</td></tr>';
+        }
+      } else if(tableView === 'all'){
+        for(var i=0;i<rows.length;i++){
+          html += rowHtml(rows[i], cur);
+        }
+        html += '<tr class="summary-row"><td>Total</td><td></td><td>'+fmtMoney(s.totalPayment,cur)+'</td><td>'+fmtMoney(s.amount,cur)+'</td><td>'+fmtMoney(s.totalInterest,cur)+'</td><td></td></tr>';
+      } else { // yearly
+        var year = 1, yPay=0,yPrin=0,yInt=0,yearStart=0;
+        for(var i=0;i<rows.length;i++){
+          var r = rows[i];
+          yPay+=r.payment; yPrin+=r.principal; yInt+=r.interest;
+          if(r.n % 12 === 0 || i === rows.length-1){
+            var yrEnd = r.date;
+            html += '<tr class="summary-row"><td>Yr '+year+'</td><td>'+fmtDate(yrEnd)+'</td><td>'+fmtMoney(yPay,cur)+'</td><td>'+fmtMoney(yPrin,cur)+'</td><td>'+fmtMoney(yInt,cur)+'</td><td>'+fmtMoney(r.balance,cur)+'</td></tr>';
+            year++; yPay=0;yPrin=0;yInt=0;
+          }
+        }
+      }
+      body.innerHTML = html;
+    }
+    function rowHtml(r, cur){
+      return '<tr><td>'+r.n+'</td><td>'+fmtDate(r.date)+'</td><td>'+fmtMoney(r.payment,cur)+'</td><td>'+fmtMoney(r.principal,cur)+'</td><td>'+fmtMoney(r.interest,cur)+'</td><td>'+fmtMoney(r.balance,cur)+'</td></tr>';
+    }
+
+    /* ---------- Read form ---------- */
+    function readForm(){
+      state.amount = parseFloat($('amount').value) || 0;
+      state.rate = parseFloat($('rate').value) || 0;
+      state.term = parseInt($('term').value,10) || 0;
+      state.currency = $('currency').value;
+      var sd = $('startDate').value;
+      state.startDate = sd ? new Date(sd+'T00:00:00') : new Date();
+      var checked = document.querySelector('input[name="itype"]:checked');
+      state.itype = checked ? checked.value : 'annuity';
+      updateAmountHint();
+    }
+    function updateAmountHint(){
+      var v = parseFloat($('amount').value) || 0;
+      $('amountHint').textContent = 'Formatted: ' + fmtMoney(v, $('currency').value);
+    }
+
+    /* ---------- CSV export ---------- */
+    function exportCSV(){
+      if(!lastSummary){ return; }
+      var cur = state.currency;
+      var lines = [];
+      lines.push('Month,Date,Payment,Principal,Interest,Balance');
+      var rows = lastSummary.schedule;
+      for(var i=0;i<rows.length;i++){
+        var r = rows[i];
+        lines.push([
+          r.n,
+          r.date.toISOString().slice(0,10),
+          r.payment.toFixed(2),
+          r.principal.toFixed(2),
+          r.interest.toFixed(2),
+          r.balance.toFixed(2)
+        ].join(','));
+      }
+      lines.push('');
+      lines.push('Summary');
+      lines.push('Currency,'+cur);
+      lines.push('Monthly payment,'+lastSummary.monthly.toFixed(2));
+      lines.push('Total interest,'+lastSummary.totalInterest.toFixed(2));
+      lines.push('Total payment,'+lastSummary.totalPayment.toFixed(2));
+      lines.push('Effective annual rate,'+(lastSummary.ear*100).toFixed(4)+'%');
+      var blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'amortization-schedule.csv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);}, 1000);
+    }
+
+    /* ---------- Sample ---------- */
+    function loadSample(){
+      $('amount').value = '500000000';
+      $('currency').value = 'IDR';
+      $('rate').value = '8.5';
+      $('term').value = '10';
+      setTermUnit('years');
+      var annuity = document.querySelector('input[name="itype"][value="annuity"]');
+      if(annuity) annuity.checked = true;
+      $('startDate').value = localDateStr(new Date());
+      readForm();
+      render();
+      window.scrollTo({top:$('chartPanel').offsetTop - 80, behavior:'smooth'});
+    }
+    function localDateStr(d){
+      var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+      return y+'-'+m+'-'+day;
+    }
+
+    /* ---------- Term unit segment ---------- */
+    function setTermUnit(unit){
+      state.termUnit = unit;
+      var btns = $('termUnit').querySelectorAll('button');
+      for(var i=0;i<btns.length;i++){
+        btns[i].classList.toggle('active', btns[i].dataset.unit === unit);
+      }
+    }
+    $('termUnit').addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      setTermUnit(b.dataset.unit);
+      readForm(); render();
+    });
+
+    /* ---------- Wire up ---------- */
+    $('loanForm').addEventListener('submit', function(e){
+      e.preventDefault(); readForm(); render();
+    });
+    ['amount','rate','term','currency'].forEach(function(id){
+      $(id).addEventListener('input', function(){ readForm(); });
+    });
+    $('startDate').addEventListener('change', function(){ readForm(); });
+    document.getElementById('interestType').addEventListener('change', function(){ readForm(); render(); });
+
+    $('tableToggles').addEventListener('click', function(e){
+      var b = e.target.closest('button[data-view]'); if(!b) return;
+      tableView = b.dataset.view;
+      var btns = $('tableToggles').querySelectorAll('button[data-view]');
+      for(var i=0;i<btns.length;i++){ btns[i].classList.toggle('active', btns[i]===b); }
+      if(lastSummary) renderTable(lastSummary);
+    });
+
+    $('sampleBtn').addEventListener('click', loadSample);
+    $('sampleBtn2').addEventListener('click', loadSample);
+    $('printBtn').addEventListener('click', function(){ window.print(); });
+    $('csvBtn').addEventListener('click', exportCSV);
+
+    // re-render chart on theme change (colors differ)
+    themeToggle.addEventListener('click', function(){
+      if(lastSummary) setTimeout(function(){ renderChart(lastSummary); }, 50);
+    });
+
+    /* ---------- Init ---------- */
+    (function init(){
+      $('startDate').value = localDateStr(new Date());
+      readForm();
+      render();
+    })();
+  })();
+  </script>
+</body>
+</html>
