@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get the App — Apps by Achmad Bayhaqy</title>
+  <meta name="description" content="Install the Bayhaqy Apps as a Progressive Web App (works on Android and iOS, 100% offline) or build a native Android APK using Capacitor.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%230F172A'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+      --fg:#0F172A;--muted:#64748B;--muted-2:#94A3B8;
+      --accent:#0F766E;--accent-bg:rgba(15,118,110,0.08);
+      --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);
+      --radius:8px;
+    }
+    [data-theme="dark"]{
+      --bg:#0B1120;--bg-2:#111827;--bg-3:#1E293B;
+      --fg:#F1F5F9;--muted:#94A3B8;--muted-2:#64748B;
+      --accent:#14B8A6;--accent-bg:rgba(20,184,166,0.12);
+      --card-bg:#111827;--card-border:rgba(241,245,249,0.08);
+    }
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;font-size:15px}
+    .container{max-width:760px;margin:0 auto;padding:0 1.5rem}
+    header.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--card-border)}
+    [data-theme="dark"] header.site-header{background:rgba(11,17,32,0.9)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:.8rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--fg);font-weight:700;font-size:1rem}
+    .brand-mark{width:28px;height:28px;border-radius:6px;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
+    .header-links{display:flex;gap:.5rem;align-items:center}
+    .header-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500}
+    .header-links a:hover{color:var(--fg)}
+    .theme-toggle{background:var(--bg-2);border:1px solid var(--card-border);border-radius:6px;width:32px;height:32px;cursor:pointer;color:var(--fg);font-family:inherit}
+
+    main{padding:2rem 0 3rem}
+    h1{font-size:1.85rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+    .lead{color:var(--muted);font-size:1.02rem;margin-bottom:1.75rem}
+
+    .option-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+    .option-card h2{font-size:1.1rem;font-weight:700;margin-bottom:.35rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+    .option-tag{font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:4px;background:var(--accent-bg);color:var(--accent);font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.03em;text-transform:uppercase}
+    .option-card p{color:var(--muted);font-size:.92rem;margin-bottom:1rem}
+    .option-card ol{padding-left:1.5rem;color:var(--fg);font-size:.9rem;line-height:1.85}
+    .option-card ol li{margin-bottom:.3rem}
+    .option-card ol li strong{color:var(--fg);font-weight:600}
+    .option-card .note{margin-top:1rem;padding:.7rem .9rem;background:var(--bg-2);border-radius:6px;font-size:.82rem;color:var(--muted);border-left:3px solid var(--accent)}
+    .option-card .cta{display:inline-block;margin-top:.5rem;background:var(--accent);color:white;text-decoration:none;padding:.55rem 1.1rem;border-radius:6px;font-weight:600;font-size:.88rem}
+    .option-card .cta:hover{opacity:.9}
+    .option-card .cta.secondary{background:var(--bg-3);color:var(--fg);border:1px solid var(--card-border)}
+    code{background:var(--bg-2);padding:.1rem .35rem;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em}
+
+    pre{background:#0F172A;color:#E2E8F0;padding:1rem 1.25rem;border-radius:6px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.6;margin:.75rem 0}
+    pre .c{color:#64748B;font-style:italic}
+    pre .k{color:#7DD3FC}
+    pre .s{color:#FCD34D}
+
+    footer.site-footer{border-top:1px solid var(--card-border);padding:1.5rem 0;margin-top:2rem;text-align:center;font-size:.82rem;color:var(--muted)}
+    footer.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+  </style>
+  <script>(function(){var t=localStorage.getItem('apps-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/apps/" class="brand">
+        <span class="brand-mark">A</span>
+        <span>Apps</span>
+      </a>
+      <nav class="header-links">
+        <a href="/apps/">← All apps</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Get the app</h1>
+    <p class="lead">Two ways to install on your phone. Pick whichever fits your needs.</p>
+
+    <div class="option-card">
+      <h2>Progressive Web App <span class="option-tag">Recommended</span></h2>
+      <p>Installs directly from the browser. Works on both Android and iOS. No sideloading, no app store. Updates automatically when you visit the site.</p>
+      <ol>
+        <li><strong>Android (Chrome/Edge):</strong> Open <code>bayhaqy.my.id/apps/</code> → tap the three-dot menu → <strong>Install app</strong>.</li>
+        <li><strong>iOS (Safari):</strong> Open <code>bayhaqy.my.id/apps/</code> → tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.</li>
+        <li>The app icon appears on your home screen. Launch it — it runs full-screen and works offline.</li>
+      </ol>
+      <div class="note">PWA is the modern standard for installing web apps. You get offline support, push notifications (future), and home-screen presence — without app store review delays.</div>
+      <a class="cta" href="/apps/">Open the site to install →</a>
+    </div>
+
+    <div class="option-card">
+      <h2>Native Android APK <span class="option-tag">Advanced</span></h2>
+      <p>If you specifically need a real <code>.apk</code> file (for sideloading, MDM distribution, or devices without a browser), you can build one in ~10 minutes. The static site is wrapped with <a href="https://capacitorjs.com" style="color:var(--accent)">Capacitor</a> to produce a native Android package.</p>
+      <ol>
+        <li>Install <a href="https://developer.android.com/studio" style="color:var(--accent)">Android Studio</a> (includes Android SDK + JDK 17).</li>
+        <li>Install Node.js 18+ and the Capacitor CLI.</li>
+        <li>Clone the repo, init Capacitor, add Android platform, build the APK.</li>
+      </ol>
+      <pre><span class="c"># One-time setup</span>
+npm install -g @capacitor/cli
+
+<span class="c"># Clone and prepare</span>
+git clone https://github.com/bayhaqy/apps.git
+cd apps
+npm init -y
+npm install @capacitor/core @capacitor/cli @capacitor/android
+npx cap init <span class="s">"Apps by Bayhaqy"</span> <span class="s">"id.bayhaqy.apps"</span> --web-dir=.
+
+<span class="c"># Add Android and build</span>
+npx cap add android
+npx cap copy android
+npx cap open android
+<span class="c"># In Android Studio: Build → Build Bundle(s)/APK(s) → Build APK(s)</span>
+
+<span class="c"># Move the output where your download button can reach it</span>
+mv app-release.apk /apps/bayhaqy-apps.apk</pre>
+      <div class="note">Because the entire app is static HTML/CSS/JS, the resulting APK runs 100% offline from first launch — no internet permission needed beyond the initial WebView load.</div>
+      <a class="cta secondary" href="https://github.com/bayhaqy/apps/blob/main/APK_BUILD_GUIDE.md" target="_blank" rel="noopener">Full build guide →</a>
+    </div>
+
+    <div class="option-card">
+      <h2>Self-host</h2>
+      <p>Want to host these tools on your own domain? Clone the repo and serve the static files from any web server. No build step, no environment variables, no database.</p>
+      <pre>git clone https://github.com/bayhaqy/apps.git
+cd apps
+python3 -m http.server 8080
+<span class="c"># Open http://localhost:8080/</span></pre>
+      <a class="cta secondary" href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source on GitHub →</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · <a href="https://github.com/bayhaqy/apps">Source</a> · MIT licensed
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('apps-theme', next);
+    });
+  </script>
+</body>
+</html>
