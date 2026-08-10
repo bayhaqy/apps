@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Local OCR Text Extractor — extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
-  <meta name="keywords" content="OCR, text extraction, image to text, Tesseract.js, offline OCR, browser OCR, Indonesian OCR, English OCR, local OCR, Bayhaqy" />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-  <meta name="bingbot" content="index, follow" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Local OCR Text Extractor — Image to Text Offline" />
-  <meta property="og:description" content="Extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/ocr-extractor/" />
-  <meta property="og:site_name" content="OCR Extractor" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Local OCR Text Extractor — Image to Text Offline" />
-  <meta name="twitter:description" content="Extract text from images directly in your browser using Tesseract.js. 100% client-side, Indonesian & English, no uploads." />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/ocr-extractor/" />
-  <title>Local OCR Text Extractor — Image to Text Offline (Indonesian &amp; English)</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EOE%3C/text%3E%3C/svg%3E" />
-  <script type="application/ld+json">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Local OCR Text Extractor — extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian &amp; English, no uploads." name="description"/>
+<meta content="OCR, text extraction, image to text, Tesseract.js, offline OCR, browser OCR, Indonesian OCR, English OCR, local OCR, Bayhaqy" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="index, follow" name="robots"/>
+<meta content="index, follow" name="googlebot"/>
+<meta content="index, follow" name="bingbot"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Local OCR Text Extractor — Image to Text Offline" property="og:title"/>
+<meta content="Extract text from images (receipts, book pages, notes) directly in your browser using Tesseract.js. 100% client-side, Indonesian &amp; English, no uploads." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/ocr-extractor/" property="og:url"/>
+<meta content="OCR Extractor" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Local OCR Text Extractor — Image to Text Offline" name="twitter:title"/>
+<meta content="Extract text from images directly in your browser using Tesseract.js. 100% client-side, Indonesian &amp; English, no uploads." name="twitter:description"/>
+<link href="https://bayhaqy.my.id/apps/ocr-extractor/" rel="canonical"/>
+<title>Local OCR Text Extractor — Image to Text Browser-based (Indonesian &amp; English)</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EOE%3C/text%3E%3C/svg%3E" rel="icon"/>
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -43,12 +43,12 @@
     ]
   }
   </script>
-  <style>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--muted:#64748B;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
       --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
       --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
@@ -58,7 +58,7 @@
     [data-theme="dark"]{
       --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
       --fg:#F1F5F9;--muted:#94A3B8;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
       --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
       --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
@@ -499,9 +499,9 @@
       *{animation:none!important;transition:none!important}
     }
   </style>
-</head>
-<body>
-  <script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="OCR Extractor">
+<script>
     // Prevent theme flash
     (function(){
       var saved = localStorage.getItem('ocrextractor-theme');
@@ -510,273 +510,227 @@
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/ocr-extractor/" class="brand">
-        <span class="brand-logo">OE</span>
-        <span>OCR Extractor</span>
-      </a>
-      <nav class="header-links">
-        <a href="#how-to-use">How to use</a>
-        <a href="#features">Features</a>
-        <a href="#faq">FAQ</a>
-        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
-          <span class="icon-moon">🌙</span>
-          <span class="icon-sun">☀️</span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-        <span class="hero-eyebrow">100% local · Tesseract.js</span>
-        <h1>Extract text from images <span class="accent">in your browser</span></h1>
-        <p class="sub">OCR Extractor reads text from receipts, book pages, notes, and screenshots using Tesseract.js — running fully on your device. No uploads, no API keys, no server.</p>
-        <div class="hero-pills">
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Indonesian + English</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Multi-image</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Word-level confidence</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No uploads</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="container">
-      <div class="merge-card">
-        <!-- Settings -->
-        <div class="settings-panel">
-          <div class="settings-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+<main>
+<section class="hero">
+<div class="container">
+<span class="hero-eyebrow">100% local · Tesseract.js</span>
+<h1>Extract text from images <span class="accent">in your browser</span></h1>
+<p class="sub">OCR Extractor reads text from receipts, book pages, notes, and screenshots using Tesseract.js — running fully on your device. No uploads, no API keys, no server.</p>
+<div class="hero-pills">
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Indonesian + English</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Multi-image</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Word-level confidence</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> No uploads</span>
+</div>
+</div>
+</section>
+<section class="container">
+<div class="merge-card">
+<!-- Settings -->
+<div class="settings-panel">
+<div class="settings-title">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             OCR Settings
           </div>
-          <div class="settings-grid">
-            <div class="setting-field">
-              <label>Languages</label>
-              <div class="lang-chips">
-                <label class="lang-chip" id="langEng"><input type="checkbox" checked /> English (eng) <small>~15 MB</small></label>
-                <label class="lang-chip" id="langInd"><input type="checkbox" checked /> Indonesian (ind) <small>~10 MB</small></label>
-              </div>
-              <div class="hint">First use of each language downloads trained data once; cached afterwards by your browser.</div>
-            </div>
-            <div class="setting-field">
-              <label>Output mode</label>
-              <div class="seg-control" id="outputMode">
-                <button type="button" data-mode="text" class="active">Plain text</button>
-                <button type="button" data-mode="bbox">Bounding boxes</button>
-                <button type="button" data-mode="hocr">hOCR</button>
-              </div>
-              <div class="hint">Plain text reads naturally. Bounding boxes show coordinates per word. hOCR is an HTML standard for OCR results.</div>
-            </div>
-            <div class="setting-field">
-              <label>Confidence threshold</label>
-              <div class="slider-wrap">
-                <input type="range" id="confThreshold" min="0" max="100" value="60" />
-                <span class="slider-val" id="confVal">60</span>
-              </div>
-              <div class="hint">Words below this confidence are highlighted in amber and underlined in the extracted text.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dropzone -->
-        <label class="dropzone" id="dropzone" for="fileInput">
-          <div class="dropzone-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <h3>Drop images here</h3>
-          <p>or <span class="browse-link">browse from your device</span> · JPG, PNG, WebP, BMP, GIF — multiple allowed</p>
-          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/bmp,image/gif,.jpg,.jpeg,.png,.webp,.bmp,.gif" multiple />
-        </label>
-
-        <!-- Queue -->
-        <div class="queue-head" id="queueHead" style="display:none">
-          <h4>Image queue</h4>
-          <span class="count" id="queueCount"></span>
-        </div>
-        <div class="queue" id="queue"></div>
-
-        <!-- Progress -->
-        <div class="progress-wrap" id="progressWrap">
-          <div class="progress-label">
-            <span><span class="cur" id="progressCur">Preparing…</span></span>
-            <span class="overall-label">Overall <strong id="overallPct">0%</strong></span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-          <div class="progress-overall"><div class="progress-overall-fill" id="progressOverallFill"></div></div>
-        </div>
-
-        <!-- Results -->
-        <div class="results-section" id="resultsSection">
-          <div class="results-head" id="resultsHead" style="display:none">
-            <h3>Extracted text</h3>
-            <div class="results-actions">
-              <button class="btn btn-ghost btn-sm" id="copyAllBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<div class="settings-grid">
+<div class="setting-field">
+<label>Languages</label>
+<div class="lang-chips">
+<label class="lang-chip" id="langEng"><input checked="" type="checkbox"/> English (eng) <small>~15 MB</small></label>
+<label class="lang-chip" id="langInd"><input checked="" type="checkbox"/> Indonesian (ind) <small>~10 MB</small></label>
+</div>
+<div class="hint">First use of each language downloads trained data once; cached afterwards by your browser.</div>
+</div>
+<div class="setting-field">
+<label>Output mode</label>
+<div class="seg-control" id="outputMode">
+<button class="active" data-mode="text" type="button">Plain text</button>
+<button data-mode="bbox" type="button">Bounding boxes</button>
+<button data-mode="hocr" type="button">hOCR</button>
+</div>
+<div class="hint">Plain text reads naturally. Bounding boxes show coordinates per word. hOCR is an HTML standard for OCR results.</div>
+</div>
+<div class="setting-field">
+<label>Confidence threshold</label>
+<div class="slider-wrap">
+<input id="confThreshold" max="100" min="0" type="range" value="60"/>
+<span class="slider-val" id="confVal">60</span>
+</div>
+<div class="hint">Words below this confidence are highlighted in amber and underlined in the extracted text.</div>
+</div>
+</div>
+</div>
+<!-- Dropzone -->
+<label class="dropzone" for="fileInput" id="dropzone">
+<div class="dropzone-icon">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+</div>
+<h3>Drop images here</h3>
+<p>or <span class="browse-link">browse from your device</span> · JPG, PNG, WebP, BMP, GIF — multiple allowed</p>
+<input accept="image/jpeg,image/png,image/webp,image/bmp,image/gif,.jpg,.jpeg,.png,.webp,.bmp,.gif" id="fileInput" multiple="" type="file"/>
+</label>
+<!-- Queue -->
+<div class="queue-head" id="queueHead" style="display:none">
+<h4>Image queue</h4>
+<span class="count" id="queueCount"></span>
+</div>
+<div class="queue" id="queue"></div>
+<!-- Progress -->
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-label">
+<span><span class="cur" id="progressCur">Preparing…</span></span>
+<span class="overall-label">Overall <strong id="overallPct">0%</strong></span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-overall"><div class="progress-overall-fill" id="progressOverallFill"></div></div>
+</div>
+<!-- Results -->
+<div class="results-section" id="resultsSection">
+<div class="results-head" id="resultsHead" style="display:none">
+<h3>Extracted text</h3>
+<div class="results-actions">
+<button class="btn btn-ghost btn-sm" id="copyAllBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copy all text
               </button>
-              <button class="btn btn-ghost btn-sm" id="downloadZipBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<button class="btn btn-ghost btn-sm" id="downloadZipBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
                 Download all as .zip
               </button>
-            </div>
-          </div>
-          <div id="resultsList"></div>
-        </div>
-
-        <!-- Action bar -->
-        <div class="action-bar">
-          <div class="action-info" id="actionInfo">No images added yet.</div>
-          <div class="action-buttons">
-            <button class="btn btn-ghost" id="clearBtn" disabled>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+</div>
+</div>
+<div id="resultsList"></div>
+</div>
+<!-- Action bar -->
+<div class="action-bar">
+<div class="action-info" id="actionInfo">No images added yet.</div>
+<div class="action-buttons">
+<button class="btn btn-ghost" disabled="" id="clearBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>
               Clear all
             </button>
-            <button class="btn btn-primary" id="extractBtn" disabled>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5z"/><path d="M9 13l2 2 4-4"/></svg>
+<button class="btn btn-primary" disabled="" id="extractBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M3 5l2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5z"></path><path d="M9 13l2 2 4-4"></path></svg>
               Extract text
             </button>
-          </div>
-        </div>
-      </div>
-    </section>
+</div>
+</div>
+</div>
+</section>
+<section class="howto" id="how-to-use">
+<div class="container">
+<h2>How to use OCR Extractor</h2>
+<p>Four simple steps — your images are processed locally in your browser and never uploaded anywhere.</p>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-num">1</div>
+<h4>Add images</h4>
+<p>Drag-and-drop or browse to add one or more images: JPG, PNG, WebP, BMP, or GIF. Receipts, scanned pages, notes, and screenshots all work.</p>
+</div>
+<div class="step-card">
+<div class="step-num">2</div>
+<h4>Choose settings</h4>
+<p>Pick languages (Indonesian, English, or both), select plain text / bounding boxes / hOCR output, and set a confidence threshold for low-confidence highlighting.</p>
+</div>
+<div class="step-card">
+<div class="step-num">3</div>
+<h4>Click "Extract text"</h4>
+<p>OCR Extractor runs Tesseract.js on each image sequentially. The first run downloads language data (~10–15 MB per language); subsequent runs are cached.</p>
+</div>
+<div class="step-card">
+<div class="step-num">4</div>
+<h4>Review &amp; download</h4>
+<p>Copy text per image, download individual .txt files, copy all text together, or download a .zip with every result. Low-confidence words are underlined in amber.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="features" id="features">
+<div class="container">
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h4>Truly private</h4>
+<p>Images are processed entirely in your browser via Tesseract.js (WASM). They are never uploaded to a server, never stored, never logged.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M5 8l6 6"></path><path d="M4 14l6-6 2-3"></path><path d="M2 8l2 2"></path><path d="M14 4l2 2"></path><path d="M12 22l8-8-4-4-8 8z"></path></svg></div>
+<h4>Indonesian &amp; English</h4>
+<p>Both languages are supported out of the box. Run them together ("eng+ind") for mixed-language documents like Indonesian receipts with English brand names.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><path d="M9 9h6v6H9z"></path></svg></div>
+<h4>Word-level confidence</h4>
+<p>Every word gets a confidence score from 0–100. Set a threshold and ambiguous words are highlighted so you know what to proofread.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg></div>
+<h4>Batch processing</h4>
+<p>Queue up many images at once. OCR Extractor runs them sequentially with a per-image and overall progress bar, so you can step away while it works.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></div>
+<h4>Flexible export</h4>
+<p>Copy text per image, download a single .txt, copy all text concatenated, or download a .zip with every result and a combined file. Your choice.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></div>
+<h4>Open &amp; transparent</h4>
+<p>Built on the open-source Tesseract.js (Apache 2.0) and JSZip (MIT). The full source is on GitHub — you can audit it, fork it, or self-host it.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="faq" id="faq">
+<div class="container">
+<h2>Frequently asked questions</h2>
+<div class="faq-item">
+<button class="faq-q" type="button">Are my images uploaded to a server? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>No. OCR Extractor runs entirely in your browser using Tesseract.js (WebAssembly). Your images are read into memory on your own device, processed locally, and the result is offered as text — they never touch any server. You can verify this by opening your browser's DevTools → Network tab and watching that no image data is sent anywhere while OCR runs.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Does it work without leaving your browser? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>After the first run. On first use of each language, Tesseract downloads the trained language data (~10–15 MB per language) from its CDN; your browser then caches this data. On subsequent runs — even Browser-based — the cached data is used and no network is required. The Tesseract.js library itself is loaded from a CDN on first page load, so save the page (Ctrl+S → "Webpage, Complete") if you need guaranteed Browser-based use.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Why is the first run slow? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>The first OCR run with a language has to fetch the trained data (eng ~15 MB, ind ~10 MB) and initialise the WASM engine. Subsequent images use the same engine instance and cached data, so they're much faster — typically 1–4 seconds per image on a modern laptop.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">How accurate is Tesseract OCR? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Tesseract is excellent with clean, high-contrast printed text (book pages, receipts, scanned documents) — usually 95%+ accuracy. It struggles with handwriting, very small fonts, low-contrast photos, skewed text, and decorative typefaces. For best results, use well-lit, straight, in-focus images. The confidence highlighting helps you spot which words to double-check.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">What's the difference between plain text, bounding boxes, and hOCR? <span class="chev">⌄</span></button>
+<div class="faq-a"><p><strong>Plain text</strong> gives you the extracted text as a normal readable paragraph. <strong>Bounding boxes</strong> adds each word's pixel coordinates (x0, y0, x1, y1) — useful if you want to overlay text on the image or build a search index. <strong>hOCR</strong> is an open HTML-based standard for OCR output that embeds text plus geometry in a structured document, suitable for ingestion by other OCR tools.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">What does the confidence threshold do? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Every word Tesseract returns has a confidence score (0–100). Words below the threshold you set are highlighted in amber and underlined in the extracted text, and shown in red in the per-word confidence table. This makes it easy to spot which words to proofread manually. The default is 60; lower it to see fewer highlights, raise it to be more strict.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Is there a file size or image limit? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>There is no artificial limit. The constraint is your device's memory — Tesseract.js loads each image into a WASM buffer. Large images (over ~4000px) are automatically downscaled to a max of 2000px on the longest side before OCR, which keeps memory reasonable and improves speed. For very large batches, OCR Extractor processes images sequentially to avoid exhausting RAM.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Any modern browser with WebAssembly support: Chrome 57+, Firefox 53+, Safari 11+, Edge 79+, and equivalent mobile browsers. WASM is required. For best performance on large images, a device with at least 2 GB of free RAM is recommended. Internet Explorer is not supported.</p></div>
+</div>
+</div>
+</section>
+</main>
 
-    <section class="howto" id="how-to-use">
-      <div class="container">
-        <h2>How to use OCR Extractor</h2>
-        <p>Four simple steps — your images are processed locally in your browser and never uploaded anywhere.</p>
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-num">1</div>
-            <h4>Add images</h4>
-            <p>Drag-and-drop or browse to add one or more images: JPG, PNG, WebP, BMP, or GIF. Receipts, scanned pages, notes, and screenshots all work.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">2</div>
-            <h4>Choose settings</h4>
-            <p>Pick languages (Indonesian, English, or both), select plain text / bounding boxes / hOCR output, and set a confidence threshold for low-confidence highlighting.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">3</div>
-            <h4>Click "Extract text"</h4>
-            <p>OCR Extractor runs Tesseract.js on each image sequentially. The first run downloads language data (~10–15 MB per language); subsequent runs are cached.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">4</div>
-            <h4>Review &amp; download</h4>
-            <p>Copy text per image, download individual .txt files, copy all text together, or download a .zip with every result. Low-confidence words are underlined in amber.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="features" id="features">
-      <div class="container">
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h4>Truly private</h4>
-            <p>Images are processed entirely in your browser via Tesseract.js (WASM). They are never uploaded to a server, never stored, never logged.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 8l2 2"/><path d="M14 4l2 2"/><path d="M12 22l8-8-4-4-8 8z"/></svg></div>
-            <h4>Indonesian &amp; English</h4>
-            <p>Both languages are supported out of the box. Run them together ("eng+ind") for mixed-language documents like Indonesian receipts with English brand names.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div>
-            <h4>Word-level confidence</h4>
-            <p>Every word gets a confidence score from 0–100. Set a threshold and ambiguous words are highlighted so you know what to proofread.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-            <h4>Batch processing</h4>
-            <p>Queue up many images at once. OCR Extractor runs them sequentially with a per-image and overall progress bar, so you can step away while it works.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-            <h4>Flexible export</h4>
-            <p>Copy text per image, download a single .txt, copy all text concatenated, or download a .zip with every result and a combined file. Your choice.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></div>
-            <h4>Open &amp; transparent</h4>
-            <p>Built on the open-source Tesseract.js (Apache 2.0) and JSZip (MIT). The full source is on GitHub — you can audit it, fork it, or self-host it.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="faq" id="faq">
-      <div class="container">
-        <h2>Frequently asked questions</h2>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Are my images uploaded to a server? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>No. OCR Extractor runs entirely in your browser using Tesseract.js (WebAssembly). Your images are read into memory on your own device, processed locally, and the result is offered as text — they never touch any server. You can verify this by opening your browser's DevTools → Network tab and watching that no image data is sent anywhere while OCR runs.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Does it work without internet? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>After the first run. On first use of each language, Tesseract downloads the trained language data (~10–15 MB per language) from its CDN; your browser then caches this data. On subsequent runs — even offline — the cached data is used and no network is required. The Tesseract.js library itself is loaded from a CDN on first page load, so save the page (Ctrl+S → "Webpage, Complete") if you need guaranteed offline use.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Why is the first run slow? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>The first OCR run with a language has to fetch the trained data (eng ~15 MB, ind ~10 MB) and initialise the WASM engine. Subsequent images use the same engine instance and cached data, so they're much faster — typically 1–4 seconds per image on a modern laptop.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">How accurate is Tesseract OCR? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Tesseract is excellent with clean, high-contrast printed text (book pages, receipts, scanned documents) — usually 95%+ accuracy. It struggles with handwriting, very small fonts, low-contrast photos, skewed text, and decorative typefaces. For best results, use well-lit, straight, in-focus images. The confidence highlighting helps you spot which words to double-check.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">What's the difference between plain text, bounding boxes, and hOCR? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p><strong>Plain text</strong> gives you the extracted text as a normal readable paragraph. <strong>Bounding boxes</strong> adds each word's pixel coordinates (x0, y0, x1, y1) — useful if you want to overlay text on the image or build a search index. <strong>hOCR</strong> is an open HTML-based standard for OCR output that embeds text plus geometry in a structured document, suitable for ingestion by other OCR tools.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">What does the confidence threshold do? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Every word Tesseract returns has a confidence score (0–100). Words below the threshold you set are highlighted in amber and underlined in the extracted text, and shown in red in the per-word confidence table. This makes it easy to spot which words to proofread manually. The default is 60; lower it to see fewer highlights, raise it to be more strict.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Is there a file size or image limit? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>There is no artificial limit. The constraint is your device's memory — Tesseract.js loads each image into a WASM buffer. Large images (over ~4000px) are automatically downscaled to a max of 2000px on the longest side before OCR, which keeps memory reasonable and improves speed. For very large batches, OCR Extractor processes images sequentially to avoid exhausting RAM.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Any modern browser with WebAssembly support: Chrome 57+, Firefox 53+, Safari 11+, Edge 79+, and equivalent mobile browsers. WASM is required. For best performance on large images, a device with at least 2 GB of free RAM is recommended. Internet Explorer is not supported.</p></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-text">
-        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
-        Powered by <a href="https://tesseract.projectnaptha.com/" target="_blank" rel="noopener">Tesseract.js</a> &amp; <a href="https://stuk.github.io/jszip/" target="_blank" rel="noopener">JSZip</a> ·
-        <span id="footerYear">2026</span>
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
-        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
-        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
-        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Image preview modal -->
-  <div class="modal" id="modal">
-    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-    <img id="modalImg" alt="" />
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <!-- Tesseract.js (WebAssembly OCR engine) -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js" crossorigin="anonymous"></script>
-  <!-- JSZip (zip archive generation) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
-  <script>
+<!-- Image preview modal -->
+<div class="modal" id="modal">
+<button aria-label="Close" class="modal-close" id="modalClose">×</button>
+<img alt="" id="modalImg"/>
+</div>
+<div class="toast" id="toast"></div>
+<!-- Tesseract.js (WebAssembly OCR engine) -->
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+<!-- JSZip (zip archive generation) -->
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
     (function(){
       'use strict';
       var doc = document;
@@ -817,13 +771,6 @@
       var modalClose = doc.getElementById('modalClose');
 
       // ----- Theme toggle -----
-      var themeToggle = doc.getElementById('themeToggle');
-      themeToggle.addEventListener('click', function(){
-        var current = doc.documentElement.getAttribute('data-theme') || 'light';
-        var next = current === 'dark' ? 'light' : 'dark';
-        doc.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('ocrextractor-theme', next);
-      });
 
       // ----- Toast -----
       var toastTimer = null;
@@ -1543,7 +1490,6 @@
       });
 
       // ----- Footer year -----
-      doc.getElementById('footerYear').textContent = new Date().getFullYear();
 
       // ----- Initial state -----
       renderQueue();
@@ -1559,5 +1505,5 @@
 
     })();
   </script>
-</body>
+<script data-app-name="OCR Extractor" src="/apps/assets/app-shell.js"></script></body>
 </html>
