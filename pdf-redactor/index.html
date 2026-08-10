@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PDF Text Extractor &amp; Redactor · Bayhaqy Apps</title>
+  <meta name="description" content="Extract text from PDFs and automatically redact sensitive data (emails, phones, NIK, credit cards, IBAN) with permanent black boxes." />
+  <meta name="keywords" content="pdf, redact, extract, sensitive, pii, regex, pdf-lib" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/pdf-redactor/" />
+  <meta property="og:title" content="PDF Redactor — Auto-Redact Sensitive Data" />
+  <meta property="og:description" content="Extract text and permanently redact emails, phone numbers, NIK, credit cards, IBAN from PDFs." />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/pdf-redactor/" />
+  <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
+  <link rel="stylesheet" href="/apps/assets/theme.css" />
+  <script src="/apps/lib/pdf-lib.min.js"></script>
+  <script src="/apps/lib/pdfjs.min.js"></script>
+  <style>
+    .app-main { max-width: 980px; margin: 0 auto; padding: 96px 20px 60px; }
+    .page-head { margin-bottom: 24px; }
+    .page-head h1 { font-size: var(--fs-2xl); margin: 0 0 6px; color: var(--ink); }
+    .page-head p { color: var(--ink-mute); margin: 0; font-size: var(--fs-md); }
+
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+             box-shadow: var(--shadow-sm); padding: 22px 24px; margin-bottom: 18px; }
+    .panel h2 { font-size: var(--fs-md); margin: 0 0 14px; color: var(--ink-soft); font-weight: 600; }
+
+    .drop-zone { border: 2px dashed var(--line); border-radius: var(--radius); padding: 36px 24px;
+                 text-align: center; cursor: pointer; transition: all 0.15s; background: var(--paper-alt); }
+    .drop-zone:hover, .drop-zone.dragging { border-color: var(--red-700); background: var(--red-50); }
+    .drop-zone svg { color: var(--ink-mute); margin-bottom: 8px; }
+    .drop-zone p { margin: 4px 0; color: var(--ink-mute); font-size: var(--fs-sm); }
+    .drop-zone strong { color: var(--ink); font-size: var(--fs-md); }
+
+    .pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    @media (max-width: 600px) { .pattern-grid { grid-template-columns: 1fr; } }
+    .pattern-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+                   background: var(--paper-alt); border: 1px solid var(--line); border-radius: var(--radius); }
+    .pattern-row input[type="checkbox"] { width: auto; }
+    .pattern-row label { margin: 0; cursor: pointer; flex: 1; font-size: var(--fs-sm); color: var(--ink-soft); }
+    .pattern-row code { font-size: var(--fs-xs); color: var(--ink-mute); background: var(--line-soft); padding: 1px 4px; border-radius: 3px; }
+
+    textarea { width: 100%; padding: 11px 13px; font-size: var(--fs-base); font-family: 'SFMono-Regular', Consolas, monospace;
+               border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-alt);
+               color: var(--ink); min-height: 220px; resize: vertical; font-size: 0.85rem; line-height: 1.55; }
+    textarea:focus { outline: none; border-color: var(--red-700); box-shadow: 0 0 0 3px var(--red-50); }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius);
+           font-size: var(--fs-sm); font-weight: 600; cursor: pointer; border: 1px solid transparent;
+           transition: all 0.15s; font-family: inherit; }
+    .btn-primary { background: var(--red-700); color: #fff; }
+    .btn-primary:hover { background: var(--red-800); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--line-soft); }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+    .progress { height: 6px; background: var(--line-soft); border-radius: 3px; overflow: hidden; margin-top: 14px; display: none; }
+    .progress.active { display: block; }
+    .progress-bar { height: 100%; background: var(--red-700); width: 0; transition: width 0.2s; }
+    .alert { padding: 10px 14px; border-radius: var(--radius); font-size: var(--fs-sm); margin-top: 14px; display: none; }
+    .alert-error { background: var(--red-50); color: var(--red-900); border: 1px solid #fecaca; }
+    .alert-success { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
+    [data-theme="dark"] .alert-success { background: rgba(34,197,94,0.12); color: #86efac; border-color: rgba(34,197,94,0.3); }
+
+    .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: var(--fs-sm); color: var(--ink-mute); }
+    .stat-row strong { color: var(--ink); }
+    .info { font-size: var(--fs-xs); color: var(--ink-faint); margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  </style>
+</head>
+<body data-sensitive="true">
+  <main class="app-main">
+    <div class="page-head">
+      <h1>PDF Text Extractor &amp; Smart Redactor</h1>
+      <p>Extract text from any PDF and permanently redact sensitive patterns (emails, phones, NIK, cards, IBAN) with black boxes.</p>
+    </div>
+
+    <div class="panel">
+      <h2>1. Upload PDF</h2>
+      <label class="drop-zone" id="dropZone" for="fileInput">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p><strong>Drop a PDF here</strong> or click to browse</p>
+        <p>Scanned PDFs (images) won't yield text — use OCR Extractor for those.</p>
+      </label>
+      <input type="file" id="fileInput" accept="application/pdf" hidden />
+    </div>
+
+    <div class="panel" id="optionsPanel" style="display:none;">
+      <h2>2. Choose what to redact</h2>
+      <div class="pattern-grid">
+        <div class="pattern-row"><input type="checkbox" id="patEmail" checked /><label for="patEmail">Email addresses</label><code>\S+@\S+\.\S+</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patPhone" checked /><label for="patPhone">Phone numbers (Indo + intl)</label><code>+?[\d\s\-()]{8,}</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patNik" checked /><label for="patNik">NIK (Indo ID, 16 digits)</label><code>\d{16}</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patCard" checked /><label for="patCard">Credit cards (13–19 digits)</label><code>\d[\d\s\-]{12,22}\d</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patIban" /><label for="patIban">IBAN</label><code>[A-Z]{2}\d{2}[\dA-Z]{10,30}</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patSsn" /><label for="patSsn">US SSN</label><code>\d{3}-\d{2}-\d{4}</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patIpv4" /><label for="patIpv4">IPv4 addresses</label><code>\d{1,3}(\.\d{1,3}){3}</code></div>
+        <div class="pattern-row"><input type="checkbox" id="patDate" /><label for="patDate">Dates (YYYY-MM-DD)</label><code>\d{4}-\d{2}-\d{2}</code></div>
+      </div>
+      <div class="pattern-row" style="margin-top: 8px;">
+        <input type="checkbox" id="patCustom" />
+        <label for="patCustom">Custom regex pattern</label>
+      </div>
+      <input type="text" id="customRegex" placeholder="e.g. \bCONFIDENTIAL\b" style="width: 100%; padding: 8px 12px; margin-top: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-alt); color: var(--ink);" />
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="extractBtn" data-primary>Extract text only</button>
+        <button class="btn btn-primary" id="redactBtn">Extract + Redact PDF</button>
+      </div>
+    </div>
+
+    <div class="panel" id="resultPanel" style="display:none;">
+      <h2>3. Extracted text &amp; results</h2>
+      <div class="stat-row" id="resultStats"></div>
+      <textarea id="extractedText" placeholder="Extracted text will appear here…" readonly data-primary></textarea>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-copy-target="#extractedText">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="btn btn-ghost" data-download-target="#extractedText" data-download-name="extracted.txt" data-download-ext="txt">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .txt
+        </button>
+      </div>
+    </div>
+
+    <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="alert alert-error" id="alertError"></div>
+    <div class="alert alert-success" id="alertSuccess"></div>
+
+    <div class="info">
+      <p>Powered by <code>pdfjs-dist</code> + <code>pdf-lib</code> (self-hosted). Redaction is permanent — original text is covered with black boxes drawn on top of the PDF page. Pattern matching is regex-based, so always review the result before sharing.</p>
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="PDF Redactor" data-sensitive="true"></script>
+  <script>
+    'use strict';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/apps/lib/pdfjs.worker.min.js';
+
+    var $ = function (s) { return document.querySelector(s); };
+    var { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    var pdfFile = null;
+
+    $('#dropZone').addEventListener('click', function () { $('#fileInput').click(); });
+    $('#dropZone').addEventListener('dragover', function (e) { e.preventDefault(); this.classList.add('dragging'); });
+    $('#dropZone').addEventListener('dragleave', function () { this.classList.remove('dragging'); });
+    $('#dropZone').addEventListener('drop', function (e) {
+      e.preventDefault(); this.classList.remove('dragging');
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    $('#fileInput').addEventListener('change', function (e) { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+    async function handleFile(f) {
+      if (f.type !== 'application/pdf') { window.showToast('Please select a PDF'); return; }
+      pdfFile = f;
+      $('#optionsPanel').style.display = 'block';
+      $('#resultPanel').style.display = 'none';
+      window.showToast('PDF loaded — choose redaction patterns');
+      $('#optionsPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function getPatterns() {
+      var pats = [];
+      if ($('#patEmail').checked) pats.push(/[\w.+-]+@[\w-]+\.[\w.-]+/g);
+      if ($('#patPhone').checked) pats.push(/(?:\+?\d[\d\s\-().]{7,}\d)/g);
+      if ($('#patNik').checked) pats.push(/\b\d{16}\b/g);
+      if ($('#patCard').checked) pats.push(/\b(?:\d[ -]?){13,19}\b/g);
+      if ($('#patIban').checked) pats.push(/\b[A-Z]{2}\d{2}(?:[A-Z0-9]{10,30})\b/g);
+      if ($('#patSsn').checked) pats.push(/\b\d{3}-\d{2}-\d{4}\b/g);
+      if ($('#patIpv4').checked) pats.push(/\b\d{1,3}(?:\.\d{1,3}){3}\b/g);
+      if ($('#patDate').checked) pats.push(/\b\d{4}-\d{2}-\d{2}\b/g);
+      if ($('#patCustom').checked) {
+        try {
+          var r = new RegExp($('#customRegex').value, 'g');
+          pats.push(r);
+        } catch (e) { window.showToast('Invalid custom regex: ' + e.message); }
+      }
+      return pats;
+    }
+
+    // Extract text + text item positions per page.
+    async function extractPages() {
+      var bytes = await pdfFile.arrayBuffer();
+      var pdfjsBuffer = bytes.slice(0);
+      var doc = await pdfjsLib.getDocument({ data: pdfjsBuffer }).promise;
+      var pages = [];
+      for (var i = 1; i <= doc.numPages; i++) {
+        var page = await doc.getPage(i);
+        var textContent = await page.getTextContent();
+        var viewport = page.getViewport({ scale: 1 });
+        var items = textContent.items.map(function (it) {
+          // pdfjs transform matrix: [a, b, c, d, e, f]. x=e, y=f. height ≈ sqrt(a^2+b^2)*fontSize.
+          var tx = it.transform;
+          var x = tx[4];
+          var y = tx[5];
+          var h = Math.sqrt(tx[2] * tx[2] + tx[3] * tx[3]) || 10;
+          var w = it.width;
+          return { str: it.str, x: x, y: y, w: w, h: h };
+        });
+        pages.push({
+          num: i,
+          width: viewport.width,
+          height: viewport.height,
+          items: items
+        });
+      }
+      return pages;
+    }
+
+    // Find matches across items (treat items on same line as a continuous stream).
+    function findMatches(pages, patterns) {
+      var matches = [];  // { pageNum, x, y, w, h, text }
+      pages.forEach(function (page) {
+        // Group items by approximate y (line).
+        var lines = {};
+        page.items.forEach(function (it) {
+          var yk = Math.round(it.y);
+          if (!lines[yk]) lines[yk] = [];
+          lines[yk].push(it);
+        });
+        Object.keys(lines).forEach(function (yk) {
+          var lineItems = lines[yk].sort(function (a, b) { return a.x - b.x; });
+          // Build full string with offsets.
+          var fullStr = '';
+          var offsets = [];
+          lineItems.forEach(function (it) {
+            offsets.push({ start: fullStr.length, end: fullStr.length + it.str.length, item: it });
+            fullStr += it.str;
+          });
+          patterns.forEach(function (pat) {
+            pat.lastIndex = 0;
+            var m;
+            while ((m = pat.exec(fullStr)) !== null) {
+              var matchStart = m.index, matchEnd = m.index + m[0].length;
+              // Find the items overlapping this match.
+              var x1 = Infinity, x2 = -Infinity, h = 0;
+              for (var i = 0; i < offsets.length; i++) {
+                var o = offsets[i];
+                if (o.end > matchStart && o.start < matchEnd) {
+                  // Compute partial overlap.
+                  var itemStart = Math.max(o.start, matchStart);
+                  var itemEnd = Math.min(o.end, matchEnd);
+                  var itemX1 = o.item.x + (itemStart - o.start) * (o.item.w / o.item.str.length);
+                  var itemX2 = o.item.x + (itemEnd - o.start) * (o.item.w / o.item.str.length);
+                  x1 = Math.min(x1, itemX1);
+                  x2 = Math.max(x2, itemX2);
+                  h = Math.max(h, o.item.h);
+                }
+              }
+              if (x1 !== Infinity && x2 > x1) {
+                matches.push({ pageNum: page.num, x: x1 - 1, y: lineItems[0].y - 1, w: (x2 - x1) + 2, h: (h || 10) + 2, text: m[0] });
+              }
+              if (m.index === pat.lastIndex) pat.lastIndex++;
+            }
+          });
+        });
+      });
+      return matches;
+    }
+
+    $('#extractBtn').addEventListener('click', async function () {
+      if (!pdfFile) return;
+      $('#progress').classList.add('active');
+      $('#progressBar').style.width = '20%';
+      try {
+        var pages = await extractPages();
+        $('#progressBar').style.width = '60%';
+        var fullText = pages.map(function (p, i) {
+          return '--- Page ' + (i + 1) + ' ---\n' + p.items.map(function (it) { return it.str; }).join(' ');
+        }).join('\n\n');
+        $('#progressBar').style.width = '100%';
+        $('#extractedText').value = fullText;
+        $('#resultStats').innerHTML = '<span><strong>' + pages.length + '</strong> pages</span><span><strong>' + fullText.length + '</strong> chars extracted</span>';
+        $('#resultPanel').style.display = 'block';
+        window.showToast('Text extracted ✓');
+        setTimeout(function () { $('#progress').classList.remove('active'); $('#progressBar').style.width = '0'; }, 1500);
+      } catch (e) {
+        $('#progress').classList.remove('active');
+        $('#alertError').style.display = 'block';
+        $('#alertError').textContent = 'Failed: ' + (e.message || e);
+      }
+    });
+
+    $('#redactBtn').addEventListener('click', async function () {
+      if (!pdfFile) return;
+      $('#progress').classList.add('active');
+      $('#progressBar').style.width = '10%';
+      try {
+        var pages = await extractPages();
+        $('#progressBar').style.width = '30%';
+        var patterns = getPatterns();
+        var matches = findMatches(pages, patterns);
+        $('#progressBar').style.width = '50%';
+
+        // Re-load with pdf-lib and draw black boxes.
+        var bytes = await pdfFile.arrayBuffer();
+        var pdfDoc = await PDFDocument.load(bytes);
+        var pdfPages = pdfDoc.getPages();
+        $('#progressBar').style.width = '60%';
+
+        var matchesByPage = {};
+        matches.forEach(function (m) {
+          if (!matchesByPage[m.pageNum]) matchesByPage[m.pageNum] = [];
+          matchesByPage[m.pageNum].push(m);
+        });
+
+        Object.keys(matchesByPage).forEach(function (pageNum) {
+          var page = pdfPages[parseInt(pageNum, 10) - 1];
+          if (!page) return;
+          var ph = page.getHeight();
+          matchesByPage[pageNum].forEach(function (m) {
+            // Convert pdfjs coords (origin bottom-left, y baseline) to pdf-lib coords.
+            // pdfjs y is the baseline; pdf-lib y for drawRectangle is the bottom of the rectangle.
+            page.drawRectangle({
+              x: m.x,
+              y: ph - m.y - m.h + 2,
+              width: m.w,
+              height: m.h,
+              color: rgb(0, 0, 0)
+            });
+          });
+        });
+        $('#progressBar').style.width = '80%';
+
+        var out = await pdfDoc.save();
+        var blob = new Blob([out], { type: 'application/pdf' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = pdfFile.name.replace(/\.pdf$/i, '') + '-redacted.pdf';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 200);
+        $('#progressBar').style.width = '100%';
+
+        // Also show extracted text.
+        var fullText = pages.map(function (p, i) {
+          return '--- Page ' + (i + 1) + ' ---\n' + p.items.map(function (it) { return it.str; }).join(' ');
+        }).join('\n\n');
+        $('#extractedText').value = fullText;
+        $('#resultStats').innerHTML = '<span><strong>' + pages.length + '</strong> pages</span><span><strong>' + matches.length + '</strong> redactions applied</span><span><strong>' + fullText.length + '</strong> chars extracted</span>';
+        $('#resultPanel').style.display = 'block';
+        $('#alertSuccess').style.display = 'block';
+        $('#alertSuccess').textContent = 'Redacted ' + matches.length + ' sensitive item' + (matches.length === 1 ? '' : 's') + ' and downloaded the new PDF.';
+        window.showToast('PDF redacted ✓');
+        setTimeout(function () { $('#progress').classList.remove('active'); $('#progressBar').style.width = '0'; }, 2000);
+      } catch (e) {
+        $('#progress').classList.remove('active');
+        $('#alertError').style.display = 'block';
+        $('#alertError').textContent = 'Failed: ' + (e.message || e);
+      }
+    });
+  </script>
+</body>
+</html>
