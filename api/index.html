@@ -321,7 +321,20 @@ curl <span class="s">"https://your-worker.workers.dev/api/code-formatter?languag
       const file = MODULES[endpoint];
       if (!loadedModules[file]) {
         const url = '/apps/api/' + file;
-        loadedModules[file] = await import(url);
+        // Retry dynamic import up to 4 times to handle transient CDN/SSL errors
+        let lastErr;
+        for (let attempt = 0; attempt < 4; attempt++) {
+          try {
+            // Bust cache with query param on retries
+            const cacheBuster = attempt > 0 ? '?cb=' + Date.now() : '';
+            loadedModules[file] = await import(url + cacheBuster);
+            return loadedModules[file];
+          } catch (e) {
+            lastErr = e;
+            await new Promise(r => setTimeout(r, 800));
+          }
+        }
+        throw lastErr || new Error('Failed to load module: ' + file);
       }
       return loadedModules[file];
     }
