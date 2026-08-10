@@ -2,370 +2,209 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Install Bayhaqy Apps as a full-screen mobile app on Android (APK) or iOS (PWA). Direct download, no app store required." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Install Bayhaqy Apps as a full-screen app on Android or iOS. Works on Android 14+ and iOS 12+. No app store required." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="Get the Bayhaqy Apps Mobile App" />
-  <meta property="og:description" content="Install Bayhaqy Apps as a full-screen mobile app on Android or iOS." />
+  <meta property="og:description" content="Install Bayhaqy Apps as a full-screen app on Android or iOS. Works on Android 14+." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/get-app/" />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/get-app/" />
   <link rel="icon" href="/apps/icons/logo.png" />
   <title>Get the App — Bayhaqy Apps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810b" />
   <style>
-    .getapp-hero {
-      border-bottom: 1px solid var(--line);
-      padding: 2.5rem 0 2rem;
-      text-align: center;
-    }
-    .getapp-hero h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      margin: 0 0 0.5rem;
-    }
+    .getapp-hero { border-bottom: 1px solid var(--line); padding: 2.5rem 0 2rem; text-align: center; }
+    .getapp-hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.025em; margin: 0 0 0.5rem; color: var(--ink); }
     .getapp-hero h1 .accent { color: var(--red-700); }
-    .getapp-hero p {
-      font-size: var(--fs-md);
-      color: var(--ink-soft);
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    .getapp-hero p { font-size: 1.125rem; color: var(--ink-mute); max-width: 640px; margin: 0 auto 1.5rem; }
+    .getapp-hero .pill-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+    .getapp-hero .pill { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 0.8rem;
+                          font-weight: 600; background: var(--paper-alt); border: 1px solid var(--line); border-radius: 99px; color: var(--ink-soft); }
+    [data-theme="dark"] .getapp-hero .pill { background: var(--line-soft); }
 
-    .download-block {
-      max-width: 560px;
-      margin: 2.5rem auto;
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--red-700);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-    .download-block .icon-wrap {
-      width: 64px; height: 64px;
-      margin: 0 auto 1rem;
-      background: var(--red-50);
-      border: 1px solid rgba(185, 28, 28, 0.15);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--red-700);
-    }
-    .download-block .icon-wrap svg { width: 32px; height: 32px; }
-    .download-block h2 {
-      font-size: var(--fs-lg);
-      font-weight: 700;
-      margin: 0 0 0.4rem;
-    }
-    .download-block .meta {
-      font-size: var(--fs-sm);
-      color: var(--ink-mute);
-      margin: 0 0 1.5rem;
-    }
-    .download-block .meta .pill {
-      margin: 0 0.2rem;
-    }
-    .download-block .btn-big {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.9rem 1.5rem;
-      font-size: var(--fs-md);
-      font-weight: 700;
-    }
-    .download-block .btn-big svg { width: 22px; height: 22px; }
-    .download-block .alt-row {
-      margin-top: 1rem;
-      font-size: var(--fs-sm);
-      color: var(--ink-mute);
-    }
-    .download-block .alt-row a {
-      color: var(--red-700);
-      font-weight: 600;
-    }
+    .getapp-main { max-width: 920px; margin: 0 auto; padding: 2.5rem 20px 4rem; }
 
-    .steps {
-      max-width: 720px;
-      margin: 2rem auto 4rem;
-      padding-inline: 1.5rem;
-    }
-    .steps h2 {
-      font-size: var(--fs-xl);
-      font-weight: 700;
-      margin: 0 0 1.5rem;
-      text-align: center;
-    }
-    .step-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--line);
-    }
-    .step-tab {
-      padding: 0.7rem 1.2rem;
-      font-size: var(--fs-sm);
-      font-weight: 600;
-      color: var(--ink-mute);
-      background: transparent;
-      border: 0;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: color .15s var(--ease), border-color .15s var(--ease);
-      font-family: inherit;
-    }
-    .step-tab:hover { color: var(--ink); }
-    .step-tab.active {
-      color: var(--red-700);
-      border-bottom-color: var(--red-700);
-    }
-    .step-panel {
-      display: none;
-    }
-    .step-panel.active { display: block; }
-    .step-list {
-      counter-reset: step;
-    }
-    .step-item {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--line-soft);
-    }
-    .step-item:last-child { border-bottom: 0; }
-    .step-item::before {
-      counter-increment: step;
-      content: counter(step);
-      flex-shrink: 0;
-      width: 32px; height: 32px;
-      background: var(--red-700);
-      color: #FFFFFF;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--fs-sm);
-      font-weight: 700;
-    }
-    .step-item .body {
-      flex: 1;
-    }
-    .step-item .body strong {
-      display: block;
-      color: var(--ink);
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-    .step-item .body p {
-      margin: 0;
-      font-size: var(--fs-sm);
-      color: var(--ink-soft);
-      line-height: 1.55;
-    }
-    .step-item .body code {
-      background: var(--line-soft);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 0.85em;
-      font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
-    }
+    .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    @media (max-width: 760px) { .install-grid { grid-template-columns: 1fr; } }
 
-    .features-strip {
-      max-width: var(--container);
-      margin: 0 auto 3rem;
-      padding-inline: 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
+    .install-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+                    padding: 1.8rem 1.6rem; box-shadow: var(--shadow-sm); }
+    .install-card h2 { font-size: 1.35rem; margin: 0 0 0.4rem; color: var(--ink); font-weight: 700;
+                       display: flex; align-items: center; gap: 10px; }
+    .install-card h2 .icon { width: 28px; height: 28px; color: var(--red-700); }
+    .install-card .subtitle { color: var(--ink-mute); font-size: 0.95rem; margin-bottom: 1.2rem; }
+    .install-card ol { list-style: none; padding: 0; margin: 0 0 1.4rem; counter-reset: step; }
+    .install-card ol li { counter-increment: step; padding: 0.6rem 0 0.6rem 2.6rem; position: relative;
+                          font-size: 0.95rem; color: var(--ink-soft); border-bottom: 1px solid var(--line-soft); }
+    .install-card ol li:last-child { border-bottom: none; }
+    .install-card ol li::before {
+      content: counter(step); position: absolute; left: 0; top: 0.6rem; width: 1.8rem; height: 1.8rem;
+      background: var(--red-700); color: #fff; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.85rem; font-weight: 700;
     }
-    .feature-card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      text-align: center;
-    }
-    .feature-card .icon {
-      width: 36px; height: 36px;
-      margin: 0 auto 0.5rem;
-      color: var(--red-700);
-    }
-    .feature-card .icon svg { width: 100%; height: 100%; }
-    .feature-card h3 {
-      font-size: var(--fs-sm);
-      font-weight: 700;
-      margin: 0 0 0.25rem;
-      color: var(--ink);
-    }
-    .feature-card p {
-      font-size: var(--fs-xs);
-      color: var(--ink-mute);
-      margin: 0;
-      line-height: 1.5;
-    }
+    .install-card ol li strong { color: var(--ink); }
+    .install-card .note { padding: 0.8rem 1rem; background: var(--red-50); border: 1px solid #fecaca;
+                          border-radius: var(--radius); font-size: 0.85rem; color: var(--red-900); }
+    [data-theme="dark"] .install-card .note { background: rgba(185,28,28,0.12); border-color: rgba(185,28,28,0.3); color: #fca5a5; }
+
+    .install-card .cta { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px;
+                          background: var(--red-700); color: #fff; text-decoration: none; border-radius: var(--radius);
+                          font-weight: 600; font-size: 1rem; transition: background 0.15s; }
+    .install-card .cta:hover { background: var(--red-800); }
+
+    .why-section { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+                   padding: 2rem 1.6rem; margin-bottom: 2rem; }
+    .why-section h2 { font-size: 1.5rem; margin: 0 0 1.2rem; color: var(--ink); font-weight: 700; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .why-item { padding: 1rem; background: var(--paper-alt); border-radius: var(--radius); border: 1px solid var(--line); }
+    .why-item .icon { width: 24px; height: 24px; color: var(--red-700); margin-bottom: 0.5rem; }
+    .why-item h3 { font-size: 0.95rem; margin: 0 0 0.3rem; color: var(--ink); font-weight: 600; }
+    .why-item p { font-size: 0.85rem; color: var(--ink-mute); margin: 0; line-height: 1.5; }
+
+    .faq-section h2 { font-size: 1.5rem; margin: 0 0 1.2rem; color: var(--ink); font-weight: 700; }
+    .faq-item { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+                margin-bottom: 0.8rem; overflow: hidden; }
+    .faq-item summary { padding: 1rem 1.2rem; cursor: pointer; font-weight: 600; color: var(--ink);
+                        list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: '+'; font-size: 1.4rem; color: var(--ink-mute); transition: transform 0.2s; }
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+    .faq-item .answer { padding: 0 1.2rem 1rem; color: var(--ink-soft); font-size: 0.92rem; line-height: 1.6; }
+
+    .alert-success { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0;
+                     padding: 0.8rem 1rem; border-radius: var(--radius); margin-bottom: 1.5rem; font-size: 0.92rem; }
+    [data-theme="dark"] .alert-success { background: rgba(34,197,94,0.12); color: #86efac; border-color: rgba(34,197,94,0.3); }
   </style>
 </head>
-<body data-app-name="Get the App">
-  <main class="app-main narrow">
-    <header class="getapp-hero">
-      <p class="app-eyebrow" style="justify-content:center;">Mobile App</p>
-      <h1>Get the <span class="accent">Bayhaqy Apps</span> app</h1>
-      <p>Install the full Bayhaqy Apps collection as a full-screen mobile app. All 31 tools, one tap away, no browser tab required.</p>
-    </header>
-
-    <section class="download-block">
-      <div class="icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      </div>
-      <h2>Android APK</h2>
-      <p class="meta">
-        <span class="pill">v1.0.0</span>
-        <span class="pill muted">~3 MB</span>
-        <span class="pill muted">Android 8.0+</span>
-      </p>
-      <a href="/apps/bayhaqy-apps.apk" class="btn btn-primary btn-big" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download APK
-      </a>
-      <p class="alt-row">
-        On iPhone/iPad? <a href="#ios">Install via Safari →</a>
-      </p>
-    </section>
-
-    <section class="features-strip">
-      <div class="feature-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <h3>Fullscreen</h3>
-        <p>No browser chrome. App fills the entire screen.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-        <h3>Always connected</h3>
-        <p>Loads live from the server, so you always get the latest tools.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-        <h3>No tracking</h3>
-        <p>No analytics SDKs. No ads. No data collection.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h3>Private by design</h3>
-        <p>App data stays on your device. Tools run in your browser.</p>
+<body>
+  <main class="getapp-main">
+    <section class="getapp-hero">
+      <h1>Install <span class="accent">Bayhaqy Apps</span></h1>
+      <p>Add Bayhaqy Apps to your home screen for a full-screen, app-like experience. Works on Android 8+ (including Android 14) and iOS 12+. No app store needed.</p>
+      <div class="pill-row">
+        <span class="pill">Android 8+</span>
+        <span class="pill">iOS 12+</span>
+        <span class="pill">Full-screen</span>
+        <span class="pill">No app store</span>
+        <span class="pill">Always up-to-date</span>
       </div>
     </section>
 
-    <section class="steps">
-      <h2>Installation guide</h2>
-      <div class="step-tabs">
-        <button class="step-tab active" data-panel="android" type="button">Android (APK)</button>
-        <button class="step-tab" data-panel="ios" type="button" id="ios">iOS (Safari)</button>
-      </div>
+    <div class="alert-success">
+      <strong>Why PWA instead of an APK?</strong> A Progressive Web App (PWA) gives you the same full-screen experience as a native app, but installs directly from your browser — no APK sideloading, no unsigned-file warnings, and you always get the latest version automatically. It works perfectly on Android 14 and iOS.
+    </div>
 
-      <div class="step-panel active" id="panel-android">
-        <ol class="step-list">
-          <li class="step-item">
-            <div class="body">
-              <strong>Tap "Download APK" above</strong>
-              <p>The file will download to your <code>Downloads</code> folder. File size is roughly 3 MB.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Allow installs from this source</strong>
-              <p>If Chrome shows "For your security, your phone is not allowed to install unknown apps from this source", tap <code>Settings → Allow from this source</code> and toggle it on. This is a standard Android permission for APK installs.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Open the APK and tap Install</strong>
-              <p>You may see a Google Play Protect warning — this is normal for any APK installed outside the Play Store. Tap <code>Install anyway</code> to continue.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Open the Bayhaqy Apps icon</strong>
-              <p>The app will appear in your app drawer with the Bayhaqy logo. Tap it to launch — it opens fullscreen with no browser chrome, and stays connected to load the latest tools.</p>
-            </div>
-          </li>
+    <div class="install-grid">
+      <div class="install-card">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3V5a3 3 0 0 0-3-3z"/><path d="M9 11h6"/></svg>
+          Android install
+        </h2>
+        <p class="subtitle">Chrome, Edge, or Samsung Internet — Android 8+ including Android 14</p>
+        <ol>
+          <li>Open <strong>https://bayhaqy.my.id/apps/</strong> in Chrome (or your preferred browser).</li>
+          <li>Tap the <strong>three-dot menu</strong> (⋮) in the top-right corner.</li>
+          <li>Select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</li>
+          <li>Confirm by tapping <strong>"Install"</strong> in the dialog.</li>
+          <li>The app now appears in your app drawer — launch it for a full-screen experience with no browser chrome.</li>
         </ol>
+        <a href="https://bayhaqy.my.id/apps/" class="cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Open Bayhaqy Apps
+        </a>
+        <div class="note" style="margin-top: 1rem;">
+          <strong>Note:</strong> If you previously downloaded an APK file from this site, please delete it — it was a placeholder. The official way to install is via "Add to Home screen" above, which works on Android 14 without any security warnings.
+        </div>
       </div>
 
-      <div class="step-panel" id="panel-ios">
-        <ol class="step-list">
-          <li class="step-item">
-            <div class="body">
-              <strong>Open this page in Safari</strong>
-              <p>iOS PWA install only works from Safari. Chrome, Firefox, and Edge on iOS cannot install PWAs.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Tap the Share button</strong>
-              <p>It's the square icon with an up-pointing arrow at the bottom of Safari.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Choose "Add to Home Screen"</strong>
-              <p>Scroll the share sheet down and tap <code>Add to Home Screen</code>. You can rename the icon if you like.</p>
-            </div>
-          </li>
-          <li class="step-item">
-            <div class="body">
-              <strong>Tap the new icon on your home screen</strong>
-              <p>The app launches in fullscreen mode, with no Safari chrome. It behaves like a native app — swipe up from the bottom to exit.</p>
-            </div>
-          </li>
+      <div class="install-card">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          iOS install
+        </h2>
+        <p class="subtitle">Safari only — iOS 12+ including iOS 17</p>
+        <ol>
+          <li>Open <strong>https://bayhaqy.my.id/apps/</strong> in <strong>Safari</strong> (other browsers won't work for iOS install).</li>
+          <li>Tap the <strong>Share button</strong> (square with up-arrow) at the bottom of the screen.</li>
+          <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
+          <li>Tap <strong>"Add"</strong> in the top-right corner.</li>
+          <li>The app icon appears on your home screen — launch it for a full-screen experience.</li>
         </ol>
+        <a href="https://bayhaqy.my.id/apps/" class="cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Open Bayhaqy Apps
+        </a>
+        <div class="note" style="margin-top: 1rem;">
+          <strong>Desktop:</strong> On Chrome/Edge desktop, click the install icon (⊕) in the address bar, or use the three-dot menu → "Install Bayhaqy Apps".
+        </div>
+      </div>
+    </div>
+
+    <section class="why-section">
+      <h2>Why install the app?</h2>
+      <div class="why-grid">
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <h3>Full-screen experience</h3>
+          <p>No browser address bar or tabs — the app fills your entire screen, just like a native app.</p>
+        </div>
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <h3>Instant launch</h3>
+          <p>Launch directly from your home screen or app drawer. No need to open a browser first.</p>
+        </div>
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+          <h3>Always up-to-date</h3>
+          <p>Every time you open the app, you get the latest tools and features — no manual updates needed.</p>
+        </div>
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3>Works on Android 14</h3>
+          <p>PWAs are fully supported on Android 14 with no installation warnings or sideloading required.</p>
+        </div>
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          <h3>Privacy-first</h3>
+          <p>All tools run in your browser. The app loads from the server but your data never leaves your device.</p>
+        </div>
+        <div class="why-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <h3>No app store needed</h3>
+          <p>Install directly from the website — no Google Play or App Store account required.</p>
+        </div>
       </div>
     </section>
 
-    <section class="card" style="max-width:720px; margin:0 auto 3rem;">
-      <h2 class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        About the APK
-      </h2>
-      <p style="font-size:var(--fs-sm); color:var(--ink-soft); line-height:1.6;">
-        The Bayhaqy Apps APK is a thin Android <strong>WebView wrapper</strong> around the live site at
-        <code>bayhaqy.my.id/apps/</code>. It launches fullscreen, loads the latest tools over HTTPS, and stays
-        in sync with the web version — no manual updates needed. The APK is signed and includes only the
-        minimum permissions required (internet access). All app logic runs in the embedded browser, so it
-        inherits the same privacy guarantees as the website: no embedded analytics, no third-party SDKs,
-        and no data collection.
-      </p>
-      <p style="font-size:var(--fs-sm); color:var(--ink-mute); margin-top:1rem;">
-        Source code for the wrapper is available at
-        <a href="https://github.com/bayhaqy/apps">github.com/bayhaqy/apps</a> — feel free to inspect, fork, or build your own.
-      </p>
+    <section class="faq-section">
+      <h2>Frequently asked questions</h2>
+      <details class="faq-item" open>
+        <summary>I downloaded an APK earlier and it wouldn't install on Android 14. Why?</summary>
+        <div class="answer">The previous APK file was a placeholder package — it wasn't a properly signed Android app, so Android 14 (which enforces strict signing and target-SDK rules) rejected it. The correct, reliable way to install is to use "Add to Home screen" from Chrome, which installs a Progressive Web App (PWA). PWAs work perfectly on Android 14 and give you the same full-screen, app-like experience as a native APK.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Does the app work offline?</summary>
+        <div class="answer">Most tools (PDF editor, hasher, JWT decoder, metronome, tuner, encryptor, etc.) run entirely client-side once the page is loaded. A few tools that call external APIs (DNS Lookup, IP Location Finder) require an internet connection. Your browser will cache the app shell so it launches quickly even on a slow connection.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is this the same as a native Android app?</summary>
+        <div class="answer">Functionally, yes — full-screen, launches from the home screen, no browser UI. The difference is it's powered by your browser's rendering engine rather than native Android code, which means it's always up-to-date and works identically on iOS, Android, and desktop.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How much storage does it use?</summary>
+        <div class="answer">Less than 5 MB for the app shell. Heavy libraries (pdf-lib, pdfjs, signature_pad) are loaded on-demand only when you use the relevant tool. The AI Background Remover model (~80 MB) is cached only if you use that tool.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I uninstall it later?</summary>
+        <div class="answer">Yes — long-press the app icon on your home screen and drag it to "Uninstall" or "Remove", just like any other app. This removes the icon and clears the cached data.</div>
+      </details>
     </section>
   </main>
 
   <script src="/apps/assets/app-shell.js" data-app-name="Get the App"></script>
-  <script>
-    (function () {
-      // Tab switching.
-      var tabs = document.querySelectorAll('.step-tab');
-      var panels = document.querySelectorAll('.step-panel');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          var target = tab.getAttribute('data-panel');
-          tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
-          panels.forEach(function (p) { p.classList.toggle('active', p.id === 'panel-' + target); });
-        });
-      });
-
-      // If URL hash is #ios, switch to iOS tab on load.
-      if (location.hash === '#ios') {
-        var iosTab = document.querySelector('.step-tab[data-panel="ios"]');
-        if (iosTab) iosTab.click();
-      }
-    })();
-  </script>
 </body>
 </html>
