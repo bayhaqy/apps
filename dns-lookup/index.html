@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DNS Lookup — query A, AAAA, CNAME, MX, NS, TXT, SOA, CAA records for any domain using DNS-over-HTTPS. Real-time answers from Google & Cloudflare public DNS resolvers." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="DNS Lookup — DoH DNS Checker" />
+  <meta property="og:description" content="Query DNS records (A, AAAA, CNAME, MX, NS, TXT, SOA, CAA) for any domain via DNS-over-HTTPS." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/dns-lookup/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/dns-lookup/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>DNS Lookup — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="DNS Lookup">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Network · DNS</p>
+      <h1 class="app-title">DNS <span class="accent">Lookup</span></h1>
+      <p class="app-subtitle">
+        Query A, AAAA, CNAME, MX, NS, TXT, SOA, and CAA records for any domain via DNS-over-HTTPS.
+        Bypasses local DNS cache and shows the answers that public resolvers (Google &amp; Cloudflare) actually see.
+      </p>
+    </header>
+
+    <section class="card">
+      <div class="flex-between">
+        <label class="field" style="flex:1; min-width:240px; margin-bottom:0;">
+          <span>Domain</span>
+          <input type="text" id="domain" placeholder="example.com" value="example.com" autocapitalize="none" spellcheck="false" />
+          <span class="hint">Enter a hostname without scheme (e.g. github.com, cloudflare.com).</span>
+        </label>
+      </div>
+      <div class="mt-2">
+        <span class="text-sm" style="font-weight:600; display:block; margin-bottom:0.4rem;">Record type</span>
+        <div class="checkbox-row" id="typeRow">
+          <label><input type="radio" name="rtype" value="A" checked /> A</label>
+          <label><input type="radio" name="rtype" value="AAAA" /> AAAA</label>
+          <label><input type="radio" name="rtype" value="CNAME" /> CNAME</label>
+          <label><input type="radio" name="rtype" value="MX" /> MX</label>
+          <label><input type="radio" name="rtype" value="NS" /> NS</label>
+          <label><input type="radio" name="rtype" value="TXT" /> TXT</label>
+          <label><input type="radio" name="rtype" value="SOA" /> SOA</label>
+          <label><input type="radio" name="rtype" value="CAA" /> CAA</label>
+        </div>
+      </div>
+      <div class="mt-2">
+        <span class="text-sm" style="font-weight:600; display:block; margin-bottom:0.4rem;">Resolver</span>
+        <div class="checkbox-row">
+          <label><input type="radio" name="resolver" value="google" checked /> Google (dns.google)</label>
+          <label><input type="radio" name="resolver" value="cloudflare" /> Cloudflare (cloudflare-dns.com)</label>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="resolveBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Resolve
+        </button>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+      </div>
+    </section>
+
+    <section class="card" id="resultCard" style="display:none;">
+      <div class="flex-between">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+          Records
+        </h2>
+        <span class="pill muted" id="metaPill"></span>
+      </div>
+      <div id="resultBody"></div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="DNS Lookup"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var domainInput = $('#domain');
+      var resolveBtn  = $('#resolveBtn');
+      var sampleBtn   = $('#sampleBtn');
+      var resultCard  = $('#resultCard');
+      var resultBody  = $('#resultBody');
+      var errorCard   = $('#errorCard');
+      var errorMsg    = $('#errorMsg');
+      var metaPill    = $('#metaPill');
+
+      function resolverEndpoint() {
+        var v = document.querySelector('input[name="resolver"]:checked').value;
+        return v === 'cloudflare'
+          ? 'https://cloudflare-dns.com/dns-query'
+          : 'https://dns.google/resolve';
+      }
+
+      function typeSelected() {
+        return document.querySelector('input[name="rtype"]:checked').value;
+      }
+
+      function showError(msg) {
+        resultCard.style.display = 'none';
+        errorCard.style.display  = 'block';
+        errorMsg.textContent = msg;
+      }
+
+      function clearOutput() {
+        resultCard.style.display = 'none';
+        errorCard.style.display  = 'none';
+        resultBody.innerHTML = '';
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c];
+        });
+      }
+
+      function formatTtl(ttl) {
+        if (ttl == null) return '—';
+        if (ttl < 60) return ttl + 's';
+        var m = Math.floor(ttl / 60), s = ttl % 60;
+        if (m < 60) return m + 'm ' + s + 's';
+        var h = Math.floor(m / 60); m = m % 60;
+        if (h < 24) return h + 'h ' + m + 'm';
+        var d = Math.floor(h / 24); h = h % 24;
+        return d + 'd ' + h + 'h';
+      }
+
+      function renderAnswer(name, type, ans) {
+        var rows = '';
+        if (!ans || ans.length === 0) {
+          rows = '<tr><td colspan="4" class="text-mute text-c" style="padding:1.5rem;">No records found.</td></tr>';
+        } else {
+          ans.forEach(function (r) {
+            var data = r.data;
+            if (type === 'MX') data = (r.priority != null ? r.priority + ' ' : '') + r.data;
+            if (type === 'TXT') data = Array.isArray(r.data) ? r.data.join(' ') : r.data;
+            if (type === 'SOA' && typeof r.data === 'object') {
+              data = [r.data.mname, r.data.rname, 'serial ' + r.data.serial,
+                      'refresh ' + r.data.refresh, 'retry ' + r.data.retry,
+                      'expire ' + r.data.expire, 'minimum ' + r.data.minimum].join(' · ');
+            }
+            rows += '<tr>' +
+              '<td class="k">' + escapeHtml(r.name || name) + '</td>' +
+              '<td><span class="pill">' + escapeHtml(r.type || type) + '</span></td>' +
+              '<td>' + formatTtl(r.TTL != null ? r.TTL : r.ttl) + '</td>' +
+              '<td class="v">' + escapeHtml(data) + '</td>' +
+            '</tr>';
+          });
+        }
+        resultBody.innerHTML =
+          '<table class="data"><thead><tr>' +
+            '<th>Name</th><th>Type</th><th>TTL</th><th>Value</th>' +
+          '</tr></thead><tbody>' + rows + '</tbody></table>';
+      }
+
+      async function resolve() {
+        var domain = (domainInput.value || '').trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        if (!domain) { showError('Please enter a domain.'); return; }
+        var type = typeSelected();
+        var endpoint = resolverEndpoint();
+        clearOutput();
+        resolveBtn.disabled = true;
+        resolveBtn.textContent = 'Resolving…';
+        try {
+          var url;
+          var headers;
+          if (endpoint.indexOf('dns.google') !== -1) {
+            url = endpoint + '?name=' + encodeURIComponent(domain) + '&type=' + type;
+            headers = { 'Accept': 'application/dns-json' };
+          } else {
+            url = endpoint + '?name=' + encodeURIComponent(domain) + '&type=' + type;
+            headers = { 'Accept': 'application/dns-json' };
+          }
+          var res = await fetch(url, { headers: headers });
+          if (!res.ok) throw new Error('HTTP ' + res.status + ' from ' + endpoint);
+          var data = await res.json();
+          // Normalize both Google & Cloudflare JSON shapes — they share Answer, Authority, etc.
+          var status = data.Status != null ? data.Status : (data.status != null ? data.status : 0);
+          var statusText = ({
+            0: 'NOERROR', 1: 'FORMERR', 2: 'SERVFAIL', 3: 'NXDOMAIN',
+            4: 'NOTIMP', 5: 'REFUSED'
+          })[status] || ('Status ' + status);
+
+          metaPill.textContent = (endpoint.indexOf('dns.google') !== -1 ? 'Google DNS' : 'Cloudflare DNS') + ' · ' + statusText + ' · ' + domain + '/' + type;
+          if (status !== 0) {
+            showError('DNS status: ' + statusText + ' for ' + domain + ' (' + type + '). Domain may not exist or has no record of this type.');
+            return;
+          }
+          var answers = data.Answer || data.Answer || [];
+          // Some resolvers expose Authority as well; show all Answer entries.
+          resultCard.style.display = 'block';
+          renderAnswer(domain, type, answers);
+        } catch (e) {
+          showError('Request failed: ' + (e && e.message ? e.message : e) +
+            '. This may be a network/CORS issue — try a different resolver.');
+        } finally {
+          resolveBtn.disabled = false;
+          resolveBtn.textContent = 'Resolve';
+        }
+      }
+
+      resolveBtn.addEventListener('click', resolve);
+      domainInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') resolve(); });
+
+      var samples = ['github.com', 'cloudflare.com', 'wikipedia.org', 'google.com', 'bbc.co.uk'];
+      sampleBtn.addEventListener('click', function () {
+        var pick = samples[Math.floor(Math.random() * samples.length)];
+        domainInput.value = pick;
+        resolve();
+      });
+
+      // Auto-resolve on first load.
+      setTimeout(resolve, 150);
+    })();
+  </script>
+</body>
+</html>
