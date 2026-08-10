@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Text Encryptor · Bayhaqy Apps</title>
+  <meta name="description" content="Client-side AES-GCM 256-bit text encryption. Encrypt and decrypt sensitive notes in your browser — your key never leaves your device." />
+  <meta name="keywords" content="AES-GCM, encrypt, decrypt, text encryption, web crypto, password, security" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/text-encryptor/" />
+  <meta property="og:title" content="Text Encryptor — AES-256 in your browser" />
+  <meta property="og:description" content="Encrypt and decrypt sensitive text with AES-GCM 256-bit. 100% client-side." />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/text-encryptor/" />
+  <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
+  <link rel="stylesheet" href="/apps/assets/theme.css" />
+  <style>
+    .app-main { max-width: 880px; margin: 0 auto; padding: 96px 20px 60px; }
+    .page-head { margin-bottom: 28px; }
+    .page-head h1 { font-size: var(--fs-2xl); margin: 0 0 6px; color: var(--ink); }
+    .page-head p { color: var(--ink-mute); margin: 0; font-size: var(--fs-md); }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+             box-shadow: var(--shadow-sm); padding: 22px 24px; margin-bottom: 20px; }
+    .panel h2 { font-size: var(--fs-md); margin: 0 0 14px; color: var(--ink-soft); font-weight: 600; }
+    label { display: block; font-size: var(--fs-sm); color: var(--ink-mute); margin-bottom: 6px; font-weight: 500; }
+    input[type="password"], textarea, input[type="text"] {
+      width: 100%; padding: 11px 13px; font-size: var(--fs-base); font-family: inherit;
+      border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-alt);
+      color: var(--ink); transition: border-color 0.15s, box-shadow 0.15s; }
+    input:focus, textarea:focus { outline: none; border-color: var(--red-700); box-shadow: 0 0 0 3px var(--red-50); }
+    textarea { min-height: 130px; resize: vertical; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.85rem; line-height: 1.5; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius);
+           font-size: var(--fs-sm); font-weight: 600; cursor: pointer; border: 1px solid transparent;
+           transition: all 0.15s; font-family: inherit; text-decoration: none; }
+    .btn-primary { background: var(--red-700); color: #fff; }
+    .btn-primary:hover { background: var(--red-800); }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { border-color: var(--ink-mute); background: var(--line-soft); }
+    .btn-icon { padding: 10px 14px; background: var(--paper-alt); border-color: var(--line); }
+    .alert { padding: 10px 14px; border-radius: var(--radius); font-size: var(--fs-sm); margin-bottom: 14px; }
+    .alert-warn { background: var(--red-50); color: var(--red-900); border: 1px solid #fecaca; }
+    .alert-info { background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; }
+    [data-theme="dark"] .alert-info { background: rgba(59,130,249,0.12); color: #93c5fd; border-color: rgba(59,130,249,0.3); }
+    .stat-row { display: flex; gap: 14px; font-size: var(--fs-xs); color: var(--ink-mute); margin-top: 6px; }
+    .kbd-hint { margin-top: 18px; font-size: var(--fs-xs); color: var(--ink-faint); padding-top: 14px; border-top: 1px dashed var(--line); }
+    .kbd-hint kbd { background: var(--line-soft); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); font-family: monospace; font-size: 0.85em; }
+    .output-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .output-head h2 { margin: 0; }
+  </style>
+</head>
+<body data-sensitive="true">
+  <main class="app-main">
+    <div class="page-head">
+      <h1>Text Encryptor</h1>
+      <p>AES-GCM 256-bit authenticated encryption. Your password and plaintext never leave your device.</p>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>How it works:</strong> We derive a 256-bit key from your password using PBKDF2 (250,000 iterations, SHA-256),
+      then encrypt with AES-GCM. The output includes the salt and IV, so you only need your password to decrypt.
+    </div>
+
+    <div class="panel">
+      <h2>Step 1 — Your secret</h2>
+      <label for="plain">Plaintext (the text you want to protect)</label>
+      <textarea id="plain" data-primary placeholder="Paste your secret note, password, PIN, or anything sensitive…" autofocus></textarea>
+      <div class="stat-row">
+        <span id="plainCount">0 chars</span>
+      </div>
+
+      <div class="row" style="margin-top: 14px;">
+        <div>
+          <label for="pw">Password (key)</label>
+          <input type="password" id="pw" placeholder="A strong passphrase…" autocomplete="off" />
+        </div>
+        <div>
+          <label for="pw2">Confirm password</label>
+          <input type="password" id="pw2" placeholder="Repeat password" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="encBtn" data-primary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Encrypt
+        </button>
+        <button class="btn btn-ghost" id="clearBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="output-head">
+        <h2>Step 2 — Encrypted output (safe to share)</h2>
+      </div>
+      <textarea id="cipher" placeholder="Encrypted ciphertext will appear here…" readonly></textarea>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-icon" data-copy-target="#cipher" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="btn btn-ghost btn-icon" data-download-target="#cipher" data-download-name="encrypted.txt" data-download-ext="txt" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Step 3 — Decrypt a ciphertext</h2>
+      <label for="cipherIn">Paste an encrypted ciphertext here</label>
+      <textarea id="cipherIn" placeholder="Paste the encrypted text you received…"></textarea>
+      <label for="decPw" style="margin-top: 14px;">Password used to encrypt</label>
+      <input type="password" id="decPw" placeholder="The original password" autocomplete="off" />
+      <div class="btn-row">
+        <button class="btn btn-primary" id="decBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+          Decrypt
+        </button>
+        <button class="btn btn-ghost btn-icon" data-copy-target="#decOut" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy result
+        </button>
+      </div>
+      <label for="decOut" style="margin-top: 14px;">Decrypted plaintext</label>
+      <textarea id="decOut" placeholder="Decrypted text will appear here…" readonly data-auto-clear></textarea>
+    </div>
+
+    <div class="kbd-hint">
+      <strong>Keyboard:</strong> <kbd>Esc</kbd> clears the focused input · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> runs Encrypt ·
+      <strong>Privacy:</strong> inputs auto-clear when you switch tabs or minimize the app.
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Text Encryptor" data-sensitive="true"></script>
+  <script>
+    'use strict';
+
+    // ---------- Helpers: encode / decode between ArrayBuffer, Uint8Array, Base64, UTF-8 ----------
+    function bufToB64(buf) {
+      var bytes = new Uint8Array(buf);
+      var bin = '';
+      for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin);
+    }
+    function b64ToBuf(b64) {
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return bytes;
+    }
+    function strToBuf(s) { return new TextEncoder().encode(s); }
+    function bufToStr(b) { return new TextDecoder().decode(b); }
+
+    // ---------- PBKDF2 key derivation ----------
+    async function deriveKey(password, salt) {
+      var baseKey = await crypto.subtle.importKey(
+        'raw', strToBuf(password), { name: 'PBKDF2' }, false, ['deriveKey']
+      );
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: salt, iterations: 250000, hash: 'SHA-256' },
+        baseKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    // ---------- Encrypt: returns "v1.<saltB64>.<ivB64>.<ctB64>" ----------
+    async function encryptText(plaintext, password) {
+      var salt = crypto.getRandomValues(new Uint8Array(16));
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      var key = await deriveKey(password, salt);
+      var ct = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        strToBuf(plaintext)
+      );
+      return 'v1.' + bufToB64(salt) + '.' + bufToB64(iv) + '.' + bufToB64(ct);
+    }
+
+    // ---------- Decrypt ----------
+    async function decryptText(packed, password) {
+      var parts = packed.split('.');
+      if (parts.length !== 4 || parts[0] !== 'v1') {
+        throw new Error('Invalid ciphertext format. Expected v1.salt.iv.ct');
+      }
+      var salt = b64ToBuf(parts[1]);
+      var iv = b64ToBuf(parts[2]);
+      var ct = b64ToBuf(parts[3]);
+      var key = await deriveKey(password, salt);
+      var pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ct);
+      return bufToStr(pt);
+    }
+
+    // ---------- UI wiring ----------
+    var $ = function (s) { return document.querySelector(s); };
+    var plainEl = $('#plain'), pwEl = $('#pw'), pw2El = $('#pw2'),
+        cipherEl = $('#cipher'), cipherInEl = $('#cipherIn'), decPwEl = $('#decPw'), decOutEl = $('#decOut');
+
+    plainEl.addEventListener('input', function () {
+      $('#plainCount').textContent = plainEl.value.length + ' chars';
+    });
+
+    $('#encBtn').addEventListener('click', async function () {
+      var text = plainEl.value;
+      var pw = pwEl.value;
+      var pw2 = pw2El.value;
+      if (!text) { window.showToast('Enter some text to encrypt'); return; }
+      if (!pw) { window.showToast('Enter a password'); return; }
+      if (pw !== pw2) { window.showToast('Passwords do not match'); return; }
+      if (pw.length < 6) { window.showToast('Password too short — use at least 6 chars'); return; }
+      try {
+        var out = await encryptText(text, pw);
+        cipherEl.value = out;
+        window.showToast('Encrypted ✓');
+      } catch (e) {
+        window.showToast('Encryption failed: ' + e.message);
+      }
+    });
+
+    $('#decBtn').addEventListener('click', async function () {
+      var packed = cipherInEl.value.trim();
+      var pw = decPwEl.value;
+      if (!packed) { window.showToast('Paste a ciphertext first'); return; }
+      if (!pw) { window.showToast('Enter the password'); return; }
+      try {
+        var out = await decryptText(packed, pw);
+        decOutEl.value = out;
+        window.showToast('Decrypted ✓');
+      } catch (e) {
+        decOutEl.value = '';
+        window.showToast('Wrong password or corrupted ciphertext');
+      }
+    });
+
+    $('#clearBtn').addEventListener('click', function () {
+      plainEl.value = ''; pwEl.value = ''; pw2El.value = ''; cipherEl.value = '';
+      $('#plainCount').textContent = '0 chars';
+      plainEl.focus();
+      window.showToast('Cleared');
+    });
+
+    // Auto-fill decrypt panel when cipher output is clicked.
+    cipherEl.addEventListener('focus', function () {
+      if (cipherEl.value && !cipherInEl.value) cipherInEl.value = cipherEl.value;
+    });
+  </script>
+</body>
+</html>
