@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="QR Code Studio — generate QR codes for text, URLs, Wi-Fi, email, phone, SMS, and vCards with custom colors and error correction, and scan QR codes from your camera or an image. 100% client-side." />
-  <meta name="keywords" content="QR code generator, QR code scanner, wifi QR, vCard QR, email QR, SMS QR, phone QR, custom QR code, camera QR scanner, image QR scanner, offline QR" />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="QR Code Studio — Generate & Scan QR Codes In Your Browser" />
-  <meta property="og:description" content="Generate QR codes for text, URL, Wi-Fi, email, phone, SMS, and vCard with custom colors. Scan QR codes from camera or image. 100% client-side." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/qr-studio/" />
-  <meta property="og:site_name" content="QR Code Studio" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="QR Code Studio — Generate & Scan QR Codes" />
-  <meta name="twitter:description" content="Generate QR codes for any content type with custom colors. Scan QR codes from camera or image. 100% client-side." />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/qr-studio/" />
-  <title>QR Code Studio — Generate & Scan QR Codes In Your Browser</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EQR%3C/text%3E%3C/svg%3E" />
-  <script type="application/ld+json">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="QR Code Studio — generate QR codes for text, URLs, Wi-Fi, email, phone, SMS, and vCards with custom colors and error correction, and scan QR codes from your camera or an image. 100% client-side." name="description"/>
+<meta content="QR code generator, QR code scanner, wifi QR, vCard QR, email QR, SMS QR, phone QR, custom QR code, camera QR scanner, image QR scanner, offline QR" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="index, follow" name="robots"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="QR Code Studio — Generate &amp; Scan QR Codes In Your Browser" property="og:title"/>
+<meta content="Generate QR codes for text, URL, Wi-Fi, email, phone, SMS, and vCard with custom colors. Scan QR codes from camera or image. 100% client-side." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/qr-studio/" property="og:url"/>
+<meta content="QR Code Studio" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="QR Code Studio — Generate &amp; Scan QR Codes" name="twitter:title"/>
+<meta content="Generate QR codes for any content type with custom colors. Scan QR codes from camera or image. 100% client-side." name="twitter:description"/>
+<link href="https://bayhaqy.my.id/apps/qr-studio/" rel="canonical"/>
+<title>QR Code Studio — Generate &amp; Scan QR Codes In Your Browser</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3EQR%3C/text%3E%3C/svg%3E" rel="icon"/>
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -41,14 +41,14 @@
     ]
   }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-  <style>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--fg-2:#1E293B;--muted:#64748B;--muted-2:#94A3B8;
-      --accent:#DC2626;--accent-dark:#B91C1C;
+      --accent:#B91C1C;--accent-dark:#B91C1C;
       --green:#059669;--amber:#D97706;
       --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.10);--card-border-hover:rgba(15,23,42,0.18);
       --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.10);
@@ -60,7 +60,7 @@
     [data-theme="dark"]{
       --bg:#0B1220;--bg-2:#111827;--bg-3:#1E293B;
       --fg:#F1F5F9;--fg-2:#E2E8F0;--muted:#94A3B8;--muted-2:#64748B;
-      --accent:#EF4444;--accent-dark:#DC2626;
+      --accent:#B91C1C;--accent-dark:#991B1B;
       --green:#10B981;--amber:#F59E0B;
       --card-bg:#111827;--card-border:rgba(241,245,249,0.08);--card-border-hover:rgba(241,245,249,0.18);
       --chip-bg:rgba(30,41,59,0.7);--chip-border:rgba(241,245,249,0.08);
@@ -318,9 +318,9 @@
     }
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   </style>
-</head>
-<body>
-  <script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="QR Studio">
+<script>
     (function(){
       var saved = localStorage.getItem('apps-theme');
       if (!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -328,331 +328,298 @@
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/" class="back-link">← All apps</a>
-      <span class="app-title"><span class="mono-badge">QR</span> QR Code Studio</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <span class="icon-moon">☾</span><span class="icon-sun">☀</span>
-      </button>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <h1>Generate &amp; scan QR codes</h1>
-      <p>Build QR codes for text, URLs, Wi-Fi, email, phone, SMS, or vCards with custom colors and error-correction levels. Or scan codes with your camera. Everything runs in your browser — no uploads, no API calls.</p>
-    </section>
-
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="generate" role="tab">Generate</button>
-      <button class="tab" data-tab="scan" role="tab">Scan</button>
-    </div>
-
-    <!-- GENERATE PANEL -->
-    <section id="tab-generate" class="tab-panel active">
-      <div class="gen-grid">
-        <div class="card">
-          <h3>Content <button class="btn btn-subtle" id="sampleBtn">Load sample</button></h3>
-
-          <div class="type-grid" id="typeGrid">
-            <button class="type-btn active" data-type="text">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+<main class="container">
+<section class="hero">
+<h1>Generate &amp; scan QR codes</h1>
+<p>Build QR codes for text, URLs, Wi-Fi, email, phone, SMS, or vCards with custom colors and error-correction levels. Or scan codes with your camera. Everything runs in your browser — no uploads, no API calls.</p>
+</section>
+<div class="tabs" role="tablist">
+<button class="tab active" data-tab="generate" role="tab">Generate</button>
+<button class="tab" data-tab="scan" role="tab">Scan</button>
+</div>
+<!-- GENERATE PANEL -->
+<section class="tab-panel active" id="tab-generate">
+<div class="gen-grid">
+<div class="card">
+<h3>Content <button class="btn btn-subtle" id="sampleBtn">Load sample</button></h3>
+<div class="type-grid" id="typeGrid">
+<button class="type-btn active" data-type="text">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg>
               Text
             </button>
-            <button class="type-btn" data-type="url">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+<button class="type-btn" data-type="url">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
               URL
             </button>
-            <button class="type-btn" data-type="wifi">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+<button class="type-btn" data-type="wifi">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" x2="12.01" y1="20" y2="20"></line></svg>
               Wi-Fi
             </button>
-            <button class="type-btn" data-type="email">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+<button class="type-btn" data-type="email">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
               Email
             </button>
-            <button class="type-btn" data-type="phone">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+<button class="type-btn" data-type="phone">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               Phone
             </button>
-            <button class="type-btn" data-type="sms">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<button class="type-btn" data-type="sms">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
               SMS
             </button>
-            <button class="type-btn" data-type="vcard">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+<button class="type-btn" data-type="vcard">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               vCard
             </button>
-          </div>
-
-          <!-- Text -->
-          <div class="type-form" data-form="text">
-            <div class="field">
-              <label for="t-text">Text content</label>
-              <textarea id="t-text" class="input" rows="3" placeholder="Any text you want to encode…"></textarea>
-            </div>
-          </div>
-
-          <!-- URL -->
-          <div class="type-form" data-form="url" style="display:none">
-            <div class="field">
-              <label for="t-url">URL</label>
-              <input id="t-url" type="text" class="input" placeholder="https://example.com" />
-            </div>
-          </div>
-
-          <!-- Wi-Fi -->
-          <div class="type-form" data-form="wifi" style="display:none">
-            <div class="field-row">
-              <div class="field">
-                <label for="wf-ssid">Network name (SSID)</label>
-                <input id="wf-ssid" type="text" class="input" placeholder="MyHomeWiFi" />
-              </div>
-              <div class="field">
-                <label for="wf-pass">Password</label>
-                <input id="wf-pass" type="text" class="input mono" placeholder="Welcome2024" />
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field">
-                <label for="wf-enc">Encryption</label>
-                <select id="wf-enc" class="input">
-                  <option value="WPA">WPA/WPA2</option>
-                  <option value="WEP">WEP</option>
-                  <option value="nopass">None (open)</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="wf-hidden">Hidden network</label>
-                <select id="wf-hidden" class="input">
-                  <option value="false">No</option>
-                  <option value="true">Yes</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div class="type-form" data-form="email" style="display:none">
-            <div class="field">
-              <label for="em-to">To</label>
-              <input id="em-to" type="email" class="input" placeholder="friend@example.com" />
-            </div>
-            <div class="field">
-              <label for="em-subject">Subject</label>
-              <input id="em-subject" type="text" class="input" placeholder="Hello" />
-            </div>
-            <div class="field">
-              <label for="em-body">Body</label>
-              <textarea id="em-body" class="input" rows="3" placeholder="Message body…"></textarea>
-            </div>
-          </div>
-
-          <!-- Phone -->
-          <div class="type-form" data-form="phone" style="display:none">
-            <div class="field">
-              <label for="ph-num">Phone number</label>
-              <input id="ph-num" type="tel" class="input mono" placeholder="+6281234567890" />
-            </div>
-          </div>
-
-          <!-- SMS -->
-          <div class="type-form" data-form="sms" style="display:none">
-            <div class="field">
-              <label for="sm-num">Phone number</label>
-              <input id="sm-num" type="tel" class="input mono" placeholder="+6281234567890" />
-            </div>
-            <div class="field">
-              <label for="sm-msg">Message</label>
-              <textarea id="sm-msg" class="input" rows="3" placeholder="Hey, scan this QR to text me!"></textarea>
-            </div>
-          </div>
-
-          <!-- vCard -->
-          <div class="type-form" data-form="vcard" style="display:none">
-            <div class="field-row">
-              <div class="field">
-                <label for="vc-name">Full name</label>
-                <input id="vc-name" type="text" class="input" placeholder="Achmad Bayhaqy" />
-              </div>
-              <div class="field">
-                <label for="vc-org">Organization</label>
-                <input id="vc-org" type="text" class="input" placeholder="Company" />
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field">
-                <label for="vc-phone">Phone</label>
-                <input id="vc-phone" type="tel" class="input mono" placeholder="+6281234567890" />
-              </div>
-              <div class="field">
-                <label for="vc-email">Email</label>
-                <input id="vc-email" type="email" class="input" placeholder="you@example.com" />
-              </div>
-            </div>
-            <div class="field">
-              <label for="vc-url">URL</label>
-              <input id="vc-url" type="url" class="input" placeholder="https://bayhaqy.my.id" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Customization + Preview -->
-        <div>
-          <div class="card preview-card" style="margin-bottom:1rem">
-            <h3>Preview</h3>
-            <div class="preview-wrap">
-              <canvas id="previewCanvas" width="256" height="256"></canvas>
-              <div class="preview-placeholder" id="previewPlaceholder">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="14" y1="14" x2="14" y2="14.01"/><line x1="20" y1="14" x2="20" y2="14.01"/><line x1="17" y1="17" x2="17" y2="17.01"/><line x1="14" y1="20" x2="14" y2="20.01"/><line x1="20" y1="20" x2="20" y2="20.01"/></svg>
-                <div>Enter content to generate QR</div>
-              </div>
-            </div>
-            <div class="preview-meta" id="previewMeta"></div>
-            <div class="preview-actions">
-              <button class="btn btn-ghost" id="copyPngBtn" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+</div>
+<!-- Text -->
+<div class="type-form" data-form="text">
+<div class="field">
+<label for="t-text">Text content</label>
+<textarea class="input" id="t-text" placeholder="Any text you want to encode…" rows="3"></textarea>
+</div>
+</div>
+<!-- URL -->
+<div class="type-form" data-form="url" style="display:none">
+<div class="field">
+<label for="t-url">URL</label>
+<input class="input" id="t-url" placeholder="https://example.com" type="text"/>
+</div>
+</div>
+<!-- Wi-Fi -->
+<div class="type-form" data-form="wifi" style="display:none">
+<div class="field-row">
+<div class="field">
+<label for="wf-ssid">Network name (SSID)</label>
+<input class="input" id="wf-ssid" placeholder="MyHomeWiFi" type="text"/>
+</div>
+<div class="field">
+<label for="wf-pass">Password</label>
+<input class="input mono" id="wf-pass" placeholder="Welcome2024" type="text"/>
+</div>
+</div>
+<div class="field-row">
+<div class="field">
+<label for="wf-enc">Encryption</label>
+<select class="input" id="wf-enc">
+<option value="WPA">WPA/WPA2</option>
+<option value="WEP">WEP</option>
+<option value="nopass">None (open)</option>
+</select>
+</div>
+<div class="field">
+<label for="wf-hidden">Hidden network</label>
+<select class="input" id="wf-hidden">
+<option value="false">No</option>
+<option value="true">Yes</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Email -->
+<div class="type-form" data-form="email" style="display:none">
+<div class="field">
+<label for="em-to">To</label>
+<input class="input" id="em-to" placeholder="friend@example.com" type="email"/>
+</div>
+<div class="field">
+<label for="em-subject">Subject</label>
+<input class="input" id="em-subject" placeholder="Hello" type="text"/>
+</div>
+<div class="field">
+<label for="em-body">Body</label>
+<textarea class="input" id="em-body" placeholder="Message body…" rows="3"></textarea>
+</div>
+</div>
+<!-- Phone -->
+<div class="type-form" data-form="phone" style="display:none">
+<div class="field">
+<label for="ph-num">Phone number</label>
+<input class="input mono" id="ph-num" placeholder="+6281234567890" type="tel"/>
+</div>
+</div>
+<!-- SMS -->
+<div class="type-form" data-form="sms" style="display:none">
+<div class="field">
+<label for="sm-num">Phone number</label>
+<input class="input mono" id="sm-num" placeholder="+6281234567890" type="tel"/>
+</div>
+<div class="field">
+<label for="sm-msg">Message</label>
+<textarea class="input" id="sm-msg" placeholder="Hey, scan this QR to text me!" rows="3"></textarea>
+</div>
+</div>
+<!-- vCard -->
+<div class="type-form" data-form="vcard" style="display:none">
+<div class="field-row">
+<div class="field">
+<label for="vc-name">Full name</label>
+<input class="input" id="vc-name" placeholder="Achmad Bayhaqy" type="text"/>
+</div>
+<div class="field">
+<label for="vc-org">Organization</label>
+<input class="input" id="vc-org" placeholder="Company" type="text"/>
+</div>
+</div>
+<div class="field-row">
+<div class="field">
+<label for="vc-phone">Phone</label>
+<input class="input mono" id="vc-phone" placeholder="+6281234567890" type="tel"/>
+</div>
+<div class="field">
+<label for="vc-email">Email</label>
+<input class="input" id="vc-email" placeholder="you@example.com" type="email"/>
+</div>
+</div>
+<div class="field">
+<label for="vc-url">URL</label>
+<input class="input" id="vc-url" placeholder="https://bayhaqy.my.id" type="url"/>
+</div>
+</div>
+</div>
+<!-- Customization + Preview -->
+<div>
+<div class="card preview-card" style="margin-bottom:1rem">
+<h3>Preview</h3>
+<div class="preview-wrap">
+<canvas height="256" id="previewCanvas" width="256"></canvas>
+<div class="preview-placeholder" id="previewPlaceholder">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect><line x1="14" x2="14" y1="14" y2="14.01"></line><line x1="20" x2="20" y1="14" y2="14.01"></line><line x1="17" x2="17" y1="17" y2="17.01"></line><line x1="14" x2="14" y1="20" y2="20.01"></line><line x1="20" x2="20" y1="20" y2="20.01"></line></svg>
+<div>Enter content to generate QR</div>
+</div>
+</div>
+<div class="preview-meta" id="previewMeta"></div>
+<div class="preview-actions">
+<button class="btn btn-ghost" disabled="" id="copyPngBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copy
               </button>
-              <button class="btn btn-ghost" id="downloadPngBtn" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<button class="btn btn-ghost" disabled="" id="downloadPngBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
                 PNG
               </button>
-              <button class="btn btn-ghost" id="downloadSvgBtn" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<button class="btn btn-ghost" disabled="" id="downloadSvgBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
                 SVG
               </button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Customize</h3>
-            <div class="custom-grid">
-              <div class="field">
-                <label for="fgColor">Foreground</label>
-                <div class="color-field">
-                  <input type="color" id="fgColor" value="#000000" />
-                  <span class="hex" id="fgHex">#000000</span>
-                </div>
-              </div>
-              <div class="field">
-                <label for="bgColor">Background</label>
-                <div class="color-field">
-                  <input type="color" id="bgColor" value="#FFFFFF" />
-                  <span class="hex" id="bgHex">#FFFFFF</span>
-                </div>
-              </div>
-              <div class="field slider-field" style="grid-column:1/-1">
-                <label for="sizeRange">Size: <span class="val" id="sizeVal">256</span>px</label>
-                <div class="slider-row">
-                  <input type="range" id="sizeRange" min="128" max="1024" step="32" value="256" />
-                </div>
-              </div>
-              <div class="field">
-                <label for="ecLevel">Error correction</label>
-                <select id="ecLevel" class="input">
-                  <option value="L">L — 7%</option>
-                  <option value="M" selected>M — 15%</option>
-                  <option value="Q">Q — 25%</option>
-                  <option value="H">H — 30%</option>
-                </select>
-              </div>
-              <div class="field slider-field">
-                <label for="marginRange">Margin: <span class="val" id="marginVal">2</span></label>
-                <div class="slider-row">
-                  <input type="range" id="marginRange" min="0" max="10" step="1" value="2" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SCAN PANEL -->
-    <section id="tab-scan" class="tab-panel">
-      <div class="scan-wrap">
-        <div class="card">
-          <h3>Scan QR from camera <span class="pill" id="scanPill">Idle</span></h3>
-          <div class="scan-video-wrap">
-            <video id="scanVideo" playsinline muted></video>
-            <div class="scan-overlay" id="scanOverlay" style="display:none"></div>
-            <div class="scan-state" id="scanState">
-              <h4>Camera is off</h4>
-              <p>Click "Start camera" below. You'll be asked for camera permission. The video feed never leaves your device.</p>
-            </div>
-          </div>
-          <div class="scan-controls">
-            <button class="btn btn-primary" id="startCamBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+</div>
+</div>
+<div class="card">
+<h3>Customize</h3>
+<div class="custom-grid">
+<div class="field">
+<label for="fgColor">Foreground</label>
+<div class="color-field">
+<input id="fgColor" type="color" value="#000000"/>
+<span class="hex" id="fgHex">#000000</span>
+</div>
+</div>
+<div class="field">
+<label for="bgColor">Background</label>
+<div class="color-field">
+<input id="bgColor" type="color" value="#FFFFFF"/>
+<span class="hex" id="bgHex">#FFFFFF</span>
+</div>
+</div>
+<div class="field slider-field" style="grid-column:1/-1">
+<label for="sizeRange">Size: <span class="val" id="sizeVal">256</span>px</label>
+<div class="slider-row">
+<input id="sizeRange" max="1024" min="128" step="32" type="range" value="256"/>
+</div>
+</div>
+<div class="field">
+<label for="ecLevel">Error correction</label>
+<select class="input" id="ecLevel">
+<option value="L">L — 7%</option>
+<option selected="" value="M">M — 15%</option>
+<option value="Q">Q — 25%</option>
+<option value="H">H — 30%</option>
+</select>
+</div>
+<div class="field slider-field">
+<label for="marginRange">Margin: <span class="val" id="marginVal">2</span></label>
+<div class="slider-row">
+<input id="marginRange" max="10" min="0" step="1" type="range" value="2"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SCAN PANEL -->
+<section class="tab-panel" id="tab-scan">
+<div class="scan-wrap">
+<div class="card">
+<h3>Scan QR from camera <span class="pill" id="scanPill">Idle</span></h3>
+<div class="scan-video-wrap">
+<video id="scanVideo" muted="" playsinline=""></video>
+<div class="scan-overlay" id="scanOverlay" style="display:none"></div>
+<div class="scan-state" id="scanState">
+<h4>Camera is off</h4>
+<p>Click "Start camera" below. You'll be asked for camera permission. The video feed never leaves your device.</p>
+</div>
+</div>
+<div class="scan-controls">
+<button class="btn btn-primary" id="startCamBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect height="14" rx="2" ry="2" width="15" x="1" y="5"></rect></svg>
               Start camera
             </button>
-            <button class="btn btn-ghost" id="stopCamBtn" disabled>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+<button class="btn btn-ghost" disabled="" id="stopCamBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="12" rx="1" width="12" x="6" y="6"></rect></svg>
               Stop
             </button>
-            <select id="cameraSelect" aria-label="Choose camera" disabled>
-              <option value="">Default camera</option>
-            </select>
-            <button class="btn btn-ghost" id="uploadScanBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+<select aria-label="Choose camera" disabled="" id="cameraSelect">
+<option value="">Default camera</option>
+</select>
+<button class="btn btn-ghost" id="uploadScanBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
               Upload image
             </button>
-            <input type="file" id="scanFileInput" accept="image/*" style="display:none" />
-          </div>
-
-          <div class="scan-result none" id="scanResult">
-            <div class="label">Detected content</div>
-            <div class="value" id="scanValue"></div>
-            <div class="actions">
-              <button class="btn btn-ghost" id="copyScanBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<input accept="image/*" id="scanFileInput" style="display:none" type="file"/>
+</div>
+<div class="scan-result none" id="scanResult">
+<div class="label">Detected content</div>
+<div class="value" id="scanValue"></div>
+<div class="actions">
+<button class="btn btn-ghost" id="copyScanBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copy
               </button>
-              <button class="btn btn-ghost" id="openScanBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+<button class="btn btn-ghost" id="openScanBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" x2="21" y1="14" y2="3"></line></svg>
                 Open
               </button>
-            </div>
-          </div>
-        </div>
+</div>
+</div>
+</div>
+<div class="scan-history" id="scanHistory" style="display:none">
+<h4>Recent scans (this session)</h4>
+<div class="history-list" id="historyList"></div>
+</div>
+</div>
+</section>
+<!-- HOW TO USE -->
+<section class="howto" id="how-to-use">
+<div class="container">
+<h2>How to use</h2>
+<p>Two modes: generate a QR code from your content, or scan one with your camera or an image file.</p>
+<div class="steps-grid">
+<div class="step-card"><div class="step-num">01</div><h4>Pick a content type</h4><p>Choose Text, URL, Wi-Fi, Email, Phone, SMS, or vCard from the row of buttons at the top.</p></div>
+<div class="step-card"><div class="step-num">02</div><h4>Fill the form</h4><p>The input fields adapt to the type you chose. The preview updates live as you type.</p></div>
+<div class="step-card"><div class="step-num">03</div><h4>Customize (optional)</h4><p>Change colors, size, error-correction level, and margin. Higher error correction lets the QR survive smudges.</p></div>
+<div class="step-card"><div class="step-num">04</div><h4>Export</h4><p>Download as PNG or SVG, or copy the PNG to your clipboard to paste into a document or image editor.</p></div>
+<div class="step-card"><div class="step-num">05</div><h4>Scan</h4><p>Switch to the Scan tab, allow camera access, point at a QR code. Or upload an image to scan instead.</p></div>
+</div>
+<div style="margin-top:1rem">
+<button class="btn btn-ghost" id="howtoSampleBtn">Load Wi-Fi sample</button>
+</div>
+</div>
+</section>
+</main>
 
-        <div class="scan-history" id="scanHistory" style="display:none">
-          <h4>Recent scans (this session)</h4>
-          <div class="history-list" id="historyList"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOW TO USE -->
-    <section class="howto" id="how-to-use">
-      <div class="container">
-        <h2>How to use</h2>
-        <p>Two modes: generate a QR code from your content, or scan one with your camera or an image file.</p>
-        <div class="steps-grid">
-          <div class="step-card"><div class="step-num">01</div><h4>Pick a content type</h4><p>Choose Text, URL, Wi-Fi, Email, Phone, SMS, or vCard from the row of buttons at the top.</p></div>
-          <div class="step-card"><div class="step-num">02</div><h4>Fill the form</h4><p>The input fields adapt to the type you chose. The preview updates live as you type.</p></div>
-          <div class="step-card"><div class="step-num">03</div><h4>Customize (optional)</h4><p>Change colors, size, error-correction level, and margin. Higher error correction lets the QR survive smudges.</p></div>
-          <div class="step-card"><div class="step-num">04</div><h4>Export</h4><p>Download as PNG or SVG, or copy the PNG to your clipboard to paste into a document or image editor.</p></div>
-          <div class="step-card"><div class="step-num">05</div><h4>Scan</h4><p>Switch to the Scan tab, allow camera access, point at a QR code. Or upload an image to scan instead.</p></div>
-        </div>
-        <div style="margin-top:1rem">
-          <button class="btn btn-ghost" id="howtoSampleBtn">Load Wi-Fi sample</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p class="footer-text">Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> · Runs 100% in your browser · <a href="https://github.com/bayhaqy/apps">Source</a></p>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast"></div>
-  <a id="downloadLink" style="display:none"></a>
-
+<div class="toast" id="toast"></div>
+<a id="downloadLink" style="display:none"></a>
 <script>
 "use strict";
 /* ============================================================
@@ -1136,12 +1103,10 @@ function toggleTheme(){
   var cur = document.documentElement.getAttribute('data-theme') || 'light';
   var next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('apps-theme', next);
 }
 
 /* ---------- wire up ---------- */
 document.addEventListener('DOMContentLoaded', function(){
-  $('themeToggle').addEventListener('click', toggleTheme);
 
   // tabs
   $$('.tab').forEach(function(t){
@@ -1240,5 +1205,5 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-</body>
+<script data-app-name="QR Studio" src="/apps/assets/app-shell.js"></script></body>
 </html>
