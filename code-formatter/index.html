@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Free in-browser code formatter and beautifier for SQL, Python, HTML, CSS, and JavaScript. Prettier and sql-formatter run locally — no uploads, no tracking." />
-<meta name="keywords" content="code formatter, beautifier, SQL formatter, Python indenter, HTML prettier, CSS formatter, JavaScript formatter, prettier online" />
-<meta name="author" content="Achmad Bayhaqy" />
-<meta name="theme-color" content="#DC2626" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Code Formatter & Beautifier — SQL, Python, HTML, CSS, JS" />
-<meta property="og:description" content="Beautify messy code with Prettier and sql-formatter. 100% client-side, runs in your browser." />
-<meta property="og:url" content="https://bayhaqy.my.id/apps/code-formatter/" />
-<meta name="twitter:card" content="summary" />
-<title>Code Formatter & Beautifier — Bayhaqy Apps</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='ui-monospace,monospace' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Free in-browser code formatter and beautifier for SQL, Python, HTML, CSS, and JavaScript. Prettier and sql-formatter run locally — no uploads, no tracking." name="description"/>
+<meta content="code formatter, beautifier, SQL formatter, Python indenter, HTML prettier, CSS formatter, JavaScript formatter, prettier online" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Code Formatter &amp; Beautifier — SQL, Python, HTML, CSS, JS" property="og:title"/>
+<meta content="Beautify messy code with Prettier and sql-formatter. 100% client-side, runs in your browser." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/code-formatter/" property="og:url"/>
+<meta content="summary" name="twitter:card"/>
+<title>Code Formatter &amp; Beautifier — Bayhaqy Apps</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='66' font-family='ui-monospace,monospace' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" rel="icon"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
   --fg:#0F172A;--muted:#64748B;
-  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --accent:#B91C1C;--accent-dim:#FEE2E2;
   --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
   --chip-bg:#F1F5F9;
   --add-bg:#DCFCE7;--add-fg:#166534;
@@ -30,7 +30,7 @@
 [data-theme="dark"]{
   --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
   --fg:#F1F5F9;--muted:#94A3B8;
-  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --accent:#B91C1C;--accent-dim:rgba(239,68,68,0.18);
   --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
   --chip-bg:rgba(30,41,59,0.6);
   --add-bg:rgba(34,197,94,0.18);--add-fg:#86EFAC;
@@ -198,8 +198,8 @@ footer.site-footer a:hover{text-decoration:underline}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
-</head>
-<body>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="Code Formatter">
 <script>
 (function(){
   var t = localStorage.getItem('apps-theme');
@@ -208,143 +208,118 @@ footer.site-footer a:hover{text-decoration:underline}
 })();
 </script>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a href="/apps/" class="back-link">&larr; All apps</a>
-    <span class="app-title">Code Formatter</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="icon-moon">&#9790;</span><span class="icon-sun">&#9728;</span>
-    </button>
-  </div>
-</header>
-
 <main>
-  <section class="hero container">
-    <span class="hero-eyebrow">Beautify &middot; Indent &middot; Normalize</span>
-    <h1>Code Formatter &amp; Beautifier</h1>
-    <p class="sub">Paste messy SQL, Python, HTML, CSS, or JavaScript and get clean, consistently indented code back. Formatting runs entirely in your browser via Prettier and sql-formatter &mdash; nothing is uploaded.</p>
-  </section>
-
-  <section class="container">
-    <div class="card">
-      <div class="card-head">
-        <h2>Format code</h2>
-        <span class="hint">Auto-formats as you type &middot; 300&nbsp;ms debounce</span>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-row">
-          <div class="field">
-            <label for="lang">Language</label>
-            <select id="lang">
-              <option value="sql">SQL</option>
-              <option value="python">Python</option>
-              <option value="html">HTML</option>
-              <option value="css">CSS</option>
-              <option value="javascript">JavaScript</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="indent">Indent style</label>
-            <select id="indent">
-              <option value="2">2 spaces</option>
-              <option value="4">4 spaces</option>
-              <option value="tab">Tabs</option>
-            </select>
-          </div>
-          <div class="field" id="caseField">
-            <label for="caseKw">Keyword case (SQL)</label>
-            <select id="caseKw">
-              <option value="preserve">Preserve</option>
-              <option value="upper">UPPERCASE</option>
-              <option value="lower">lowercase</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="lineWidth">Line width</label>
-            <input type="number" id="lineWidth" value="80" min="40" max="200" step="4" />
-          </div>
-        </div>
-      </div>
-
-      <div class="editor-grid">
-        <div class="editor-col">
-          <div class="editor-label">
-            <span>Input</span>
-            <span class="mini" id="inStats">0 lines &middot; 0 chars</span>
-          </div>
-          <textarea class="editor" id="input" spellcheck="false" placeholder="Paste messy code here, or press Load sample below."></textarea>
-        </div>
-        <div class="editor-col">
-          <div class="editor-label">
-            <span>Output</span>
-            <span class="mini" id="outStats">0 lines &middot; 0 chars</span>
-          </div>
-          <textarea class="editor" id="output" readonly spellcheck="false" placeholder="Formatted code will appear here."></textarea>
-        </div>
-      </div>
-
-      <div class="banner" id="banner"></div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="formatBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+<section class="hero container">
+<span class="hero-eyebrow">Beautify · Indent · Normalize</span>
+<h1>Code Formatter &amp; Beautifier</h1>
+<p class="sub">Paste messy SQL, Python, HTML, CSS, or JavaScript and get clean, consistently indented code back. Formatting runs entirely in your browser via Prettier and sql-formatter — nothing is uploaded.</p>
+</section>
+<section class="container">
+<div class="card">
+<div class="card-head">
+<h2>Format code</h2>
+<span class="hint">Auto-formats as you type · 300 ms debounce</span>
+</div>
+<div class="form-grid">
+<div class="form-row">
+<div class="field">
+<label for="lang">Language</label>
+<select id="lang">
+<option value="sql">SQL</option>
+<option value="python">Python</option>
+<option value="html">HTML</option>
+<option value="css">CSS</option>
+<option value="javascript">JavaScript</option>
+</select>
+</div>
+<div class="field">
+<label for="indent">Indent style</label>
+<select id="indent">
+<option value="2">2 spaces</option>
+<option value="4">4 spaces</option>
+<option value="tab">Tabs</option>
+</select>
+</div>
+<div class="field" id="caseField">
+<label for="caseKw">Keyword case (SQL)</label>
+<select id="caseKw">
+<option value="preserve">Preserve</option>
+<option value="upper">UPPERCASE</option>
+<option value="lower">lowercase</option>
+</select>
+</div>
+<div class="field">
+<label for="lineWidth">Line width</label>
+<input id="lineWidth" max="200" min="40" step="4" type="number" value="80"/>
+</div>
+</div>
+</div>
+<div class="editor-grid">
+<div class="editor-col">
+<div class="editor-label">
+<span>Input</span>
+<span class="mini" id="inStats">0 lines · 0 chars</span>
+</div>
+<textarea class="editor" id="input" placeholder="Paste messy code here, or press Load sample below." spellcheck="false"></textarea>
+</div>
+<div class="editor-col">
+<div class="editor-label">
+<span>Output</span>
+<span class="mini" id="outStats">0 lines · 0 chars</span>
+</div>
+<textarea class="editor" id="output" placeholder="Formatted code will appear here." readonly="" spellcheck="false"></textarea>
+</div>
+</div>
+<div class="banner" id="banner"></div>
+<div class="btn-row">
+<button class="btn btn-primary" id="formatBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"></path></svg>
           Format
         </button>
-        <button class="btn btn-ghost" id="sampleBtn">Load sample</button>
-        <button class="btn btn-ghost" id="clearBtn">Clear</button>
-        <span class="btn-spacer"></span>
-        <button class="btn btn-ghost" id="copyBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<button class="btn btn-ghost" id="sampleBtn">Load sample</button>
+<button class="btn btn-ghost" id="clearBtn">Clear</button>
+<span class="btn-spacer"></span>
+<button class="btn btn-ghost" disabled="" id="copyBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Copy output
         </button>
-        <button class="btn btn-ghost" id="downloadBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<button class="btn btn-ghost" disabled="" id="downloadBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
           Download
         </button>
-      </div>
-
-      <div class="stats">
-        <span class="stat-pill" id="pillLang">SQL</span>
-        <span class="stat-pill" id="pillIndent">2 spaces</span>
-        <span class="stat-pill" id="pillWidth">80 cols</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="section container" id="how-to-use">
-    <h2>How to use</h2>
-    <p>Five-step workflow. Sample data is bundled for each language so you can verify the formatter instantly.</p>
-    <ol class="steps">
-      <li><strong>Pick a language</strong> &mdash; SQL, Python, HTML, CSS, or JavaScript. The options panel adapts; SQL gets a keyword-case selector.</li>
-      <li><strong>Set indent and width</strong> &mdash; choose tabs, 2 spaces, or 4 spaces, and a print width between 40 and 200. Defaults are 2 spaces / 80 columns.</li>
-      <li><strong>Paste or load sample</strong> &mdash; drop your messy code into the Input pane on the left, or press <em>Load sample</em> to see a realistic example formatted immediately.</li>
-      <li><strong>Auto-format</strong> &mdash; the Output pane updates 300&nbsp;ms after you stop typing. Press <em>Format</em> to force a re-run, or <em>Clear</em> to reset both panes.</li>
-      <li><strong>Copy or download</strong> &mdash; press <em>Copy output</em> to copy to clipboard, or <em>Download</em> to save with the correct file extension (<code>.sql</code>, <code>.py</code>, <code>.html</code>, <code>.css</code>, <code>.js</code>).</li>
-    </ol>
-  </section>
-
-  <section class="section container">
-    <h2>What it formats</h2>
-    <div class="features-grid">
-      <div class="feature"><h4>SQL</h4><p>One-liner SELECT statements, JOINs, subqueries &mdash; formatted by sql-formatter with selectable keyword case (UPPER / lower / preserve).</p></div>
-      <div class="feature"><h4>Python</h4><p>Heuristic indentation re-flow based on colon-terminated lines. Handles mixed tabs/spaces and collapsed nested blocks.</p></div>
-      <div class="feature"><h4>HTML</h4><p>Prettier HTML parser &mdash; expands minified markup, normalizes attribute quoting, breaks long lines at the configured print width.</p></div>
-      <div class="feature"><h4>CSS</h4><p>Prettier PostCSS plugin &mdash; one rule per line, aligned declarations, sorted where unambiguous, consistent trailing semicolons.</p></div>
-      <div class="feature"><h4>JavaScript</h4><p>Prettier Babel plugin &mdash; expands minified arrow chains, normalizes quotes and semicolons, enforces 2-space style by default.</p></div>
-      <div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is sent anywhere &mdash; verify in DevTools &rarr; Network. Only library bundles load from CDN on first visit.</p></div>
-    </div>
-  </section>
+</div>
+<div class="stats">
+<span class="stat-pill" id="pillLang">SQL</span>
+<span class="stat-pill" id="pillIndent">2 spaces</span>
+<span class="stat-pill" id="pillWidth">80 cols</span>
+</div>
+</div>
+</section>
+<section class="section container" id="how-to-use">
+<h2>How to use</h2>
+<p>Five-step workflow. Sample data is bundled for each language so you can verify the formatter instantly.</p>
+<ol class="steps">
+<li><strong>Pick a language</strong> — SQL, Python, HTML, CSS, or JavaScript. The options panel adapts; SQL gets a keyword-case selector.</li>
+<li><strong>Set indent and width</strong> — choose tabs, 2 spaces, or 4 spaces, and a print width between 40 and 200. Defaults are 2 spaces / 80 columns.</li>
+<li><strong>Paste or load sample</strong> — drop your messy code into the Input pane on the left, or press <em>Load sample</em> to see a realistic example formatted immediately.</li>
+<li><strong>Auto-format</strong> — the Output pane updates 300 ms after you stop typing. Press <em>Format</em> to force a re-run, or <em>Clear</em> to reset both panes.</li>
+<li><strong>Copy or download</strong> — press <em>Copy output</em> to copy to clipboard, or <em>Download</em> to save with the correct file extension (<code>.sql</code>, <code>.py</code>, <code>.html</code>, <code>.css</code>, <code>.js</code>).</li>
+</ol>
+</section>
+<section class="section container">
+<h2>What it formats</h2>
+<div class="features-grid">
+<div class="feature"><h4>SQL</h4><p>One-liner SELECT statements, JOINs, subqueries — formatted by sql-formatter with selectable keyword case (UPPER / lower / preserve).</p></div>
+<div class="feature"><h4>Python</h4><p>Heuristic indentation re-flow based on colon-terminated lines. Handles mixed tabs/spaces and collapsed nested blocks.</p></div>
+<div class="feature"><h4>HTML</h4><p>Prettier HTML parser — expands minified markup, normalizes attribute quoting, breaks long lines at the configured print width.</p></div>
+<div class="feature"><h4>CSS</h4><p>Prettier PostCSS plugin — one rule per line, aligned declarations, sorted where unambiguous, consistent trailing semicolons.</p></div>
+<div class="feature"><h4>JavaScript</h4><p>Prettier Babel plugin — expands minified arrow chains, normalizes quotes and semicolons, enforces 2-space style by default.</p></div>
+<div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is sent anywhere — verify in DevTools → Network. Only library bundles load from CDN on first visit.</p></div>
+</div>
+</section>
 </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
-  </div>
-</footer>
-
 <div class="toast" id="toast"></div>
-
 <!-- Library loader: ESM modules exposed as window globals -->
 <script type="module">
 import * as prettier from "https://esm.run/prettier@3.3.3/standalone";
@@ -359,19 +334,11 @@ window.sqlFormatter = sqlFormatter;
 window.__fmtReady = true;
 document.dispatchEvent(new CustomEvent('fmt-ready'));
 </script>
-
 <script>
 (function(){
 'use strict';
 
 // ===== Theme toggle =====
-var themeBtn = document.getElementById('themeToggle');
-themeBtn.addEventListener('click', function(){
-  var cur = document.documentElement.getAttribute('data-theme');
-  var next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('apps-theme', next);
-});
 
 // ===== Toast =====
 var toastEl = document.getElementById('toast');
@@ -686,5 +653,5 @@ updateStats();
 checkReady();
 })();
 </script>
-</body>
+<script data-app-name="Code Formatter" src="/apps/assets/app-shell.js"></script></body>
 </html>
