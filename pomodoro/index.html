@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Pomodoro focus timer with a procedural ambient sound studio. Focus 25 / Short Break 5 / Long Break 15, configurable, with rain, cafe, ocean, white noise and birds generated live in your browser via the Web Audio API. No audio files, no uploads, no tracking." />
+<meta name="keywords" content="pomodoro, focus timer, ambient sound, white noise, rain sounds, study timer, productivity, web audio, offline" />
+<meta name="author" content="Achmad Bayhaqy" />
+<meta name="theme-color" content="#DC2626" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Pomodoro Tracker with Ambient Sound Studio" />
+<meta property="og:description" content="Focus timer with a procedural ambient sound mixer. All sounds generated live in-browser via Web Audio API." />
+<meta property="og:url" content="https://bayhaqy.my.id/apps/pomodoro/" />
+<meta name="twitter:card" content="summary" />
+<title>Pomodoro + Ambient Sound Studio — Bayhaqy Apps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+  --fg:#0F172A;--muted:#64748B;
+  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --green:#0F766E;--green-dim:rgba(15,118,110,0.10);
+  --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
+  --chip-bg:#F1F5F9;
+  --radius:10px;--radius-sm:6px;
+  --max-w:960px;
+}
+[data-theme="dark"]{
+  --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+  --fg:#F1F5F9;--muted:#94A3B8;
+  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --green:#14B8A6;--green-dim:rgba(20,184,166,0.14);
+  --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
+  --chip-bg:rgba(30,41,59,0.6);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+  transition:background-color .2s,color .2s;
+}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+/* Header */
+header.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+[data-theme="dark"] header.site-header{background:rgba(15,23,42,0.92)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:1rem}
+.back-link{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;white-space:nowrap}
+.back-link:hover{color:var(--fg)}
+.app-title{font-weight:700;font-size:1rem;color:var(--fg);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.theme-toggle{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+  background:var(--chip-bg);color:var(--fg);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:background .15s,border-color .15s;
+}
+.theme-toggle:hover{border-color:var(--border-strong)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+/* Hero */
+.hero{padding:2rem 0 1rem;text-align:center}
+.hero-eyebrow{
+  display:inline-block;color:var(--accent);font-size:.78rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.hero h1{font-size:clamp(1.6rem,4vw,2.2rem);line-height:1.15;letter-spacing:-.01em;font-weight:800;margin-bottom:.5rem}
+.hero p.sub{font-size:.95rem;color:var(--muted);max-width:620px;margin:0 auto}
+
+/* Layout: timer + mixer side by side on desktop */
+.workspace{display:grid;grid-template-columns:1fr;gap:1.25rem;margin-top:1.5rem}
+@media(min-width:880px){.workspace{grid-template-columns:1.1fr .9fr;align-items:start}}
+
+/* Timer card */
+.timer-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;
+}
+.mode-row{display:flex;gap:.3rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem}
+.mode-btn{
+  appearance:none;background:var(--chip-bg);border:1px solid var(--border);
+  color:var(--muted);font-family:inherit;font-size:.85rem;font-weight:600;
+  padding:.5rem .85rem;border-radius:var(--radius-sm);cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.mode-btn:hover{color:var(--fg);border-color:var(--border-strong)}
+.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mode-btn.active.focus{background:var(--accent);border-color:var(--accent)}
+.mode-btn.active.short,.mode-btn.active.long{background:var(--green);border-color:var(--green)}
+
+/* Ring */
+.ring-wrap{position:relative;width:240px;height:240px;margin:0 auto 1.25rem}
+.ring-svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--bg-3);stroke-width:8}
+.ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke .3s}
+.ring-fill.short,.ring-fill.long{stroke:var(--green)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem}
+.ring-time{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:3rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--fg);line-height:1}
+.ring-mode{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.ring-session{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.ring-session strong{color:var(--accent);font-weight:700}
+
+/* Controls */
+.ctrl-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:.75rem}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  padding:.6rem 1.1rem;border-radius:var(--radius-sm);border:1px solid transparent;
+  font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:background .15s,border-color .15s,opacity .15s;
+}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);min-width:120px}
+.btn-primary:hover:not(:disabled){background:#b91c1c}
+[data-theme="dark"] .btn-primary:hover:not(:disabled){background:#dc2626}
+.btn-ghost{background:var(--bg);color:var(--fg);border-color:var(--border)}
+.btn-ghost:hover:not(:disabled){border-color:var(--border-strong);background:var(--bg-2)}
+.btn-sm{padding:.4rem .7rem;font-size:.8rem;min-width:auto}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.status-line{text-align:center;font-size:.82rem;color:var(--muted);margin-top:.5rem;min-height:1.2rem}
+.status-line strong{color:var(--fg);font-weight:600}
+
+/* Mixer card */
+.mixer-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;
+}
+.mixer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+.mixer-head h2{font-size:.95rem;font-weight:700}
+.mixer-head .hint{font-size:.75rem;color:var(--muted)}
+.mixer-master{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--muted);margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.mixer-master input[type=range]{flex:1}
+.mixer-list{display:flex;flex-direction:column;gap:.6rem}
+.sound-row{
+  display:grid;grid-template-columns:1fr auto;gap:.5rem .75rem;align-items:center;
+  padding:.6rem .7rem;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);transition:border-color .15s;
+}
+.sound-row.on{border-color:var(--accent)}
+.sound-row.on .sound-name{color:var(--accent)}
+.sound-info{display:flex;align-items:center;gap:.6rem;grid-column:1}
+.sound-toggle{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card-bg);color:var(--muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s,border-color .15s;flex-shrink:0;
+}
+.sound-toggle:hover{border-color:var(--border-strong);color:var(--fg)}
+.sound-row.on .sound-toggle{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sound-toggle svg{width:14px;height:14px}
+.sound-name{font-size:.88rem;font-weight:600;color:var(--fg);transition:color .15s}
+.sound-vol-label{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:2.5ch;text-align:right}
+.sound-slider{grid-column:1 / -1;display:flex;align-items:center;gap:.5rem}
+.sound-slider input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+
+/* Settings */
+.settings-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;margin-top:1.25rem;
+}
+.settings-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.settings-head h2{font-size:.95rem;font-weight:700}
+.settings-chev{color:var(--muted);transition:transform .2s;font-size:.85rem}
+.settings-card.open .settings-chev{transform:rotate(180deg)}
+.settings-body{max-height:0;overflow:hidden;transition:max-height .25s ease;margin-top:0}
+.settings-card.open .settings-body{max-height:680px;margin-top:1rem}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.85rem}
+.s-field{display:flex;flex-direction:column;gap:.25rem}
+.s-field label{font-size:.74rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.s-field input[type=number]{font-family:inherit;font-size:.9rem;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .6rem;width:100%}
+.s-field input[type=number]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.s-toggles{display:flex;flex-direction:column;gap:.5rem;margin-top:.85rem}
+.s-check{display:flex;align-items:center;gap:.5rem;font-size:.88rem;cursor:pointer}
+.s-check input{width:16px;height:16px;accent-color:var(--accent)}
+.s-actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+
+/* How to use */
+.section{padding:2.5rem 0 1rem}
+.section h2{font-size:1.35rem;margin-bottom:.5rem;letter-spacing:-.01em}
+.section > .container > p{color:var(--muted);margin-bottom:1.25rem;max-width:640px;font-size:.95rem}
+.steps{counter-reset:step;list-style:none;padding:0;display:grid;gap:.6rem;max-width:640px}
+.steps li{
+  counter-increment:step;position:relative;padding:.7rem .8rem .7rem 2.6rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.9rem;line-height:1.5;
+}
+.steps li::before{
+  content:counter(step);position:absolute;left:.7rem;top:50%;transform:translateY(-50%);
+  width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;
+}
+.steps li strong{color:var(--fg)}
+
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;margin-top:1rem}
+.feature{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.feature h4{font-size:.95rem;margin-bottom:.3rem;font-weight:700}
+.feature p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* Footer */
+footer.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem}
+footer.site-footer p{font-size:.85rem;color:var(--muted);text-align:center}
+footer.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+footer.site-footer a:hover{text-decoration:underline}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(150%);
+  background:var(--fg);color:var(--bg);padding:.7rem 1.2rem;border-radius:var(--radius-sm);
+  font-size:.88rem;font-weight:500;box-shadow:0 6px 20px -4px rgba(0,0,0,0.25);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:200;max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .hero{padding:1.5rem 0 .75rem}
+  .timer-card,.mixer-card,.settings-card{padding:1.1rem}
+  .ring-wrap{width:200px;height:200px}
+  .ring-time{font-size:2.5rem}
+  .header-inner{padding:.55rem 0}
+  .app-title{font-size:.92rem}
+  .back-link{font-size:.82rem}
+  .btn-primary{min-width:100px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var t = localStorage.getItem('apps-theme');
+  if(!t){ t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/apps/" class="back-link">&larr; All apps</a>
+    <span class="app-title">Pomodoro + Sound Studio</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="icon-moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <span class="hero-eyebrow">Focus timer &middot; Procedural audio</span>
+    <h1>Pomodoro Tracker + Ambient Sound Studio</h1>
+    <p class="sub">A configurable focus timer with a built-in ambient sound mixer. Five sounds — rain, cafe, ocean, white noise and birds — are generated live in your browser through the Web Audio API. No audio files, no network requests, no tracking.</p>
+  </section>
+
+  <div class="workspace">
+    <!-- Timer -->
+    <div class="timer-card">
+      <div class="mode-row" id="modeRow">
+        <button class="mode-btn active" data-mode="focus">Focus 25</button>
+        <button class="mode-btn" data-mode="short">Short Break 5</button>
+        <button class="mode-btn" data-mode="long">Long Break 15</button>
+      </div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+          <circle class="ring-track" cx="120" cy="120" r="110"></circle>
+          <circle class="ring-fill" id="ringFill" cx="120" cy="120" r="110"
+            stroke-dasharray="691.15" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-time" id="ringTime">25:00</div>
+          <div class="ring-mode" id="ringMode">Focus</div>
+          <div class="ring-session">Today: <strong id="sessionCount">0</strong> sessions</div>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <button class="btn btn-primary" id="startBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span id="startLabel">Start</span>
+        </button>
+        <button class="btn btn-ghost" id="resetBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Reset
+        </button>
+        <button class="btn btn-ghost btn-sm" id="skipBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          Skip
+        </button>
+      </div>
+      <div class="status-line" id="statusLine">Press Start to begin a focus session.</div>
+    </div>
+
+    <!-- Sound mixer -->
+    <div class="mixer-card">
+      <div class="mixer-head">
+        <h2>Ambient mixer</h2>
+        <span class="hint">Procedural &middot; Web Audio</span>
+      </div>
+      <div class="mixer-master">
+        <span>Master</span>
+        <input type="range" id="masterVol" min="0" max="100" value="70" aria-label="Master volume" />
+        <span class="sound-vol-label" id="masterVolLabel">70%</span>
+      </div>
+      <div class="mixer-list" id="mixerList">
+        <!-- sound rows injected by JS -->
+      </div>
+      <div class="s-actions" style="margin-top:1rem">
+        <button class="btn btn-ghost btn-sm" id="loadSample">Load sample preset</button>
+        <button class="btn btn-ghost btn-sm" id="stopAll">Stop all sounds</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="settings-card" id="settingsCard">
+    <div class="settings-head" id="settingsHead">
+      <h2>Settings</h2>
+      <span class="settings-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="settings-body">
+      <div class="settings-grid">
+        <div class="s-field"><label for="setFocus">Focus duration (min)</label><input type="number" id="setFocus" min="1" max="120" value="25"></div>
+        <div class="s-field"><label for="setShort">Short break (min)</label><input type="number" id="setShort" min="1" max="60" value="5"></div>
+        <div class="s-field"><label for="setLong">Long break (min)</label><input type="number" id="setLong" min="1" max="60" value="15"></div>
+        <div class="s-field"><label for="setLongEvery">Long break after N focus</label><input type="number" id="setLongEvery" min="2" max="12" value="4"></div>
+      </div>
+      <div class="s-toggles">
+        <label class="s-check"><input type="checkbox" id="setAutoBreak"> Auto-start breaks after focus</label>
+        <label class="s-check"><input type="checkbox" id="setAutoFocus"> Auto-start next focus after break</label>
+        <label class="s-check"><input type="checkbox" id="setSoundComplete" checked> Play chime on session complete</label>
+        <label class="s-check"><input type="checkbox" id="setNotify"> Show browser notification on complete</label>
+      </div>
+      <div class="s-field" style="max-width:240px;margin-top:.85rem">
+        <label for="setChimeVol">Chime volume</label>
+        <input type="range" id="setChimeVol" min="0" max="100" value="60" aria-label="Chime volume" style="accent-color:var(--accent)">
+      </div>
+      <div class="s-actions">
+        <button class="btn btn-ghost btn-sm" id="saveSettings">Save settings</button>
+        <button class="btn btn-ghost btn-sm" id="resetSettings">Reset to defaults</button>
+        <button class="btn btn-ghost btn-sm" id="resetSessions">Reset today's count</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="how-to-use">
+    <h2>How to use</h2>
+    <p>Five steps from cold start to a finished focus block.</p>
+    <ol class="steps">
+      <li><strong>Press Start</strong> — the timer begins counting down from the focus duration (default 25 min). The ring depletes as time passes.</li>
+      <li><strong>Optionally enable ambient sounds</strong> — click any sound toggle in the mixer (rain, cafe, ocean, white noise, birds). Adjust each volume independently; multiple sounds layer.</li>
+      <li><strong>When focus ends</strong> — a chime plays and a short break starts (auto or manual). The session counter increments by one.</li>
+      <li><strong>After every N focus sessions</strong> (default 4) — a long break replaces the short break. Use Reset to restart the current mode, or Skip to advance immediately.</li>
+      <li><strong>Customize in Settings</strong> — change durations, toggle auto-start, enable browser notifications, or press Load sample preset to try 50/10/30 with rain + cafe.</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>What it does</h2>
+    <div class="features-grid">
+      <div class="feature"><h4>Configurable timer</h4><p>Focus, short break and long break durations are all editable. Long break triggers after every N focus sessions you complete.</p></div>
+      <div class="feature"><h4>Procedural ambient audio</h4><p>Rain, ocean, cafe, white noise and birds are synthesized live with the Web Audio API — no audio files, no downloads, fully offline.</p></div>
+      <div class="feature"><h4>Daily session counter</h4><p>Tracks completed focus sessions per calendar day, persisted in localStorage. Resets automatically when the date changes.</p></div>
+      <div class="feature"><h4>Notifications &amp; chimes</h4><p>Optional browser notification and a synthesized bell chime on session complete. Both can be toggled in settings.</p></div>
+      <div class="feature"><h4>Dark mode</h4><p>Light/dark theme toggle persisted in localStorage under <code>apps-theme</code>. Respects system preference on first visit.</p></div>
+      <div class="feature"><h4>Zero dependencies</h4><p>Single HTML file, ~45 KB. No external scripts, no fonts, no audio assets, no analytics.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+// ===== Theme =====
+document.getElementById('themeToggle').addEventListener('click', function(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('apps-theme', next);
+});
+
+// ===== Toast =====
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+}
+
+// ===== Default settings =====
+var DEFAULTS = { focus:25, short:5, long:15, longEvery:4, autoBreak:false, autoFocus:false, soundComplete:true, chimeVol:60, notify:false };
+
+function loadSettings(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pomodoro-settings') || '{}');
+    return Object.assign({}, DEFAULTS, s);
+  } catch(e){ return Object.assign({}, DEFAULTS); }
+}
+function saveSettings(s){ localStorage.setItem('pomodoro-settings', JSON.stringify(s)); }
+
+var settings = loadSettings();
+
+// ===== Daily session counter =====
+function todayKey(){
+  var d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function loadSessions(){
+  try {
+    var data = JSON.parse(localStorage.getItem('pomodoro-state') || '{}');
+    if(data.date !== todayKey()){ return 0; }
+    return data.count || 0;
+  } catch(e){ return 0; }
+}
+function saveSessions(count){
+  localStorage.setItem('pomodoro-state', JSON.stringify({ date: todayKey(), count: count }));
+}
+var sessionsToday = loadSessions();
+
+// ===== Timer state =====
+var MODE_LABELS = { focus:'Focus', short:'Short Break', long:'Long Break' };
+var MODE_DURATIONS = { focus:settings.focus, short:settings.short, long:settings.long };
+var currentMode = 'focus';
+var running = false;
+var remaining = settings.focus * 60; // seconds
+var endTimestamp = 0;
+var focusCompletedInCycle = 0;
+var tickHandle = null;
+
+var RING_CIRC = 2 * Math.PI * 110; // 691.15
+
+var ringFill = document.getElementById('ringFill');
+var ringTime = document.getElementById('ringTime');
+var ringMode = document.getElementById('ringMode');
+var sessionCountEl = document.getElementById('sessionCount');
+var startBtn = document.getElementById('startBtn');
+var startLabel = document.getElementById('startLabel');
+var resetBtn = document.getElementById('resetBtn');
+var skipBtn = document.getElementById('skipBtn');
+var statusLine = document.getElementById('statusLine');
+var modeRow = document.getElementById('modeRow');
+
+function modeSeconds(mode){ return settings[mode] * 60; }
+
+function setMode(mode, opts){
+  opts = opts || {};
+  currentMode = mode;
+  remaining = modeSeconds(mode);
+  running = false;
+  clearInterval(tickHandle);
+  tickHandle = null;
+  // Update mode buttons
+  [].forEach.call(modeRow.querySelectorAll('.mode-btn'), function(b){
+    b.classList.toggle('active', b.dataset.mode === mode);
+    // Update label with current duration
+    var m = b.dataset.mode;
+    var lbl = (m === 'focus' ? 'Focus ' : (m === 'short' ? 'Short Break ' : 'Long Break ')) + settings[m];
+    b.textContent = lbl;
+  });
+  // Update ring color class
+  ringFill.classList.remove('short','long');
+  if(mode === 'short') ringFill.classList.add('short');
+  else if(mode === 'long') ringFill.classList.add('long');
+  ringMode.textContent = MODE_LABELS[mode];
+  startLabel.textContent = 'Start';
+  startBtn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  renderTime();
+  if(!opts.silent) statusLine.textContent = 'Ready for ' + MODE_LABELS[mode].toLowerCase() + '. Press Start.';
+}
+
+function renderTime(){
+  var m = Math.floor(remaining / 60);
+  var s = Math.floor(remaining % 60);
+  ringTime.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  // Ring depletion: offset = C * (elapsed/total) — but if not running, show full ring (offset=0 means full)
+  // We want: at start (remaining=total), full ring visible (offset=0).
+  //         at end (remaining=0), empty ring (offset=C).
+  // offset = C * (1 - remaining/total)
+  var total = modeSeconds(currentMode);
+  var elapsed = total - remaining;
+  var offset = RING_CIRC * (elapsed / total);
+  ringFill.setAttribute('stroke-dashoffset', offset);
+  sessionCountEl.textContent = sessionsToday;
+}
+
+function tick(){
+  if(!running) return;
+  var now = Date.now();
+  remaining = Math.max(0, Math.round((endTimestamp - now) / 1000));
+  renderTime();
+  if(remaining <= 0){
+    complete();
+  }
+}
+
+function start(){
+  if(remaining <= 0) remaining = modeSeconds(currentMode);
+  running = true;
+  endTimestamp = Date.now() + remaining * 1000;
+  startLabel.textContent = 'Pause';
+  startBtn.querySelector('svg').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  statusLine.innerHTML = 'Running <strong>' + MODE_LABELS[currentMode] + '</strong>';
+  // Ensure audio context resumes (user gesture)
+  SoundEngine.resume();
+  // Request notification permission if enabled
+  if(settings.notify && 'Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission();
+  }
+  clearInterval(tickHandle);
+  tickHandle = setInterval(tick, 250);
+  tick();
+}
+
+function pause(){
+  running = false;
+  clearInterval(tickHandle);
+  tickHandle = null;
+  startLabel.textContent = 'Resume';
+  startBtn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  statusLine.textContent = 'Paused. Press Resume to continue.';
+}
+
+function complete(){
+  running = false;
+  clearInterval(tickHandle);
+  tickHandle = null;
+  remaining = 0;
+  renderTime();
+  // Chime + notification
+  if(settings.soundComplete) SoundEngine.chime(settings.chimeVol / 100);
+  if(settings.notify && 'Notification' in window && Notification.permission === 'granted'){
+    try {
+      new Notification('Pomodoro complete', { body: MODE_LABELS[currentMode] + ' session finished.', silent: true });
+    } catch(e){}
+  }
+  // Advance mode
+  if(currentMode === 'focus'){
+    sessionsToday++;
+    saveSessions(sessionsToday);
+    focusCompletedInCycle++;
+    var nextMode = (focusCompletedInCycle >= settings.longEvery) ? 'long' : 'short';
+    if(nextMode === 'long') focusCompletedInCycle = 0;
+    toast('Focus complete. ' + MODE_LABELS[nextMode] + ' starting.');
+    setMode(nextMode, { silent:true });
+    statusLine.innerHTML = 'Focus complete. <strong>' + sessionsToday + '</strong> sessions today.';
+    if(settings.autoBreak) setTimeout(start, 600);
+    else {
+      startLabel.textContent = 'Start';
+      startBtn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+    }
+  } else {
+    toast(MODE_LABELS[currentMode] + ' complete. Ready to focus.');
+    setMode('focus', { silent:true });
+    statusLine.innerHTML = 'Break over. Ready for next focus session.';
+    if(settings.autoFocus) setTimeout(start, 600);
+    else {
+      startLabel.textContent = 'Start';
+      startBtn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+    }
+  }
+}
+
+startBtn.addEventListener('click', function(){
+  if(running) pause(); else start();
+});
+resetBtn.addEventListener('click', function(){
+  setMode(currentMode);
+  toast('Timer reset');
+});
+skipBtn.addEventListener('click', function(){
+  if(currentMode === 'focus'){
+    // Skipping focus does NOT count as completed
+    var nextMode = (focusCompletedInCycle + 1 >= settings.longEvery) ? 'long' : 'short';
+    setMode(nextMode);
+  } else {
+    setMode('focus');
+  }
+  toast('Skipped to ' + MODE_LABELS[currentMode]);
+});
+modeRow.addEventListener('click', function(e){
+  var btn = e.target.closest('.mode-btn');
+  if(!btn) return;
+  setMode(btn.dataset.mode);
+});
+
+// ===== Settings UI =====
+var settingsCard = document.getElementById('settingsCard');
+document.getElementById('settingsHead').addEventListener('click', function(){
+  settingsCard.classList.toggle('open');
+});
+function fillSettingsForm(){
+  document.getElementById('setFocus').value = settings.focus;
+  document.getElementById('setShort').value = settings.short;
+  document.getElementById('setLong').value = settings.long;
+  document.getElementById('setLongEvery').value = settings.longEvery;
+  document.getElementById('setAutoBreak').checked = settings.autoBreak;
+  document.getElementById('setAutoFocus').checked = settings.autoFocus;
+  document.getElementById('setSoundComplete').checked = settings.soundComplete;
+  document.getElementById('setNotify').checked = settings.notify;
+  document.getElementById('setChimeVol').value = settings.chimeVol;
+}
+fillSettingsForm();
+document.getElementById('saveSettings').addEventListener('click', function(){
+  var next = {
+    focus: clampInt(document.getElementById('setFocus').value, 1, 120, 25),
+    short: clampInt(document.getElementById('setShort').value, 1, 60, 5),
+    long: clampInt(document.getElementById('setLong').value, 1, 60, 15),
+    longEvery: clampInt(document.getElementById('setLongEvery').value, 2, 12, 4),
+    autoBreak: document.getElementById('setAutoBreak').checked,
+    autoFocus: document.getElementById('setAutoFocus').checked,
+    soundComplete: document.getElementById('setSoundComplete').checked,
+    chimeVol: clampInt(document.getElementById('setChimeVol').value, 0, 100, 60),
+    notify: document.getElementById('setNotify').checked
+  };
+  settings = next;
+  saveSettings(next);
+  // Refresh mode labels + remaining if not running
+  if(!running){
+    remaining = modeSeconds(currentMode);
+    renderTime();
+    // Re-render mode buttons with new durations
+    [].forEach.call(modeRow.querySelectorAll('.mode-btn'), function(b){
+      var m = b.dataset.mode;
+      b.textContent = (m === 'focus' ? 'Focus ' : (m === 'short' ? 'Short Break ' : 'Long Break ')) + settings[m];
+    });
+  }
+  toast('Settings saved');
+});
+document.getElementById('resetSettings').addEventListener('click', function(){
+  settings = Object.assign({}, DEFAULTS);
+  saveSettings(settings);
+  fillSettingsForm();
+  if(!running){ remaining = modeSeconds(currentMode); renderTime(); }
+  toast('Settings reset to defaults');
+});
+document.getElementById('resetSessions').addEventListener('click', function(){
+  sessionsToday = 0;
+  focusCompletedInCycle = 0;
+  saveSessions(0);
+  renderTime();
+  toast("Today's count reset");
+});
+function clampInt(v, lo, hi, def){
+  var n = parseInt(v, 10);
+  if(isNaN(n)) n = def;
+  return Math.max(lo, Math.min(hi, n));
+}
+
+// =================================================================
+// PROCEDURAL AUDIO ENGINE (Web Audio API)
+// =================================================================
+var SoundEngine = {
+  ctx: null,
+  master: null,
+  channels: {},
+  buffers: {},
+  initialized: false,
+
+  init: function(){
+    if(this.initialized) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    this.ctx = new AC();
+    this.master = this.ctx.createGain();
+    this.master.gain.value = 0.7;
+    this.master.connect(this.ctx.destination);
+    // Pre-build noise buffers (reusable)
+    this.buffers.white = this._makeWhite(3);
+    this.buffers.pink = this._makePink(3);
+    this.buffers.brown = this._makeBrown(4);
+    // Build channels
+    ['rain','cafe','ocean','white','birds'].forEach(function(name){
+      var ch = {
+        name: name,
+        enabled: false,
+        volume: 0.5,
+        gain: this.ctx.createGain(),
+        source: null,
+        nodes: [],
+        interval: null
+      };
+      ch.gain.gain.value = 0;
+      ch.gain.connect(this.master);
+      this.channels[name] = ch;
+    }, this);
+    this.initialized = true;
+  },
+
+  resume: function(){
+    if(!this.ctx) this.init();
+    if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+  },
+
+  _makeWhite: function(seconds){
+    var buf = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * seconds), this.ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    for(var i=0;i<d.length;i++) d[i] = Math.random() * 2 - 1;
+    return buf;
+  },
+  _makePink: function(seconds){
+    // Paul Kellet's pink noise algorithm
+    var buf = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * seconds), this.ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    var b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for(var i=0;i<d.length;i++){
+      var w = Math.random()*2-1;
+      b0 = 0.99886*b0 + w*0.0555179;
+      b1 = 0.99332*b1 + w*0.0750759;
+      b2 = 0.96900*b2 + w*0.1538520;
+      b3 = 0.86650*b3 + w*0.3104856;
+      b4 = 0.55000*b4 + w*0.5329522;
+      b5 = -0.7616*b5 - w*0.0168980;
+      d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362) * 0.11;
+      b6 = w * 0.115926;
+    }
+    return buf;
+  },
+  _makeBrown: function(seconds){
+    var buf = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * seconds), this.ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    var last = 0;
+    for(var i=0;i<d.length;i++){
+      var w = Math.random()*2-1;
+      last = (last + 0.02 * w) / 1.02;
+      d[i] = last * 3.5;
+    }
+    return buf;
+  },
+
+  setMasterVolume: function(v){
+    if(this.master) this.master.gain.value = v;
+  },
+
+  setVolume: function(name, v){
+    var ch = this.channels[name];
+    if(!ch) return;
+    ch.volume = v;
+    if(ch.enabled) ch.gain.gain.value = v;
+  },
+
+  toggle: function(name, on){
+    this.resume();
+    if(!this.ctx) return;
+    var ch = this.channels[name];
+    if(!ch) return;
+    if(on && !ch.enabled){
+      ch.enabled = true;
+      ch.gain.gain.value = ch.volume;
+      this._build(name, ch);
+    } else if(!on && ch.enabled){
+      ch.enabled = false;
+      ch.gain.gain.value = 0;
+      this._teardown(ch);
+    }
+  },
+
+  stopAll: function(){
+    Object.keys(this.channels).forEach(function(name){
+      var ch = this.channels[name];
+      if(ch.enabled){
+        ch.enabled = false;
+        ch.gain.gain.value = 0;
+        this._teardown(ch);
+      }
+    }, this);
+  },
+
+  _teardown: function(ch){
+    if(ch.source){ try{ ch.source.stop(); }catch(e){} try{ ch.source.disconnect(); }catch(e){} ch.source = null; }
+    ch.nodes.forEach(function(n){ try{ n.stop && n.stop(); }catch(e){} try{ n.disconnect(); }catch(e){} });
+    ch.nodes = [];
+    if(ch.interval){ clearInterval(ch.interval); ch.interval = null; }
+  },
+
+  _build: function(name, ch){
+    if(name === 'white') this._buildWhite(ch);
+    else if(name === 'rain') this._buildRain(ch);
+    else if(name === 'ocean') this._buildOcean(ch);
+    else if(name === 'cafe') this._buildCafe(ch);
+    else if(name === 'birds') this._buildBirds(ch);
+  },
+
+  _buildWhite: function(ch){
+    var src = this.ctx.createBufferSource();
+    src.buffer = this.buffers.white;
+    src.loop = true;
+    src.connect(ch.gain);
+    src.start();
+    ch.source = src;
+  },
+
+  _buildRain: function(ch){
+    // White noise -> lowpass (2.4kHz) -> highpass (350Hz) -> channel gain
+    var src = this.ctx.createBufferSource();
+    src.buffer = this.buffers.white;
+    src.loop = true;
+    var lp = this.ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 2400;
+    var hp = this.ctx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 350;
+    src.connect(lp); lp.connect(hp); hp.connect(ch.gain);
+    src.start();
+    ch.source = src;
+    ch.nodes = [lp, hp];
+  },
+
+  _buildOcean: function(ch){
+    // Brown noise -> lowpass (600Hz) -> channel gain, with slow LFO on gain for wave swells
+    var src = this.ctx.createBufferSource();
+    src.buffer = this.buffers.brown;
+    src.loop = true;
+    var lp = this.ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 600;
+    // LFO: 0.1 Hz, depth 0.3 (constant, scales with volume via base)
+    var lfo = this.ctx.createOscillator();
+    lfo.frequency.value = 0.1;
+    var lfoGain = this.ctx.createGain();
+    lfoGain.gain.value = 0.3;
+    lfo.connect(lfoGain);
+    lfoGain.connect(ch.gain.gain);
+    src.connect(lp); lp.connect(ch.gain);
+    src.start(); lfo.start();
+    ch.source = src;
+    ch.nodes = [lp, lfo, lfoGain];
+  },
+
+  _buildCafe: function(ch){
+    // Pink noise -> bandpass (500Hz, Q=0.7) -> channel gain, plus scheduled random "clink" bursts
+    var src = this.ctx.createBufferSource();
+    src.buffer = this.buffers.pink;
+    src.loop = true;
+    var bp = this.ctx.createBiquadFilter();
+    bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = 0.7;
+    src.connect(bp); bp.connect(ch.gain);
+    src.start();
+    ch.source = src;
+    ch.nodes = [bp];
+    var self = this;
+    ch.interval = setInterval(function(){
+      if(!ch.enabled) return;
+      // Random short burst (filtered white noise) to simulate cups / chatter
+      var burst = self.ctx.createBufferSource();
+      burst.buffer = self.buffers.white;
+      var bp2 = self.ctx.createBiquadFilter();
+      bp2.type = 'bandpass'; bp2.frequency.value = 1500 + Math.random()*2500; bp2.Q.value = 5;
+      var bg = self.ctx.createGain();
+      var now = self.ctx.currentTime;
+      var peak = ch.volume * 0.35 * (0.5 + Math.random()*0.5);
+      bg.gain.setValueAtTime(0, now);
+      bg.gain.linearRampToValueAtTime(peak, now + 0.02);
+      bg.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      burst.connect(bp2); bp2.connect(bg); bg.connect(ch.gain);
+      burst.start(now);
+      burst.stop(now + 0.25);
+    }, 700 + Math.random()*900);
+  },
+
+  _buildBirds: function(ch){
+    var self = this;
+    function chirp(){
+      if(!ch.enabled) return;
+      var now = self.ctx.currentTime;
+      var osc = self.ctx.createOscillator();
+      var g = self.ctx.createGain();
+      osc.type = 'sine';
+      var f = 2200 + Math.random()*2000;
+      osc.frequency.setValueAtTime(f, now);
+      osc.frequency.exponentialRampToValueAtTime(f*1.5, now + 0.04);
+      osc.frequency.exponentialRampToValueAtTime(f*0.7, now + 0.12);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(ch.volume * 0.4, now + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.connect(g); g.connect(ch.gain);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    }
+    ch.interval = setInterval(function(){
+      if(!ch.enabled) return;
+      chirp();
+      if(Math.random() < 0.5) setTimeout(chirp, 150 + Math.random()*120);
+    }, 1500 + Math.random()*2000);
+  },
+
+  // Chime: three-note ascending bell (synthesized)
+  chime: function(vol){
+    this.resume();
+    if(!this.ctx) return;
+    vol = Math.max(0, Math.min(1, vol));
+    if(vol <= 0) return;
+    var now = this.ctx.currentTime;
+    var notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach(function(freq, i){
+      var t = now + i * 0.18;
+      var osc = this.ctx.createOscillator();
+      var g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol * 0.4, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      // Add a subtle harmonic for bell character
+      var osc2 = this.ctx.createOscillator();
+      var g2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, t);
+      g2.gain.setValueAtTime(0, t);
+      g2.gain.linearRampToValueAtTime(vol * 0.1, t + 0.02);
+      g2.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.connect(g); g.connect(this.master);
+      osc2.connect(g2); g2.connect(this.master);
+      osc.start(t); osc.stop(t + 0.7);
+      osc2.start(t); osc2.stop(t + 0.5);
+    }, this);
+  }
+};
+
+// ===== Mixer UI =====
+var SOUND_DEFS = [
+  { name:'rain',   label:'Rain',        icon:'rain' },
+  { name:'cafe',   label:'Cafe',        icon:'cafe' },
+  { name:'ocean',  label:'Ocean Waves', icon:'ocean' },
+  { name:'white',  label:'White Noise', icon:'white' },
+  { name:'birds',  label:'Birds',       icon:'birds' }
+];
+
+var ICONS = {
+  rain:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 13v4M12 15v4M8 13v4M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg>',
+  cafe:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>',
+  ocean: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0 4 2 6 0"/><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0 4 2 6 0"/><path d="M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0 4 2 6 0"/></svg>',
+  white: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="1.5"/><circle cx="19" cy="5" r="1.5"/><circle cx="5" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/><circle cx="12" cy="3" r="1"/><circle cx="12" cy="21" r="1"/><circle cx="3" cy="12" r="1"/><circle cx="21" cy="12" r="1"/></svg>',
+  birds: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7a4 4 0 0 0-4 4 4 4 0 0 0-4-4"/><path d="M3 12c2-2 4-2 6 0"/><path d="M15 12c2-2 4-2 6 0"/></svg>'
+};
+
+var mixerList = document.getElementById('mixerList');
+var soundStates = {}; // { name: { enabled, volume } }
+
+function renderMixer(){
+  mixerList.innerHTML = '';
+  SOUND_DEFS.forEach(function(def){
+    var state = soundStates[def.name] || { enabled:false, volume:0.5 };
+    var row = document.createElement('div');
+    row.className = 'sound-row' + (state.enabled ? ' on' : '');
+    row.dataset.name = def.name;
+    row.innerHTML =
+      '<div class="sound-info">' +
+        '<button class="sound-toggle" aria-label="Toggle ' + def.label + '" data-toggle="' + def.name + '">' + ICONS[def.icon] + '</button>' +
+        '<span class="sound-name">' + def.label + '</span>' +
+      '</div>' +
+      '<span class="sound-vol-label" data-vol-label="' + def.name + '">' + Math.round(state.volume*100) + '%</span>' +
+      '<div class="sound-slider">' +
+        '<input type="range" min="0" max="100" value="' + Math.round(state.volume*100) + '" data-slider="' + def.name + '" aria-label="' + def.label + ' volume">' +
+      '</div>';
+    mixerList.appendChild(row);
+  });
+}
+
+mixerList.addEventListener('click', function(e){
+  var btn = e.target.closest('[data-toggle]');
+  if(!btn) return;
+  var name = btn.dataset.toggle;
+  var state = soundStates[name] || { enabled:false, volume:0.5 };
+  state.enabled = !state.enabled;
+  soundStates[name] = state;
+  SoundEngine.toggle(name, state.enabled);
+  var row = btn.closest('.sound-row');
+  row.classList.toggle('on', state.enabled);
+});
+
+mixerList.addEventListener('input', function(e){
+  var sl = e.target.closest('[data-slider]');
+  if(!sl) return;
+  var name = sl.dataset.slider;
+  var vol = parseInt(sl.value, 10) / 100;
+  var state = soundStates[name] || { enabled:false, volume:0.5 };
+  state.volume = vol;
+  soundStates[name] = state;
+  SoundEngine.setVolume(name, vol);
+  var lbl = mixerList.querySelector('[data-vol-label="' + name + '"]');
+  if(lbl) lbl.textContent = Math.round(vol*100) + '%';
+});
+
+// Master volume
+var masterVol = document.getElementById('masterVol');
+var masterVolLabel = document.getElementById('masterVolLabel');
+masterVol.addEventListener('input', function(){
+  var v = parseInt(masterVol.value, 10);
+  masterVolLabel.textContent = v + '%';
+  SoundEngine.setMasterVolume(v / 100);
+});
+
+document.getElementById('stopAll').addEventListener('click', function(){
+  SoundEngine.stopAll();
+  SOUND_DEFS.forEach(function(def){
+    if(soundStates[def.name]) soundStates[def.name].enabled = false;
+  });
+  renderMixer();
+  toast('All sounds stopped');
+});
+
+// Load sample preset
+document.getElementById('loadSample').addEventListener('click', function(){
+  // 50/10/30 with rain at 40% and cafe at 20%
+  settings.focus = 50; settings.short = 10; settings.long = 30;
+  settings.longEvery = 4;
+  saveSettings(settings);
+  fillSettingsForm();
+  // Stop existing sounds
+  SoundEngine.stopAll();
+  // Set sound states
+  soundStates = {
+    rain:  { enabled:true,  volume:0.4 },
+    cafe:  { enabled:true,  volume:0.2 },
+    ocean: { enabled:false, volume:0.5 },
+    white: { enabled:false, volume:0.5 },
+    birds: { enabled:false, volume:0.5 }
+  };
+  // Apply
+  SoundEngine.resume();
+  SoundEngine.toggle('rain', true);
+  SoundEngine.setVolume('rain', 0.4);
+  SoundEngine.toggle('cafe', true);
+  SoundEngine.setVolume('cafe', 0.2);
+  renderMixer();
+  // Reset timer to focus mode with new duration
+  if(!running){
+    setMode('focus', { silent:true });
+  }
+  toast('Sample preset loaded: 50/10/30 + rain & cafe');
+});
+
+// ===== Initialize =====
+renderMixer();
+setMode('focus', { silent:true });
+
+// Check for date rollover every minute
+setInterval(function(){
+  var fresh = loadSessions();
+  if(fresh !== sessionsToday){
+    sessionsToday = fresh;
+    renderTime();
+  }
+}, 60000);
+
+// Expose for debugging
+window.__pomodoro = { SoundEngine: SoundEngine, getSettings: function(){ return settings; } };
+
+})();
+</script>
+</body>
+</html>
