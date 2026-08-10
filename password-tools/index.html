@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Password Strength & Generator — generate cryptographically secure passwords and score their entropy in bits. Uses window.crypto.getRandomValues for true randomness." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Password Strength & Generator" />
+  <meta property="og:description" content="Generate cryptographically secure passwords and score their entropy in bits." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/password-tools/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/password-tools/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Password Strength & Generator — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Password Tools">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Security · Auth</p>
+      <h1 class="app-title">Password <span class="accent">Strength &amp; Generator</span></h1>
+      <p class="app-subtitle">
+        Generate cryptographically secure passwords using <span class="text-mono">window.crypto.getRandomValues</span>
+        and score existing passwords by entropy (bits). No password ever leaves your browser.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Generator
+      </h2>
+
+      <div class="flex-between mb-2">
+        <code id="generatedOut" class="text-mono" style="flex:1; background:var(--paper-alt); border:1px solid var(--line); border-radius:6px; padding:0.75rem 1rem; word-break:break-all; font-size:1.05rem; min-height:48px;">—</code>
+        <div class="flex-c">
+          <button class="btn btn-ghost" id="copyBtn" type="button" title="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="btn btn-primary" id="regenBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Generate
+          </button>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Length: <strong id="lenLabel">20</strong> characters</span>
+        <input type="range" id="lenRange" min="4" max="64" value="20" />
+      </label>
+
+      <div class="checkbox-row mb-1">
+        <label><input type="checkbox" id="useUpper" checked /> A–Z</label>
+        <label><input type="checkbox" id="useLower" checked /> a–z</label>
+        <label><input type="checkbox" id="useDigits" checked /> 0–9</label>
+        <label><input type="checkbox" id="useSymbols" /> !@#$%</label>
+        <label><input type="checkbox" id="useAmbiguous" /> avoid ambiguous (0/O, 1/l)</label>
+      </div>
+
+      <div class="flex-c">
+        <span class="text-sm text-mute">Strength:</span>
+        <div class="strength-bar" id="genStrengthBar" style="flex:1; max-width:240px;"><div></div></div>
+        <span class="text-sm" id="genStrengthLabel" style="font-weight:600;">—</span>
+        <span class="pill muted" id="genEntropyPill">0 bits</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Strength checker
+      </h2>
+      <label class="field">
+        <span>Test a password</span>
+        <div class="flex-between">
+          <input type="text" id="testInput" placeholder="Type a password to score…" autocapitalize="none" spellcheck="false" style="flex:1;" />
+          <button class="btn btn-ghost" id="toggleVisBtn" type="button" title="Show/hide">eye</button>
+        </div>
+      </label>
+      <div class="flex-c">
+        <span class="text-sm text-mute">Strength:</span>
+        <div class="strength-bar" id="testStrengthBar" style="flex:1; max-width:240px;"><div></div></div>
+        <span class="text-sm" id="testStrengthLabel" style="font-weight:600;">—</span>
+        <span class="pill muted" id="testEntropyPill">0 bits</span>
+      </div>
+      <div id="testDetails" class="mt-2 text-sm text-mute"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Password Tools"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var lenRange = $('#lenRange');
+      var lenLabel = $('#lenLabel');
+      var useUpper = $('#useUpper');
+      var useLower = $('#useLower');
+      var useDigits = $('#useDigits');
+      var useSymbols = $('#useSymbols');
+      var useAmbiguous = $('#useAmbiguous');
+      var generatedOut = $('#generatedOut');
+      var copyBtn = $('#copyBtn');
+      var regenBtn = $('#regenBtn');
+      var genStrengthBar = $('#genStrengthBar');
+      var genStrengthLabel = $('#genStrengthLabel');
+      var genEntropyPill = $('#genEntropyPill');
+      var testInput = $('#testInput');
+      var testStrengthBar = $('#testStrengthBar');
+      var testStrengthLabel = $('#testStrengthLabel');
+      var testEntropyPill = $('#testEntropyPill');
+      var testDetails = $('#testDetails');
+      var toggleVisBtn = $('#toggleVisBtn');
+
+      var SETS = {
+        upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        lower: 'abcdefghijklmnopqrstuvwxyz',
+        digits: '0123456789',
+        symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?/~'
+      };
+      var AMBIGUOUS = '0O1lI|`';
+
+      function secureRandomInt(maxExclusive) {
+        // Reject modulo bias. maxExclusive must be <= 256.
+        if (maxExclusive > 256) throw new Error('maxExclusive too large');
+        var buf = new Uint8Array(1);
+        var limit = Math.floor(256 / maxExclusive) * maxExclusive;
+        while (true) {
+          crypto.getRandomValues(buf);
+          if (buf[0] < limit) return buf[0] % maxExclusive;
+        }
+      }
+
+      function buildPool() {
+        var pool = '';
+        var required = [];
+        if (useUpper.checked)   { pool += SETS.upper;   required.push(SETS.upper); }
+        if (useLower.checked)   { pool += SETS.lower;   required.push(SETS.lower); }
+        if (useDigits.checked)  { pool += SETS.digits;  required.push(SETS.digits); }
+        if (useSymbols.checked) { pool += SETS.symbols; required.push(SETS.symbols); }
+        if (useAmbiguous.checked) {
+          pool = pool.split('').filter(function (c) { return AMBIGUOUS.indexOf(c) === -1; }).join('');
+          required = required.map(function (s) {
+            return s.split('').filter(function (c) { return AMBIGUOUS.indexOf(c) === -1; }).join('');
+          });
+        }
+        return { pool: pool, required: required };
+      }
+
+      function generate() {
+        var len = parseInt(lenRange.value, 10);
+        var built = buildPool();
+        var pool = built.pool;
+        var required = built.required;
+        if (!pool) { generatedOut.textContent = '(select at least one character set)'; return; }
+        var out = '';
+        // Guarantee at least one from each required set.
+        for (var i = 0; i < required.length && i < len; i++) {
+          var s = required[i];
+          if (!s) continue;
+          out += s[secureRandomInt(s.length)];
+        }
+        while (out.length < len) {
+          out += pool[secureRandomInt(pool.length)];
+        }
+        // Shuffle (Fisher-Yates with crypto randomness).
+        var arr = out.split('');
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = secureRandomInt(i + 1);
+          var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+        }
+        out = arr.join('');
+        generatedOut.textContent = out;
+        updateStrength(out, genStrengthBar, genStrengthLabel, genEntropyPill, null);
+      }
+
+      function entropyBits(password, poolSize) {
+        if (!password) return 0;
+        var len = password.length;
+        // log2(poolSize^len) = len * log2(poolSize)
+        return len * Math.log2(poolSize || 1);
+      }
+
+      function classify(entropy) {
+        if (entropy < 28) return { name: 'Very weak', cls: 'weak', pct: 20 };
+        if (entropy < 36) return { name: 'Weak',      cls: 'weak', pct: 40 };
+        if (entropy < 60) return { name: 'Fair',      cls: 'fair', pct: 60 };
+        if (entropy < 100) return { name: 'Strong',   cls: 'strong', pct: 80 };
+        return { name: 'Very strong', cls: 'very-strong', pct: 100 };
+      }
+
+      function analyzePassword(pw) {
+        // Determine the actual pool size by detecting which sets are used.
+        var hasUpper = /[A-Z]/.test(pw), hasLower = /[a-z]/.test(pw);
+        var hasDigit = /[0-9]/.test(pw), hasSym = /[^A-Za-z0-9]/.test(pw);
+        var poolSize = 0;
+        if (hasUpper) poolSize += 26;
+        if (hasLower) poolSize += 26;
+        if (hasDigit) poolSize += 10;
+        if (hasSym)   poolSize += 32;
+        if (poolSize === 0) poolSize = 1;
+        return {
+          entropy: entropyBits(pw, poolSize),
+          poolSize: poolSize,
+          hasUpper: hasUpper, hasLower: hasLower, hasDigit: hasDigit, hasSym: hasSym,
+          len: pw.length
+        };
+      }
+
+      function updateStrength(pw, bar, label, pill, detailsEl) {
+        var a = analyzePassword(pw);
+        var c = classify(a.entropy);
+        bar.className = 'strength-bar ' + c.cls;
+        bar.querySelector('div').style.width = c.pct + '%';
+        label.textContent = c.name;
+        label.style.color = c.cls === 'weak' ? '#DC2626' : c.cls === 'fair' ? '#B45309' : '#047857';
+        pill.textContent = Math.round(a.entropy) + ' bits';
+        if (detailsEl) {
+          var parts = [];
+          parts.push('Length: ' + a.len);
+          parts.push('Pool size: ' + a.poolSize);
+          var checks = [];
+          if (a.hasUpper) checks.push('A-Z'); if (a.hasLower) checks.push('a-z');
+          if (a.hasDigit) checks.push('0-9'); if (a.hasSym)   checks.push('!@#');
+          parts.push('Classes used: ' + (checks.join(' ') || 'none'));
+          // Time-to-crack (rough): assume 10^10 guesses/sec offline attack on SHA-256.
+          var guesses = Math.pow(2, a.entropy);
+          var seconds = guesses / 1e10;
+          var crack = formatDuration(seconds);
+          parts.push('Est. offline crack time: ' + crack);
+          detailsEl.innerHTML = parts.map(escapeHtml).join(' · ');
+        }
+      }
+
+      function formatDuration(sec) {
+        if (!isFinite(sec) || sec <= 0) return 'instant';
+        if (sec < 1) return '< 1 second';
+        var units = [
+          ['year', 31536000], ['day', 86400], ['hour', 3600], ['minute', 60], ['second', 1]
+        ];
+        var parts = [];
+        for (var i = 0; i < units.length; i++) {
+          var name = units[i][0], size = units[i][1];
+          var n = Math.floor(sec / size);
+          if (n > 0) { parts.push(n + ' ' + name + (n > 1 ? 's' : '')); sec -= n * size; }
+          if (parts.length >= 3) break;
+        }
+        if (parts.length === 0) return '< 1 second';
+        if (parts.length === 1 && /year/.test(parts[0])) {
+          var years = parseInt(parts[0]);
+          if (years > 1e9) return '> ' + (years / 1e9).toFixed(1) + ' billion years';
+          if (years > 1e6) return '> ' + (years / 1e6).toFixed(1) + ' million years';
+        }
+        return parts.join(' ');
+      }
+
+      function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+
+      // Events.
+      lenRange.addEventListener('input', function () { lenLabel.textContent = lenRange.value; generate(); });
+      [useUpper, useLower, useDigits, useSymbols, useAmbiguous].forEach(function (cb) {
+        cb.addEventListener('change', generate);
+      });
+      regenBtn.addEventListener('click', generate);
+      copyBtn.addEventListener('click', function () {
+        var v = generatedOut.textContent;
+        if (!v || v === '—') return;
+        window.copyText(v).then(function (ok) { window.showToast(ok ? 'Copied' : 'Copy failed'); });
+      });
+      testInput.addEventListener('input', function () {
+        updateStrength(testInput.value, testStrengthBar, testStrengthLabel, testEntropyPill, testDetails);
+      });
+      var visible = true;
+      toggleVisBtn.addEventListener('click', function () {
+        visible = !visible;
+        testInput.type = visible ? 'text' : 'password';
+        toggleVisBtn.textContent = visible ? 'eye' : 'eye-off';
+      });
+
+      // Initial.
+      generate();
+      updateStrength('', testStrengthBar, testStrengthLabel, testEntropyPill, testDetails);
+    })();
+  </script>
+</body>
+</html>
