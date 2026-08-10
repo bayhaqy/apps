@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Crypto Hash Generator — compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text or files. SHA family uses the native Web Crypto API; MD5/SHA-1 via crypto-js." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Crypto Hash Generator — MD5, SHA-1, SHA-256, SHA-512" />
+  <meta property="og:description" content="Compute cryptographic hashes (MD5, SHA-1, SHA-256, SHA-384, SHA-512) from text or files, fully in-browser." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/hash-generator/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/hash-generator/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Hash Generator — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Hash Generator">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Security · Crypto</p>
+      <h1 class="app-title">Crypto <span class="accent">Hash Generator</span></h1>
+      <p class="app-subtitle">
+        Compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text or files.
+        SHA family uses the native Web Crypto API for native-speed hashing; MD5/SHA-1 use crypto-js.
+      </p>
+    </header>
+
+    <section class="card">
+      <div class="flex-between mb-2">
+        <span class="pill">Input</span>
+        <div class="radio-row">
+          <label><input type="radio" name="mode" value="text" checked /> Text</label>
+          <label><input type="radio" name="mode" value="file" /> File</label>
+        </div>
+      </div>
+
+      <div id="textMode">
+        <label class="field">
+          <span>Text to hash</span>
+          <textarea id="textInput" placeholder="Hello, world!" rows="4">Hello, world!</textarea>
+        </label>
+        <label class="checkbox-row" style="display:flex; gap:0.6rem; align-items:center;">
+          <label><input type="checkbox" id="utf8" checked /> UTF-8 encode</label>
+        </label>
+      </div>
+
+      <div id="fileMode" style="display:none;">
+        <label class="field">
+          <span>File to hash</span>
+          <input type="file" id="fileInput" />
+          <span class="hint">Files are processed entirely in your browser — nothing is uploaded.</span>
+        </label>
+        <p id="fileMeta" class="text-mute text-sm"></p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="hashBtn" type="button">Generate hashes</button>
+        <button class="btn btn-ghost" id="copyAllBtn" type="button">Copy all</button>
+      </div>
+    </section>
+
+    <section class="card" id="resultCard" style="display:none;">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Digests
+      </h2>
+      <div id="hashList"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Hash Generator"></script>
+  <!-- crypto-js for MD5 and SHA-1 (Web Crypto API does not support these) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var textMode = $('#textMode');
+      var fileMode = $('#fileMode');
+      var textInput = $('#textInput');
+      var fileInput = $('#fileInput');
+      var fileMeta = $('#fileMeta');
+      var hashBtn = $('#hashBtn');
+      var copyAllBtn = $('#copyAllBtn');
+      var resultCard = $('#resultCard');
+      var hashList = $('#hashList');
+
+      document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+        r.addEventListener('change', function () {
+          var v = document.querySelector('input[name="mode"]:checked').value;
+          textMode.style.display = v === 'text' ? 'block' : 'none';
+          fileMode.style.display = v === 'file' ? 'block' : 'none';
+        });
+      });
+
+      function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+      function bufToHex(buf) {
+        var bytes = new Uint8Array(buf);
+        var hex = '';
+        for (var i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
+        return hex;
+      }
+      async function subtleDigest(algo, data) {
+        var hashBuf = await crypto.subtle.digest(algo, data);
+        return bufToHex(hashBuf);
+      }
+
+      function renderRow(name, hex, deprecated) {
+        var id = 'hash-' + name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return '<div style="margin-bottom:1rem;">' +
+          '<div class="flex-between mb-0">' +
+            '<span class="text-sm" style="font-weight:600;">' + escapeHtml(name) +
+              (deprecated ? ' <span class="pill" style="margin-left:0.5rem;">deprecated</span>' : '') +
+            '</span>' +
+            '<button class="btn btn-ghost" type="button" data-copy-target="' + id + '" style="padding:0.3rem 0.7rem; font-size:0.8rem;">Copy</button>' +
+          '</div>' +
+          '<code id="' + id + '" class="text-mono text-sm" style="display:block; word-break:break-all; background:var(--paper-alt); border:1px solid var(--line); border-radius:6px; padding:0.6rem 0.75rem;">' + escapeHtml(hex) + '</code>' +
+        '</div>';
+      }
+
+      async function hashBytes(bytes) {
+        var results = [];
+        // MD5 via crypto-js
+        try {
+          var words = CryptoJS.lib.WordArray.create(bytes);
+          var md5 = CryptoJS.MD5(words).toString();
+          results.push({ name: 'MD5', hex: md5, deprecated: true });
+        } catch (e) { results.push({ name: 'MD5', hex: 'Error: ' + (e.message || e), deprecated: true }); }
+        // SHA-1 via crypto-js (Web Crypto supports it too, but be consistent).
+        try {
+          var words2 = CryptoJS.lib.WordArray.create(bytes);
+          var sha1 = CryptoJS.SHA1(words2).toString();
+          results.push({ name: 'SHA-1', hex: sha1, deprecated: true });
+        } catch (e) { results.push({ name: 'SHA-1', hex: 'Error: ' + (e.message || e), deprecated: true }); }
+        // SHA-256 / 384 / 512 via Web Crypto API
+        try { results.push({ name: 'SHA-256', hex: await subtleDigest('SHA-256', bytes) }); } catch (e) { results.push({ name: 'SHA-256', hex: 'Error: ' + (e.message || e) }); }
+        try { results.push({ name: 'SHA-384', hex: await subtleDigest('SHA-384', bytes) }); } catch (e) { results.push({ name: 'SHA-384', hex: 'Error: ' + (e.message || e) }); }
+        try { results.push({ name: 'SHA-512', hex: await subtleDigest('SHA-512', bytes) }); } catch (e) { results.push({ name: 'SHA-512', hex: 'Error: ' + (e.message || e) }); }
+        return results;
+      }
+
+      async function run() {
+        resultCard.style.display = 'block';
+        hashList.innerHTML = '<p class="text-mute text-sm">Hashing…</p>';
+        try {
+          var mode = document.querySelector('input[name="mode"]:checked').value;
+          var bytes;
+          if (mode === 'text') {
+            var text = textInput.value;
+            bytes = new TextEncoder().encode(text);
+          } else {
+            var f = fileInput.files && fileInput.files[0];
+            if (!f) { hashList.innerHTML = '<p class="text-red text-sm">Please select a file.</p>'; return; }
+            fileMeta.textContent = f.name + ' · ' + f.size.toLocaleString() + ' bytes · ' + (f.type || 'unknown type');
+            var ab = await f.arrayBuffer();
+            bytes = new Uint8Array(ab);
+          }
+          var results = await hashBytes(bytes);
+          hashList.innerHTML = results.map(function (r) { return renderRow(r.name, r.hex, r.deprecated); }).join('');
+        } catch (e) {
+          hashList.innerHTML = '<p class="text-red text-sm">Error: ' + escapeHtml(e.message || String(e)) + '</p>';
+        }
+      }
+
+      hashBtn.addEventListener('click', run);
+      textInput.addEventListener('input', function () { if (resultCard.style.display === 'block') run(); });
+
+      // Delegate copy buttons.
+      hashList.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-copy-target]');
+        if (!btn) return;
+        var id = btn.getAttribute('data-copy-target');
+        var el = document.getElementById(id);
+        if (!el) return;
+        window.copyText(el.textContent).then(function (ok) { window.showToast(ok ? 'Copied' : 'Copy failed'); });
+      });
+
+      copyAllBtn.addEventListener('click', function () {
+        var lines = [];
+        hashList.querySelectorAll('code').forEach(function (el) {
+          var name = el.previousElementSibling ? '' : '';
+          var labelEl = el.closest('div').querySelector('.text-sm');
+          lines.push((labelEl ? labelEl.textContent.replace('Copy','').trim() : 'HASH') + ':  ' + el.textContent);
+        });
+        window.copyText(lines.join('\n')).then(function (ok) { window.showToast(ok ? 'All hashes copied' : 'Copy failed'); });
+      });
+
+      // Auto-run on load.
+      setTimeout(run, 150);
+    })();
+  </script>
+</body>
+</html>
