@@ -1,13 +1,13 @@
 {
-  "name": "Apps by Achmad Bayhaqy",
-  "short_name": "Apps",
-  "description": "11 free, privacy-first web tools. All run locally in your browser — no uploads, no tracking.",
+  "name": "Bayhaqy Apps — 31 Developer & IT Tools",
+  "short_name": "Bayhaqy Apps",
+  "description": "A curated collection of 31 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity boosters.",
   "start_url": "/apps/",
   "scope": "/apps/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#FFFFFF",
-  "theme_color": "#DC2626",
+  "theme_color": "#B91C1C",
   "lang": "en",
   "categories": ["productivity", "utilities", "developer"],
   "icons": [
@@ -26,24 +26,24 @@
   ],
   "shortcuts": [
     {
+      "name": "DNS Lookup",
+      "short_name": "DNS",
+      "description": "Query DNS records via DoH",
+      "url": "/apps/dns-lookup/",
+      "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
       "name": "BayMerge",
       "short_name": "BayMerge",
-      "description": "Merge PDF files locally",
+      "description": "Merge PDF files in your browser",
       "url": "/apps/baymerge/",
       "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "AI Context Packer",
-      "short_name": "Context",
-      "description": "Combine code files for AI prompts",
-      "url": "/apps/ai-context-packer/",
-      "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Text Humanizer",
-      "short_name": "Humanizer",
-      "description": "Detect and replace AI cliché phrases",
-      "url": "/apps/text-humanizer/",
+      "name": "Hash Generator",
+      "short_name": "Hash",
+      "description": "MD5, SHA-1, SHA-256, SHA-512",
+      "url": "/apps/hash-generator/",
       "icons": [{ "src": "/apps/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
