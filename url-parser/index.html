@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HTTP Header Checker & URL Parser — break any URL into protocol, host, port, path, and query parameters, and inspect server response headers for SEO and debugging." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="HTTP Header Checker & URL Parser" />
+  <meta property="og:description" content="Break any URL into components and inspect HTTP response headers for SEO/debugging." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/url-parser/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/url-parser/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>URL Parser & HTTP Header Checker — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="URL Parser">
+  <main class="app-main">
+    <header class="app-hero">
+      <p class="app-eyebrow">Network · HTTP</p>
+      <h1 class="app-title">URL Parser &amp; <span class="accent">HTTP Header Checker</span></h1>
+      <p class="app-subtitle">
+        Break any URL into protocol, host, port, path, and query parameters, then optionally
+        fetch the response headers via a public CORS proxy to inspect server, cache, and security headers.
+      </p>
+    </header>
+
+    <section class="card">
+      <label class="field">
+        <span>URL</span>
+        <input type="url" id="urlInput" placeholder="https://example.com/path?key=value" value="https://example.com/path?key=value" autocapitalize="none" spellcheck="false" />
+        <span class="hint">URL components are parsed locally in your browser (no network call). Header fetching uses a public CORS proxy.</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="parseBtn" type="button">Parse URL</button>
+        <button class="btn btn-ghost" id="fetchBtn" type="button">Fetch headers</button>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+      </div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+
+    <div class="grid-2" style="margin-top:1.25rem;">
+      <section class="card" id="parseCard" style="display:none;">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          URL components
+        </h2>
+        <table class="data" id="parseTable"></table>
+      </section>
+      <section class="card" id="headerCard" style="display:none;">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Response headers
+        </h2>
+        <table class="data" id="headerTable"></table>
+      </section>
+    </div>
+
+    <section class="card" id="statusCard" style="display:none; margin-top:1.25rem;">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Status
+      </h2>
+      <div id="statusBody"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="URL Parser"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var urlInput = $('#urlInput');
+      var parseBtn = $('#parseBtn');
+      var fetchBtn = $('#fetchBtn');
+      var sampleBtn = $('#sampleBtn');
+      var parseCard = $('#parseCard');
+      var parseTable = $('#parseTable');
+      var headerCard = $('#headerCard');
+      var headerTable = $('#headerTable');
+      var statusCard = $('#statusCard');
+      var statusBody = $('#statusBody');
+      var errorCard = $('#errorCard');
+      var errorMsg = $('#errorMsg');
+
+      function clearOutput() { parseCard.style.display='none'; headerCard.style.display='none'; statusCard.style.display='none'; errorCard.style.display='none'; }
+      function showError(m) { clearOutput(); errorCard.style.display='block'; errorMsg.textContent = m; }
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+      function row(k, v, cls) { return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v' + (cls ? ' ' + cls : '') + '">' + escapeHtml(v) + '</td></tr>'; }
+      function statusPill(code) {
+        var cls = 'pill';
+        if (code >= 200 && code < 300) cls += ' green';
+        else if (code >= 400) cls += '';
+        else cls += ' muted';
+        return '<span class="' + cls + '">' + code + '</span>';
+      }
+
+      function parseURL() {
+        clearOutput();
+        var raw = urlInput.value.trim();
+        if (!raw) { showError('Enter a URL.'); return; }
+        try {
+          var u = new URL(raw);
+          var rows = '';
+          rows += row('Protocol', u.protocol);
+          rows += row('Username', u.username || '—');
+          rows += row('Password', u.password ? '•••••' : '—');
+          rows += row('Host', u.hostname);
+          rows += row('Port', u.port || (u.protocol === 'https:' ? '443 (default)' : u.protocol === 'http:' ? '80 (default)' : '—'));
+          rows += row('Path', u.pathname || '/');
+          rows += row('Hash / fragment', u.hash || '—');
+          rows += row('Search string', u.search || '—');
+          rows += row('Origin', u.origin);
+          parseTable.innerHTML = '<tbody>' + rows + '</tbody>';
+
+          // Query parameters as separate table.
+          var params = u.searchParams;
+          var pkeys = [];
+          params.forEach(function (v, k) { pkeys.push([k, v]); });
+          if (pkeys.length > 0) {
+            var pRows = pkeys.map(function (kv) { return row(kv[0], kv[1]); }).join('');
+            parseTable.innerHTML += '<tbody><tr><td colspan="2" style="padding-top:1rem; background:var(--paper-alt); font-weight:600;">Query parameters</td></tr>' + pRows + '</tbody>';
+          }
+
+          // Quick security checks.
+          var sec = [];
+          if (u.protocol === 'https:') sec.push('<span class="pill green">HTTPS</span>');
+          else if (u.protocol === 'http:') sec.push('<span class="pill">Insecure HTTP</span>');
+          // Look for suspicious patterns in params.
+          var suspiciousKeys = ['token','password','passwd','pwd','secret','api_key','apikey','access_token'];
+          var foundSusp = [];
+          params.forEach(function (v, k) {
+            var lk = k.toLowerCase();
+            if (suspiciousKeys.indexOf(lk) !== -1) foundSusp.push(k);
+          });
+          if (foundSusp.length > 0) sec.push('<span class="pill">Sensitive param: ' + escapeHtml(foundSusp.join(', ')) + '</span>');
+
+          statusBody.innerHTML = '<div class="flex-c">' + sec.join('') + '</div>';
+          statusCard.style.display = 'block';
+          parseCard.style.display = 'block';
+        } catch (e) {
+          showError('Invalid URL: ' + (e.message || e) + '. Make sure to include the protocol (https:// or http://).');
+        }
+      }
+
+      async function fetchHeaders() {
+        clearOutput();
+        var raw = urlInput.value.trim();
+        if (!raw) { showError('Enter a URL.'); return; }
+        var target;
+        try { target = new URL(raw); } catch (e) { showError('Invalid URL: ' + (e.message || e)); return; }
+        if (target.protocol !== 'https:' && target.protocol !== 'http:') { showError('Only http/https URLs can be fetched.'); return; }
+
+        parseCard.style.display = 'block';
+        parseTable.innerHTML = '<tbody><tr><td class="k">Fetching…</td><td class="v">via public CORS proxy</td></tr></tbody>';
+        headerCard.style.display = 'block';
+        headerTable.innerHTML = '<tbody><tr><td colspan="2" class="text-mute">Loading response headers…</td></tr></tbody>';
+        statusCard.style.display = 'block';
+        statusBody.innerHTML = '<p class="text-mute text-sm">Sending request through <span class="text-mono">corsproxy.io</span>…</p>';
+
+        try {
+          // Use corsproxy.io — a free, public CORS proxy that forwards headers.
+          var proxied = 'https://corsproxy.io/?url=' + encodeURIComponent(target.href);
+          var res = await fetch(proxied, { method: 'GET', redirect: 'follow' });
+          // Parse URL components first (for context).
+          parseURL();
+          parseCard.style.display = 'block';
+
+          // Status line.
+          var ok = res.ok;
+          statusBody.innerHTML = '<div class="flex-c">' + statusPill(res.status) + '<span class="text-sm">' + escapeHtml(res.statusText || '') + '</span><span class="pill muted">' + escapeHtml(res.type || '') + '</span></div>';
+
+          // Headers.
+          var rows = '';
+          var headers = [];
+          res.headers.forEach(function (v, k) { headers.push([k, v]); });
+          if (headers.length === 0) {
+            rows = '<tr><td colspan="2" class="text-mute text-c" style="padding:1rem;">No headers exposed by the proxy.</td></tr>';
+          } else {
+            headers.sort(function (a, b) { return a[0].localeCompare(b[0]); });
+            headers.forEach(function (h) {
+              var cls = '';
+              var lk = h[0].toLowerCase();
+              if (lk === 'set-cookie' || lk === 'authorization') cls = 'text-red';
+              rows += row(h[0], h[1], cls);
+            });
+          }
+          headerTable.innerHTML = '<tbody><tr><th style="width:40%;">Header</th><th>Value</th></tr></tbody>' + rows;
+        } catch (e) {
+          headerTable.innerHTML = '<tbody><tr><td colspan="2" class="text-red">Fetch failed: ' + escapeHtml(e.message || String(e)) + '</td></tr></tbody>';
+          statusBody.innerHTML = '<p class="text-red text-sm">The public CORS proxy may be down or the target blocked the request. Try a different URL.</p>';
+        }
+      }
+
+      parseBtn.addEventListener('click', parseURL);
+      fetchBtn.addEventListener('click', fetchHeaders);
+      urlInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') parseURL(); });
+      var samples = [
+        'https://github.com/bayhaqy/apps?tab=readme&q=search',
+        'https://httpbin.org/status/200',
+        'https://example.com/path?key=value&user=42',
+        'https://cloudflare.com/cdn-cgi/trace'
+      ];
+      var si = 0;
+      sampleBtn.addEventListener('click', function () { si = (si + 1) % samples.length; urlInput.value = samples[si]; parseURL(); });
+
+      setTimeout(parseURL, 150);
+    })();
+  </script>
+</body>
+</html>
