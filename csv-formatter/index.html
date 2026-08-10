@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Clean CSV / Excel Data Formatter & JSON Converter — trim spaces, fix capitalization, split name columns, dedupe rows and export to clean CSV, JSON or formatted XLSX. 100% client-side, runs in your browser. No uploads." />
-  <meta name="keywords" content="CSV formatter, CSV cleaner, Excel formatter, XLSX to JSON, CSV to JSON, dedupe CSV, clean spreadsheet, trim whitespace, split names, data cleaning, offline CSV, browser CSV, privacy CSV" />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-  <meta name="bingbot" content="index, follow" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="CSV / Excel Formatter & JSON Converter — Clean Data Locally" />
-  <meta property="og:description" content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/csv-formatter/" />
-  <meta property="og:site_name" content="CSV Formatter" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CSV / Excel Formatter & JSON Converter — Clean Data Locally" />
-  <meta name="twitter:description" content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/csv-formatter/" />
-  <title>CSV / Excel Formatter & JSON Converter — Clean Data Locally</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECF%3C/text%3E%3C/svg%3E" />
-  <script type="application/ld+json">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Clean CSV / Excel Data Formatter &amp; JSON Converter — trim spaces, fix capitalization, split name columns, dedupe rows and export to clean CSV, JSON or formatted XLSX. 100% client-side, runs in your browser. No uploads." name="description"/>
+<meta content="CSV formatter, CSV cleaner, Excel formatter, XLSX to JSON, CSV to JSON, dedupe CSV, clean spreadsheet, trim whitespace, split names, data cleaning, offline CSV, browser CSV, privacy CSV" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="index, follow" name="robots"/>
+<meta content="index, follow" name="googlebot"/>
+<meta content="index, follow" name="bingbot"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="CSV / Excel Formatter &amp; JSON Converter — Clean Data Locally" property="og:title"/>
+<meta content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/csv-formatter/" property="og:url"/>
+<meta content="CSV Formatter" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="CSV / Excel Formatter &amp; JSON Converter — Clean Data Locally" name="twitter:title"/>
+<meta content="Drop a CSV or .xlsx file, auto-clean it (trim spaces, fix capitalization, split name columns, dedupe rows), preview the result, and export to clean CSV / JSON / formatted Excel. 100% client-side." name="twitter:description"/>
+<link href="https://bayhaqy.my.id/apps/csv-formatter/" rel="canonical"/>
+<title>CSV / Excel Formatter &amp; JSON Converter — Clean Data Locally</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECF%3C/text%3E%3C/svg%3E" rel="icon"/>
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -51,12 +51,12 @@
     ]
   }
   </script>
-  <style>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--muted:#64748B;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
       --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
       --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
@@ -67,7 +67,7 @@
     [data-theme="dark"]{
       --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
       --fg:#F1F5F9;--muted:#94A3B8;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
       --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
       --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
@@ -431,9 +431,9 @@
       *{animation:none!important;transition:none!important}
     }
   </style>
-</head>
-<body>
-  <script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/></head>
+<body data-app-name="CSV Formatter">
+<script>
     // Prevent theme flash
     (function(){
       var saved = localStorage.getItem('csvfmt-theme');
@@ -442,245 +442,200 @@
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/csv-formatter/" class="brand">
-        <span class="brand-logo">CF</span>
-        <span>CSV Formatter</span>
-      </a>
-      <nav class="header-links">
-        <a href="#how-to-use">How to use</a>
-        <a href="#features">Features</a>
-        <a href="#faq">FAQ</a>
-        <a href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">← Back to apps</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
-          <span class="icon-moon">🌙</span>
-          <span class="icon-sun">☀️</span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-        <span class="hero-eyebrow">100% local · CSV · XLSX · JSON</span>
-        <h1>Clean messy spreadsheets <span class="accent">in seconds</span></h1>
-        <p class="sub">Drop a CSV or Excel file and CSV Formatter trims whitespace, fixes capitalization, splits name columns, removes duplicates and exports to clean CSV, JSON or formatted XLSX — all in your browser, nothing uploaded.</p>
-        <div class="hero-pills">
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Auto-clean</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Split names</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Dedupe</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Multi-format export</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="container">
-      <div class="fmt-card">
-        <label class="dropzone" id="dropzone" for="fileInput">
-          <div class="dropzone-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <h3>Drop a CSV or Excel file here</h3>
-          <p>or <span class="browse-link">browse from your device</span> · supports .csv, .xlsx, .xls, .tsv, .txt</p>
-          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.tsv,.txt,text/csv,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
-          <div class="file-meta-line" id="fileMetaLine" style="display:none;"></div>
-        </label>
-
-        <div class="lib-fallback" id="libFallback">
+<main>
+<section class="hero">
+<div class="container">
+<span class="hero-eyebrow">100% local · CSV · XLSX · JSON</span>
+<h1>Clean messy spreadsheets <span class="accent">in seconds</span></h1>
+<p class="sub">Drop a CSV or Excel file and CSV Formatter trims whitespace, fixes capitalization, splits name columns, removes duplicates and exports to clean CSV, JSON or formatted XLSX — all in your browser, nothing uploaded.</p>
+<div class="hero-pills">
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Auto-clean</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Split names</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Dedupe</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Multi-format export</span>
+</div>
+</div>
+</section>
+<section class="container">
+<div class="fmt-card">
+<label class="dropzone" for="fileInput" id="dropzone">
+<div class="dropzone-icon">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+</div>
+<h3>Drop a CSV or Excel file here</h3>
+<p>or <span class="browse-link">browse from your device</span> · supports .csv, .xlsx, .xls, .tsv, .txt</p>
+<input accept=".csv,.xlsx,.xls,.tsv,.txt,text/csv,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" id="fileInput" type="file"/>
+<div class="file-meta-line" id="fileMetaLine" style="display:none;"></div>
+</label>
+<div class="lib-fallback" id="libFallback">
           ⚠️ A required library (PapaParse or SheetJS) failed to load. Check your internet connection and refresh the page. The app cannot parse files without them.
         </div>
-
-        <!-- Summary -->
-        <div class="summary-card" id="summaryCard" style="display:none;">
-          <div class="summary-head">
-            <h3>Data summary</h3>
-            <span class="file-pill" id="sumFilePill"></span>
-          </div>
-          <div class="summary-stats">
-            <div class="summary-stat"><div class="label">Rows</div><div class="value" id="sumRows">—</div></div>
-            <div class="summary-stat"><div class="label">Columns</div><div class="value" id="sumCols">—</div></div>
-            <div class="summary-stat"><div class="label">File size</div><div class="value" id="sumSize">—</div></div>
-            <div class="summary-stat"><div class="label">Type</div><div class="value" id="sumType">—</div></div>
-          </div>
-          <div class="summary-section">
-            <h4>Detected column types</h4>
-            <div class="type-badges" id="sumTypes"></div>
-          </div>
-          <div class="summary-section">
-            <h4>Issues found</h4>
-            <div class="issues-list" id="sumIssues"></div>
-          </div>
-        </div>
-
-        <!-- Options -->
-        <div class="options-panel" id="optionsPanel" style="display:none;">
-          <h3>Cleaning options</h3>
-          <div class="options-grid">
-            <label class="opt"><input type="checkbox" id="opt-trim" checked><span class="opt-text"><strong>Trim whitespace</strong><small>Remove leading/trailing spaces from all cells</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-collapse" checked><span class="opt-text"><strong>Collapse multiple spaces</strong><small>Turn runs of spaces into a single space</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-empty" checked><span class="opt-text"><strong>Remove empty rows</strong><small>Drop rows where every cell is blank</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-dedupe" checked><span class="opt-text"><strong>Remove duplicate rows</strong><small>Delete exact duplicate rows (keeps first)</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-email" checked><span class="opt-text"><strong>Normalize email column</strong><small>Lowercase and trim email addresses</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-name" checked><span class="opt-text"><strong>Title-case name columns</strong><small>"JOhn smIth" → "John Smith"</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-date" checked><span class="opt-text"><strong>Standardize dates to ISO</strong><small>Convert to YYYY-MM-DD where unambiguous</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-split"><span class="opt-text"><strong>Split full name column</strong><small>Auto-detect "Full Name"/"Nama Lengkap" → First + Last</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-nonprint"><span class="opt-text"><strong>Strip non-printable chars</strong><small>Remove control characters from all cells</small></span></label>
-            <label class="opt"><input type="checkbox" id="opt-null"><span class="opt-text"><strong>Empty → null/empty</strong><small>Convert empty strings to <select id="opt-null-val"><option value="empty">empty string</option><option value="null">null</option></select></small></span></label>
-          </div>
-          <div class="opt-row-controls">
-            <div class="action-info" id="cleanInfo" style="font-size:.88rem;color:var(--muted);">Adjust options then apply to re-clean from the original data.</div>
-            <button class="btn btn-primary" id="applyBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+<!-- Summary -->
+<div class="summary-card" id="summaryCard" style="display:none;">
+<div class="summary-head">
+<h3>Data summary</h3>
+<span class="file-pill" id="sumFilePill"></span>
+</div>
+<div class="summary-stats">
+<div class="summary-stat"><div class="label">Rows</div><div class="value" id="sumRows">—</div></div>
+<div class="summary-stat"><div class="label">Columns</div><div class="value" id="sumCols">—</div></div>
+<div class="summary-stat"><div class="label">File size</div><div class="value" id="sumSize">—</div></div>
+<div class="summary-stat"><div class="label">Type</div><div class="value" id="sumType">—</div></div>
+</div>
+<div class="summary-section">
+<h4>Detected column types</h4>
+<div class="type-badges" id="sumTypes"></div>
+</div>
+<div class="summary-section">
+<h4>Issues found</h4>
+<div class="issues-list" id="sumIssues"></div>
+</div>
+</div>
+<!-- Options -->
+<div class="options-panel" id="optionsPanel" style="display:none;">
+<h3>Cleaning options</h3>
+<div class="options-grid">
+<label class="opt"><input checked="" id="opt-trim" type="checkbox"/><span class="opt-text"><strong>Trim whitespace</strong><small>Remove leading/trailing spaces from all cells</small></span></label>
+<label class="opt"><input checked="" id="opt-collapse" type="checkbox"/><span class="opt-text"><strong>Collapse multiple spaces</strong><small>Turn runs of spaces into a single space</small></span></label>
+<label class="opt"><input checked="" id="opt-empty" type="checkbox"/><span class="opt-text"><strong>Remove empty rows</strong><small>Drop rows where every cell is blank</small></span></label>
+<label class="opt"><input checked="" id="opt-dedupe" type="checkbox"/><span class="opt-text"><strong>Remove duplicate rows</strong><small>Delete exact duplicate rows (keeps first)</small></span></label>
+<label class="opt"><input checked="" id="opt-email" type="checkbox"/><span class="opt-text"><strong>Normalize email column</strong><small>Lowercase and trim email addresses</small></span></label>
+<label class="opt"><input checked="" id="opt-name" type="checkbox"/><span class="opt-text"><strong>Title-case name columns</strong><small>"JOhn smIth" → "John Smith"</small></span></label>
+<label class="opt"><input checked="" id="opt-date" type="checkbox"/><span class="opt-text"><strong>Standardize dates to ISO</strong><small>Convert to YYYY-MM-DD where unambiguous</small></span></label>
+<label class="opt"><input id="opt-split" type="checkbox"/><span class="opt-text"><strong>Split full name column</strong><small>Auto-detect "Full Name"/"Nama Lengkap" → First + Last</small></span></label>
+<label class="opt"><input id="opt-nonprint" type="checkbox"/><span class="opt-text"><strong>Strip non-printable chars</strong><small>Remove control characters from all cells</small></span></label>
+<label class="opt"><input id="opt-null" type="checkbox"/><span class="opt-text"><strong>Empty → null/empty</strong><small>Convert empty strings to <select id="opt-null-val"><option value="empty">empty string</option><option value="null">null</option></select></small></span></label>
+</div>
+<div class="opt-row-controls">
+<div class="action-info" id="cleanInfo" style="font-size:.88rem;color:var(--muted);">Adjust options then apply to re-clean from the original data.</div>
+<button class="btn btn-primary" id="applyBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
               Apply cleaning
             </button>
-          </div>
-          <div class="ba-stats" id="baStats"></div>
-        </div>
+</div>
+<div class="ba-stats" id="baStats"></div>
+</div>
+<!-- Export bar + preview -->
+<div class="export-bar" id="exportBar" style="display:none;">
+<span class="export-label">Export current view</span>
+<button class="btn btn-ghost" data-export="csv"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Export .csv</button>
+<button class="btn btn-ghost" data-export="json"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Export .json</button>
+<button class="btn btn-ghost" data-export="json-nested"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Export .json (nested)</button>
+<button class="btn btn-ghost" data-export="xlsx"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Export .xlsx</button>
+<button class="btn btn-ghost" data-copy="markdown"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy Markdown</button>
+<button class="btn btn-ghost" data-copy="json"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy JSON</button>
+</div>
+<div class="preview-wrap" id="previewWrap"></div>
+</div>
+</section>
+<section class="howto" id="how-to-use">
+<div class="container">
+<h2>How to use CSV Formatter</h2>
+<p>Four simple steps — your data is cleaned locally in your browser and never uploaded anywhere.</p>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-num">1</div>
+<h4>Drop your file</h4>
+<p>Drag a .csv, .xlsx, .xls, .tsv or .txt file onto the dropzone, or click to browse. Only one file at a time — dropping a new one replaces the previous.</p>
+</div>
+<div class="step-card">
+<div class="step-num">2</div>
+<h4>Review the summary</h4>
+<p>CSV Formatter inspects every column, detects types (text, number, date, email, boolean) and lists issues like empty rows, duplicates and messy whitespace.</p>
+</div>
+<div class="step-card">
+<div class="step-num">3</div>
+<h4>Tune &amp; apply cleaning</h4>
+<p>Toggle the cleaning options you want, then click "Apply cleaning". The preview re-renders from the original data and shows before/after stats.</p>
+</div>
+<div class="step-card">
+<div class="step-num">4</div>
+<h4>Export anywhere</h4>
+<p>Download clean CSV (UTF-8 with BOM for Excel), JSON, nested JSON, or formatted XLSX — or copy the table as Markdown / JSON to your clipboard.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="features" id="features">
+<div class="container">
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h4>100% private</h4>
+<p>Your spreadsheet is parsed entirely in your browser. No upload, no server, no tracking — your data never leaves your device.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+<h4>Smart auto-clean</h4>
+<p>Trim whitespace, collapse spaces, normalize emails, title-case names and standardize dates — all detected and applied automatically.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" x2="20" y1="8" y2="14"></line><line x1="23" x2="17" y1="11" y2="11"></line></svg></div>
+<h4>Split &amp; dedupe</h4>
+<p>Split a "Full Name" column into First and Last, and remove exact duplicate rows or empty rows in one click.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" x2="12" y1="18" y2="12"></line><line x1="9" x2="15" y1="15" y2="15"></line></svg></div>
+<h4>Multi-format export</h4>
+<p>Export to clean CSV (Excel-ready BOM), JSON, nested JSON, or formatted XLSX. Or copy as Markdown / JSON for docs and chat.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></div>
+<h4>Live preview</h4>
+<p>Scroll through up to 100 rows with a sticky header. Modified cells are highlighted yellow — click any to see its original value.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg></div>
+<h4>Cross-platform</h4>
+<p>Works on Chrome, Firefox, Safari, Edge and modern mobile browsers. Uses PapaParse and SheetJS — the battle-tested open-source parsers.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="faq" id="faq">
+<div class="container">
+<h2>Frequently asked questions</h2>
+<div class="faq-item">
+<button class="faq-q" type="button">Is my data uploaded to a server? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>No. CSV Formatter runs entirely in your browser using JavaScript. Your file is read into memory on your own device, cleaned there, and the result is offered as a download — nothing is ever uploaded. You can verify this by opening DevTools → Network and watching that no file data leaves your device.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">What file formats are supported? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Input: .csv, .tsv, .txt (plain delimited), .xlsx and .xls (Excel). Output: clean .csv (UTF-8 with BOM for Excel compatibility), .json (array of objects), .json with nested name object, and .xlsx (via SheetJS). You can also copy the table as Markdown or JSON.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">How are column types detected? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Each column is sampled: if more than 80% of its non-empty cells match a number pattern, it is flagged "number"; if they match date patterns (DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY, or Indonesian "12 Januari 2020"), it is "date"; if the header contains "email" or &gt;80% of cells match an email regex, it is "email"; if &gt;80% match true/false/yes/no/y/n/0/1, it is "boolean"; otherwise "text". Detection only guides cleaning — it never deletes your data.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">How does the name split work? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>If you enable "Split full name column", the app looks for a header matching "Full Name", "Nama Lengkap" or "Name" (case-insensitive). That column is split on the first space into a "First Name" and "Last Name" column. Single-word names get an empty last name. The original full-name column is replaced.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Are formulas preserved when I read an .xlsx file? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>No. SheetJS reads the cached cell values, not live formulas. If a cell contains a formula, you get its last computed value. Formatting (colors, fonts, number formats) is also not preserved on re-export — the focus of this tool is clean data, not faithful spreadsheet cloning.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">How big a file can I clean? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>The app handles roughly 50,000 rows smoothly on a typical laptop. Beyond that, parsing and rendering slow down and the preview table (capped at 100 visible rows) may take a moment. There is no hard limit — the only constraint is your device's memory.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Any modern browser from the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer is not supported. PapaParse and SheetJS are loaded from a CDN on first visit.</p></div>
+</div>
+</div>
+</section>
+</main>
 
-        <!-- Export bar + preview -->
-        <div class="export-bar" id="exportBar" style="display:none;">
-          <span class="export-label">Export current view</span>
-          <button class="btn btn-ghost" data-export="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .csv</button>
-          <button class="btn btn-ghost" data-export="json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .json</button>
-          <button class="btn btn-ghost" data-export="json-nested"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .json (nested)</button>
-          <button class="btn btn-ghost" data-export="xlsx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export .xlsx</button>
-          <button class="btn btn-ghost" data-copy="markdown"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Markdown</button>
-          <button class="btn btn-ghost" data-copy="json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy JSON</button>
-        </div>
-
-        <div class="preview-wrap" id="previewWrap"></div>
-      </div>
-    </section>
-
-    <section class="howto" id="how-to-use">
-      <div class="container">
-        <h2>How to use CSV Formatter</h2>
-        <p>Four simple steps — your data is cleaned locally in your browser and never uploaded anywhere.</p>
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-num">1</div>
-            <h4>Drop your file</h4>
-            <p>Drag a .csv, .xlsx, .xls, .tsv or .txt file onto the dropzone, or click to browse. Only one file at a time — dropping a new one replaces the previous.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">2</div>
-            <h4>Review the summary</h4>
-            <p>CSV Formatter inspects every column, detects types (text, number, date, email, boolean) and lists issues like empty rows, duplicates and messy whitespace.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">3</div>
-            <h4>Tune &amp; apply cleaning</h4>
-            <p>Toggle the cleaning options you want, then click "Apply cleaning". The preview re-renders from the original data and shows before/after stats.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">4</div>
-            <h4>Export anywhere</h4>
-            <p>Download clean CSV (UTF-8 with BOM for Excel), JSON, nested JSON, or formatted XLSX — or copy the table as Markdown / JSON to your clipboard.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="features" id="features">
-      <div class="container">
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h4>100% private</h4>
-            <p>Your spreadsheet is parsed entirely in your browser. No upload, no server, no tracking — your data never leaves your device.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-            <h4>Smart auto-clean</h4>
-            <p>Trim whitespace, collapse spaces, normalize emails, title-case names and standardize dates — all detected and applied automatically.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
-            <h4>Split &amp; dedupe</h4>
-            <p>Split a "Full Name" column into First and Last, and remove exact duplicate rows or empty rows in one click.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
-            <h4>Multi-format export</h4>
-            <p>Export to clean CSV (Excel-ready BOM), JSON, nested JSON, or formatted XLSX. Or copy as Markdown / JSON for docs and chat.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-            <h4>Live preview</h4>
-            <p>Scroll through up to 100 rows with a sticky header. Modified cells are highlighted yellow — click any to see its original value.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-            <h4>Cross-platform</h4>
-            <p>Works on Chrome, Firefox, Safari, Edge and modern mobile browsers. Uses PapaParse and SheetJS — the battle-tested open-source parsers.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="faq" id="faq">
-      <div class="container">
-        <h2>Frequently asked questions</h2>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Is my data uploaded to a server? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>No. CSV Formatter runs entirely in your browser using JavaScript. Your file is read into memory on your own device, cleaned there, and the result is offered as a download — nothing is ever uploaded. You can verify this by opening DevTools → Network and watching that no file data leaves your device.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">What file formats are supported? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Input: .csv, .tsv, .txt (plain delimited), .xlsx and .xls (Excel). Output: clean .csv (UTF-8 with BOM for Excel compatibility), .json (array of objects), .json with nested name object, and .xlsx (via SheetJS). You can also copy the table as Markdown or JSON.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">How are column types detected? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Each column is sampled: if more than 80% of its non-empty cells match a number pattern, it is flagged "number"; if they match date patterns (DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY, or Indonesian "12 Januari 2020"), it is "date"; if the header contains "email" or >80% of cells match an email regex, it is "email"; if >80% match true/false/yes/no/y/n/0/1, it is "boolean"; otherwise "text". Detection only guides cleaning — it never deletes your data.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">How does the name split work? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>If you enable "Split full name column", the app looks for a header matching "Full Name", "Nama Lengkap" or "Name" (case-insensitive). That column is split on the first space into a "First Name" and "Last Name" column. Single-word names get an empty last name. The original full-name column is replaced.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Are formulas preserved when I read an .xlsx file? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>No. SheetJS reads the cached cell values, not live formulas. If a cell contains a formula, you get its last computed value. Formatting (colors, fonts, number formats) is also not preserved on re-export — the focus of this tool is clean data, not faithful spreadsheet cloning.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">How big a file can I clean? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>The app handles roughly 50,000 rows smoothly on a typical laptop. Beyond that, parsing and rendering slow down and the preview table (capped at 100 visible rows) may take a moment. There is no hard limit — the only constraint is your device's memory.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
-          <div class="faq-a"><p>Any modern browser from the last few years: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer is not supported. PapaParse and SheetJS are loaded from a CDN on first visit.</p></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-text">
-        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> ·
-        Powered by <a href="https://www.papaparse.com/" target="_blank" rel="noopener">PapaParse</a> &amp; <a href="https://sheetjs.com/" target="_blank" rel="noopener">SheetJS</a> ·
-        <span id="footerYear">2026</span>
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
-        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
-        <a href="https://bayhaqy.my.id/games" target="_blank" rel="noopener">Games</a>
-        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
-      </div>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast"></div>
-  <div class="cell-tooltip" id="cellTooltip">
-    <div class="tt-label">Original value</div>
-    <div class="tt-val" id="ttVal"></div>
-    <div class="tt-new" id="ttNew"></div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" crossorigin="anonymous"></script>
-  <script>
+<div class="toast" id="toast"></div>
+<div class="cell-tooltip" id="cellTooltip">
+<div class="tt-label">Original value</div>
+<div class="tt-val" id="ttVal"></div>
+<div class="tt-new" id="ttNew"></div>
+</div>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
     (function(){
       'use strict';
       var doc = document;
@@ -723,13 +678,6 @@
       var ttNew = doc.getElementById('ttNew');
 
       // ----- Theme toggle -----
-      var themeToggle = doc.getElementById('themeToggle');
-      themeToggle.addEventListener('click', function(){
-        var current = doc.documentElement.getAttribute('data-theme') || 'light';
-        var next = current === 'dark' ? 'light' : 'dark';
-        doc.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('csvfmt-theme', next);
-      });
 
       // ----- Toast -----
       var toastTimer = null;
@@ -1562,12 +1510,11 @@
       });
 
       // ----- Footer year -----
-      doc.getElementById('footerYear').textContent = new Date().getFullYear();
 
       // ----- Init -----
       // nothing to render until a file is loaded
 
     })();
   </script>
-</body>
+<script data-app-name="CSV Formatter" src="/apps/assets/app-shell.js"></script></body>
 </html>
