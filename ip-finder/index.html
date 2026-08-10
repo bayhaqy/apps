@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="IP Location Finder — auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive map." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="IP Location Finder — GeoIP Tracker" />
+  <meta property="og:description" content="Auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on a map." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/ip-finder/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/ip-finder/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>IP Location Finder — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ezLr+/xwB6U5jfnxkM4A3C8q6XwA=" crossorigin="" />
+</head>
+<body data-app-name="IP Location">
+  <main class="app-main">
+    <header class="app-hero">
+      <p class="app-eyebrow">Network · GeoIP</p>
+      <h1 class="app-title">IP <span class="accent">Location Finder</span></h1>
+      <p class="app-subtitle">
+        Auto-detect your public IP on load, or look up any IPv4 / IPv6 to see country, city, GPS
+        coordinates, ISP, and ASN. Powered by ipapi.co &amp; ip-api.com.
+      </p>
+    </header>
+
+    <section class="card">
+      <label class="field">
+        <span>IP address (leave empty for your own IP)</span>
+        <input type="text" id="ipInput" placeholder="8.8.8.8" autocapitalize="none" spellcheck="false" />
+        <span class="hint">Accepts IPv4 (e.g. 1.1.1.1) or IPv6 (e.g. 2606:4700:4700::1111).</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="lookupBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Look up
+        </button>
+        <button class="btn btn-ghost" id="meBtn" type="button">My IP</button>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+      </div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+
+    <section class="grid-2" style="margin-top:1.25rem;">
+      <section class="card" id="infoCard" style="display:none;">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Details
+        </h2>
+        <table class="data" id="infoTable"></table>
+      </section>
+      <section class="card" id="mapCard" style="display:none;">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Map
+        </h2>
+        <div id="map" class="map-frame"></div>
+        <p class="text-xs text-mute mt-1">Map tiles © OpenStreetMap contributors.</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="IP Location"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var ipInput = $('#ipInput');
+      var lookupBtn = $('#lookupBtn');
+      var meBtn = $('#meBtn');
+      var sampleBtn = $('#sampleBtn');
+      var errorCard = $('#errorCard');
+      var errorMsg = $('#errorMsg');
+      var infoCard = $('#infoCard');
+      var infoTable = $('#infoTable');
+      var mapCard = $('#mapCard');
+      var mapEl = $('#map');
+      var map = null, marker = null;
+
+      function showError(msg) {
+        infoCard.style.display = 'none';
+        mapCard.style.display = 'none';
+        errorCard.style.display = 'block';
+        errorMsg.textContent = msg;
+      }
+      function clearOutput() {
+        errorCard.style.display = 'none';
+        infoCard.style.display = 'none';
+        mapCard.style.display = 'none';
+      }
+
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+
+      function row(k, v) {
+        return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v">' + escapeHtml(v) + '</td></tr>';
+      }
+
+      function showInfo(data) {
+        infoCard.style.display = 'block';
+        var rows = '';
+        rows += row('IP', data.ip || data.query || '—');
+        rows += row('Country', (data.country_name || data.country || '—') + (data.country_code ? ' (' + data.country_code + ')' : ''));
+        rows += row('Region', data.region || data.regionName || '—');
+        rows += row('City', data.city || '—');
+        rows += row('Postal', data.postal || data.zip || '—');
+        rows += row('Latitude', data.latitude || data.lat || '—');
+        rows += row('Longitude', data.longitude || data.lon || '—');
+        rows += row('Timezone', data.timezone || '—');
+        rows += row('ISP', data.org || data.isp || '—');
+        rows += row('ASN', data.asn || (data.as ? (data.as || '—') : '—'));
+        infoTable.innerHTML = '<tbody>' + rows + '</tbody>';
+
+        var lat = parseFloat(data.latitude || data.lat);
+        var lon = parseFloat(data.longitude || data.lon);
+        if (!isNaN(lat) && !isNaN(lon)) {
+          mapCard.style.display = 'block';
+          // Wait for layout to settle before initializing the map.
+          setTimeout(function () { ensureMap(lat, lon, data.city || data.ip || 'Location'); }, 60);
+        }
+      }
+
+      function ensureMap(lat, lon, label) {
+        if (map === null) {
+          map = L.map(mapEl, { scrollWheelZoom: false }).setView([lat, lon], 10);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 19
+          }).addTo(map);
+          marker = L.marker([lat, lon]).addTo(map).bindPopup(escapeHtml(label));
+        } else {
+          mapCard.style.display = 'block';
+          marker.setLatLng([lat, lon]).bindPopup(escapeHtml(label));
+          map.setView([lat, lon], 10);
+        }
+        setTimeout(function () { if (map) map.invalidateSize(); }, 100);
+      }
+
+      async function lookup(ip) {
+        clearOutput();
+        lookupBtn.disabled = true;
+        lookupBtn.textContent = 'Looking up…';
+        var lastErr = null;
+        try {
+          // Try ipapi.co first (HTTPS, CORS-friendly, has ASN).
+          try {
+            var url1 = ip ? ('https://ipapi.co/' + encodeURIComponent(ip) + '/json/') : 'https://ipapi.co/json/';
+            var res1 = await fetch(url1);
+            if (res1.ok) {
+              var data1 = await res1.json();
+              if (!data1 || data1.error) throw new Error(data1 && data1.reason || 'Lookup failed');
+              if (!data1.ip && data1.query) data1.ip = data1.query;
+              showInfo(data1);
+              return;
+            }
+            throw new Error('ipapi.co returned HTTP ' + res1.status);
+          } catch (err) { lastErr = err; }
+
+          // Fallback to ipwho.is (HTTPS, CORS-friendly, free, has ASN).
+          try {
+            var url2 = ip ? ('https://ipwho.is/' + encodeURIComponent(ip)) : 'https://ipwho.is/';
+            var res2 = await fetch(url2);
+            if (res2.ok) {
+              var data2 = await res2.json();
+              if (data2 && data2.success === false) throw new Error(data2.message || 'Lookup failed');
+              var normalized = {
+                ip: data2.ip,
+                country_name: data2.country,
+                country_code: data2.country_code,
+                region: data2.region,
+                city: data2.city,
+                postal: data2.postal,
+                latitude: data2.latitude,
+                longitude: data2.longitude,
+                timezone: data2.timezone ? data2.timezone.id : null,
+                org: data2.connection ? (data2.connection.isp || data2.connection.org) : null,
+                asn: data2.connection ? data2.connection.asn : null
+              };
+              showInfo(normalized);
+              return;
+            }
+            throw new Error('ipwho.is returned HTTP ' + res2.status);
+          } catch (err) { lastErr = err; }
+
+          showError('Lookup failed via both ipapi.co and ipwho.is. Last error: ' + (lastErr && lastErr.message ? lastErr.message : lastErr) + '. Please retry in a moment.');
+        } finally {
+          lookupBtn.disabled = false;
+          lookupBtn.textContent = 'Look up';
+        }
+      }
+
+      lookupBtn.addEventListener('click', function () { lookup(ipInput.value.trim()); });
+      ipInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') lookup(ipInput.value.trim()); });
+      meBtn.addEventListener('click', function () { ipInput.value = ''; lookup(''); });
+      var samples = ['8.8.8.8', '1.1.1.1', '208.67.222.222', '9.9.9.9', '4.2.2.2'];
+      sampleBtn.addEventListener('click', function () {
+        var p = samples[Math.floor(Math.random() * samples.length)];
+        ipInput.value = p; lookup(p);
+      });
+
+      // Auto-detect own IP on first load.
+      setTimeout(function () { lookup(''); }, 200);
+    })();
+  </script>
+</body>
+</html>
