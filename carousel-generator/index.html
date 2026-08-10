@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Free Markdown to social media carousel generator. Paste bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads, no sign-up." />
-  <meta name="keywords" content="carousel generator, markdown to slides, social media carousel, LinkedIn carousel, Instagram carousel, PNG slides, markdown carousel, free carousel maker" />
-  <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-  <meta name="bingbot" content="index, follow" />
-  <meta name="theme-color" content="#DC2626" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Markdown to Carousel Generator — Social Media Slides from Text" />
-  <meta property="og:description" content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." />
-  <meta property="og:url" content="https://bayhaqy.my.id/apps/carousel-generator/" />
-  <meta property="og:site_name" content="Bayhaqy Apps" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Markdown to Carousel Generator — Social Media Slides from Text" />
-  <meta name="twitter:description" content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." />
-  <link rel="canonical" href="https://bayhaqy.my.id/apps/carousel-generator/" />
-  <title>Markdown to Carousel Generator — Social Media Slides from Text</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECG%3C/text%3E%3C/svg%3E" />
-  <script type="application/ld+json">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Free Markdown to social media carousel generator. Paste bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads, no sign-up." name="description"/>
+<meta content="carousel generator, markdown to slides, social media carousel, LinkedIn carousel, Instagram carousel, PNG slides, markdown carousel, free carousel maker" name="keywords"/>
+<meta content="Achmad Bayhaqy" name="author"/>
+<meta content="index, follow" name="robots"/>
+<meta content="index, follow" name="googlebot"/>
+<meta content="index, follow" name="bingbot"/>
+<meta content="#B91C1C" name="theme-color"/>
+<meta content="website" property="og:type"/>
+<meta content="Markdown to Carousel Generator — Social Media Slides from Text" property="og:title"/>
+<meta content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." property="og:description"/>
+<meta content="https://bayhaqy.my.id/apps/carousel-generator/" property="og:url"/>
+<meta content="Bayhaqy Apps" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Markdown to Carousel Generator — Social Media Slides from Text" name="twitter:title"/>
+<meta content="Paste Markdown bullet points, get polished PNG slide images for LinkedIn, Instagram, and X. 100% client-side, no uploads." name="twitter:description"/>
+<link href="https://bayhaqy.my.id/apps/carousel-generator/" rel="canonical"/>
+<title>Markdown to Carousel Generator — Social Media Slides from Text</title><link href="/apps/assets/theme.css?v=20260810a" rel="stylesheet"/>
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23B91C1C'/%3E%3Ctext x='50' y='62' font-family='Arial,sans-serif' font-size='42' font-weight='bold' fill='white' text-anchor='middle'%3ECG%3C/text%3E%3C/svg%3E" rel="icon"/>
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -52,17 +52,17 @@
     ]
   }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
-  <style>
+<link crossorigin="" href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Poppins:wght@400;500;600;700;800&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
       --fg:#0F172A;--muted:#64748B;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#FFFFFF;--card-border:rgba(15,23,42,0.08);--card-border-hover:rgba(15,23,42,0.15);
       --chip-bg:#F1F5F9;--chip-border:rgba(15,23,42,0.08);
       --shadow:0 10px 30px -10px rgba(15,23,42,0.12);
@@ -72,7 +72,7 @@
     [data-theme="dark"]{
       --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
       --fg:#F1F5F9;--muted:#94A3B8;
-      --accent:#DC2626;--accent-2:#F59E0B;--green:#10B981;
+      --accent:#B91C1C;--accent-2:#F59E0B;--green:#10B981;
       --card-bg:#1E293B;--card-border:rgba(241,245,249,0.07);--card-border-hover:rgba(241,245,249,0.15);
       --chip-bg:rgba(30,41,59,0.6);--chip-border:rgba(241,245,249,0.07);
       --shadow:0 10px 30px -10px rgba(0,0,0,0.5);
@@ -471,8 +471,8 @@
     }
   </style>
 </head>
-<body>
-  <script>
+<body data-app-name="Carousel Generator">
+<script>
     // Prevent theme flash
     (function(){
       var saved = localStorage.getItem('carousel-theme');
@@ -481,278 +481,242 @@
     })();
   </script>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/apps/carousel-generator/" class="brand">
-        <span class="brand-logo">CG</span>
-        <span>Carousel Generator</span>
-      </a>
-      <nav class="header-links">
-        <a href="#how-to-use">How to use</a>
-        <a href="#themes">Themes</a>
-        <a href="#faq">FAQ</a>
-        <a class="back-link" href="https://bayhaqy.my.id/apps/" target="_blank" rel="noopener">&larr; Back to apps</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
-          <span class="icon-moon">&#127769;</span>
-          <span class="icon-sun">&#9728;&#65039;</span>
-        </button>
-      </nav>
-    </div>
-  </header>
+<main>
+<section class="hero">
+<div class="container">
+<span class="hero-eyebrow">100% local · LinkedIn · Instagram · X</span>
+<h1>Turn Markdown into <span class="accent">carousel slides</span></h1>
+<p class="sub">Paste bullet points, pick a theme, and export polished PNG slides ready for LinkedIn, Instagram, and X — no design skills, no uploads, no sign-up. Everything renders in your browser.</p>
+<div class="hero-pills">
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> Markdown input</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> 6 themes</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> PNG export</span>
+<span class="hero-pill"><svg fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg> No design skills</span>
+</div>
+</div>
+</section>
+<section class="container">
+<div class="app-card">
+<div class="app-grid">
+<!-- LEFT: Input + Settings -->
+<div class="panel">
+<div>
+<div class="panel-label">Markdown input</div>
+<textarea class="md-textarea" id="mdInput" placeholder="# Slide title
 
-  <main>
-    <section class="hero">
-      <div class="container">
-        <span class="hero-eyebrow">100% local &middot; LinkedIn &middot; Instagram &middot; X</span>
-        <h1>Turn Markdown into <span class="accent">carousel slides</span></h1>
-        <p class="sub">Paste bullet points, pick a theme, and export polished PNG slides ready for LinkedIn, Instagram, and X &mdash; no design skills, no uploads, no sign-up. Everything renders in your browser.</p>
-        <div class="hero-pills">
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Markdown input</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 6 themes</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> PNG export</span>
-          <span class="hero-pill"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> No design skills</span>
-        </div>
-      </div>
-    </section>
+- Bullet point one
+- Bullet point two
+- Bullet point three
 
-    <section class="container">
-      <div class="app-card">
-        <div class="app-grid">
-          <!-- LEFT: Input + Settings -->
-          <div class="panel">
-            <div>
-              <div class="panel-label">Markdown input</div>
-              <textarea class="md-textarea" id="mdInput" spellcheck="false" placeholder="# Slide title&#10;&#10;- Bullet point one&#10;- Bullet point two&#10;- Bullet point three&#10;&#10;> A memorable quote for emphasis.&#10;&#10;---&#10;&#10;## Next slide&#10;&#10;1. First numbered item&#10;2. Second numbered item&#10;3. Third numbered item"></textarea>
-              <div class="textarea-toolbar">
-                <div class="textarea-info"><strong id="slideCount">0</strong> <span id="slideLabel">slides</span> detected</div>
-                <button class="btn btn-ghost btn-sm" id="loadSampleBtn" type="button">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+&gt; A memorable quote for emphasis.
+
+---
+
+## Next slide
+
+1. First numbered item
+2. Second numbered item
+3. Third numbered item" spellcheck="false"></textarea>
+<div class="textarea-toolbar">
+<div class="textarea-info"><strong id="slideCount">0</strong> <span id="slideLabel">slides</span> detected</div>
+<button class="btn btn-ghost btn-sm" id="loadSampleBtn" type="button">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" x2="15" y1="13" y2="13"></line><line x1="9" x2="15" y1="17" y2="17"></line></svg>
                   Load sample
                 </button>
-              </div>
+</div>
+</div>
+<div class="format-help">
+<strong>Format:</strong> Each <code># Title</code> or <code>## Section</code> starts a new slide. Use <code>- item</code> for bullets, <code>1.</code> for numbered lists, <code>&gt; quote</code> for callouts. <code>**bold**</code> and <code>*italic*</code> supported. <code>---</code> forces a slide break.
             </div>
-
-            <div class="format-help">
-              <strong>Format:</strong> Each <code># Title</code> or <code>## Section</code> starts a new slide. Use <code>- item</code> for bullets, <code>1.</code> for numbered lists, <code>&gt; quote</code> for callouts. <code>**bold**</code> and <code>*italic*</code> supported. <code>---</code> forces a slide break.
-            </div>
-
-            <div class="settings-section">
-              <div class="panel-label">Settings</div>
-
-              <div class="setting-row">
-                <div class="setting-label">Theme</div>
-                <div class="theme-grid" id="themeGrid"></div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-label">Aspect ratio</div>
-                <div class="radio-group" id="ratioGroup"></div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-label">Font family</div>
-                <div class="radio-group" id="fontGroup"></div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-label">Slide number style</div>
-                <div class="radio-group" id="numStyleGroup"></div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-label">Accent color</div>
-                <div class="color-input-wrap">
-                  <input type="color" id="accentColor" value="#DC2626" />
-                  <span class="color-hex" id="accentHex">#DC2626</span>
-                  <button class="btn btn-ghost btn-sm" id="resetAccentBtn" type="button" title="Use theme default">Reset</button>
-                </div>
-                <div class="setting-hint">Used for highlights, bullets, and slide numbers. Leave on default to match the theme.</div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-label">Author handle</div>
-                <div class="toggle-row">
-                  <div class="toggle" id="handleToggle" role="switch" aria-checked="false" tabindex="0"></div>
-                  <span class="setting-hint">Show on every slide</span>
-                </div>
-                <input type="text" class="text-input" id="handleText" value="@yourhandle" placeholder="@yourhandle" maxlength="40" disabled />
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT: Preview -->
-          <div class="panel">
-            <div class="panel-label">Live preview</div>
-            <div class="preview-toolbar">
-              <div class="preview-meta"><strong id="previewCount">0</strong> slides &middot; <span id="previewRatio">1:1</span></div>
-              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-                <button class="btn btn-ghost btn-sm" id="downloadAllIndivBtn" type="button" disabled>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<div class="settings-section">
+<div class="panel-label">Settings</div>
+<div class="setting-row">
+<div class="setting-label">Theme</div>
+<div class="theme-grid" id="themeGrid"></div>
+</div>
+<div class="setting-row">
+<div class="setting-label">Aspect ratio</div>
+<div class="radio-group" id="ratioGroup"></div>
+</div>
+<div class="setting-row">
+<div class="setting-label">Font family</div>
+<div class="radio-group" id="fontGroup"></div>
+</div>
+<div class="setting-row">
+<div class="setting-label">Slide number style</div>
+<div class="radio-group" id="numStyleGroup"></div>
+</div>
+<div class="setting-row">
+<div class="setting-label">Accent color</div>
+<div class="color-input-wrap">
+<input id="accentColor" type="color" value="#DC2626"/>
+<span class="color-hex" id="accentHex">#DC2626</span>
+<button class="btn btn-ghost btn-sm" id="resetAccentBtn" title="Use theme default" type="button">Reset</button>
+</div>
+<div class="setting-hint">Used for highlights, bullets, and slide numbers. Leave on default to match the theme.</div>
+</div>
+<div class="setting-row">
+<div class="setting-label">Author handle</div>
+<div class="toggle-row">
+<div aria-checked="false" class="toggle" id="handleToggle" role="switch" tabindex="0"></div>
+<span class="setting-hint">Show on every slide</span>
+</div>
+<input class="text-input" disabled="" id="handleText" maxlength="40" placeholder="@yourhandle" type="text" value="@yourhandle"/>
+</div>
+</div>
+</div>
+<!-- RIGHT: Preview -->
+<div class="panel">
+<div class="panel-label">Live preview</div>
+<div class="preview-toolbar">
+<div class="preview-meta"><strong id="previewCount">0</strong> slides · <span id="previewRatio">1:1</span></div>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap">
+<button class="btn btn-ghost btn-sm" disabled="" id="downloadAllIndivBtn" type="button">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
                   Download all individually
                 </button>
-                <button class="btn btn-primary btn-sm" id="downloadZipBtn" type="button" disabled>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+<button class="btn btn-primary btn-sm" disabled="" id="downloadZipBtn" type="button">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M21 8v13H3V8"></path><path d="M1 3h22v5H1z"></path><path d="M10 12h4"></path></svg>
                   Download all as ZIP
                 </button>
-              </div>
-            </div>
-            <div class="progress-wrap" id="progressWrap">
-              <div class="progress-label" id="progressLabel">Preparing&hellip;</div>
-              <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            </div>
-            <div class="preview-list" id="previewList"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+</div>
+</div>
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-label" id="progressLabel">Preparing…</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div class="preview-list" id="previewList"></div>
+</div>
+</div>
+</div>
+</section>
+<section class="howto" id="how-to-use">
+<div class="container">
+<h2>How to use</h2>
+<p>Five simple steps — your slides are generated locally in your browser and never uploaded anywhere.</p>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-num">1</div>
+<h4>Write or paste Markdown</h4>
+<p>Use <code>#</code> or <code>##</code> for slide titles, <code>-</code> for bullets, <code>1.</code> for numbered lists, <code>&gt;</code> for callouts. Or click "Load sample" to see an example.</p>
+</div>
+<div class="step-card">
+<div class="step-num">2</div>
+<h4>Pick a theme &amp; ratio</h4>
+<p>Choose from 6 polished themes, set the aspect ratio (1:1 for Instagram, 9:16 for Stories, 16:9 for LinkedIn), and pick a font.</p>
+</div>
+<div class="step-card">
+<div class="step-num">3</div>
+<h4>Preview live</h4>
+<p>Slides update instantly as you type. Click any slide to zoom in. Adjust the accent color, slide numbers, and author handle.</p>
+</div>
+<div class="step-card">
+<div class="step-num">4</div>
+<h4>Export PNGs</h4>
+<p>Download a single slide, grab all slides individually, or bundle them into a ZIP. Each PNG is rendered at full 1080-base resolution.</p>
+</div>
+<div class="step-card">
+<div class="step-num">5</div>
+<h4>Post &amp; engage</h4>
+<p>Upload the PNGs to LinkedIn, Instagram, or X as a carousel post. Add a caption, tag your audience, and publish.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="themes-showcase" id="themes">
+<div class="container">
+<h2>Six polished themes</h2>
+<p>Each theme is designed for readability on mobile feeds — pick one, then fine-tune the accent color.</p>
+<div class="themes-grid" id="themesShowcase"></div>
+</div>
+</section>
+<section class="features" id="features">
+<div class="container">
+<h2>Why this beats manual design</h2>
+<p>Stop fighting with drag-and-drop editors. Write your ideas in Markdown and get publication-ready slides in seconds.</p>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h4>Truly private</h4>
+<p>Your text never leaves your browser. Private — runs in your browser, no server-side processing — everything runs locally.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg></div>
+<h4>Markdown-native</h4>
+<p>Write in the format you already know. Headings, bullets, numbered lists, blockquotes, bold, and italic — all parsed automatically.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg></div>
+<h4>Six designer themes</h4>
+<p>Minimal Light, Bold Dark, Sunset, Ocean, Forest, and Cyberpunk — each tuned for social media readability. Custom accent color included.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg></div>
+<h4>Multi-platform ratios</h4>
+<p>1:1 Instagram square, 4:5 portrait, 9:16 Story/Reels, 16:9 LinkedIn landscape — switch with one click, preview updates instantly.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></div>
+<h4>Bulk PNG export</h4>
+<p>Download every slide at 1080-base resolution, individually or bundled as a ZIP. Filenames include slide numbers and title slugs.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
+<h4>Instant &amp; free</h4>
+<p>No queue, no watermark, no subscription. Slides render in milliseconds — the only limit is how fast you can write.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="faq" id="faq">
+<div class="container">
+<h2>Frequently asked questions</h2>
+<div class="faq-item">
+<button class="faq-q" type="button">Is my Markdown uploaded to a server? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>No. This tool runs entirely in your browser. Your Markdown text is parsed locally, slides are rendered locally, and PNGs are generated locally — nothing is ever sent to a server. You can verify this in your browser's DevTools Network tab.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">What Markdown is supported? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Slide titles from <code># H1</code> and <code>## H2</code>. Bullets (<code>- item</code>), numbered lists (<code>1. item</code>), blockquotes (<code>&gt; quote</code>), <code>**bold**</code>, <code>*italic*</code>, and <code>`code`</code>. A horizontal rule (<code>---</code>) forces a slide break. Tables, images, and complex nesting are not supported — this is a slide generator, not a full document renderer.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Why do the exported PNGs use a different font than the preview? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>The live preview uses the Google Font you selected (Inter, Plus Jakarta Sans, Poppins, or Playfair Display). The PNG export uses an SVG rendering technique that does not have access to web fonts loaded by the page, so it falls back to a similar system font (sans-serif or serif). The layout, colors, and structure are identical — only the exact font glyphs differ. This is a documented limitation of browser-based image export.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">What resolution are the exported PNGs? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Each slide is exported at full social-media resolution: 1080×1080 for 1:1, 1080×1350 for 4:5, 1080×1920 for 9:16, and 1920×1080 for 16:9. These are the recommended dimensions for LinkedIn, Instagram, and X — sharp on retina displays and ready to publish.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Can I edit a slide after exporting? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>PNGs are flat raster images — you cannot edit the text in a PNG after export. To change a slide, edit your Markdown in the input area, then re-export. Your settings (theme, ratio, font, colors) are remembered in localStorage between sessions.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">How many slides can I generate? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>There is no hard limit. In practice, 20–30 slides work smoothly. Very long carousels (50+ slides) may slow down the preview rendering and the ZIP export, since each slide is rasterized through an SVG-to-canvas pipeline. For best engagement, aim for 5–10 slides per post.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Does it work offline? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Almost. The app itself runs entirely client-side, but it loads the marked.js parser, JSZip, and Google Fonts from CDNs on first visit. Once cached by your browser, it will work without an internet connection. PNG export does not require fonts to be loaded, so it works fully Browser-based after the first load.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" type="button">Which browsers are supported? <span class="chev">⌄</span></button>
+<div class="faq-a"><p>Any modern browser that supports SVG <code>foreignObject</code> and canvas <code>toBlob</code>: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer and very old browsers are not supported.</p></div>
+</div>
+</div>
+</section>
+</main>
 
-    <section class="howto" id="how-to-use">
-      <div class="container">
-        <h2>How to use</h2>
-        <p>Five simple steps &mdash; your slides are generated locally in your browser and never uploaded anywhere.</p>
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-num">1</div>
-            <h4>Write or paste Markdown</h4>
-            <p>Use <code>#</code> or <code>##</code> for slide titles, <code>-</code> for bullets, <code>1.</code> for numbered lists, <code>&gt;</code> for callouts. Or click "Load sample" to see an example.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">2</div>
-            <h4>Pick a theme &amp; ratio</h4>
-            <p>Choose from 6 polished themes, set the aspect ratio (1:1 for Instagram, 9:16 for Stories, 16:9 for LinkedIn), and pick a font.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">3</div>
-            <h4>Preview live</h4>
-            <p>Slides update instantly as you type. Click any slide to zoom in. Adjust the accent color, slide numbers, and author handle.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">4</div>
-            <h4>Export PNGs</h4>
-            <p>Download a single slide, grab all slides individually, or bundle them into a ZIP. Each PNG is rendered at full 1080-base resolution.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-num">5</div>
-            <h4>Post &amp; engage</h4>
-            <p>Upload the PNGs to LinkedIn, Instagram, or X as a carousel post. Add a caption, tag your audience, and publish.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="themes-showcase" id="themes">
-      <div class="container">
-        <h2>Six polished themes</h2>
-        <p>Each theme is designed for readability on mobile feeds &mdash; pick one, then fine-tune the accent color.</p>
-        <div class="themes-grid" id="themesShowcase"></div>
-      </div>
-    </section>
-
-    <section class="features" id="features">
-      <div class="container">
-        <h2>Why this beats manual design</h2>
-        <p>Stop fighting with drag-and-drop editors. Write your ideas in Markdown and get publication-ready slides in seconds.</p>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h4>Truly private</h4>
-            <p>Your text never leaves your browser. No uploads, no tracking, no server-side processing &mdash; everything runs locally.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
-            <h4>Markdown-native</h4>
-            <p>Write in the format you already know. Headings, bullets, numbered lists, blockquotes, bold, and italic &mdash; all parsed automatically.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
-            <h4>Six designer themes</h4>
-            <p>Minimal Light, Bold Dark, Sunset, Ocean, Forest, and Cyberpunk &mdash; each tuned for social media readability. Custom accent color included.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-            <h4>Multi-platform ratios</h4>
-            <p>1:1 Instagram square, 4:5 portrait, 9:16 Story/Reels, 16:9 LinkedIn landscape &mdash; switch with one click, preview updates instantly.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-            <h4>Bulk PNG export</h4>
-            <p>Download every slide at 1080-base resolution, individually or bundled as a ZIP. Filenames include slide numbers and title slugs.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-            <h4>Instant &amp; free</h4>
-            <p>No queue, no watermark, no subscription. Slides render in milliseconds &mdash; the only limit is how fast you can write.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="faq" id="faq">
-      <div class="container">
-        <h2>Frequently asked questions</h2>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Is my Markdown uploaded to a server? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>No. This tool runs entirely in your browser. Your Markdown text is parsed locally, slides are rendered locally, and PNGs are generated locally &mdash; nothing is ever sent to a server. You can verify this in your browser's DevTools Network tab.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">What Markdown is supported? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>Slide titles from <code># H1</code> and <code>## H2</code>. Bullets (<code>- item</code>), numbered lists (<code>1. item</code>), blockquotes (<code>&gt; quote</code>), <code>**bold**</code>, <code>*italic*</code>, and <code>`code`</code>. A horizontal rule (<code>---</code>) forces a slide break. Tables, images, and complex nesting are not supported &mdash; this is a slide generator, not a full document renderer.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Why do the exported PNGs use a different font than the preview? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>The live preview uses the Google Font you selected (Inter, Plus Jakarta Sans, Poppins, or Playfair Display). The PNG export uses an SVG rendering technique that does not have access to web fonts loaded by the page, so it falls back to a similar system font (sans-serif or serif). The layout, colors, and structure are identical &mdash; only the exact font glyphs differ. This is a documented limitation of browser-based image export.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">What resolution are the exported PNGs? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>Each slide is exported at full social-media resolution: 1080&times;1080 for 1:1, 1080&times;1350 for 4:5, 1080&times;1920 for 9:16, and 1920&times;1080 for 16:9. These are the recommended dimensions for LinkedIn, Instagram, and X &mdash; sharp on retina displays and ready to publish.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Can I edit a slide after exporting? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>PNGs are flat raster images &mdash; you cannot edit the text in a PNG after export. To change a slide, edit your Markdown in the input area, then re-export. Your settings (theme, ratio, font, colors) are remembered in localStorage between sessions.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">How many slides can I generate? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>There is no hard limit. In practice, 20&ndash;30 slides work smoothly. Very long carousels (50+ slides) may slow down the preview rendering and the ZIP export, since each slide is rasterized through an SVG-to-canvas pipeline. For best engagement, aim for 5&ndash;10 slides per post.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Does it work offline? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>Almost. The app itself runs entirely client-side, but it loads the marked.js parser, JSZip, and Google Fonts from CDNs on first visit. Once cached by your browser, it will work without an internet connection. PNG export does not require fonts to be loaded, so it works fully offline after the first load.</p></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" type="button">Which browsers are supported? <span class="chev">&#8964;</span></button>
-          <div class="faq-a"><p>Any modern browser that supports SVG <code>foreignObject</code> and canvas <code>toBlob</code>: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+, and equivalent mobile browsers. Internet Explorer and very old browsers are not supported.</p></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-text">
-        Built by <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Achmad Bayhaqy</a> &middot;
-        Powered by <a href="https://marked.js.org/" target="_blank" rel="noopener">marked.js</a> &amp; <a href="https://stuk.github.io/jszip/" target="_blank" rel="noopener">JSZip</a> &middot;
-        <span id="footerYear">2026</span>
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/bayhaqy/apps" target="_blank" rel="noopener">Source code</a>
-        <a href="https://bayhaqy.my.id/" target="_blank" rel="noopener">Portfolio</a>
-        <a href="https://bayhaqy.my.id/apps" target="_blank" rel="noopener">More apps</a>
-      </div>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="modal" id="modal">
-    <div class="modal-inner">
-      <button class="modal-close" id="modalClose" aria-label="Close preview">&times;</button>
-      <button class="modal-nav prev" id="modalPrev" aria-label="Previous slide">&lsaquo;</button>
-      <button class="modal-nav next" id="modalNext" aria-label="Next slide">&rsaquo;</button>
-      <div class="modal-content" id="modalContent"></div>
-    </div>
-  </div>
-
-  <script>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal">
+<div class="modal-inner">
+<button aria-label="Close preview" class="modal-close" id="modalClose">×</button>
+<button aria-label="Previous slide" class="modal-nav prev" id="modalPrev">‹</button>
+<button aria-label="Next slide" class="modal-nav next" id="modalNext">›</button>
+<div class="modal-content" id="modalContent"></div>
+</div>
+</div>
+<script>
     (function(){
       'use strict';
       var doc = document;
@@ -933,16 +897,6 @@
       var modalClose = doc.getElementById('modalClose');
       var modalPrev = doc.getElementById('modalPrev');
       var modalNext = doc.getElementById('modalNext');
-      var themeToggle = doc.getElementById('themeToggle');
-      var themesShowcase = doc.getElementById('themesShowcase');
-
-      // ----- Theme toggle -----
-      themeToggle.addEventListener('click', function(){
-        var current = doc.documentElement.getAttribute('data-theme') || 'light';
-        var next = current === 'dark' ? 'light' : 'dark';
-        doc.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('carousel-theme', next);
-      });
 
       // ----- Toast -----
       var toastTimer = null;
@@ -1636,7 +1590,6 @@
       });
 
       // ----- Init -----
-      doc.getElementById('footerYear').textContent = new Date().getFullYear();
       buildThemeGrid();
       buildRatioGroup();
       buildFontGroup();
@@ -1650,5 +1603,5 @@
       renderPreview();
     })();
   </script>
-</body>
+<script data-app-name="Carousel Generator" src="/apps/assets/app-shell.js"></script></body>
 </html>
