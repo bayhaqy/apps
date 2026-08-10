@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Free in-browser code formatter and beautifier for SQL, Python, HTML, CSS, and JavaScript. Prettier and sql-formatter run locally — no uploads, no tracking." />
+<meta name="keywords" content="code formatter, beautifier, SQL formatter, Python indenter, HTML prettier, CSS formatter, JavaScript formatter, prettier online" />
+<meta name="author" content="Achmad Bayhaqy" />
+<meta name="theme-color" content="#DC2626" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Code Formatter & Beautifier — SQL, Python, HTML, CSS, JS" />
+<meta property="og:description" content="Beautify messy code with Prettier and sql-formatter. 100% client-side, runs in your browser." />
+<meta property="og:url" content="https://bayhaqy.my.id/apps/code-formatter/" />
+<meta name="twitter:card" content="summary" />
+<title>Code Formatter & Beautifier — Bayhaqy Apps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='66' font-family='ui-monospace,monospace' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+  --fg:#0F172A;--muted:#64748B;
+  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
+  --chip-bg:#F1F5F9;
+  --add-bg:#DCFCE7;--add-fg:#166534;
+  --del-bg:#FEE2E2;--del-fg:#991B1B;
+  --radius:10px;--radius-sm:6px;
+  --max-w:1080px;
+}
+[data-theme="dark"]{
+  --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+  --fg:#F1F5F9;--muted:#94A3B8;
+  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
+  --chip-bg:rgba(30,41,59,0.6);
+  --add-bg:rgba(34,197,94,0.18);--add-fg:#86EFAC;
+  --del-bg:rgba(239,68,68,0.18);--del-fg:#FCA5A5;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+  transition:background-color .2s,color .2s;
+}
+code,pre,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+/* Header */
+header.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+[data-theme="dark"] header.site-header{background:rgba(15,23,42,0.92)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:1rem}
+.back-link{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;white-space:nowrap}
+.back-link:hover{color:var(--fg)}
+.app-title{font-weight:700;font-size:1rem;color:var(--fg);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.theme-toggle{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+  background:var(--chip-bg);color:var(--fg);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:background .15s,border-color .15s;
+}
+.theme-toggle:hover{border-color:var(--border-strong)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+/* Hero */
+.hero{padding:2.5rem 0 1.25rem}
+.hero-eyebrow{
+  display:inline-block;color:var(--accent);font-size:.78rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:.7rem;
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.15;letter-spacing:-.01em;font-weight:800;margin-bottom:.6rem}
+.hero p.sub{font-size:1rem;color:var(--muted);max-width:720px}
+
+/* Card */
+.card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.card-head h2{font-size:1.05rem;font-weight:700}
+.card-head .hint{font-size:.82rem;color:var(--muted)}
+
+/* Form */
+.form-grid{display:grid;gap:1rem}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.9rem}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.field select,.field input[type=number]{
+  font-family:inherit;font-size:.95rem;color:var(--fg);
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.55rem .7rem;width:100%;transition:border-color .15s;
+}
+.field select:focus,.field input[type=number]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.field.disabled{opacity:.45;pointer-events:none}
+
+/* Editor grid */
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:.4rem}
+.editor-col{display:flex;flex-direction:column;gap:.4rem}
+.editor-label{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.editor-label .mini{font-size:.72rem;font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0}
+textarea.editor{
+  width:100%;min-height:340px;resize:vertical;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.85rem;line-height:1.55;
+  background:var(--bg);color:var(--fg);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.75rem;tab-size:2;
+  transition:border-color .15s;
+}
+textarea.editor:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+textarea.editor[readonly]{background:var(--bg-2);color:var(--fg)}
+
+/* Buttons */
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem .9rem;border-radius:var(--radius-sm);border:1px solid transparent;
+  font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;
+  font-family:inherit;transition:background .15s,border-color .15s,opacity .15s;
+}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover:not(:disabled){background:#b91c1c}
+[data-theme="dark"] .btn-primary:hover:not(:disabled){background:#dc2626}
+.btn-ghost{background:var(--bg);color:var(--fg);border-color:var(--border)}
+.btn-ghost:hover:not(:disabled){border-color:var(--border-strong);background:var(--bg-2)}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-spacer{flex:1}
+
+/* Stats */
+.stats{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem;font-size:.78rem;color:var(--muted)}
+.stat-pill{background:var(--bg-2);border:1px solid var(--border);padding:.3rem .65rem;border-radius:99px;font-variant-numeric:tabular-nums}
+.stat-pill strong{color:var(--fg);font-weight:600}
+.stat-pill.err{background:var(--del-bg);color:var(--del-fg);border-color:transparent}
+
+/* Banner */
+.banner{
+  display:none;margin-top:.9rem;padding:.7rem .9rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.85rem;color:var(--muted);
+}
+.banner.show{display:block}
+.banner.error{background:var(--del-bg);color:var(--del-fg);border-color:transparent}
+.banner .mono{font-size:.8rem;color:var(--fg)}
+
+/* How to use */
+.section{padding:2.5rem 0 1rem}
+.section h2{font-size:1.35rem;margin-bottom:.5rem;letter-spacing:-.01em}
+.section > .container > p{color:var(--muted);margin-bottom:1.25rem;max-width:680px;font-size:.95rem}
+.steps{counter-reset:step;list-style:none;padding:0;display:grid;gap:.6rem;max-width:680px}
+.steps li{
+  counter-increment:step;position:relative;padding:.7rem .8rem .7rem 2.6rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.9rem;line-height:1.5;
+}
+.steps li::before{
+  content:counter(step);position:absolute;left:.7rem;top:50%;transform:translateY(-50%);
+  width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;
+}
+.steps li strong{color:var(--fg)}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.feature{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.feature h4{font-size:.95rem;margin-bottom:.3rem;font-weight:700}
+.feature p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* Footer */
+footer.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem}
+footer.site-footer p{font-size:.85rem;color:var(--muted);text-align:center}
+footer.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+footer.site-footer a:hover{text-decoration:underline}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(150%);
+  background:var(--fg);color:var(--bg);padding:.7rem 1.2rem;border-radius:var(--radius-sm);
+  font-size:.88rem;font-weight:500;box-shadow:0 6px 20px -4px rgba(0,0,0,0.25);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:200;max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:760px){
+  .editor-grid{grid-template-columns:1fr}
+  textarea.editor{min-height:240px}
+}
+@media(max-width:600px){
+  .hero{padding:1.75rem 0 .75rem}
+  .card{padding:1.1rem}
+  .header-inner{padding:.55rem 0}
+  .app-title{font-size:.92rem}
+  .back-link{font-size:.82rem}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var t = localStorage.getItem('apps-theme');
+  if(!t){ t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/apps/" class="back-link">&larr; All apps</a>
+    <span class="app-title">Code Formatter</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="icon-moon">&#9790;</span><span class="icon-sun">&#9728;</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <span class="hero-eyebrow">Beautify &middot; Indent &middot; Normalize</span>
+    <h1>Code Formatter &amp; Beautifier</h1>
+    <p class="sub">Paste messy SQL, Python, HTML, CSS, or JavaScript and get clean, consistently indented code back. Formatting runs entirely in your browser via Prettier and sql-formatter &mdash; nothing is uploaded.</p>
+  </section>
+
+  <section class="container">
+    <div class="card">
+      <div class="card-head">
+        <h2>Format code</h2>
+        <span class="hint">Auto-formats as you type &middot; 300&nbsp;ms debounce</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="field">
+            <label for="lang">Language</label>
+            <select id="lang">
+              <option value="sql">SQL</option>
+              <option value="python">Python</option>
+              <option value="html">HTML</option>
+              <option value="css">CSS</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="indent">Indent style</label>
+            <select id="indent">
+              <option value="2">2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tabs</option>
+            </select>
+          </div>
+          <div class="field" id="caseField">
+            <label for="caseKw">Keyword case (SQL)</label>
+            <select id="caseKw">
+              <option value="preserve">Preserve</option>
+              <option value="upper">UPPERCASE</option>
+              <option value="lower">lowercase</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="lineWidth">Line width</label>
+            <input type="number" id="lineWidth" value="80" min="40" max="200" step="4" />
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-grid">
+        <div class="editor-col">
+          <div class="editor-label">
+            <span>Input</span>
+            <span class="mini" id="inStats">0 lines &middot; 0 chars</span>
+          </div>
+          <textarea class="editor" id="input" spellcheck="false" placeholder="Paste messy code here, or press Load sample below."></textarea>
+        </div>
+        <div class="editor-col">
+          <div class="editor-label">
+            <span>Output</span>
+            <span class="mini" id="outStats">0 lines &middot; 0 chars</span>
+          </div>
+          <textarea class="editor" id="output" readonly spellcheck="false" placeholder="Formatted code will appear here."></textarea>
+        </div>
+      </div>
+
+      <div class="banner" id="banner"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="formatBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+          Format
+        </button>
+        <button class="btn btn-ghost" id="sampleBtn">Load sample</button>
+        <button class="btn btn-ghost" id="clearBtn">Clear</button>
+        <span class="btn-spacer"></span>
+        <button class="btn btn-ghost" id="copyBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy output
+        </button>
+        <button class="btn btn-ghost" id="downloadBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+      </div>
+
+      <div class="stats">
+        <span class="stat-pill" id="pillLang">SQL</span>
+        <span class="stat-pill" id="pillIndent">2 spaces</span>
+        <span class="stat-pill" id="pillWidth">80 cols</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="how-to-use">
+    <h2>How to use</h2>
+    <p>Five-step workflow. Sample data is bundled for each language so you can verify the formatter instantly.</p>
+    <ol class="steps">
+      <li><strong>Pick a language</strong> &mdash; SQL, Python, HTML, CSS, or JavaScript. The options panel adapts; SQL gets a keyword-case selector.</li>
+      <li><strong>Set indent and width</strong> &mdash; choose tabs, 2 spaces, or 4 spaces, and a print width between 40 and 200. Defaults are 2 spaces / 80 columns.</li>
+      <li><strong>Paste or load sample</strong> &mdash; drop your messy code into the Input pane on the left, or press <em>Load sample</em> to see a realistic example formatted immediately.</li>
+      <li><strong>Auto-format</strong> &mdash; the Output pane updates 300&nbsp;ms after you stop typing. Press <em>Format</em> to force a re-run, or <em>Clear</em> to reset both panes.</li>
+      <li><strong>Copy or download</strong> &mdash; press <em>Copy output</em> to copy to clipboard, or <em>Download</em> to save with the correct file extension (<code>.sql</code>, <code>.py</code>, <code>.html</code>, <code>.css</code>, <code>.js</code>).</li>
+    </ol>
+  </section>
+
+  <section class="section container">
+    <h2>What it formats</h2>
+    <div class="features-grid">
+      <div class="feature"><h4>SQL</h4><p>One-liner SELECT statements, JOINs, subqueries &mdash; formatted by sql-formatter with selectable keyword case (UPPER / lower / preserve).</p></div>
+      <div class="feature"><h4>Python</h4><p>Heuristic indentation re-flow based on colon-terminated lines. Handles mixed tabs/spaces and collapsed nested blocks.</p></div>
+      <div class="feature"><h4>HTML</h4><p>Prettier HTML parser &mdash; expands minified markup, normalizes attribute quoting, breaks long lines at the configured print width.</p></div>
+      <div class="feature"><h4>CSS</h4><p>Prettier PostCSS plugin &mdash; one rule per line, aligned declarations, sorted where unambiguous, consistent trailing semicolons.</p></div>
+      <div class="feature"><h4>JavaScript</h4><p>Prettier Babel plugin &mdash; expands minified arrow chains, normalizes quotes and semicolons, enforces 2-space style by default.</p></div>
+      <div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is sent anywhere &mdash; verify in DevTools &rarr; Network. Only library bundles load from CDN on first visit.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Library loader: ESM modules exposed as window globals -->
+<script type="module">
+import * as prettier from "https://esm.run/prettier@3.3.3/standalone";
+import * as babel from "https://esm.run/prettier@3.3.3/plugins/babel";
+import * as estree from "https://esm.run/prettier@3.3.3/plugins/estree";
+import * as postcss from "https://esm.run/prettier@3.3.3/plugins/postcss";
+import * as html from "https://esm.run/prettier@3.3.3/plugins/html";
+import * as sqlFormatter from "https://esm.run/sql-formatter@13.0.1";
+window.prettier = prettier;
+window.prettierPlugins = { babel, estree, postcss, html };
+window.sqlFormatter = sqlFormatter;
+window.__fmtReady = true;
+document.dispatchEvent(new CustomEvent('fmt-ready'));
+</script>
+
+<script>
+(function(){
+'use strict';
+
+// ===== Theme toggle =====
+var themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', function(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('apps-theme', next);
+});
+
+// ===== Toast =====
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+}
+
+// ===== Element refs =====
+var langSel = document.getElementById('lang');
+var indentSel = document.getElementById('indent');
+var caseField = document.getElementById('caseField');
+var caseSel = document.getElementById('caseKw');
+var widthInput = document.getElementById('lineWidth');
+var inputEl = document.getElementById('input');
+var outputEl = document.getElementById('output');
+var inStats = document.getElementById('inStats');
+var outStats = document.getElementById('outStats');
+var pillLang = document.getElementById('pillLang');
+var pillIndent = document.getElementById('pillIndent');
+var pillWidth = document.getElementById('pillWidth');
+var banner = document.getElementById('banner');
+var formatBtn = document.getElementById('formatBtn');
+var sampleBtn = document.getElementById('sampleBtn');
+var clearBtn = document.getElementById('clearBtn');
+var copyBtn = document.getElementById('copyBtn');
+var downloadBtn = document.getElementById('downloadBtn');
+
+// ===== Sample data =====
+var SAMPLES = {
+  sql: "select u.id,u.name,o.total from users u join orders o on u.id=o.user_id where o.total>100 and u.status='active' order by o.total desc",
+  python: "def  calculate_total(items):\n    total=0\n    for item in items:\n        if item.price>0:\n              total += item.price\n        else:\n              total += 0\n    return total\n\nclass Order:\n    def __init__(self,price,qty):\n        self.price=price\n        self.qty=qty\n    def subtotal(self):\n        return self.price*self.qty",
+  html: "<!DOCTYPE html><html><head><title>Test</title><style>body{color:red}</style></head><body><h1>Hello</h1><p>This is a paragraph.</p><ul><li>One</li><li>Two</li><li>Three</li></ul></body></html>",
+  css: "body{margin:0;padding:0;font-family:sans-serif}.container{max-width:1200px;margin:0 auto;padding:20px}.btn{display:inline-block;padding:10px 20px;background:#007bff;color:#fff;border-radius:4px}.btn:hover{background:#0056b3}",
+  javascript: "const sum=arr=>arr.reduce((a,b)=>a+b,0);const avg=arr=>sum(arr)/arr.length;const result=[1,2,3,4,5].map(x=>x*2).filter(x=>x>5).reduce((a,b)=>a+b,0);console.log('result:',result,'avg:',avg([1,2,3]));"
+};
+
+var EXT = { sql:'sql', python:'py', html:'html', css:'css', javascript:'js' };
+var LANG_LABEL = { sql:'SQL', python:'Python', html:'HTML', css:'CSS', javascript:'JavaScript' };
+
+// ===== Helpers =====
+function indentString(){
+  var v = indentSel.value;
+  if(v === 'tab') return '\t';
+  return v === '4' ? '    ' : '  ';
+}
+function indentWidth(){
+  var v = indentSel.value;
+  return v === 'tab' ? 2 : (v === '4' ? 4 : 2);
+}
+function updateOptionsVisibility(){
+  caseField.classList.toggle('disabled', langSel.value !== 'sql');
+  caseSel.disabled = (langSel.value !== 'sql');
+  pillLang.textContent = LANG_LABEL[langSel.value];
+  pillIndent.textContent = indentSel.value === 'tab' ? 'tabs' : indentSel.value + ' spaces';
+  pillWidth.textContent = (parseInt(widthInput.value,10) || 80) + ' cols';
+}
+function updateStats(){
+  var inTxt = inputEl.value;
+  var outTxt = outputEl.value;
+  inStats.textContent = lineCount(inTxt) + ' lines \u00b7 ' + inTxt.length + ' chars';
+  outStats.textContent = lineCount(outTxt) + ' lines \u00b7 ' + outTxt.length + ' chars';
+}
+function lineCount(s){ return s.length === 0 ? 0 : s.split(/\r\n|\r|\n/).length; }
+
+function showBanner(msg, isError){
+  banner.textContent = '';
+  if(!msg){ banner.classList.remove('show'); banner.classList.remove('error'); return; }
+  banner.classList.add('show');
+  banner.classList.toggle('error', !!isError);
+  banner.innerHTML = msg;
+}
+function escapeHtml(s){ return s.replace(/[&<>]/g, function(c){ return c==='&'?'&amp;':c==='<'?'&lt;':'&gt;'; }); }
+
+// ===== Format dispatcher (async — Prettier 3.x format() returns a Promise) =====
+function format(){
+  var code = inputEl.value;
+  if(!code.trim()){
+    outputEl.value = '';
+    copyBtn.disabled = true;
+    downloadBtn.disabled = true;
+    updateStats();
+    showBanner('');
+    return Promise.resolve();
+  }
+  var lang = langSel.value;
+  // SQL and Python are synchronous; HTML/CSS/JS go through async Prettier.
+  var outPromise;
+  try {
+    if(lang === 'sql') outPromise = Promise.resolve(formatSql(code));
+    else if(lang === 'python') outPromise = Promise.resolve(formatPython(code));
+    else if(lang === 'html') outPromise = formatHtml(code);
+    else if(lang === 'css') outPromise = formatCss(code);
+    else outPromise = formatJs(code);
+  } catch(err){
+    outPromise = Promise.reject(err);
+  }
+  return outPromise.then(function(out){
+    outputEl.value = out;
+    copyBtn.disabled = false;
+    downloadBtn.disabled = false;
+    showBanner('');
+    updateStats();
+  }).catch(function(err){
+    outputEl.value = '';
+    copyBtn.disabled = true;
+    downloadBtn.disabled = true;
+    showBanner('Could not format: <span class="mono">' + escapeHtml(String(err && err.message || err)) + '</span>', true);
+    updateStats();
+  });
+}
+
+// ===== SQL formatter =====
+function formatSql(code){
+  if(!window.sqlFormatter) throw new Error('sql-formatter not loaded');
+  var kw = caseSel.value; // preserve | upper | lower
+  // sql-formatter v13: keywordCase 'preserve' | 'upper' | 'lower'
+  var opts = {
+    language: 'sql',
+    keywordCase: kw,
+    indentStyle: 'standard',
+    tabWidth: indentWidth(),
+    useTabs: indentSel.value === 'tab',
+    linesBetweenQueries: 2,
+    dense: false
+  };
+  return window.sqlFormatter.format(code, opts);
+}
+
+// ===== Python heuristic indenter (stack-based, respects existing indentation) =====
+function formatPython(code){
+  var lines = code.replace(/\r\n?/g, '\n').split('\n');
+  var indent = indentString();
+  function repeatStr(s, n){ n = Math.max(0, n); var r = ''; for(var i = 0; i < n; i++) r += s; return r; }
+  function effIndent(line){
+    var m = line.match(/^[\t ]*/)[0];
+    var n = 0;
+    for(var i = 0; i < m.length; i++){ n += (m[i] === '\t') ? 4 : 1; }
+    return n;
+  }
+  function endsColon(s){
+    var stripped = s.replace(/\s*#.*$/, '').replace(/\s+$/, '');
+    return stripped.charAt(stripped.length - 1) === ':';
+  }
+  function parenBalance(line){
+    var clean = line.replace(/#.*$/, '').replace(/'(\\.|[^'])*'/g, "''").replace(/"(\\.|[^"])*"/g, '""');
+    var opens = (clean.match(/[\(\[\{]/g) || []).length;
+    var closes = (clean.match(/[\)\]\}]/g) || []).length;
+    return opens - closes;
+  }
+  var stack = [{indent:0, depth:0}]; // sentinel at depth 0
+  var expectIncrease = false;
+  var parenDepth = 0;
+  var out = [];
+  for(var i = 0; i < lines.length; i++){
+    var raw = lines[i];
+    var stripped = raw.replace(/^[\t ]*/, '');
+    if(stripped.length === 0){ out.push(''); continue; }
+    if(parenDepth > 0){
+      // Inside an unclosed paren: continuation line. Indent one level deeper than the opener.
+      var topD = stack[stack.length - 1].depth;
+      out.push(repeatStr(indent, topD + 1) + stripped);
+      parenDepth += parenBalance(stripped);
+      if(parenDepth < 0) parenDepth = 0;
+      continue;
+    }
+    var curIndent = effIndent(raw);
+    // Pop inner levels whose indent is greater than this line's
+    while(stack.length > 1 && stack[stack.length - 1].indent > curIndent){
+      stack.pop();
+    }
+    var top = stack[stack.length - 1];
+    if(curIndent > top.indent && expectIncrease){
+      // Entering a new block — push a new indent level
+      stack.push({indent: curIndent, depth: top.depth + 1});
+    }
+    var emitDepth = stack[stack.length - 1].depth;
+    out.push(repeatStr(indent, emitDepth) + stripped);
+    expectIncrease = endsColon(stripped);
+    parenDepth += parenBalance(stripped);
+    if(parenDepth < 0) parenDepth = 0;
+  }
+  while(out.length > 1 && out[out.length - 1] === '') out.pop();
+  return out.join('\n') + '\n';
+}
+
+// ===== Prettier wrapper (async — Prettier 3.x format() returns a Promise) =====
+function prettierFormat(code, parser, opts){
+  if(!window.prettier) return Promise.reject(new Error('Prettier not loaded'));
+  var plugins = window.prettierPlugins;
+  if(!plugins) return Promise.reject(new Error('Prettier plugins not loaded'));
+  // Build plugin list — estree is required for babel
+  var pluginArr = [];
+  if(parser === 'babel'){ pluginArr.push(plugins.babel, plugins.estree); }
+  else if(parser === 'html'){ pluginArr.push(plugins.html); }
+  else if(parser === 'css'){ pluginArr.push(plugins.postcss); }
+  var useTabs = indentSel.value === 'tab';
+  var tabW = indentWidth();
+  var printW = parseInt(widthInput.value, 10) || 80;
+  var finalOpts = Object.assign({
+    parser: parser,
+    plugins: pluginArr,
+    useTabs: useTabs,
+    tabWidth: tabW,
+    printWidth: printW,
+    singleQuote: true,
+    trailingComma: 'none'
+  }, opts || {});
+  return window.prettier.format(code, finalOpts);
+}
+function formatHtml(code){ return prettierFormat(code, 'html', { htmlWhitespaceSensitivity: 'css' }); }
+function formatCss(code){ return prettierFormat(code, 'css'); }
+function formatJs(code){ return prettierFormat(code, 'babel'); }
+
+// ===== Debounced auto-format =====
+var fmtTimer = null;
+function scheduleFormat(){
+  clearTimeout(fmtTimer);
+  fmtTimer = setTimeout(format, 300);
+}
+
+// ===== Wire up events =====
+inputEl.addEventListener('input', scheduleFormat);
+langSel.addEventListener('change', function(){ updateOptionsVisibility(); format(); });
+indentSel.addEventListener('change', function(){ updateOptionsVisibility(); format(); });
+caseSel.addEventListener('change', format);
+widthInput.addEventListener('input', function(){ updateOptionsVisibility(); scheduleFormat(); });
+formatBtn.addEventListener('click', format);
+
+sampleBtn.addEventListener('click', function(){
+  var lang = langSel.value;
+  inputEl.value = SAMPLES[lang] || '';
+  updateOptionsVisibility();
+  format();
+  toast('Sample loaded (' + LANG_LABEL[lang] + ')');
+  inputEl.focus();
+});
+clearBtn.addEventListener('click', function(){
+  inputEl.value = '';
+  outputEl.value = '';
+  copyBtn.disabled = true;
+  downloadBtn.disabled = true;
+  showBanner('');
+  updateStats();
+  inputEl.focus();
+});
+copyBtn.addEventListener('click', function(){
+  var text = outputEl.value;
+  if(!text) return;
+  copyText(text);
+});
+downloadBtn.addEventListener('click', function(){
+  var text = outputEl.value;
+  if(!text) return;
+  var lang = langSel.value;
+  var ext = EXT[lang] || 'txt';
+  var filename = 'formatted-' + Date.now() + '.' + ext;
+  var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 500);
+  toast('Downloaded ' + filename);
+});
+
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast('Copied to clipboard'); }, function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Copied to clipboard'); }catch(e){ toast('Copy failed'); }
+  document.body.removeChild(ta);
+}
+
+// ===== Library ready check =====
+function checkReady(){
+  if(window.__fmtReady){
+    showBanner('');
+    // If sample input already present (from initial state), format
+    if(inputEl.value.trim()) format();
+  } else {
+    showBanner('Loading formatter libraries from CDN&hellip; (first visit only)', false);
+    setTimeout(checkReady, 250);
+    // Hard fail after 10s
+    if(!window.__fmtReady && !window.__fmtFailShown){
+      window.__fmtFailTimer = (window.__fmtFailTimer || 0) + 1;
+      if(window.__fmtFailTimer >= 40){
+        showBanner('Formatter libraries failed to load. Check your network connection and refresh.', true);
+        window.__fmtFailShown = true;
+      }
+    }
+  }
+}
+
+document.addEventListener('fmt-ready', function(){
+  showBanner('');
+  if(inputEl.value.trim()) format();
+});
+
+// ===== Init =====
+updateOptionsVisibility();
+updateStats();
+checkReady();
+})();
+</script>
+</body>
+</html>
