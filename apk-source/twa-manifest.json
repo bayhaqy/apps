@@ -1,0 +1,46 @@
+{
+  "packageId": "my.bayhaqy.apps",
+  "host": "bayhaqy.my.id",
+  "name": "Bayhaqy Apps",
+  "launcherName": "Bayhaqy Apps",
+  "display": "fullscreen",
+  "orientation": "default",
+  "themeColor": "#B91C1C",
+  "themeColorDark": "#111111",
+  "navigationColor": "#B91C1C",
+  "navigationColorDark": "#111111",
+  "navigationDividerColor": "#B91C1C",
+  "navigationDividerColorDark": "#111111",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": false,
+  "startUrl": "/apps/",
+  "iconUrl": "https://bayhaqy.my.id/apps/icons/icon-512.png",
+  "maskableIconUrl": "https://bayhaqy.my.id/apps/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/z/my-project/work/apk-build/keystore.jks",
+    "password": "bayhaqy2026",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    { "name": "DNS Lookup", "shortName": "DNS", "url": "/apps/dns-lookup/" },
+    { "name": "BayMerge", "shortName": "Merge", "url": "/apps/baymerge/" },
+    { "name": "Hash Generator", "shortName": "Hash", "url": "/apps/hash-generator/" }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://bayhaqy.my.id/apps/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": { "enabled": false },
+    "playBilling": { "enabled": false }
+  },
+  "alphaDependencies": { "enabled": false },
+  "enableSiteSettingsShortcut": false,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://bayhaqy.my.id/apps/",
+  "minSdkVersion": 26,
+  "_comment": "Android 8.0+ (API 26+) target. Fullscreen display mode. Signed with debug keystore."
+}
