@@ -2,13 +2,23 @@
    Strategy: cache-first for app shell (HTML/CSS/JS/icons), network-first for app content.
    All app pages and their lib/ assets are cached on first visit → full offline support.
 */
-var CACHE_VERSION = 'apps-v1-20260810';
+var CACHE_VERSION = 'apps-v2-20260810';
 var APP_SHELL = [
   '/apps/',
   '/apps/index.html',
   '/apps/manifest.json',
   '/apps/icons/icon-192.png',
-  '/apps/icons/icon-512.png'
+  '/apps/icons/icon-512.png',
+  '/apps/api/',
+  '/apps/api/index.html',
+  '/apps/api/code-formatter.js',
+  '/apps/api/text-diff.js',
+  '/apps/api/date-calculator.js',
+  '/apps/api/timezone-slider.js',
+  '/apps/api/loan-calculator.js',
+  '/apps/api/converter.js',
+  '/apps/api/qr-studio.js',
+  '/apps/get-app/'
 ];
 
 var APP_ROUTE_PREFIX = '/apps/';
