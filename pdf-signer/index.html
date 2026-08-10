@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PDF Signer · Bayhaqy Apps</title>
+  <meta name="description" content="Sign PDFs with a drawn signature or uploaded stamp image. Drag, resize, and place precisely. 100% client-side via pdf-lib + signature_pad." />
+  <meta name="keywords" content="pdf sign, signature, stamp, pdf-lib, signature_pad" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/pdf-signer/" />
+  <meta property="og:title" content="PDF Signer — Draw or Stamp Your Signature" />
+  <meta property="og:description" content="Draw a signature with mouse/finger or upload a stamp PNG. Drag and place onto any PDF page." />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/pdf-signer/" />
+  <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
+  <link rel="stylesheet" href="/apps/assets/theme.css" />
+  <script src="/apps/lib/pdf-lib.min.js"></script>
+  <script src="/apps/lib/signature_pad.min.js"></script>
+  <script src="/apps/lib/pdfjs.min.js"></script>
+  <style>
+    .app-main { max-width: 1100px; margin: 0 auto; padding: 96px 20px 60px; }
+    .page-head { margin-bottom: 24px; }
+    .page-head h1 { font-size: var(--fs-2xl); margin: 0 0 6px; color: var(--ink); }
+    .page-head p { color: var(--ink-mute); margin: 0; font-size: var(--fs-md); }
+
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
+             box-shadow: var(--shadow-sm); padding: 22px 24px; margin-bottom: 18px; }
+    .panel h2 { font-size: var(--fs-md); margin: 0 0 14px; color: var(--ink-soft); font-weight: 600; }
+
+    .layout { display: grid; grid-template-columns: 320px 1fr; gap: 18px; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    .drop-zone { border: 2px dashed var(--line); border-radius: var(--radius); padding: 24px 16px;
+                 text-align: center; cursor: pointer; transition: all 0.15s; background: var(--paper-alt); }
+    .drop-zone:hover, .drop-zone.dragging { border-color: var(--red-700); background: var(--red-50); }
+    .drop-zone p { margin: 4px 0; color: var(--ink-mute); font-size: var(--fs-sm); }
+    .drop-zone strong { color: var(--ink); }
+
+    .sig-canvas-wrap { background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+                       padding: 8px; margin-top: 12px; }
+    #sigCanvas { width: 100%; height: 160px; cursor: crosshair; touch-action: none; display: block; background: #fff; }
+
+    .tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+    .tab { flex: 1; padding: 8px 12px; text-align: center; background: var(--paper-alt);
+           border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer;
+           font-size: var(--fs-sm); font-weight: 500; color: var(--ink-soft); }
+    .tab.active { background: var(--red-700); color: #fff; border-color: var(--red-700); }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: var(--radius);
+           font-size: var(--fs-sm); font-weight: 600; cursor: pointer; border: 1px solid transparent;
+           transition: all 0.15s; font-family: inherit; }
+    .btn-primary { background: var(--red-700); color: #fff; }
+    .btn-primary:hover { background: var(--red-800); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--line-soft); }
+    .btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+    .pdf-stage { position: relative; background: var(--paper-alt); border: 1px solid var(--line);
+                 border-radius: var(--radius); min-height: 400px; overflow: auto; padding: 16px; text-align: center; }
+    .pdf-stage-empty { padding: 60px 16px; color: var(--ink-mute); }
+    .pdf-stage-empty svg { color: var(--ink-faint); margin-bottom: 8px; }
+
+    .pdf-page-wrap { position: relative; display: inline-block; margin: 0 auto; box-shadow: var(--shadow); }
+    .pdf-page-wrap canvas { display: block; background: #fff; }
+    .pdf-page-wrap .overlay { position: absolute; inset: 0; pointer-events: none; }
+
+    .signature-overlay { position: absolute; cursor: move; pointer-events: auto;
+                          border: 2px dashed transparent; transition: border-color 0.15s; }
+    .signature-overlay:hover, .signature-overlay.selected { border-color: var(--red-700); }
+    .signature-overlay img { display: block; width: 100%; height: 100%; pointer-events: none; }
+    .signature-overlay .resize-handle { position: absolute; right: -8px; bottom: -8px; width: 18px; height: 18px;
+                                         background: var(--red-700); border: 2px solid #fff; border-radius: 50%;
+                                         cursor: nwse-resize; }
+    .signature-overlay .remove-btn { position: absolute; right: -10px; top: -10px; width: 22px; height: 22px;
+                                      background: #111; color: #fff; border: 2px solid #fff; border-radius: 50%;
+                                      cursor: pointer; font-size: 13px; line-height: 1; display: flex;
+                                      align-items: center; justify-content: center; }
+
+    .page-nav { display: flex; gap: 8px; justify-content: center; align-items: center; margin-top: 12px;
+                font-size: var(--fs-sm); color: var(--ink-mute); }
+    .page-nav button { padding: 4px 10px; background: var(--paper); border: 1px solid var(--line);
+                       border-radius: var(--radius); cursor: pointer; color: var(--ink); }
+    .page-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .progress { height: 6px; background: var(--line-soft); border-radius: 3px; overflow: hidden; margin-top: 14px; display: none; }
+    .progress.active { display: block; }
+    .progress-bar { height: 100%; background: var(--red-700); width: 0; transition: width 0.2s; }
+    .alert { padding: 10px 14px; border-radius: var(--radius); font-size: var(--fs-sm); margin-top: 14px; display: none; }
+    .alert-error { background: var(--red-50); color: var(--red-900); border: 1px solid #fecaca; }
+
+    .info { font-size: var(--fs-xs); color: var(--ink-faint); margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); }
+    .info kbd { background: var(--line-soft); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); font-family: monospace; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <main class="app-main">
+    <div class="page-head">
+      <h1>PDF Signer &amp; Stamp Placement</h1>
+      <p>Draw a signature or upload a stamp image, then drag and resize it onto any page of your PDF.</p>
+    </div>
+
+    <div class="panel">
+      <h2>1. Upload PDF</h2>
+      <label class="drop-zone" id="pdfDrop" for="pdfInput">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p><strong>Drop a PDF here</strong> or click to browse</p>
+      </label>
+      <input type="file" id="pdfInput" accept="application/pdf" hidden />
+    </div>
+
+    <div class="layout">
+      <div class="panel" id="sigPanel" style="display:none;">
+        <h2>2. Create your signature</h2>
+        <div class="tabs">
+          <div class="tab active" data-tab="draw">Draw</div>
+          <div class="tab" data-tab="upload">Upload stamp</div>
+        </div>
+
+        <div id="drawTab">
+          <div class="sig-canvas-wrap">
+            <canvas id="sigCanvas"></canvas>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" id="clearSig">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              Clear
+            </button>
+            <button class="btn btn-primary" id="addDrawSig" data-primary>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Place on page
+            </button>
+          </div>
+        </div>
+
+        <div id="uploadTab" style="display:none;">
+          <label class="drop-zone" id="stampDrop" for="stampInput" style="padding: 24px 12px;">
+            <p><strong>Upload stamp image</strong></p>
+            <p>PNG with transparent background recommended</p>
+          </label>
+          <input type="file" id="stampInput" accept="image/*" hidden />
+          <div id="stampPreview" style="display:none; margin-top: 12px;">
+            <img id="stampImg" style="max-width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: #fff;" />
+            <div class="btn-row">
+              <button class="btn btn-primary" id="addStampSig">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Place on page
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; font-size: var(--fs-xs); color: var(--ink-mute);">
+          <p><strong>Tip:</strong> Drag placed signatures to move them. Use the bottom-right handle to resize. Click the × to remove.</p>
+        </div>
+      </div>
+
+      <div class="panel" id="pdfPanel" style="display:none;">
+        <h2>3. PDF preview — place signatures</h2>
+        <div class="pdf-stage" id="pdfStage">
+          <div class="pdf-page-wrap" id="pdfPageWrap">
+            <canvas id="pdfCanvas"></canvas>
+            <div class="overlay" id="overlay"></div>
+          </div>
+        </div>
+        <div class="page-nav">
+          <button id="prevPage" disabled>‹ Prev</button>
+          <span>Page <strong id="curPage">1</strong> of <strong id="totalPages">1</strong></span>
+          <button id="nextPage" disabled>Next ›</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top: 18px;">
+      <button class="btn btn-primary" id="exportBtn" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export signed PDF
+      </button>
+    </div>
+
+    <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="alert alert-error" id="alertError"></div>
+
+    <div class="info">
+      <p>Powered by <code>pdf-lib</code> + <code>signature_pad</code> + <code>pdfjs</code> (all self-hosted). Your PDF never leaves your browser.</p>
+      <p style="margin-top:8px"><strong>Keyboard:</strong> <kbd>Ctrl</kbd>+<kbd>Enter</kbd> places the drawn signature · <kbd>Esc</kbd> deselects.</p>
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="PDF Signer"></script>
+  <script>
+    'use strict';
+    // Configure pdfjs to use our self-hosted worker.
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/apps/lib/pdfjs.worker.min.js';
+
+    var $ = function (s) { return document.querySelector(s); };
+    var { PDFDocument, StandardFonts } = PDFLib;
+
+    var pdfFile = null;
+    var pdfDoc = null;
+    var currentPage = 1;
+    var totalPages = 1;
+    var pageScale = 1.5;  // render scale
+    var placedSignatures = [];  // { pageNum, x, y, w, h, dataUrl, aspectRatio }
+    var signaturePad = null;
+
+    // ---------- Tab switching ----------
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+        t.classList.add('active');
+        $('#drawTab').style.display = t.getAttribute('data-tab') === 'draw' ? 'block' : 'none';
+        $('#uploadTab').style.display = t.getAttribute('data-tab') === 'upload' ? 'block' : 'none';
+      });
+    });
+
+    // ---------- Signature pad ----------
+    var sigCanvas = $('#sigCanvas');
+    function setupSignaturePad() {
+      // Resize canvas to its display size with device pixel ratio.
+      var rect = sigCanvas.getBoundingClientRect();
+      var dpr = window.devicePixelRatio || 1;
+      sigCanvas.width = rect.width * dpr;
+      sigCanvas.height = rect.height * dpr;
+      var ctx = sigCanvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      signaturePad = new SignaturePad(sigCanvas, { penColor: '#111', backgroundColor: '#ffffff', minWidth: 1.2, maxWidth: 3 });
+    }
+    if (document.readyState !== 'loading') setupSignaturePad();
+    else document.addEventListener('DOMContentLoaded', setupSignaturePad);
+
+    $('#clearSig').addEventListener('click', function () { signaturePad.clear(); });
+
+    // ---------- Stamp upload ----------
+    var stampDataUrl = null;
+    $('#stampInput').addEventListener('change', function (e) {
+      var f = e.target.files[0]; if (!f) return;
+      var r = new FileReader();
+      r.onload = function (ev) {
+        stampDataUrl = ev.target.result;
+        $('#stampImg').src = stampDataUrl;
+        $('#stampPreview').style.display = 'block';
+      };
+      r.readAsDataURL(f);
+    });
+
+    // ---------- PDF upload ----------
+    $('#pdfDrop').addEventListener('click', function () { $('#pdfInput').click(); });
+    $('#pdfDrop').addEventListener('dragover', function (e) { e.preventDefault(); this.classList.add('dragging'); });
+    $('#pdfDrop').addEventListener('dragleave', function () { this.classList.remove('dragging'); });
+    $('#pdfDrop').addEventListener('drop', function (e) {
+      e.preventDefault(); this.classList.remove('dragging');
+      if (e.dataTransfer.files[0]) handlePdfFile(e.dataTransfer.files[0]);
+    });
+    $('#pdfInput').addEventListener('change', function (e) { if (e.target.files[0]) handlePdfFile(e.target.files[0]); });
+
+    async function handlePdfFile(f) {
+      if (f.type !== 'application/pdf') { window.showToast('Please select a PDF'); return; }
+      pdfFile = f;
+      var bytes = await f.arrayBuffer();
+      // pdfjs needs its own copy of the buffer.
+      var pdfjsBuffer = bytes.slice(0);
+      pdfDoc = await pdfjsLib.getDocument({ data: pdfjsBuffer }).promise;
+      totalPages = pdfDoc.numPages;
+      currentPage = 1;
+      $('#curPage').textContent = '1';
+      $('#totalPages').textContent = totalPages;
+      $('#sigPanel').style.display = 'block';
+      $('#pdfPanel').style.display = 'block';
+      $('#exportBtn').disabled = false;
+      await renderPage();
+      $('#pdfStage').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function renderPage() {
+      var page = await pdfDoc.getPage(currentPage);
+      var viewport = page.getViewport({ scale: pageScale });
+      var canvas = $('#pdfCanvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = viewport.width + 'px';
+      canvas.style.height = viewport.height + 'px';
+      $('#overlay').style.width = viewport.width + 'px';
+      $('#overlay').style.height = viewport.height + 'px';
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+      $('#prevPage').disabled = currentPage <= 1;
+      $('#nextPage').disabled = currentPage >= totalPages;
+      renderPlacedSignatures();
+    }
+
+    $('#prevPage').addEventListener('click', function () { if (currentPage > 1) { currentPage--; $('#curPage').textContent = currentPage; renderPage(); } });
+    $('#nextPage').addEventListener('click', function () { if (currentPage < totalPages) { currentPage++; $('#curPage').textContent = currentPage; renderPage(); } });
+
+    // ---------- Place signatures ----------
+    function placeSignature(dataUrl, aspectRatio) {
+      var canvas = $('#pdfCanvas');
+      var w = 180, h = w / aspectRatio;
+      var sig = {
+        pageNum: currentPage,
+        x: (canvas.width - w) / 2,
+        y: canvas.height - h - 60,
+        w: w, h: h,
+        dataUrl: dataUrl,
+        aspectRatio: aspectRatio
+      };
+      placedSignatures.push(sig);
+      renderPlacedSignatures();
+      selectSignature(sig);
+      window.showToast('Signature placed — drag to position');
+    }
+
+    $('#addDrawSig').addEventListener('click', function () {
+      if (signaturePad.isEmpty()) { window.showToast('Draw a signature first'); return; }
+      var dataUrl = signaturePad.toDataURL('image/png');
+      // Determine aspect ratio from the canvas.
+      var ar = sigCanvas.width / sigCanvas.height;
+      placeSignature(dataUrl, ar);
+    });
+
+    $('#addStampSig').addEventListener('click', function () {
+      if (!stampDataUrl) { window.showToast('Upload a stamp first'); return; }
+      var img = new Image();
+      img.onload = function () { placeSignature(stampDataUrl, img.width / img.height); };
+      img.src = stampDataUrl;
+    });
+
+    function renderPlacedSignatures() {
+      var overlay = $('#overlay');
+      overlay.innerHTML = '';
+      placedSignatures.filter(function (s) { return s.pageNum === currentPage; }).forEach(function (s) {
+        var el = document.createElement('div');
+        el.className = 'signature-overlay';
+        el.style.left = s.x + 'px';
+        el.style.top = s.y + 'px';
+        el.style.width = s.w + 'px';
+        el.style.height = s.h + 'px';
+        el.innerHTML = '<img src="' + s.dataUrl + '" alt="Signature" />' +
+          '<button class="remove-btn" aria-label="Remove signature" data-sig="' + placedSignatures.indexOf(s) + '">×</button>' +
+          '<div class="resize-handle" data-sig="' + placedSignatures.indexOf(s) + '"></div>';
+        overlay.appendChild(el);
+      });
+    }
+
+    function selectSignature(sig) {
+      document.querySelectorAll('.signature-overlay').forEach(function (el) { el.classList.remove('selected'); });
+      // Find the DOM element matching this sig.
+      var sigs = placedSignatures.filter(function (s) { return s.pageNum === currentPage; });
+      var idx = sigs.indexOf(sig);
+      if (idx !== -1) {
+        var el = document.querySelectorAll('.signature-overlay')[idx];
+        if (el) el.classList.add('selected');
+      }
+    }
+
+    // ---------- Drag and resize ----------
+    var dragState = null;
+    $('#overlay').addEventListener('mousedown', function (e) {
+      var overlay = e.target.closest('.signature-overlay');
+      if (!overlay) return;
+      var idx = parseInt(overlay.querySelector('.remove-btn').getAttribute('data-sig'), 10);
+      var sig = placedSignatures[idx];
+      if (e.target.classList.contains('remove-btn')) {
+        placedSignatures.splice(idx, 1);
+        renderPlacedSignatures();
+        return;
+      }
+      if (e.target.classList.contains('resize-handle')) {
+        dragState = { sig: sig, mode: 'resize', startX: e.clientX, startY: e.clientY, startW: sig.w, startH: sig.h };
+      } else {
+        dragState = { sig: sig, mode: 'move', startX: e.clientX, startY: e.clientY, startLeft: sig.x, startTop: sig.y };
+      }
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!dragState) return;
+      var dx = e.clientX - dragState.startX;
+      var dy = e.clientY - dragState.startY;
+      if (dragState.mode === 'move') {
+        dragState.sig.x = dragState.startLeft + dx;
+        dragState.sig.y = dragState.startTop + dy;
+      } else if (dragState.mode === 'resize') {
+        var newW = Math.max(40, dragState.startW + dx);
+        dragState.sig.w = newW;
+        dragState.sig.h = newW / dragState.sig.aspectRatio;
+      }
+      renderPlacedSignatures();
+    });
+    document.addEventListener('mouseup', function () { dragState = null; });
+
+    // Touch support
+    $('#overlay').addEventListener('touchstart', function (e) {
+      var t = e.touches[0];
+      var target = document.elementFromPoint(t.clientX, t.clientY);
+      var overlay = target && target.closest('.signature-overlay');
+      if (!overlay) return;
+      var idx = parseInt(overlay.querySelector('.remove-btn').getAttribute('data-sig'), 10);
+      var sig = placedSignatures[idx];
+      if (target.classList.contains('remove-btn')) {
+        placedSignatures.splice(idx, 1);
+        renderPlacedSignatures();
+        return;
+      }
+      if (target.classList.contains('resize-handle')) {
+        dragState = { sig: sig, mode: 'resize', startX: t.clientX, startY: t.clientY, startW: sig.w, startH: sig.h };
+      } else {
+        dragState = { sig: sig, mode: 'move', startX: t.clientX, startY: t.clientY, startLeft: sig.x, startTop: sig.y };
+      }
+      e.preventDefault();
+    }, { passive: false });
+    document.addEventListener('touchmove', function (e) {
+      if (!dragState) return;
+      var t = e.touches[0];
+      var dx = t.clientX - dragState.startX;
+      var dy = t.clientY - dragState.startY;
+      if (dragState.mode === 'move') {
+        dragState.sig.x = dragState.startLeft + dx;
+        dragState.sig.y = dragState.startTop + dy;
+      } else {
+        var newW = Math.max(40, dragState.startW + dx);
+        dragState.sig.w = newW;
+        dragState.sig.h = newW / dragState.sig.aspectRatio;
+      }
+      renderPlacedSignatures();
+      e.preventDefault();
+    }, { passive: false });
+    document.addEventListener('touchend', function () { dragState = null; });
+
+    // ---------- Export ----------
+    $('#exportBtn').addEventListener('click', async function () {
+      if (!pdfFile) { window.showToast('Upload a PDF first'); return; }
+      $('#progress').classList.add('active');
+      $('#progressBar').style.width = '10%';
+      try {
+        var bytes = await pdfFile.arrayBuffer();
+        var pdfLibDoc = await PDFDocument.load(bytes);
+        var font = await pdfLibDoc.embedFont(StandardFonts.Helvetica);
+        var pages = pdfLibDoc.getPages();
+        $('#progressBar').style.width = '30%';
+
+        for (var i = 0; i < placedSignatures.length; i++) {
+          var s = placedSignatures[i];
+          var page = pages[s.pageNum - 1];
+          if (!page) continue;
+          var pngBytes = await fetch(s.dataUrl).then(function (r) { return r.arrayBuffer(); });
+          var img = await pdfLibDoc.embedPng(pngBytes);
+          var pw = page.getWidth();
+          var ph = page.getHeight();
+          // Convert display coords (canvas px) to PDF coords (PDF points).
+          var canvasW = $('#pdfCanvas').width;
+          var scaleX = pw / canvasW;
+          var scaleY = ph / $('#pdfCanvas').height;
+          // PDF origin is bottom-left; canvas is top-left.
+          var pdfX = s.x * scaleX;
+          var pdfY = ph - (s.y * scaleY) - (s.h * scaleY);
+          page.drawImage(img, { x: pdfX, y: pdfY, width: s.w * scaleX, height: s.h * scaleY });
+          $('#progressBar').style.width = (30 + Math.round((i + 1) / placedSignatures.length * 60)) + '%';
+        }
+
+        var out = await pdfLibDoc.save();
+        var blob = new Blob([out], { type: 'application/pdf' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = pdfFile.name.replace(/\.pdf$/i, '') + '-signed.pdf';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 200);
+        $('#progressBar').style.width = '100%';
+        window.showToast('Signed PDF downloaded ✓');
+        setTimeout(function () { $('#progress').classList.remove('active'); $('#progressBar').style.width = '0'; }, 2000);
+      } catch (e) {
+        $('#progress').classList.remove('active');
+        $('#alertError').style.display = 'block';
+        $('#alertError').textContent = 'Export failed: ' + (e.message || e);
+      }
+    });
+  </script>
+</body>
+</html>
