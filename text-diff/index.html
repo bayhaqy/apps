@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Free in-browser text diff checker and text cleaner. Word, line, and character diff with similarity stats, plus a text-cleaning utility. Powered by diff-match-patch. 100% client-side." />
+<meta name="keywords" content="text diff, diff checker, word diff, line diff, character diff, text cleaner, normalize text, strip smart quotes, diff-match-patch" />
+<meta name="author" content="Achmad Bayhaqy" />
+<meta name="theme-color" content="#DC2626" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Text Diff Checker & Text Clean Utility" />
+<meta property="og:description" content="Word, line, and character diff with similarity stats, plus a text-cleaning utility. Runs 100% in your browser." />
+<meta property="og:url" content="https://bayhaqy.my.id/apps/text-diff/" />
+<meta name="twitter:card" content="summary" />
+<title>Text Diff Checker &amp; Clean Utility — Bayhaqy Apps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23DC2626'/%3E%3Ctext x='50' y='68' font-family='ui-monospace,monospace' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3E%CE%94%3C/text%3E%3C/svg%3E" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFFFFF;--bg-2:#F8FAFC;--bg-3:#F1F5F9;
+  --fg:#0F172A;--muted:#64748B;
+  --accent:#DC2626;--accent-dim:#FEE2E2;
+  --card-bg:#FFFFFF;--border:rgba(15,23,42,0.10);--border-strong:rgba(15,23,42,0.18);
+  --chip-bg:#F1F5F9;
+  --add-bg:#DCFCE7;--add-fg:#166534;
+  --del-bg:#FEE2E2;--del-fg:#991B1B;
+  --add-bg-soft:rgba(34,197,94,0.18);--del-bg-soft:rgba(239,68,68,0.18);
+  --radius:10px;--radius-sm:6px;
+  --max-w:1080px;
+}
+[data-theme="dark"]{
+  --bg:#0F172A;--bg-2:#1E293B;--bg-3:#334155;
+  --fg:#F1F5F9;--muted:#94A3B8;
+  --accent:#EF4444;--accent-dim:rgba(239,68,68,0.18);
+  --card-bg:#1E293B;--border:rgba(241,245,249,0.10);--border-strong:rgba(241,245,249,0.22);
+  --chip-bg:rgba(30,41,59,0.6);
+  --add-bg:rgba(34,197,94,0.22);--add-fg:#86EFAC;
+  --del-bg:rgba(239,68,68,0.22);--del-fg:#FCA5A5;
+  --add-bg-soft:rgba(34,197,94,0.18);--del-bg-soft:rgba(239,68,68,0.18);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.55;min-height:100vh;
+  transition:background-color .2s,color .2s;
+}
+code,pre,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 1.25rem}
+
+/* Header */
+header.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+[data-theme="dark"] header.site-header{background:rgba(15,23,42,0.92)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:1rem}
+.back-link{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;white-space:nowrap}
+.back-link:hover{color:var(--fg)}
+.app-title{font-weight:700;font-size:1rem;color:var(--fg);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.theme-toggle{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+  background:var(--chip-bg);color:var(--fg);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:background .15s,border-color .15s;
+}
+.theme-toggle:hover{border-color:var(--border-strong)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+/* Hero */
+.hero{padding:2.5rem 0 1.25rem}
+.hero-eyebrow{
+  display:inline-block;color:var(--accent);font-size:.78rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:.7rem;
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.15;letter-spacing:-.01em;font-weight:800;margin-bottom:.6rem}
+.hero p.sub{font-size:1rem;color:var(--muted);max-width:720px}
+
+/* Tabs */
+.tabbar{
+  display:flex;gap:.25rem;border-bottom:1px solid var(--border);
+  margin-top:1.25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.tab-btn{
+  appearance:none;background:none;border:none;cursor:pointer;
+  padding:.7rem .9rem;font-size:.9rem;font-weight:600;color:var(--muted);
+  font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .15s,border-color .15s;margin-bottom:-1px;
+}
+.tab-btn:hover{color:var(--fg)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Card */
+.card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.card-head h2{font-size:1.05rem;font-weight:700}
+.card-head .hint{font-size:.82rem;color:var(--muted)}
+
+/* Form */
+.form-grid{display:grid;gap:1rem}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.9rem;align-items:end}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.field select{
+  font-family:inherit;font-size:.95rem;color:var(--fg);
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.55rem .7rem;width:100%;transition:border-color .15s;
+}
+.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+
+/* Checkboxes */
+.checks{display:flex;flex-direction:column;gap:.55rem;margin-top:.3rem}
+.checks.inline{flex-direction:row;flex-wrap:wrap;gap:1rem}
+.check{display:flex;align-items:center;gap:.55rem;cursor:pointer;font-size:.88rem}
+.check input{margin:0;width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+
+/* Editor grid */
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:.4rem}
+.editor-col{display:flex;flex-direction:column;gap:.4rem}
+.editor-label{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.editor-label .mini{font-size:.72rem;font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0}
+textarea.editor{
+  width:100%;min-height:200px;resize:vertical;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.85rem;line-height:1.55;
+  background:var(--bg);color:var(--fg);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.75rem;tab-size:2;
+  transition:border-color .15s;
+}
+textarea.editor:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+
+/* Buttons */
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem .9rem;border-radius:var(--radius-sm);border:1px solid transparent;
+  font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;
+  font-family:inherit;transition:background .15s,border-color .15s,opacity .15s;
+}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover:not(:disabled){background:#b91c1c}
+[data-theme="dark"] .btn-primary:hover:not(:disabled){background:#dc2626}
+.btn-ghost{background:var(--bg);color:var(--fg);border-color:var(--border)}
+.btn-ghost:hover:not(:disabled){border-color:var(--border-strong);background:var(--bg-2)}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-spacer{flex:1}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-top:1.1rem}
+.stat-cell{
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:.7rem .8rem;
+}
+.stat-cell .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:.15rem}
+.stat-cell .val{font-size:1.35rem;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+.stat-cell.add .val{color:var(--add-fg)}
+.stat-cell.del .val{color:var(--del-fg)}
+.stat-cell.sim .val{color:var(--accent)}
+
+/* Diff output */
+.diff-out{
+  margin-top:1.1rem;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg);overflow:hidden;
+}
+.diff-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.55rem .8rem;border-bottom:1px solid var(--border);
+  background:var(--bg-2);font-size:.78rem;color:var(--muted);flex-wrap:wrap;gap:.5rem;
+}
+.diff-legend{display:flex;align-items:center;gap:.85rem}
+.diff-legend .lg{display:inline-flex;align-items:center;gap:.3rem}
+.diff-legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px}
+.diff-legend .sw.add{background:var(--add-bg);border:1px solid var(--add-fg)}
+.diff-legend .sw.del{background:var(--del-bg);border:1px solid var(--del-fg)}
+.diff-legend .sw.eq{background:var(--bg-3);border:1px solid var(--border-strong)}
+.diff-body{
+  padding:.9rem 1rem;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:.85rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;
+  max-height:520px;overflow:auto;
+}
+.diff-body .ins{background:var(--add-bg);color:var(--add-fg);text-decoration:none;border-radius:2px}
+.diff-body .del{background:var(--del-bg);color:var(--del-fg);text-decoration:line-through;border-radius:2px}
+.diff-body .eq{color:var(--muted)}
+.diff-line-num{display:inline-block;width:3.2em;color:var(--muted);user-select:none;text-align:right;padding-right:.6em}
+.diff-line{display:block;min-height:1.5em}
+.diff-line.add{background:var(--add-bg-soft)}
+.diff-line.del{background:var(--del-bg-soft)}
+.placeholder{color:var(--muted);font-size:.9rem;font-style:italic;padding:.85rem 1rem;background:var(--bg-2);border:1px dashed var(--border);border-radius:var(--radius-sm);margin:1.1rem 0 0}
+
+/* Clean text */
+.clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:.4rem}
+@media(max-width:760px){.clean-grid{grid-template-columns:1fr}}
+.clean-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center}
+
+/* How to use */
+.section{padding:2.5rem 0 1rem}
+.section h2{font-size:1.35rem;margin-bottom:.5rem;letter-spacing:-.01em}
+.section > .container > p{color:var(--muted);margin-bottom:1.25rem;max-width:680px;font-size:.95rem}
+.steps{counter-reset:step;list-style:none;padding:0;display:grid;gap:.6rem;max-width:680px}
+.steps li{
+  counter-increment:step;position:relative;padding:.7rem .8rem .7rem 2.6rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.9rem;line-height:1.5;
+}
+.steps li::before{
+  content:counter(step);position:absolute;left:.7rem;top:50%;transform:translateY(-50%);
+  width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;
+}
+.steps li strong{color:var(--fg)}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.feature{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.feature h4{font-size:.95rem;margin-bottom:.3rem;font-weight:700}
+.feature p{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* Footer */
+footer.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem}
+footer.site-footer p{font-size:.85rem;color:var(--muted);text-align:center}
+footer.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+footer.site-footer a:hover{text-decoration:underline}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(150%);
+  background:var(--fg);color:var(--bg);padding:.7rem 1.2rem;border-radius:var(--radius-sm);
+  font-size:.88rem;font-weight:500;box-shadow:0 6px 20px -4px rgba(0,0,0,0.25);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:200;max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Banner */
+.banner{
+  display:none;margin-top:.9rem;padding:.7rem .9rem;
+  background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:.85rem;color:var(--muted);
+}
+.banner.show{display:block}
+.banner.error{background:var(--del-bg);color:var(--del-fg);border-color:transparent}
+
+@media(max-width:760px){.editor-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .hero{padding:1.75rem 0 .75rem}
+  .card{padding:1.1rem}
+  .header-inner{padding:.55rem 0}
+  .app-title{font-size:.92rem}
+  .back-link{font-size:.82rem}
+  .diff-line-num{width:2.5em}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var t = localStorage.getItem('apps-theme');
+  if(!t){ t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/apps/" class="back-link">&larr; All apps</a>
+    <span class="app-title">Text Diff &amp; Clean</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="icon-moon">&#9790;</span><span class="icon-sun">&#9728;</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <span class="hero-eyebrow">Word &middot; Line &middot; Character diff</span>
+    <h1>Text Diff Checker &amp; Clean Utility</h1>
+    <p class="sub">Compare two pieces of text side by side with word, line, or character diff highlighting, then normalize whitespace and punctuation with the bundled text cleaner. Powered by diff-match-patch &mdash; everything runs locally in your browser.</p>
+  </section>
+
+  <section class="container">
+    <div class="tabbar" role="tablist" id="tabbar">
+      <button class="tab-btn active" role="tab" data-tab="diff">Diff Checker</button>
+      <button class="tab-btn" role="tab" data-tab="clean">Text Clean</button>
+    </div>
+
+    <!-- TAB: Diff -->
+    <div class="card" data-panel="diff">
+      <div class="card-head">
+        <h2>Compare two texts</h2>
+        <span class="hint">Auto-runs as you type &middot; 300&nbsp;ms debounce</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="field">
+            <label for="mode">Diff mode</label>
+            <select id="mode">
+              <option value="word">Word diff</option>
+              <option value="line">Line diff</option>
+              <option value="char">Character diff</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Options</label>
+            <div class="checks inline">
+              <label class="check"><input type="checkbox" id="ignoreWs"> Ignore whitespace</label>
+              <label class="check"><input type="checkbox" id="ignoreCase"> Ignore case</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-grid">
+        <div class="editor-col">
+          <div class="editor-label">
+            <span>Original</span>
+            <span class="mini" id="origStats">0 words &middot; 0 chars</span>
+          </div>
+          <textarea class="editor" id="original" spellcheck="false" placeholder="Paste the original text here, or press Load sample."></textarea>
+        </div>
+        <div class="editor-col">
+          <div class="editor-label">
+            <span>Modified</span>
+            <span class="mini" id="modStats">0 words &middot; 0 chars</span>
+          </div>
+          <textarea class="editor" id="modified" spellcheck="false" placeholder="Paste the modified text here."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="diffBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+          Run diff
+        </button>
+        <button class="btn btn-ghost" id="sampleBtn">Load sample</button>
+        <button class="btn btn-ghost" id="swapBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Swap left &amp; right
+        </button>
+        <button class="btn btn-ghost" id="clearBtn">Clear</button>
+        <span class="btn-spacer"></span>
+        <button class="btn btn-ghost" id="copyBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy diff
+        </button>
+      </div>
+
+      <div class="banner" id="banner"></div>
+
+      <div class="stats-grid">
+        <div class="stat-cell add"><div class="lbl">Words added</div><div class="val" id="statAdd">0</div></div>
+        <div class="stat-cell del"><div class="lbl">Words removed</div><div class="val" id="statDel">0</div></div>
+        <div class="stat-cell"><div class="lbl">Equal words</div><div class="val" id="statEq">0</div></div>
+        <div class="stat-cell sim"><div class="lbl">Similarity</div><div class="val" id="statSim">—</div></div>
+      </div>
+
+      <div class="diff-out">
+        <div class="diff-toolbar">
+          <div class="diff-legend">
+            <span class="lg"><span class="sw add"></span>added</span>
+            <span class="lg"><span class="sw del"></span>removed</span>
+            <span class="lg"><span class="sw eq"></span>unchanged</span>
+          </div>
+          <span id="diffModeLabel">Word diff</span>
+        </div>
+        <div class="diff-body" id="diffBody"><span class="eq">Diff output appears here. Press Load sample to see it in action.</span></div>
+      </div>
+    </div>
+
+    <!-- TAB: Clean -->
+    <div class="card" data-panel="clean" style="display:none">
+      <div class="card-head">
+        <h2>Clean text</h2>
+        <span class="hint">Toggle rules, then press Clean</span>
+      </div>
+
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="cTrim" checked> Trim leading / trailing whitespace per line</label>
+        <label class="check"><input type="checkbox" id="cCollapse" checked> Collapse multiple spaces to single</label>
+        <label class="check"><input type="checkbox" id="cEmpty" checked> Remove empty lines</label>
+        <label class="check"><input type="checkbox" id="cLF" checked> Normalize line endings to LF</label>
+        <label class="check"><input type="checkbox" id="cPunct"> Remove duplicate trailing punctuation (e.g. <code>,,</code> &rarr; <code>,</code>)</label>
+        <label class="check"><input type="checkbox" id="cQuotes"> Strip smart quotes (curly &rarr; straight)</label>
+      </div>
+
+      <div class="clean-grid" style="margin-top:1rem">
+        <div class="editor-col">
+          <div class="editor-label"><span>Input</span><span class="mini" id="cleanInStats">0 lines &middot; 0 chars</span></div>
+          <textarea class="editor" id="cleanInput" spellcheck="false" placeholder="Paste text to clean, or press Load sample."></textarea>
+        </div>
+        <div class="editor-col">
+          <div class="editor-label"><span>Output</span><span class="mini" id="cleanOutStats">0 lines &middot; 0 chars</span></div>
+          <textarea class="editor" id="cleanOutput" readonly spellcheck="false" placeholder="Cleaned text appears here."></textarea>
+        </div>
+      </div>
+
+      <div class="clean-actions">
+        <button class="btn btn-primary" id="cleanBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>
+          Clean text
+        </button>
+        <button class="btn btn-ghost" id="cleanSampleBtn">Load sample</button>
+        <button class="btn btn-ghost" id="cleanClearBtn">Clear</button>
+        <span class="btn-spacer"></span>
+        <button class="btn btn-ghost" id="cleanCopyBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy output
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="how-to-use">
+    <h2>How to use</h2>
+    <p>Two tabs: <strong>Diff Checker</strong> compares two texts and shows inline highlights; <strong>Text Clean</strong> normalizes whitespace, line endings, and punctuation. Each tab has a Load sample button.</p>
+    <ol class="steps">
+      <li><strong>Choose a tab</strong> &mdash; Diff Checker for comparing two texts, Text Clean for normalizing one text.</li>
+      <li><strong>Load sample or paste</strong> &mdash; press <em>Load sample</em> to fill both panes (Diff) or the input pane (Clean) with realistic example data.</li>
+      <li><strong>Pick options</strong> &mdash; in Diff: mode (word / line / character), ignore whitespace, ignore case; in Clean: toggle the six normalization rules.</li>
+      <li><strong>Run</strong> &mdash; Diff auto-runs 300&nbsp;ms after you stop typing; press <em>Swap left &amp; right</em> to flip original and modified. Clean runs on button click.</li>
+      <li><strong>Copy</strong> &mdash; press <em>Copy diff</em> to copy the highlighted diff as plain text with <code>+</code>/<code>-</code> markers, or <em>Copy output</em> for the cleaned text.</li>
+    </ol>
+  </section>
+
+  <section class="section container">
+    <h2>What it does</h2>
+    <div class="features-grid">
+      <div class="feature"><h4>Word diff</h4><p>Tokenizes both texts into words and whitespace, runs diff-match-patch, and reassembles with inline green additions and red strikethrough deletions.</p></div>
+      <div class="feature"><h4>Line diff</h4><p>Encodes each line as a single character, diffs the encoded strings, and renders one block per line with full-line green/red backgrounds.</p></div>
+      <div class="feature"><h4>Character diff</h4><p>Raw character-level diff with semantic cleanup. Best for spotting single-character edits inside words.</p></div>
+      <div class="feature"><h4>Similarity score</h4><p>Percentage of matching characters over the longer text. Updates live with the diff.</p></div>
+      <div class="feature"><h4>Text cleaner</h4><p>Six toggleable rules: trim per line, collapse spaces, drop empty lines, normalize CRLF to LF, dedupe trailing punctuation, and strip smart quotes.</p></div>
+      <div class="feature"><h4>Privacy</h4><p>100% client-side. No paste is uploaded &mdash; verify in DevTools &rarr; Network. Only the diff-match-patch library loads from CDN on first visit.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Built by <a href="https://bayhaqy.my.id/">Achmad Bayhaqy</a> &middot; Runs 100% in your browser &middot; <a href="https://github.com/bayhaqy/apps">Source</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+// ===== Theme toggle =====
+var themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', function(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('apps-theme', next);
+});
+
+// ===== Toast =====
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+}
+
+// ===== Element refs =====
+var modeSel = document.getElementById('mode');
+var ignoreWs = document.getElementById('ignoreWs');
+var ignoreCase = document.getElementById('ignoreCase');
+var originalEl = document.getElementById('original');
+var modifiedEl = document.getElementById('modified');
+var origStats = document.getElementById('origStats');
+var modStats = document.getElementById('modStats');
+var statAdd = document.getElementById('statAdd');
+var statDel = document.getElementById('statDel');
+var statEq = document.getElementById('statEq');
+var statSim = document.getElementById('statSim');
+var diffBody = document.getElementById('diffBody');
+var diffModeLabel = document.getElementById('diffModeLabel');
+var banner = document.getElementById('banner');
+var diffBtn = document.getElementById('diffBtn');
+var sampleBtn = document.getElementById('sampleBtn');
+var swapBtn = document.getElementById('swapBtn');
+var clearBtn = document.getElementById('clearBtn');
+var copyBtn = document.getElementById('copyBtn');
+
+// Clean tab refs
+var cTrim = document.getElementById('cTrim');
+var cCollapse = document.getElementById('cCollapse');
+var cEmpty = document.getElementById('cEmpty');
+var cLF = document.getElementById('cLF');
+var cPunct = document.getElementById('cPunct');
+var cQuotes = document.getElementById('cQuotes');
+var cleanInput = document.getElementById('cleanInput');
+var cleanOutput = document.getElementById('cleanOutput');
+var cleanInStats = document.getElementById('cleanInStats');
+var cleanOutStats = document.getElementById('cleanOutStats');
+var cleanBtn = document.getElementById('cleanBtn');
+var cleanSampleBtn = document.getElementById('cleanSampleBtn');
+var cleanClearBtn = document.getElementById('cleanClearBtn');
+var cleanCopyBtn = document.getElementById('cleanCopyBtn');
+
+var MODE_LABEL = { word:'Word diff', line:'Line diff', char:'Character diff' };
+var lastDiffText = '';
+
+// ===== Sample data =====
+var SAMPLE_ORIGINAL = "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. A wizard's job is to vex chumps quickly in fog. The five boxing wizards jump quickly. Sphinx of black quartz, judge my vow.\n\nHow vexingly quick daft zebras jump! The jay, pig, fox, zebra and my wolves quack. Two driven jocks help fax my big quiz. Five quacking zephyrs jolt my wax bed.";
+
+var SAMPLE_MODIFIED = "The quick brown fox leaps over the lazy dog. Pack my box with five dozen liquor jugs. A wizard's task is to vex chumps quickly in fog. The five boxing wizards jump quickly. Sphinx of black quartz, judge my vow.\n\nHow vexingly quick daft zebras hop! The jay, pig, fox, zebra and my wolves quack. Two driven jocks help fax my big quiz. Five quacking zephyrs jolt my wax bed. Bright vixens jump; dozy fowl quack.";
+
+var SAMPLE_CLEAN = "The  quick   brown fox\tjumps over  the lazy dog.\n\n\nPack my box with five dozen liquor jugs.\n  A wizard\u2019s job is to vex chumps quickly in fog,,,\nThe five boxing wizards jump quickly.\r\nSphinx of black quartz,, judge my vow.";
+
+// ===== Helpers =====
+function escapeHtml(s){ return s.replace(/[&<>]/g, function(c){ return c==='&'?'&amp;':c==='<'?'&lt;':'&gt;'; }); }
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g, '&quot;'); }
+function wordCount(s){
+  if(!s) return 0;
+  var m = s.match(/\S+/g);
+  return m ? m.length : 0;
+}
+function lineCount(s){ return s.length === 0 ? 0 : s.split(/\r\n|\r|\n/).length; }
+function showBanner(msg, isError){
+  banner.textContent = '';
+  if(!msg){ banner.classList.remove('show'); banner.classList.remove('error'); return; }
+  banner.classList.add('show');
+  banner.classList.toggle('error', !!isError);
+  banner.innerHTML = msg;
+}
+
+// ===== Diff core (uses diff_match_patch global) =====
+function getDmp(){
+  if(typeof diff_match_patch === 'undefined') return null;
+  return new diff_match_patch();
+}
+
+// Word-level diff using a single-char encoding
+function diffWords(a, b){
+  var dmp = getDmp();
+  if(!dmp) throw new Error('diff-match-patch not loaded');
+  if(ignoreCase.checked){ a = a.toLowerCase(); b = b.toLowerCase(); }
+  // Tokenize: words and whitespace runs
+  var toksA = a.match(/\s+|\S+/g) || [];
+  var toksB = b.match(/\s+|\S+/g) || [];
+  var charMap = {};
+  var charArr = [];
+  var wsChar = '\u0001';
+  function encode(arr){
+    var s = '';
+    for(var i = 0; i < arr.length; i++){
+      var t = arr[i];
+      if(/^\s+$/.test(t)){
+        s += wsChar;
+      } else {
+        if(!(t in charMap)){
+          var c = String.fromCharCode(charArr.length + 2);
+          charMap[t] = c;
+          charArr.push(t);
+        }
+        s += charMap[t];
+      }
+    }
+    return s;
+  }
+  var encA = encode(toksA);
+  var encB = encode(toksB);
+  var diffs = dmp.diff_main(encA, encB, false);
+  dmp.diff_cleanupSemantic(diffs);
+  // Map back to tokens, collapsing consecutive same-op
+  var result = [];
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var chars = diffs[i][1];
+    var text = '';
+    for(var j = 0; j < chars.length; j++){
+      var c = chars.charAt(j);
+      text += (c === wsChar) ? ' ' : charArr[c.charCodeAt(0) - 2];
+    }
+    if(result.length && result[result.length-1][0] === op){
+      result[result.length-1][1] += text;
+    } else {
+      result.push([op, text]);
+    }
+  }
+  // When ignoreWhitespace is on, drop pure-whitespace insertions/deletions
+  if(ignoreWs.checked){
+    result = result.filter(function(d){
+      if(d[0] === 0) return true;
+      return !/^\s+$/.test(d[1]);
+    });
+  }
+  return result;
+}
+
+// Line-level diff
+function diffLines(a, b){
+  var dmp = getDmp();
+  if(!dmp) throw new Error('diff-match-patch not loaded');
+  if(ignoreCase.checked){ a = a.toLowerCase(); b = b.toLowerCase(); }
+  // Normalize line endings to \n for splitting
+  var linesA = a.replace(/\r\n?/g, '\n').split('\n');
+  var linesB = b.replace(/\r\n?/g, '\n').split('\n');
+  // Encode each line as a single char (preserving line content)
+  var charMap = {};
+  var charArr = [];
+  function encode(arr){
+    var s = '';
+    for(var i = 0; i < arr.length; i++){
+      var line = arr[i];
+      if(ignoreWs.checked){ line = line.trim(); }
+      if(!(line in charMap)){
+        var c = String.fromCharCode(charArr.length + 2);
+        charMap[line] = c;
+        charArr.push(line);
+      }
+      s += charMap[line];
+    }
+    return s;
+  }
+  var encA = encode(linesA);
+  var encB = encode(linesB);
+  var diffs = dmp.diff_main(encA, encB, false);
+  dmp.diff_cleanupSemantic(diffs);
+  // Map back to lines
+  var result = [];
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var chars = diffs[i][1];
+    for(var j = 0; j < chars.length; j++){
+      var line = charArr[chars.charCodeAt(j) - 2];
+      result.push([op, line]);
+    }
+  }
+  return result;
+}
+
+// Character-level diff
+function diffChars(a, b){
+  var dmp = getDmp();
+  if(!dmp) throw new Error('diff-match-patch not loaded');
+  if(ignoreCase.checked){ a = a.toLowerCase(); b = b.toLowerCase(); }
+  if(ignoreWs.checked){
+    a = a.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+    b = b.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+  }
+  var diffs = dmp.diff_main(a, b, false);
+  dmp.diff_cleanupSemantic(diffs);
+  return diffs;
+}
+
+// ===== Render =====
+function renderInline(diffs){
+  // Word / char mode: inline spans
+  var html = '';
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var text = diffs[i][1];
+    if(!text) continue;
+    var cls = op === 1 ? 'ins' : (op === -1 ? 'del' : 'eq');
+    var escaped = escapeHtml(text);
+    // Preserve newlines as visual breaks
+    if(cls === 'eq'){
+      html += '<span class="' + cls + '">' + escaped + '</span>';
+    } else {
+      html += '<span class="' + cls + '">' + escaped + '</span>';
+    }
+  }
+  return html || '<span class="eq">(no differences)</span>';
+}
+
+function renderLine(diffs){
+  // Line mode: one block per line with full-line bg
+  var html = '';
+  var lineNum = 0;
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var text = diffs[i][1];
+    var cls = op === 1 ? 'add' : (op === -1 ? 'del' : 'eq');
+    if(op === 0) lineNum++;
+    var numStr = op === 0 ? String(lineNum) : (op === 1 ? '+' : '-');
+    var prefix = '<span class="diff-line-num">' + escapeHtml(numStr) + '</span>';
+    html += '<span class="diff-line ' + cls + '">' + prefix + escapeHtml(text) + '\n</span>';
+  }
+  return html || '<span class="eq">(no differences)</span>';
+}
+
+function statsFromDiffs(diffs){
+  var added = 0, removed = 0, equal = 0;
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var text = diffs[i][1];
+    var words = text.match(/\S+/g);
+    var n = words ? words.length : 0;
+    if(op === 1) added += n;
+    else if(op === -1) removed += n;
+    else equal += n;
+  }
+  return { added:added, removed:removed, equal:equal };
+}
+
+function similarity(a, b){
+  if(!a && !b) return 100;
+  if(!a || !b) return 0;
+  // Use equal-char count from char diff
+  var dmp = getDmp();
+  if(!dmp) return 0;
+  var aa = a, bb = b;
+  if(ignoreCase.checked){ aa = aa.toLowerCase(); bb = bb.toLowerCase(); }
+  if(ignoreWs.checked){
+    aa = aa.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+    bb = bb.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+  }
+  var diffs = dmp.diff_main(aa, bb);
+  dmp.diff_levenshtein(diffs);
+  var equalChars = 0;
+  for(var i = 0; i < diffs.length; i++){
+    if(diffs[i][0] === 0) equalChars += diffs[i][1].length;
+  }
+  var maxLen = Math.max(aa.length, bb.length);
+  return maxLen === 0 ? 100 : Math.round(equalChars / maxLen * 100);
+}
+
+// ===== Run diff =====
+function runDiff(){
+  var a = originalEl.value;
+  var b = modifiedEl.value;
+  origStats.textContent = wordCount(a) + ' words \u00b7 ' + a.length + ' chars';
+  modStats.textContent = wordCount(b) + ' words \u00b7 ' + b.length + ' chars';
+  if(!a && !b){
+    diffBody.innerHTML = '<span class="eq">Paste text into both panes, or press Load sample.</span>';
+    statAdd.textContent = '0'; statDel.textContent = '0'; statEq.textContent = '0'; statSim.textContent = '—';
+    copyBtn.disabled = true;
+    lastDiffText = '';
+    showBanner('');
+    return;
+  }
+  try {
+    var mode = modeSel.value;
+    var diffs;
+    if(mode === 'word') diffs = diffWords(a, b);
+    else if(mode === 'line') diffs = diffLines(a, b);
+    else diffs = diffChars(a, b);
+    // Render
+    if(mode === 'line'){
+      diffBody.innerHTML = renderLine(diffs);
+    } else {
+      diffBody.innerHTML = renderInline(diffs);
+    }
+    // Stats
+    var st = statsFromDiffs(diffs);
+    statAdd.textContent = st.added.toLocaleString();
+    statDel.textContent = st.removed.toLocaleString();
+    statEq.textContent = st.equal.toLocaleString();
+    statSim.textContent = similarity(a, b) + '%';
+    diffModeLabel.textContent = MODE_LABEL[mode];
+    // Plain-text diff for copy
+    lastDiffText = buildPlainTextDiff(diffs, mode);
+    copyBtn.disabled = !lastDiffText;
+    showBanner('');
+  } catch(err){
+    diffBody.innerHTML = '<span class="eq">Error: ' + escapeHtml(String(err && err.message || err)) + '</span>';
+    statAdd.textContent = '0'; statDel.textContent = '0'; statEq.textContent = '0'; statSim.textContent = '—';
+    copyBtn.disabled = true;
+    lastDiffText = '';
+    showBanner('Diff library not loaded. Check your network connection and refresh.', true);
+  }
+}
+
+function buildPlainTextDiff(diffs, mode){
+  var lines = [];
+  for(var i = 0; i < diffs.length; i++){
+    var op = diffs[i][0];
+    var text = diffs[i][1];
+    if(!text) continue;
+    if(mode === 'line'){
+      var prefix = op === 1 ? '+ ' : (op === -1 ? '- ' : '  ');
+      lines.push(prefix + text);
+    } else {
+      var marker = op === 1 ? '[+' : (op === -1 ? '[-' : '');
+      var closer = op === 0 ? '' : ']';
+      if(op === 0){
+        lines.push(text);
+      } else {
+        lines.push(marker + text + closer);
+      }
+    }
+  }
+  return lines.join(mode === 'line' ? '\n' : '');
+}
+
+// ===== Clean text =====
+function cleanText(){
+  var s = cleanInput.value;
+  if(!s){
+    cleanOutput.value = '';
+    cleanCopyBtn.disabled = true;
+    updateCleanStats();
+    return;
+  }
+  if(cLF.checked){ s = s.replace(/\r\n?/g, '\n'); }
+  if(cQuotes.checked){
+    s = s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\u201A/g, ',').replace(/\u201E/g, ',').replace(/\u2013/g, '-').replace(/\u2014/g, '--');
+  }
+  if(cCollapse.checked){ s = s.replace(/[ \t]+/g, ' '); }
+  if(cPunct.checked){
+    // Collapse runs of identical punctuation at end of a word: "Hello,,," -> "Hello,"  "yes!!" -> "yes!"
+    s = s.replace(/([,.!?;:])\1+/g, '$1');
+  }
+  if(cTrim.checked){
+    s = s.split('\n').map(function(l){ return l.replace(/^\s+|\s+$/g, ''); }).join('\n');
+  }
+  if(cEmpty.checked){
+    s = s.split('\n').filter(function(l){ return l.length > 0; }).join('\n');
+  }
+  // Strip trailing whitespace overall
+  s = s.replace(/\s+$/g, '');
+  cleanOutput.value = s;
+  cleanCopyBtn.disabled = !s;
+  updateCleanStats();
+}
+
+function updateCleanStats(){
+  var i = cleanInput.value;
+  var o = cleanOutput.value;
+  cleanInStats.textContent = lineCount(i) + ' lines \u00b7 ' + i.length + ' chars';
+  cleanOutStats.textContent = lineCount(o) + ' lines \u00b7 ' + o.length + ' chars';
+}
+
+// ===== Tabs =====
+var tabBtns = document.querySelectorAll('.tab-btn');
+var panels = document.querySelectorAll('[data-panel]');
+tabBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var tab = btn.dataset.tab;
+    tabBtns.forEach(function(b){ b.classList.toggle('active', b === btn); });
+    panels.forEach(function(p){ p.style.display = (p.dataset.panel === tab) ? '' : 'none'; });
+  });
+});
+
+// ===== Debounced diff =====
+var diffTimer = null;
+function scheduleDiff(){
+  clearTimeout(diffTimer);
+  diffTimer = setTimeout(runDiff, 300);
+}
+
+// ===== Wire up events =====
+originalEl.addEventListener('input', scheduleDiff);
+modifiedEl.addEventListener('input', scheduleDiff);
+modeSel.addEventListener('change', runDiff);
+ignoreWs.addEventListener('change', runDiff);
+ignoreCase.addEventListener('change', runDiff);
+diffBtn.addEventListener('click', runDiff);
+
+sampleBtn.addEventListener('click', function(){
+  originalEl.value = SAMPLE_ORIGINAL;
+  modifiedEl.value = SAMPLE_MODIFIED;
+  runDiff();
+  toast('Sample loaded');
+  originalEl.focus();
+});
+swapBtn.addEventListener('click', function(){
+  var a = originalEl.value;
+  originalEl.value = modifiedEl.value;
+  modifiedEl.value = a;
+  runDiff();
+  toast('Swapped');
+});
+clearBtn.addEventListener('click', function(){
+  originalEl.value = '';
+  modifiedEl.value = '';
+  runDiff();
+  originalEl.focus();
+});
+copyBtn.addEventListener('click', function(){
+  if(!lastDiffText) return;
+  copyText(lastDiffText);
+});
+
+// Clean tab events
+[cTrim, cCollapse, cEmpty, cLF, cPunct, cQuotes].forEach(function(el){
+  el.addEventListener('change', cleanText);
+});
+cleanInput.addEventListener('input', function(){
+  // Auto-run on input? Spec says Clean runs on button click. We won't auto-run, but update stats live.
+  updateCleanStats();
+});
+cleanBtn.addEventListener('click', function(){
+  cleanText();
+  toast('Cleaned');
+});
+cleanSampleBtn.addEventListener('click', function(){
+  cleanInput.value = SAMPLE_CLEAN;
+  updateCleanStats();
+  cleanText();
+  toast('Sample loaded');
+  cleanInput.focus();
+});
+cleanClearBtn.addEventListener('click', function(){
+  cleanInput.value = '';
+  cleanOutput.value = '';
+  cleanCopyBtn.disabled = true;
+  updateCleanStats();
+  cleanInput.focus();
+});
+cleanCopyBtn.addEventListener('click', function(){
+  if(!cleanOutput.value) return;
+  copyText(cleanOutput.value);
+});
+
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast('Copied to clipboard'); }, function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Copied to clipboard'); }catch(e){ toast('Copy failed'); }
+  document.body.removeChild(ta);
+}
+
+// ===== Library ready check =====
+function checkReady(){
+  if(typeof diff_match_patch !== 'undefined'){
+    showBanner('');
+    if(originalEl.value || modifiedEl.value) runDiff();
+  } else {
+    showBanner('Loading diff-match-patch from CDN&hellip;', false);
+    setTimeout(checkReady, 250);
+    checkReady._n = (checkReady._n || 0) + 1;
+    if(checkReady._n > 40){
+      showBanner('Diff library failed to load. Check your network connection and refresh.', true);
+    }
+  }
+}
+
+// ===== Init =====
+updateCleanStats();
+checkReady();
+})();
+</script>
+</body>
+</html>
