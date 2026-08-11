@@ -1,5 +1,33 @@
-# robots.txt — bayhaqy.my.id/apps
+# robots.txt for bayhaqy.my.id/apps
 User-agent: *
+Allow: /
+Disallow:
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: BingPreview
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Applebot
 Allow: /
 
 Sitemap: https://bayhaqy.my.id/apps/sitemap.xml
