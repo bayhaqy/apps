@@ -59,17 +59,16 @@
     // Footer: logo + copyright (no "Bayhaqy Apps" text).
     var footer = document.createElement('footer');
     footer.className = 'app-footer';
-    var year = new Date().getFullYear();
     footer.innerHTML =
       '<div class="app-footer-inner">' +
         '<a class="brand-mini" href="/apps/" aria-label="Bayhaqy — Apps home">' +
           '<img src="/apps/icons/logo.png" alt="Bayhaqy" />' +
         '</a>' +
-        '<span class="copy">© ' + year + ' Achmad Bayhaqy · <a href="https://bayhaqy.my.id/">bayhaqy.my.id</a></span>' +
+        '<span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>' +
         '<span class="links">' +
           '<a href="https://bayhaqy.my.id/">Portfolio</a>' +
-          '<a href="https://bayhaqy.my.id/games/">Games</a>' +
           '<a href="https://bayhaqy.my.id/kids/">Kids</a>' +
+          '<a href="https://bayhaqy.my.id/games/">Games</a>' +
           '<a href="https://github.com/bayhaqy/apps">GitHub</a>' +
         '</span>' +
       '</div>';
