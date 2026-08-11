@@ -49,7 +49,7 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260811a" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
   <style>
     /* Landing-page-specific styles layered on top of theme.css */
     .apps-hero {
@@ -69,7 +69,7 @@
       margin-inline: auto;
       padding-inline: 1.5rem;
       display: grid;
-      grid-template-columns: minmax(0, 1fr); max-width: 760px;
+      grid-template-columns: minmax(0, 1.6fr) minmax(260px, 360px);
       gap: 3rem;
       align-items: center;
       position: relative;
@@ -567,8 +567,7 @@
       <nav class="landing-nav" aria-label="Primary">
         <a href="https://bayhaqy.my.id/" class="hide-mobile">Portfolio</a>
         <a href="https://bayhaqy.my.id/games/" class="hide-mobile">Games</a>
-        <a href="https://bayhaqy.my.id/kids/" class="hide-mobile">Kids</a>
-        <a href="/apps/bayhaqy-apps.apk" class="hide-mobile" download>Get the App</a>
+        <a href="/apps/get-app/" class="hide-mobile">Get the App</a>
         <a href="https://github.com/bayhaqy/apps" class="hide-mobile">GitHub</a>
         <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -598,9 +597,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               Browse all 41 tools
             </a>
-            <a href="/apps/bayhaqy-apps.apk" class="btn btn-ghost" download>
+            <a href="/apps/get-app/" class="btn btn-ghost">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Get the mobile app (.apk)
+              Get the mobile app
             </a>
           </div>
           <ul class="hero-stats">
@@ -610,7 +609,23 @@
             <li class="stat"><span class="num">100%</span><span class="lbl">Free</span></li>
           </ul>
         </div>
-        </div>
+        <aside class="hero-side">
+          <h3>Get the mobile app</h3>
+          <p>Install Bayhaqy Apps as a full-screen app on your phone — direct access to all 41 tools without a browser tab.</p>
+          <div class="install-row">
+            <a href="/apps/get-app/" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download APK
+            </a>
+            <a href="/apps/get-app/" class="btn btn-ghost">iOS</a>
+          </div>
+          <div class="platform-row">
+            <span class="pill">Android 8+</span>
+            <span class="pill">iOS 12+</span>
+            <span class="pill">Fullscreen</span>
+          </div>
+        </aside>
+      </div>
     </section>
 
     <!-- Search + filters -->
@@ -641,11 +656,11 @@
       <a class="brand-mini" href="/apps/" aria-label="Bayhaqy — Apps home">
         <img src="/apps/icons/logo.png" alt="Bayhaqy" />
       </a>
-      <span class="copy">© <span id="year">2026</span> Achmad Bayhaqy · <a href="https://bayhaqy.my.id/">bayhaqy.my.id</a></span>
+      <span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>
       <span class="links">
         <a href="https://bayhaqy.my.id/">Portfolio</a>
-        <a href="https://bayhaqy.my.id/games/">Games</a>
         <a href="https://bayhaqy.my.id/kids/">Kids</a>
+        <a href="https://bayhaqy.my.id/games/">Games</a>
         <a href="https://github.com/bayhaqy/apps">GitHub</a>
       </span>
     </div>
@@ -674,9 +689,6 @@
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
-
-      // Year in footer.
-      document.getElementById('year').textContent = new Date().getFullYear();
 
       // ---------- App catalog ----------
       var ICONS = {
