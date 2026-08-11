@@ -167,9 +167,22 @@
         statusBody.innerHTML = '<p class="text-mute text-sm">Sending request through <span class="text-mono">corsproxy.io</span>…</p>';
 
         try {
-          // Use corsproxy.io — a free, public CORS proxy that forwards headers.
-          var proxied = 'https://corsproxy.io/?url=' + encodeURIComponent(target.href);
-          var res = await fetch(proxied, { method: 'GET', redirect: 'follow' });
+          // Try multiple CORS proxies in order — first one that works wins.
+          var proxies = [
+            function(u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+            function(u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
+            function(u) { return 'https://thingproxy.freeboard.io/fetch/' + u; },
+            function(u) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u); }
+          ];
+          var res = null, lastErr = null;
+          for (var i = 0; i < proxies.length; i++) {
+            try {
+              var proxied = proxies[i](target.href);
+              res = await fetch(proxied, { method: 'GET', redirect: 'follow' });
+              if (res.ok) break;
+            } catch (e) { lastErr = e; res = null; }
+          }
+          if (!res) throw lastErr || new Error('All CORS proxies failed');
           // Parse URL components first (for context).
           parseURL();
           parseCard.style.display = 'block';
