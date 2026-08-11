@@ -23,6 +23,7 @@
 
     .layout { display: grid; grid-template-columns: 280px 1fr; gap: 18px; }
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .panel { padding: 14px 16px; } .pdf-stage { padding: 8px; min-height: 300px; } .btn { padding: 8px 14px; font-size: 13px; } .tool-group { margin-bottom: 12px; } }
 
     .panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg);
              box-shadow: var(--shadow-sm); padding: 22px 24px; margin-bottom: 18px; }
@@ -180,7 +181,18 @@
     var { PDFDocument, StandardFonts, rgb } = PDFLib;
 
     var pdfFile = null, pdfDoc = null, currentPage = 1, totalPages = 1;
-    var pageScale = 1.4;
+    // Dynamic page scale — fit to container width, capped for performance.
+    function computePageScale() {
+      var stage = document.querySelector('.pdf-stage');
+      if (!stage) return 1.0;
+      var sw = stage.clientWidth - 40;  // padding
+      // A4 portrait at 72dpi = 595pt wide. Use 1.5x as base on desktop.
+      // On mobile (<=640px), scale to fit container.
+      if (sw <= 0) return 1.0;
+      var scale = sw / 595;
+      return Math.max(0.5, Math.min(scale, 1.8));
+    }
+    var pageScale = computePageScale();
     var annotations = [];  // { pageNum, type: 'highlight'|'text', x, y, w, h, text, color }
     var mode = 'highlight';
     var currentColor = '#FDE047';
