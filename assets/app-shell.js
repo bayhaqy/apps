@@ -69,6 +69,7 @@
         '<span class="links">' +
           '<a href="https://bayhaqy.my.id/">Portfolio</a>' +
           '<a href="https://bayhaqy.my.id/games/">Games</a>' +
+          '<a href="https://bayhaqy.my.id/kids/">Kids</a>' +
           '<a href="https://github.com/bayhaqy/apps">GitHub</a>' +
         '</span>' +
       '</div>';
