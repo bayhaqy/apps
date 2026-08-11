@@ -28,7 +28,6 @@
 
     .layout { display: grid; grid-template-columns: 320px 1fr; gap: 18px; }
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-    @media (max-width: 640px) { .panel { padding: 14px 16px; } .pdf-stage { padding: 8px; min-height: 300px; } .btn { padding: 8px 14px; font-size: 13px; } #sigCanvas { height: 140px; } .tabs .tab { padding: 6px 8px; font-size: 12px; } }
 
     .drop-zone { border: 2px dashed var(--line); border-radius: var(--radius); padding: 24px 16px;
                  text-align: center; cursor: pointer; transition: all 0.15s; background: var(--paper-alt); }
@@ -200,16 +199,7 @@
     var pdfDoc = null;
     var currentPage = 1;
     var totalPages = 1;
-    // Dynamic page scale — fit to container width.
-    function computePageScale() {
-      var stage = document.querySelector('.pdf-stage');
-      if (!stage) return 1.0;
-      var sw = stage.clientWidth - 40;
-      if (sw <= 0) return 1.0;
-      var scale = sw / 595;
-      return Math.max(0.5, Math.min(scale, 1.8));
-    }
-    var pageScale = computePageScale();  // render scale
+    var pageScale = 1.5;  // render scale
     var placedSignatures = [];  // { pageNum, x, y, w, h, dataUrl, aspectRatio }
     var signaturePad = null;
 
@@ -235,32 +225,6 @@
       ctx.scale(dpr, dpr);
       signaturePad = new SignaturePad(sigCanvas, { penColor: '#111', backgroundColor: '#ffffff', minWidth: 1.2, maxWidth: 3 });
     }
-    // Re-render current page on resize (debounced).
-    var resizeTimer = null;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () {
-        if (currentPage > 0 && pdfDoc) {
-          pageScale = computePageScale();
-          renderPage(currentPage);
-        }
-        // Resize signature canvas too.
-        if (signaturePad && sigCanvas) {
-          var dpr = window.devicePixelRatio || 1;
-          var rect = sigCanvas.getBoundingClientRect();
-          sigCanvas.width = rect.width * dpr;
-          sigCanvas.height = rect.height * dpr;
-          sigCanvas.getContext('2d').scale(dpr, dpr);
-          signaturePad.clear();
-        }
-      }, 250);
-    });
-    document.addEventListener('themechange', function () {
-      if (currentPage > 0 && pdfDoc) {
-        setTimeout(function () { renderPage(currentPage); }, 50);
-      }
-    });
-
     if (document.readyState !== 'loading') setupSignaturePad();
     else document.addEventListener('DOMContentLoaded', setupSignaturePad);
 
