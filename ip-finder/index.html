@@ -14,8 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260811a" />
-  <style>.map-frame{height:380px;max-height:60vh;width:100%;}@media(max-width:640px){.map-frame{height:300px;}}</style>
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ezLr+/xwB6U5jfnxkM4A3C8q6XwA=" crossorigin="" />
 </head>
 <body data-app-name="IP Location">
@@ -144,16 +143,7 @@
           marker.setLatLng([lat, lon]).bindPopup(escapeHtml(label));
           map.setView([lat, lon], 10);
         }
-        // Force Leaflet to recalculate its container size after the card becomes visible.
-          // Multiple RAFs ensure the layout has fully settled (esp. on mobile).
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              if (map) {
-                map.invalidateSize(true);
-                if (marker) map.setView(marker.getLatLng(), 10);
-              }
-            });
-          });
+        setTimeout(function () { if (map) map.invalidateSize(); }, 100);
       }
 
       async function lookup(ip) {
