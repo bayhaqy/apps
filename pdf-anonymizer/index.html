@@ -793,8 +793,8 @@
 </main>
 
 <div class="toast" id="toast"></div>
-<script src="/apps/lib/pdf-lib.min.js"></script>
-<script src="/apps/lib/pdfjs.min.js"></script>
+<script src="lib/pdf-lib.min.js"></script>
+<script src="lib/pdfjs.min.js"></script>
 <script>
     (function(){
       'use strict';
@@ -802,7 +802,7 @@
       var PDFLib = window.PDFLib;
       var { PDFDocument, rgb } = PDFLib;
       // Configure pdfjs worker to local file (offline-capable)
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '/apps/lib/pdfjs.worker.min.js';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'lib/pdfjs-worker.min.js';
 
       // ---------- State ----------
       var state = {
