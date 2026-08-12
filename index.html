@@ -69,7 +69,7 @@
       margin-inline: auto;
       padding-inline: 1.5rem;
       display: grid;
-      grid-template-columns: minmax(0, 1.6fr) minmax(260px, 360px);
+      grid-template-columns: minmax(0, 1fr);
       gap: 3rem;
       align-items: center;
       position: relative;
@@ -148,48 +148,6 @@
       line-height: 1.4;
     }
 
-    /* Hero side card (APK install) */
-    .hero-side {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-left: 3px solid var(--red-700);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-    }
-    .hero-side h3 {
-      font-size: var(--fs-md);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0 0 0.5rem;
-    }
-    .hero-side p {
-      font-size: var(--fs-sm);
-      color: var(--ink-soft);
-      margin: 0 0 1rem;
-    }
-    .hero-side .install-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .hero-side .install-row .btn {
-      flex: 1;
-      min-width: 130px;
-      padding: 0.65rem 0.9rem;
-      font-size: var(--fs-sm);
-    }
-    .hero-side .platform-row {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: 0.75rem;
-      flex-wrap: wrap;
-    }
-    .hero-side .platform-row .pill {
-      background: var(--line-soft);
-      color: var(--ink-soft);
-      border-color: var(--line);
-    }
 
     /* Search + filter */
     .toolbar {
@@ -609,14 +567,6 @@
             <li class="stat"><span class="num">100%</span><span class="lbl">Free</span></li>
           </ul>
         </div>
-        <aside class="hero-side">
-          <h3>Get the mobile app</h3>
-          <p>Install Bayhaqy Apps on your Android phone — one tap, no app store needed.</p>
-          <a href="/apps/bayhaqy-apps.apk" download="bayhaqy-apps.apk" class="btn btn-primary" style="width:100%; justify-content:center;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download APK
-          </a>
-        </aside>
       </div>
     </section>
 
