@@ -35,19 +35,17 @@
     var appName = (script && script.getAttribute('data-app-name')) ||
                   document.body.getAttribute('data-app-name') || 'App';
 
-    // Header: logo only (no text label — matches bayhaqy.github.io portfolio).
+    // Header: logo + Portfolio + lang toggle + theme toggle (minimal, consistent across sites)
     var header = document.createElement('header');
     header.className = 'app-header';
     header.innerHTML =
       '<div class="app-header-inner">' +
-        '<a class="app-brand" href="/apps/" aria-label="Bayhaqy — Back to apps">' +
+        '<a class="app-brand" href="/apps/" aria-label="Bayhaqy — home">' +
           '<img src="/apps/icons/logo.png" alt="Bayhaqy" />' +
         '</a>' +
-        '<nav class="app-nav" aria-label="App">' +
-          '<a class="back-link" href="/apps/" aria-label="Back to all apps">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>' +
-            '<span>All apps</span>' +
-          '</a>' +
+        '<nav class="app-nav" aria-label="Primary">' +
+          '<a class="nav-link" href="https://bayhaqy.my.id/" data-i18n="nav_portfolio">Portfolio</a>' +
+          '<button class="lang-toggle" type="button" aria-label="Switch language" id="langToggle">ID</button>' +
           '<button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">' +
             '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' +
             '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="1.5" x2="12" y2="3.5"/><line x1="12" y1="20.5" x2="12" y2="22.5"/><line x1="4.22" y1="4.22" x2="5.64"  y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1.5" y1="12" x2="3.5" y2="12"/><line x1="20.5" y1="12" x2="22.5" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
@@ -55,6 +53,39 @@
         '</nav>' +
       '</div>';
     document.body.insertBefore(header, document.body.firstChild);
+
+    // Minimal i18n for the few UI strings on apps/games
+    var UI = {
+      en: { nav_portfolio: 'Portfolio', switch_lang: 'Switch to Indonesian', toggle_theme: 'Toggle dark mode' },
+      id: { nav_portfolio: 'Portofolio', switch_lang: 'Ganti ke Inggris', toggle_theme: 'Ganti mode gelap' }
+    };
+    var curLang = (function () {
+      try { var s = localStorage.getItem('bayhaqy-apps-lang'); if (s === 'en' || s === 'id') return s; } catch (e) {}
+      var nav = (navigator.language || 'en').toLowerCase();
+      return nav.indexOf('id') === 0 ? 'id' : 'en';
+    })();
+    function applyShellI18n() {
+      var t = UI[curLang] || UI.en;
+      header.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n');
+        if (t[k]) el.textContent = t[k];
+      });
+      var lt = document.getElementById('langToggle');
+      if (lt) { lt.textContent = curLang === 'en' ? 'ID' : 'EN'; lt.setAttribute('aria-label', t.switch_lang); }
+      var tt = document.getElementById('themeToggle');
+      if (tt) tt.setAttribute('aria-label', t.toggle_theme);
+      document.documentElement.setAttribute('lang', curLang === 'id' ? 'id' : 'en');
+    }
+    applyShellI18n();
+    var ltBtn = document.getElementById('langToggle');
+    if (ltBtn) {
+      ltBtn.addEventListener('click', function () {
+        curLang = curLang === 'en' ? 'id' : 'en';
+        try { localStorage.setItem('bayhaqy-apps-lang', curLang); } catch (e) {}
+        applyShellI18n();
+        document.dispatchEvent(new CustomEvent('langchange', { detail: { lang: curLang } }));
+      });
+    }
 
     // Footer: logo + copyright (no "Bayhaqy Apps" text).
     var footer = document.createElement('footer');
