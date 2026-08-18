@@ -3,8 +3,9 @@
   <url><loc>https://bayhaqy.my.id/apps/</loc><lastmod>2026-08-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/get-app/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <!-- Network & DNS -->
-  <url><loc>https://bayhaqy.my.id/apps/dns-lookup/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/ip-finder/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/dns-lookup/</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/whois-lookup/</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/ip-finder/</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/subnet-calc/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/url-parser/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Security & Crypto -->
