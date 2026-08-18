@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="IP Location Finder — auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive map." />
+  <meta name="description" content="IP Location Finder — auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive map powered by ipwho.is & ipapi.co + Leaflet/OpenStreetMap." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="IP Location Finder — GeoIP Tracker" />
-  <meta property="og:description" content="Auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on a map." />
+  <meta property="og:description" content="Auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive OpenStreetMap." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/ip-finder/" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/ip-finder/" />
   <link rel="icon" href="/apps/icons/logo.png" />
@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260818a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ezLr+/xwB6U5jfnxkM4A3C8q6XwA=" crossorigin="" />
 </head>
 <body data-app-name="IP Location">
@@ -24,7 +24,9 @@
       <h1 class="app-title">IP <span class="accent">Location Finder</span></h1>
       <p class="app-subtitle">
         Auto-detect your public IP on load, or look up any IPv4 / IPv6 to see country, city, GPS
-        coordinates, ISP, and ASN. Powered by ipapi.co &amp; ip-api.com.
+        coordinates, ISP, and ASN on an interactive OpenStreetMap. Powered by ipwho.is &amp; ipapi.co.
+        <strong>Tip:</strong> mobile-carrier, VPN, or Cloudflare IPs often resolve to the carrier
+        core / exit node city — not your physical location. This is a known IP-geolocation limit.
       </p>
     </header>
 
@@ -65,8 +67,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           Map
         </h2>
-        <div id="map" class="map-frame"></div>
-        <p class="text-xs text-mute mt-1">Map tiles © OpenStreetMap contributors.</p>
+        <div id="map" class="map-frame" role="application" aria-label="Interactive map showing the IP location"></div>
+        <p class="text-xs text-mute mt-1">
+          © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:inherit">OpenStreetMap</a> contributors
+          · © <a href="https://carto.com/attributions" target="_blank" rel="noopener" style="color:inherit">CARTO</a>
+          · IP-based location; may differ from your physical location.
+        </p>
       </section>
     </section>
   </main>
@@ -123,27 +129,70 @@
 
         var lat = parseFloat(data.latitude || data.lat);
         var lon = parseFloat(data.longitude || data.lon);
-        if (!isNaN(lat) && !isNaN(lon)) {
+        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
           mapCard.style.display = 'block';
           // Wait for layout to settle before initializing the map.
-          setTimeout(function () { ensureMap(lat, lon, data.city || data.ip || 'Location'); }, 60);
+          setTimeout(function () { ensureMap(lat, lon, data); }, 60);
+        } else {
+          mapCard.style.display = 'none';
         }
       }
 
-      function ensureMap(lat, lon, label) {
+      function ensureMap(lat, lon, data) {
+        // Leaflet expects [LAT, LON] — never reversed. Validate bounds to prevent
+        // the marker ending up in the Atlantic (0,0) if the API returns null coords.
+        if (!isFinite(lat) || !isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+          mapCard.style.display = 'none';
+          return;
+        }
+        var popupHtml =
+          '<div style="font-weight:700;margin-bottom:2px;">' + escapeHtml(data.ip || data.query || '—') + '</div>' +
+          '<div>' + escapeHtml(data.city || '—') + (data.region ? ', ' + escapeHtml(data.region) : '') + '</div>' +
+          '<div>' + escapeHtml(data.country_name || data.country || '—') + (data.country_code ? ' (' + escapeHtml(data.country_code) + ')' : '') + '</div>' +
+          '<div class="text-mute text-xs" style="margin-top:4px">' +
+            escapeHtml(data.latitude || data.lat || '') + ', ' + escapeHtml(data.longitude || data.lon || '') +
+            (data.org || data.isp ? ' · ISP: ' + escapeHtml(data.org || data.isp) : '') +
+          '</div>';
         if (map === null) {
-          map = L.map(mapEl, { scrollWheelZoom: false }).setView([lat, lon], 10);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap',
-            maxZoom: 19
-          }).addTo(map);
-          marker = L.marker([lat, lon]).addTo(map).bindPopup(escapeHtml(label));
+          map = L.map(mapEl, {
+            scrollWheelZoom: false,
+            worldCopyJump: true,
+            zoomControl: true,
+            attributionControl: true
+          }).setView([lat, lon], 11);
+          // Primary: CARTO Positron (light, fast, well-attributed, HTTPS by default).
+          var primary = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            subdomains: 'abcd',
+            maxZoom: 20,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          });
+          // Fallback: OSM standard tiles (in case CARTO is rate-limited/unavailable).
+          var fallback = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            subdomains: 'abc',
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          });
+          primary.on('tileerror', function () {
+            // If the primary provider starts returning errors, swap to OSM fallback.
+            if (map.hasLayer(primary)) {
+              map.removeLayer(primary);
+              fallback.addTo(map);
+              // Re-add marker on top.
+              if (marker) marker.addTo(map);
+            }
+          });
+          primary.addTo(map);
+          marker = L.marker([lat, lon]).addTo(map).bindPopup(popupHtml).openPopup();
         } else {
           mapCard.style.display = 'block';
-          marker.setLatLng([lat, lon]).bindPopup(escapeHtml(label));
-          map.setView([lat, lon], 10);
+          marker.setLatLng([lat, lon]).bindPopup(popupHtml).openPopup();
+          map.setView([lat, lon], 11);
         }
-        setTimeout(function () { if (map) map.invalidateSize(); }, 100);
+        // Invalidate size after the container is visible — needed because the
+        // mapCard starts as display:none and Leaflet computes tile positions
+        // based on the container's current pixel size.
+        setTimeout(function () { if (map) { map.invalidateSize(); } }, 120);
+        setTimeout(function () { if (map) { map.invalidateSize(); } }, 400);
       }
 
       async function lookup(ip) {
