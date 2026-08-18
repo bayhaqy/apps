@@ -271,32 +271,6 @@
       color: inherit;
       transition: all .2s var(--ease);
     }
-    .app-card .badge-row {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      display: flex;
-      gap: 6px;
-    }
-    .app-card .offline-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 3px 7px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: #15803d;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 99px;
-      letter-spacing: 0.2px;
-      text-transform: uppercase;
-    }
-    [data-theme="dark"] .app-card .offline-badge {
-      color: #86efac;
-      background: rgba(34,197,94,0.12);
-      border-color: rgba(34,197,94,0.3);
-    }
     .app-card:hover {
       border-color: var(--red-700);
       transform: translateY(-2px);
@@ -633,6 +607,7 @@
         convert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
         vault: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
         qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>',
+        whois: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><path d="M12 19v3"/></svg>',
         dns: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
         ip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
         subnet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
@@ -650,6 +625,9 @@
         { id: 'dns-lookup', cat: 'network', icon: 'dns', name: 'DNS Lookup',
           desc: 'Query A, AAAA, CNAME, MX, NS, TXT, SOA, CAA records via DNS-over-HTTPS.',
           tags: ['dns', 'network', 'doh', 'records'] },
+        { id: 'whois-lookup', cat: 'network', icon: 'whois', name: 'WHOIS Domain Lookup',
+          desc: 'Look up registrar, creation date, expiry date, name servers, and status for any domain via RDAP.',
+          tags: ['whois', 'rdap', 'domain', 'registrar', 'network'] },
         { id: 'ip-finder', cat: 'network', icon: 'ip', name: 'IP Location Finder',
           desc: 'Auto-detect your IP or look up any IPv4/IPv6 to see country, city, ISP, ASN, and a map pin.',
           tags: ['ip', 'geoip', 'network', 'map'] },
@@ -759,45 +737,45 @@
         // Category: Brand
         { id: 'link-in-bio', cat: 'brand', icon: 'link', name: 'Link-in-Bio Builder',
           desc: 'Create a Linktree-style page with avatar, links, themes, and analytics.',
-          tags: ['linktree', 'bio', 'social', 'brand'], offline: true },
+          tags: ['linktree', 'bio', 'social', 'brand'] },
 
         // Category: PDF Editor (new)
         { id: 'pdf-signer', cat: 'pdf', icon: 'pdf', name: 'PDF Signer & Stamp',
           desc: 'Draw a signature with mouse/finger or upload a stamp image. Drag, resize, and place on any page.',
-          tags: ['pdf', 'sign', 'signature', 'stamp', 'pdf-lib'], offline: true },
+          tags: ['pdf', 'sign', 'signature', 'stamp', 'pdf-lib'] },
         { id: 'pdf-annotator', cat: 'pdf', icon: 'pdf', name: 'PDF Annotator & Highlighter',
           desc: 'Highlight text passages and add colored text annotations. Export the marked-up PDF.',
-          tags: ['pdf', 'annotate', 'highlight', 'note', 'pdf-lib'], offline: true },
+          tags: ['pdf', 'annotate', 'highlight', 'note', 'pdf-lib'] },
         { id: 'pdf-organizer', cat: 'pdf', icon: 'pdf', name: 'PDF Page Organizer',
           desc: 'Delete, rotate, and reorder PDF pages visually with drag-and-drop thumbnails.',
-          tags: ['pdf', 'organize', 'reorder', 'rotate', 'delete'], offline: true },
+          tags: ['pdf', 'organize', 'reorder', 'rotate', 'delete'] },
         { id: 'pdf-redactor', cat: 'pdf', icon: 'pdf', name: 'PDF Redactor',
           desc: 'Extract text and permanently redact emails, phones, NIK, cards, IBAN with black boxes.',
-          tags: ['pdf', 'redact', 'extract', 'pii', 'regex'], offline: true },
+          tags: ['pdf', 'redact', 'extract', 'pii', 'regex'] },
         { id: 'pdf-watermark', cat: 'pdf', icon: 'pdf', name: 'PDF Watermark & Page Numbers',
           desc: 'Add diagonal text watermarks (CONFIDENTIAL, DRAFT) and automatic page numbers.',
-          tags: ['pdf', 'watermark', 'page numbers', 'stamp'], offline: true },
+          tags: ['pdf', 'watermark', 'page numbers', 'stamp'] },
 
         // Category: Media & AI (new)
         { id: 'bg-remover', cat: 'media', icon: 'image', name: 'AI Background Remover',
           desc: 'Remove image backgrounds 100% locally via Transformers.js + WebGPU. No upload, no quota.',
-          tags: ['image', 'ai', 'webgpu', 'remove bg', 'transformers'], offline: true },
+          tags: ['image', 'ai', 'webgpu', 'remove bg', 'transformers'] },
         { id: 'file-to-pdf', cat: 'files', icon: 'pdf', name: 'File-to-PDF Converter',
           desc: 'Convert images (JPG, PNG, WebP) and text files into a single PDF. Reorder, set page size.',
-          tags: ['pdf', 'convert', 'jpg', 'png', 'image to pdf'], offline: true },
+          tags: ['pdf', 'convert', 'jpg', 'png', 'image to pdf'] },
 
         // Category: Music Utilities (new)
         { id: 'instrument-tuner', cat: 'music', icon: 'audio', name: 'Instrument Tuner',
           desc: 'Chromatic tuner using your microphone. Real-time pitch detection via FFT for guitar, bass, violin.',
-          tags: ['tuner', 'guitar', 'music', 'pitch', 'fft', 'microphone'], offline: true },
+          tags: ['tuner', 'guitar', 'music', 'pitch', 'fft', 'microphone'] },
         { id: 'metronome', cat: 'music', icon: 'audio', name: 'Metronome & Tap Tempo',
           desc: 'Precision metronome with microsecond timing. Tap tempo, time signatures, accented downbeats.',
-          tags: ['metronome', 'bpm', 'tap tempo', 'music', 'rhythm'], offline: true },
+          tags: ['metronome', 'bpm', 'tap tempo', 'music', 'rhythm'] },
 
         // Category: Security (new)
         { id: 'text-encryptor', cat: 'security', icon: 'lock', name: 'Text Encryptor (AES-256)',
           desc: 'Client-side AES-GCM 256-bit authenticated encryption. Your password never leaves your device.',
-          tags: ['encrypt', 'aes', 'crypto', 'security', 'password'], offline: true }
+          tags: ['encrypt', 'aes', 'crypto', 'security', 'password'] }
       ];
 
       var CATS = [
@@ -908,11 +886,7 @@
         var tagsHtml = a.tags.slice(0, 3).map(function (t) {
           return '<span class="tag">' + escapeHtml(t) + '</span>';
         }).join('');
-        var offlineBadge = a.offline
-          ? '<span class="offline-badge" title="Runs entirely in your browser — no internet needed after first load"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Offline OK</span>'
-          : '';
         return '<a class="app-card' + (isRecent ? ' recent' : '') + '" href="/apps/' + a.id + '/" data-app-id="' + a.id + '">' +
-          (offlineBadge ? '<div class="badge-row">' + offlineBadge + '</div>' : '') +
           '<div class="app-card-head">' +
             '<span class="app-icon">' + (ICONS[a.icon] || ICONS.file) + '</span>' +
             '<div>' +
