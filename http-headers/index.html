@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HTTP Headers Checker — inspect response headers of any URL, audit security headers (CSP, HSTS, X-Frame-Options, etc.), and get a security score. Free, no signup." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="HTTP Headers Checker — Security Header Audit" />
+  <meta property="og:description" content="Inspect response headers of any URL and audit security headers (CSP, HSTS, X-Frame-Options, etc.) with a security score." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/http-headers/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/http-headers/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>HTTP Headers Checker — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="HTTP Headers Checker">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Security · Network</p>
+      <h1 class="app-title">HTTP Headers <span class="accent">Checker</span></h1>
+      <p class="app-subtitle">
+        Inspect response headers of any URL and audit security headers like CSP, HSTS,
+        X-Frame-Options, and more. Get an instant security score with recommendations.
+      </p>
+    </header>
+
+    <section class="card">
+      <label class="field">
+        <span>URL to check</span>
+        <input type="text" id="urlInput" placeholder="https://example.com" value="https://example.com" autocapitalize="none" spellcheck="false" />
+        <span class="hint">Enter a full URL including the scheme (https:// or http://).</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="checkBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Check Headers
+        </button>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
+      </div>
+    </section>
+
+    <section class="card" id="errorCard" style="display:none;">
+      <h2 class="card-title text-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Error
+      </h2>
+      <p id="errorMsg" class="text-mono text-sm"></p>
+    </section>
+
+    <!-- Score Card -->
+    <section class="card" id="scoreCard" style="display:none;">
+      <div class="flex-between">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Security Score
+        </h2>
+        <span class="text-xs text-mute" id="responseTime"></span>
+      </div>
+      <div id="scoreBody"></div>
+    </section>
+
+    <!-- Headers Table -->
+    <section class="card" id="headersCard" style="display:none;">
+      <div class="flex-between">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/><path d="M4 15h16"/></svg>
+          Response Headers
+        </h2>
+        <button class="btn btn-ghost" id="copyBtn" type="button" style="padding:0.35rem 0.7rem; font-size:0.8rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:-2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy all
+        </button>
+      </div>
+      <div id="headersBody" style="overflow-x:auto;"></div>
+      <p class="text-xs text-mute mt-1" id="corsNote" style="display:none;"></p>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="HTTP Headers Checker"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var urlInput    = $('#urlInput');
+      var checkBtn    = $('#checkBtn');
+      var sampleBtn   = $('#sampleBtn');
+      var copyBtn     = $('#copyBtn');
+      var errorCard   = $('#errorCard');
+      var errorMsg    = $('#errorMsg');
+      var scoreCard   = $('#scoreCard');
+      var scoreBody   = $('#scoreBody');
+      var headersCard = $('#headersCard');
+      var headersBody = $('#headersBody');
+      var responseTime= $('#responseTime');
+      var corsNote    = $('#corsNote');
+
+      var lastHeaders = {}; // store for copy
+
+      var SECURITY_HEADERS = [
+        {
+          name: 'content-security-policy',
+          label: 'Content-Security-Policy (CSP)',
+          severity: 'Critical',
+          desc: 'Controls which resources the browser is allowed to load. Prevents XSS and data injection attacks by whitelisting sources of scripts, styles, images, and more.',
+          recommend: 'Add a strict CSP header. Start with Content-Security-Policy: default-src \'self\' and tighten from there. Use report-only mode first to test.'
+        },
+        {
+          name: 'strict-transport-security',
+          label: 'Strict-Transport-Security (HSTS)',
+          severity: 'Critical',
+          desc: 'Forces browsers to only use HTTPS for all future requests to this domain. Prevents protocol downgrade attacks and cookie hijacking.',
+          recommend: 'Add Strict-Transport-Security: max-age=31536000; includeSubDomains; preload for at least 1 year with subdomains and preload.'
+        },
+        {
+          name: 'x-content-type-options',
+          label: 'X-Content-Type-Options',
+          severity: 'Important',
+          desc: 'Prevents browsers from MIME-type sniffing a response away from the declared content-type. Blocks attacks based on content-type confusion.',
+          recommend: 'Set X-Content-Type-Options: nosniff on all responses.'
+        },
+        {
+          name: 'x-frame-options',
+          label: 'X-Frame-Options',
+          severity: 'Important',
+          desc: 'Controls whether your site can be embedded in iframes. Protects against clickjacking attacks by preventing your pages from being framed by malicious sites.',
+          recommend: 'Set X-Frame-Options: DENY or SAMEORIGIN. For broader protection, also use Content-Security-Policy: frame-ancestors.'
+        },
+        {
+          name: 'x-xss-protection',
+          label: 'X-XSS-Protection',
+          severity: 'Low',
+          desc: 'Enables the browser\'s built-in XSS filter. Note: this header is deprecated in modern browsers in favor of CSP, but legacy browsers may still benefit.',
+          recommend: 'Set X-XSS-Protection: 0 (to avoid XSS auditor bypasses) and rely on Content-Security-Policy instead. Or set to 1; mode=block for legacy browser support.'
+        },
+        {
+          name: 'referrer-policy',
+          label: 'Referrer-Policy',
+          severity: 'Important',
+          desc: 'Controls how much referrer information is sent when navigating away from your site. Protects user privacy and prevents sensitive URL data leakage.',
+          recommend: 'Set Referrer-Policy: strict-origin-when-cross-origin as a good balance between security and usability.'
+        },
+        {
+          name: 'permissions-policy',
+          label: 'Permissions-Policy',
+          severity: 'Moderate',
+          desc: 'Controls which browser features (camera, microphone, geolocation, etc.) your site and embedded iframes can use. Reduces the attack surface.',
+          recommend: 'Set Permissions-Policy: camera=(), microphone=(), geolocation=() to disable unused features, or whitelist specific origins.'
+        },
+        {
+          name: 'cross-origin-opener-policy',
+          label: 'Cross-Origin-Opener-Policy',
+          severity: 'Moderate',
+          desc: 'Prevents cross-origin windows from directly interacting with your window. Protects against Spectre-class side-channel attacks.',
+          recommend: 'Set Cross-Origin-Opener-Policy: same-origin if your site doesn\'t need cross-origin window access.'
+        },
+        {
+          name: 'cross-origin-resource-policy',
+          label: 'Cross-Origin-Resource-Policy',
+          severity: 'Moderate',
+          desc: 'Controls whether cross-origin requests can read the response body of your resources. Prevents cross-origin data leaks.',
+          recommend: 'Set Cross-Origin-Resource-Policy: same-origin for sensitive resources, or same-site if subdomain access is needed.'
+        }
+      ];
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      }
+
+      function normalizeUrl(raw) {
+        var url = (raw || '').trim();
+        if (!url) return '';
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        return url;
+      }
+
+      function showError(msg) {
+        scoreCard.style.display = 'none';
+        headersCard.style.display = 'none';
+        errorCard.style.display = 'block';
+        errorMsg.textContent = msg;
+      }
+
+      function clearOutput() {
+        errorCard.style.display = 'none';
+        scoreCard.style.display = 'none';
+        headersCard.style.display = 'none';
+        scoreBody.innerHTML = '';
+        headersBody.innerHTML = '';
+        corsNote.style.display = 'none';
+        lastHeaders = {};
+      }
+
+      function severityColor(sev) {
+        if (sev === 'Critical') return 'var(--red-700)';
+        if (sev === 'Important') return '#b45309';
+        if (sev === 'Moderate') return '#6366f1';
+        return 'var(--ink-mute)';
+      }
+
+      function renderScore(headers) {
+        var found = 0;
+        var total = SECURITY_HEADERS.length;
+        var headerKeys = Object.keys(headers);
+
+        SECURITY_HEADERS.forEach(function (h) {
+          var present = false;
+          for (var i = 0; i < headerKeys.length; i++) {
+            if (headerKeys[i].toLowerCase() === h.name) { present = true; break; }
+          }
+          if (present) found++;
+        });
+
+        var html = '';
+        var pct = Math.round((found / total) * 100);
+        var barColor = pct >= 78 ? '#16a34a' : pct >= 56 ? '#ca8a04' : 'var(--red-700)';
+
+        html += '<div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">';
+        html += '<div style="font-size:2.5rem; font-weight:800; line-height:1; color:' + barColor + ';">' + found + '<span style="font-size:1.4rem; font-weight:600; color:var(--ink-mute);">/' + total + '</span></div>';
+        html += '<div style="flex:1; min-width:160px;">';
+        html += '<div style="font-weight:600; margin-bottom:0.3rem;">' + pct + '% security coverage</div>';
+        html += '<div style="height:8px; background:var(--line); border-radius:4px; overflow:hidden;"><div style="height:100%; width:' + pct + '%; background:' + barColor + '; border-radius:4px; transition:width 0.4s ease;"></div></div>';
+        html += '</div></div>';
+
+        // Each header audit item
+        SECURITY_HEADERS.forEach(function (h) {
+          var present = false;
+          var value = '';
+          for (var i = 0; i < headerKeys.length; i++) {
+            if (headerKeys[i].toLowerCase() === h.name) {
+              present = true;
+              value = headers[headerKeys[i]];
+              break;
+            }
+          }
+
+          html += '<div style="border:1px solid var(--line); border-radius:0.5rem; padding:0.85rem 1rem; margin-bottom:0.65rem;">';
+          html += '<div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.35rem;">';
+          html += '<span class="pill ' + (present ? 'green' : '') + '"' + (!present ? ' style="background:var(--red-700); color:#fff;"' : '') + '>' + (present ? 'Present' : 'Missing') + '</span>';
+          html += '<span style="font-weight:700; font-size:0.92rem;">' + escapeHtml(h.label) + '</span>';
+          html += '<span class="text-xs" style="color:' + severityColor(h.severity) + '; font-weight:600; margin-left:auto;">' + h.severity + '</span>';
+          html += '</div>';
+          html += '<p class="text-sm" style="color:var(--ink-soft); margin-bottom:0.35rem;">' + escapeHtml(h.desc) + '</p>';
+          if (present) {
+            html += '<p class="text-xs text-mono" style="color:var(--ink); background:var(--paper-alt); padding:0.35rem 0.6rem; border-radius:0.25rem; word-break:break-all; margin-bottom:0.3rem;">' + escapeHtml(value) + '</p>';
+          } else {
+            html += '<p class="text-xs" style="color:var(--red-700);"><strong>Recommendation:</strong> ' + escapeHtml(h.recommend) + '</p>';
+          }
+          html += '</div>';
+        });
+
+        scoreBody.innerHTML = html;
+        scoreCard.style.display = 'block';
+      }
+
+      function renderHeaders(headers) {
+        lastHeaders = headers;
+        var keys = Object.keys(headers).sort(function (a, b) {
+          return a.toLowerCase().localeCompare(b.toLowerCase());
+        });
+        if (keys.length === 0) {
+          headersBody.innerHTML = '<p class="text-mute text-sm" style="padding:1rem;">No headers received.</p>';
+        } else {
+          var rows = '';
+          keys.forEach(function (k) {
+            rows += '<tr><td class="k" style="white-space:nowrap;">' + escapeHtml(k) + '</td><td class="v" style="word-break:break-all;">' + escapeHtml(headers[k]) + '</td></tr>';
+          });
+          headersBody.innerHTML = '<table class="data"><thead><tr><th>Header</th><th>Value</th></tr></thead><tbody>' + rows + '</tbody></table>';
+        }
+        headersCard.style.display = 'block';
+      }
+
+      // Try to parse headers from an allorigins response
+      // allorigins returns JSON with a "status" object containing headers
+      function headersFromAllOriginsJson(json) {
+        var h = {};
+        if (json && json.status) {
+          var src = json.status;
+          // status may have headers as an object
+          if (src.headers) {
+            var hk = Object.keys(src.headers);
+            for (var i = 0; i < hk.length; i++) {
+              h[hk[i]] = Array.isArray(src.headers[hk[i]]) ? src.headers[hk[i]].join(', ') : String(src.headers[hk[i]]);
+            }
+          }
+          // Also extract status code and content-type from top level
+          if (src.content_type) h['content-type'] = src.content_type;
+          if (src.http_code) h[':status'] = String(src.http_code);
+          if (src.url) h[':final-url'] = src.url;
+          if (src.response_time) h[':response-time'] = String(src.response_time);
+        }
+        // allorigins may also return response_headers as a string
+        if (json && json.response_headers) {
+          var lines = json.response_headers.split('\n');
+          for (var j = 0; j < lines.length; j++) {
+            var line = lines[j].trim();
+            if (!line) continue;
+            var idx = line.indexOf(':');
+            if (idx > 0) {
+              var key = line.substring(0, idx).trim();
+              var val = line.substring(idx + 1).trim();
+              // Don't overwrite if already set from status object (more structured)
+              if (!h[key.toLowerCase()] && !h[key]) {
+                h[key] = val;
+              }
+            }
+          }
+        }
+        return h;
+      }
+
+      async function checkHeaders() {
+        var url = normalizeUrl(urlInput.value);
+        if (!url) { showError('Please enter a valid URL.'); return; }
+
+        // Basic URL validation
+        try { new URL(url); } catch (e) { showError('Invalid URL. Please enter a full URL like https://example.com'); return; }
+
+        clearOutput();
+        checkBtn.disabled = true;
+        checkBtn.textContent = 'Checking…';
+
+        var startTime = performance.now();
+        var headers = null;
+        var usedProxy = false;
+        var lastErr = null;
+
+        // Strategy 1: allorigins proxy (most reliable for cross-origin header inspection)
+        try {
+          var proxyJsonUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
+          var res3 = await fetch(proxyJsonUrl);
+          if (res3.ok) {
+            var json = await res3.json();
+            headers = headersFromAllOriginsJson(json);
+            if (Object.keys(headers).length > 0) {
+              usedProxy = true;
+            }
+          }
+        } catch (e) {
+          lastErr = e;
+        }
+
+        // Strategy 2: Direct CORS fetch (works for CORS-enabled APIs)
+        if (!headers || Object.keys(headers).length === 0) {
+          try {
+            var res = await fetch(url, { method: 'HEAD', mode: 'cors' });
+            var h = {};
+            res.headers.forEach(function (v, k) { h[k] = v; });
+            if (Object.keys(h).length > 0) {
+              headers = h;
+            }
+          } catch (e) {
+            lastErr = e;
+          }
+        }
+
+        var elapsed = Math.round(performance.now() - startTime);
+
+        if (!headers || Object.keys(headers).length === 0) {
+          showError('Could not fetch headers. The target server may not allow cross-origin requests, and the CORS proxy also failed. Last error: ' + (lastErr && lastErr.message ? lastErr.message : lastErr) + '. Try a different URL or check if the site is reachable.');
+          checkBtn.disabled = false;
+          checkBtn.textContent = 'Check Headers';
+          return;
+        }
+
+        responseTime.textContent = elapsed + 'ms' + (usedProxy ? ' via CORS proxy' : '');
+        renderHeaders(headers);
+        renderScore(headers);
+
+        if (usedProxy) {
+          corsNote.style.display = 'block';
+          corsNote.innerHTML = 'Headers fetched via <strong>api.allorigins.win</strong> CORS proxy. Some headers may be filtered by the proxy and not shown. For complete results, run <code>curl -I ' + escapeHtml(url) + '</code> from a terminal.';
+        }
+
+        checkBtn.disabled = false;
+        checkBtn.textContent = 'Check Headers';
+      }
+
+      checkBtn.addEventListener('click', checkHeaders);
+      urlInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') checkHeaders(); });
+
+      copyBtn.addEventListener('click', function () {
+        var text = '';
+        var keys = Object.keys(lastHeaders).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+        keys.forEach(function (k) { text += k + ': ' + lastHeaders[k] + '\n'; });
+        copyText(text, copyBtn);
+      });
+
+      var samples = ['https://github.com', 'https://cloudflare.com', 'https://www.gov.uk', 'https://securityheaders.com', 'https://mozilla.org'];
+      sampleBtn.addEventListener('click', function () {
+        var pick = samples[Math.floor(Math.random() * samples.length)];
+        urlInput.value = pick;
+        checkHeaders();
+      });
+
+      // Auto-check on first load.
+      setTimeout(checkHeaders, 150);
+    })();
+  </script>
+</body>
+</html>

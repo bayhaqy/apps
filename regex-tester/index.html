@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Regex Tester — test regular expressions in real time with match highlighting, capture groups, and a clickable cheat sheet. Runs entirely in your browser." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Regex Tester — Live Regular Expression Tester" />
+  <meta property="og:description" content="Test regular expressions in real time with match highlighting, capture groups, and a clickable cheat sheet." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/regex-tester/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/regex-tester/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Regex Tester — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    #highlightOutput {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 0.875rem 1rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 8px;
+      min-height: 2.5rem;
+    }
+    #highlightOutput mark {
+      background: #fecaca;
+      color: var(--red-700, #B91C1C);
+      border-radius: 3px;
+      padding: 1px 2px;
+      font-weight: 600;
+    }
+    #highlightOutput:empty::before {
+      content: 'Matches will be highlighted here…';
+      color: var(--ink-mute, #999);
+      font-style: italic;
+    }
+    .flags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .flags-row label {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--ink-soft, #555);
+      user-select: none;
+    }
+    .flags-row label:hover {
+      color: var(--ink, #111);
+    }
+    .flags-row input[type="checkbox"] {
+      accent-color: var(--red-700, #B91C1C);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .cheat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.5rem;
+    }
+    .cheat-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      color: var(--ink, #111);
+      text-align: left;
+    }
+    .cheat-btn:hover {
+      border-color: var(--red-700, #B91C1C);
+      background: #fff5f5;
+    }
+    .cheat-btn .cheat-name {
+      font-weight: 600;
+      color: var(--red-700, #B91C1C);
+    }
+    .cheat-btn .cheat-regex {
+      font-family: 'Inter', monospace;
+      font-size: 0.75rem;
+      color: var(--ink-mute, #999);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .groups-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .groups-table th,
+    .groups-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line, #e0e0e0);
+    }
+    .groups-table th {
+      font-weight: 600;
+      color: var(--ink-soft, #555);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--paper-alt, #f8f8f8);
+    }
+    .groups-table th:first-child { border-radius: 6px 0 0 0; }
+    .groups-table th:last-child  { border-radius: 0 6px 0 0; }
+    .groups-table td.text-mono {
+      font-family: 'Inter', monospace;
+      word-break: break-all;
+    }
+    .error-msg {
+      display: none;
+      padding: 0.625rem 0.875rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+      color: var(--red-700, #B91C1C);
+      font-size: 0.8125rem;
+      font-family: 'Inter', monospace;
+      margin-top: 0.5rem;
+    }
+    .error-msg.visible { display: block; }
+    .match-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.625rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      color: var(--ink-soft, #555);
+    }
+    .stat-chip strong {
+      color: var(--red-700, #B91C1C);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body data-app-name="Regex Tester">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Developer · Text</p>
+      <h1 class="app-title">Regex <span class="accent">Tester</span></h1>
+      <p class="app-subtitle">
+        Test regular expressions in real time with match highlighting, capture groups,
+        and a clickable cheat sheet. Everything runs locally in your browser.
+      </p>
+    </header>
+
+    <!-- Input Card -->
+    <section class="card">
+      <label class="field">
+        <span>Test string</span>
+        <textarea id="testString" rows="6" placeholder="Enter your test string here… e.g. Contact us at hello@bayhaqy.my.id or call +1 (555) 123-4567. Our site is https://bayhaqy.my.id."></textarea>
+      </label>
+
+      <label class="field">
+        <span>Pattern</span>
+        <input type="text" id="pattern" placeholder="e.g. \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b" spellcheck="false" autocapitalize="none" />
+      </label>
+
+      <div class="flags-row">
+        <label><input type="checkbox" id="flagG" /> <code class="text-mono text-sm">g</code> global</label>
+        <label><input type="checkbox" id="flagI" checked /> <code class="text-mono text-sm">i</code> case-insensitive</label>
+        <label><input type="checkbox" id="flagM" /> <code class="text-mono text-sm">m</code> multiline</label>
+        <label><input type="checkbox" id="flagS" /> <code class="text-mono text-sm">s</code> dotall</label>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="btn-row mt-1">
+        <button class="btn btn-ghost" id="copyBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy regex
+        </button>
+        <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+      </div>
+    </section>
+
+    <!-- Results Card -->
+    <section class="card mt-1" id="resultsCard">
+      <h2 class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Results
+      </h2>
+
+      <div class="match-stats mb-1" id="matchStats" style="display:none;"></div>
+
+      <!-- Highlighted text -->
+      <div class="field">
+        <span>Highlighted matches</span>
+        <div id="highlightOutput"></div>
+      </div>
+
+      <!-- Capture groups -->
+      <div id="groupsSection" style="display:none;">
+        <h3 class="card-title mt-1">Capture groups</h3>
+        <div style="overflow-x:auto;">
+          <table class="groups-table" id="groupsTable">
+            <thead>
+              <tr>
+                <th>Match #</th>
+                <th>Group</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody id="groupsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Match positions -->
+      <div id="positionsSection" style="display:none;">
+        <h3 class="card-title mt-1">Match positions</h3>
+        <table class="groups-table" id="positionsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Match</th>
+              <th>Index</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+          <tbody id="positionsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Cheat Sheet Card -->
+    <section class="card mt-1">
+      <h2 class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        Common patterns
+        <span class="text-xs text-mute" style="font-weight:400;margin-left:0.25rem;">click to insert</span>
+      </h2>
+      <div class="cheat-grid" id="cheatGrid"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Regex Tester"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var testString  = $('#testString');
+      var patternInput = $('#pattern');
+      var flagG = $('#flagG');
+      var flagI = $('#flagI');
+      var flagM = $('#flagM');
+      var flagS = $('#flagS');
+      var errorMsg   = $('#errorMsg');
+      var matchStats = $('#matchStats');
+      var highlightOutput = $('#highlightOutput');
+      var groupsSection = $('#groupsSection');
+      var groupsBody    = $('#groupsBody');
+      var positionsSection = $('#positionsSection');
+      var positionsBody    = $('#positionsBody');
+      var copyBtn  = $('#copyBtn');
+      var clearBtn = $('#clearBtn');
+      var cheatGrid = $('#cheatGrid');
+
+      /* ── Cheat sheet data ── */
+      var patterns = [
+        { name: 'Email',     regex: '[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}',                        test: 'hello@bayhaqy.my.id and admin@example.co.uk' },
+        { name: 'URL',       regex: 'https?://[\\w\\-._~:/?#\\[\\]@!$&\'()*+,;=%]+',       test: 'Visit https://bayhaqy.my.id/apps/regex-tester/ for more' },
+        { name: 'Phone',     regex: '\\+?\\d[\\d\\s\\-().]{7,}',                             test: 'Call +1 (555) 123-4567 or 0812-3456-7890' },
+        { name: 'IPv4',      regex: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b',                    test: 'Servers at 192.168.1.1, 10.0.0.255, and 172.16.254.1' },
+        { name: 'Date',      regex: '\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])',       test: 'Events on 2025-01-15, 2024-12-31, and 2023-06-07' },
+        { name: 'Hex color', regex: '#(?:[0-9a-fA-F]{3}){1,2}\\b',                              test: 'Colors: #FF5733, #b91c1c, #fff, #333, #00ff88aa (invalid)' }
+      ];
+
+      /* ── Build cheat sheet buttons ── */
+      patterns.forEach(function (p) {
+        var btn = document.createElement('button');
+        btn.className = 'cheat-btn';
+        btn.type = 'button';
+        btn.innerHTML = '<span class="cheat-name">' + p.name + '</span><span class="cheat-regex">' + escapeHtml(p.regex) + '</span>';
+        btn.addEventListener('click', function () {
+          patternInput.value = p.regex;
+          testString.value = p.test;
+          flagI.checked = true;
+          runMatch();
+          patternInput.focus();
+          showToast(p.name + ' pattern inserted');
+        });
+        cheatGrid.appendChild(btn);
+      });
+
+      /* ── Helpers ── */
+      function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      }
+
+      function buildFlags() {
+        var f = '';
+        if (flagG.checked) f += 'g';
+        if (flagI.checked) f += 'i';
+        if (flagM.checked) f += 'm';
+        if (flagS.checked) f += 's';
+        return f;
+      }
+
+      /* ── Main match logic ── */
+      function runMatch() {
+        // Hide error
+        errorMsg.classList.remove('visible');
+        errorMsg.textContent = '';
+
+        var text = testString.value;
+        var pat  = patternInput.value;
+
+        // Clear results if either is empty
+        if (!pat || !text) {
+          matchStats.style.display = 'none';
+          highlightOutput.innerHTML = '';
+          groupsSection.style.display = 'none';
+          groupsBody.innerHTML = '';
+          positionsSection.style.display = 'none';
+          positionsBody.innerHTML = '';
+          return;
+        }
+
+        var flags = buildFlags();
+        var regex;
+        try {
+          regex = new RegExp(pat, flags);
+        } catch (e) {
+          errorMsg.textContent = e.message;
+          errorMsg.classList.add('visible');
+          matchStats.style.display = 'none';
+          highlightOutput.innerHTML = '';
+          groupsSection.style.display = 'none';
+          positionsSection.style.display = 'none';
+          return;
+        }
+
+        // Collect all matches
+        var matches = [];
+        var m;
+        if (flags.indexOf('g') !== -1) {
+          // Reset lastIndex
+          regex.lastIndex = 0;
+          while ((m = regex.exec(text)) !== null) {
+            matches.push({
+              value: m[0],
+              index: m.index,
+              length: m[0].length,
+              groups: m.slice(1)
+            });
+            if (m[0].length === 0) { regex.lastIndex++; }
+          }
+        } else {
+          m = regex.exec(text);
+          if (m) {
+            matches.push({
+              value: m[0],
+              index: m.index,
+              length: m[0].length,
+              groups: m.slice(1)
+            });
+          }
+        }
+
+        var count = matches.length;
+
+        // Stats
+        if (count > 0) {
+          matchStats.style.display = 'flex';
+          matchStats.innerHTML = '<span class="stat-chip"><strong>' + count + '</strong> match' + (count !== 1 ? 'es' : '') + '</span>';
+          var totalLen = 0;
+          matches.forEach(function (x) { totalLen += x.length; });
+          matchStats.innerHTML += '<span class="stat-chip"><strong>' + totalLen + '</strong> chars matched</span>';
+        } else {
+          matchStats.style.display = 'flex';
+          matchStats.innerHTML = '<span class="stat-chip">No matches found</span>';
+        }
+
+        // Highlighted output
+        if (count > 0) {
+          // Build highlighted text
+          var parts = [];
+          var lastIdx = 0;
+          matches.forEach(function (match) {
+            if (match.index > lastIdx) {
+              parts.push(escapeHtml(text.slice(lastIdx, match.index)));
+            }
+            parts.push('<mark>' + escapeHtml(match.value) + '</mark>');
+            lastIdx = match.index + match.length;
+          });
+          if (lastIdx < text.length) {
+            parts.push(escapeHtml(text.slice(lastIdx)));
+          }
+          highlightOutput.innerHTML = parts.join('');
+        } else {
+          highlightOutput.innerHTML = '<span class="text-mute">' + escapeHtml(text) + '</span>';
+        }
+
+        // Capture groups table
+        var hasGroups = false;
+        var groupsHtml = '';
+        matches.forEach(function (match, mi) {
+          if (match.groups.length > 0) {
+            hasGroups = true;
+            match.groups.forEach(function (g, gi) {
+              groupsHtml += '<tr>' +
+                '<td>' + (mi + 1) + '</td>' +
+                '<td class="text-mono text-sm">$' + (gi + 1) + '</td>' +
+                '<td class="text-mono text-sm">' + escapeHtml(g != null ? g : 'undefined') + '</td>' +
+                '</tr>';
+            });
+          }
+        });
+        if (hasGroups) {
+          groupsSection.style.display = 'block';
+          groupsBody.innerHTML = groupsHtml;
+        } else {
+          groupsSection.style.display = 'none';
+          groupsBody.innerHTML = '';
+        }
+
+        // Match positions table
+        if (count > 0) {
+          positionsSection.style.display = 'block';
+          var posHtml = '';
+          matches.forEach(function (match, i) {
+            posHtml += '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td class="text-mono text-sm">' + escapeHtml(match.value) + '</td>' +
+              '<td class="text-mono text-sm">' + match.index + '</td>' +
+              '<td class="text-mono text-sm">' + match.length + '</td>' +
+              '</tr>';
+          });
+          positionsBody.innerHTML = posHtml;
+        } else {
+          positionsSection.style.display = 'none';
+          positionsBody.innerHTML = '';
+        }
+      }
+
+      /* ── Debounce ── */
+      var debounceTimer = null;
+      function scheduleMatch() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runMatch, 200);
+      }
+
+      /* ── Events ── */
+      testString.addEventListener('input', scheduleMatch);
+      patternInput.addEventListener('input', scheduleMatch);
+      flagG.addEventListener('change', scheduleMatch);
+      flagI.addEventListener('change', scheduleMatch);
+      flagM.addEventListener('change', scheduleMatch);
+      flagS.addEventListener('change', scheduleMatch);
+
+      /* ── Copy regex ── */
+      copyBtn.addEventListener('click', function () {
+        var flags = buildFlags();
+        var full = '/' + patternInput.value + '/' + flags;
+        if (!patternInput.value) { showToast('Enter a pattern first'); return; }
+        copyText(full, copyBtn);
+      });
+
+      /* ── Clear ── */
+      clearBtn.addEventListener('click', function () {
+        testString.value = '';
+        patternInput.value = '';
+        flagG.checked = false;
+        flagI.checked = true;
+        flagM.checked = false;
+        flagS.checked = false;
+        errorMsg.classList.remove('visible');
+        matchStats.style.display = 'none';
+        highlightOutput.innerHTML = '';
+        groupsSection.style.display = 'none';
+        positionsSection.style.display = 'none';
+        testString.focus();
+      });
+
+      /* ── Initial run ── */
+      runMatch();
+    })();
+  </script>
+</body>
+</html>

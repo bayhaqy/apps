@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Color Converter & Palette — convert between HEX, RGB, and HSL. Generate shades and tints, check WCAG contrast ratios, and copy CSS color values. 100% client-side." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Color Converter & Palette — HEX, RGB, HSL, WCAG Contrast" />
+  <meta property="og:description" content="Convert colors between HEX, RGB, HSL. Generate shades & tints, check WCAG accessibility contrast. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/color-converter/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/color-converter/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Color Converter — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    .color-picker-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .color-picker-wrap input[type="color"] {
+      width: 56px;
+      height: 56px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 2px;
+      background: var(--paper);
+      flex-shrink: 0;
+    }
+    .color-picker-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+    .color-picker-wrap input[type="color"]::-webkit-color-swatch { border-radius: 8px; border: none; }
+    .color-picker-wrap input[type="color"]::-moz-color-swatch { border-radius: 8px; border: none; }
+    #colorPreview {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      border: 2px solid var(--line);
+      transition: background-color 0.15s ease;
+    }
+    .format-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .format-row:last-child { margin-bottom: 0; }
+    .format-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      width: 3rem;
+      flex-shrink: 0;
+    }
+    .format-row input[type="text"] {
+      flex: 1;
+      min-width: 0;
+    }
+    .format-row .btn {
+      flex-shrink: 0;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.75rem;
+    }
+    .rgb-group, .hsl-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .rgb-group label.field, .hsl-group label.field {
+      margin-bottom: 0;
+    }
+    .rgb-group label.field span, .hsl-group label.field span {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+    .palette-swatch {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      border: 2px solid var(--line);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      min-height: 48px;
+    }
+    .palette-swatch:hover {
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1;
+    }
+    .palette-swatch .swatch-label {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6rem;
+      color: var(--ink-mute);
+      white-space: nowrap;
+      font-family: 'Inter', monospace;
+    }
+    .palette-section {
+      margin-bottom: 1.75rem;
+    }
+    .contrast-preview {
+      padding: 1rem;
+      border-radius: 10px;
+      border: 2px solid var(--line);
+      margin-top: 0.75rem;
+    }
+    .contrast-preview .preview-normal {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .contrast-preview .preview-large {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .contrast-result {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-right: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .contrast-result .ratio {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--ink);
+    }
+    .recent-grid {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .recent-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid var(--line);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .recent-swatch:hover {
+      transform: scale(1.15);
+    }
+    .empty-recent {
+      color: var(--ink-mute);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body data-app-name="Color Converter">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Design · Developer</p>
+      <h1 class="app-title">Color <span class="accent">Converter</span></h1>
+      <p class="app-subtitle">
+        Convert between HEX, RGB, and HSL. Generate shades &amp; tints,
+        check WCAG contrast ratios, and copy CSS values instantly.
+      </p>
+    </header>
+
+    <!-- Color Picker & Preview -->
+    <section class="card">
+      <div class="flex-between mb-2">
+        <span class="pill">Pick a color</span>
+        <button class="btn btn-ghost" id="randomBtn" type="button" style="padding:0.3rem 0.7rem;font-size:0.8rem;">🎲 Random</button>
+      </div>
+      <div class="color-picker-wrap mb-2">
+        <input type="color" id="colorPicker" value="#B91C1C" />
+        <div style="flex:1;">
+          <label class="field" style="margin-bottom:0;">
+            <span>HEX</span>
+            <input type="text" id="hexInput" value="#B91C1C" maxlength="7" placeholder="#RRGGBB" autocomplete="off" spellcheck="false" autocapitalize="none" data-primary />
+          </label>
+        </div>
+      </div>
+      <div id="colorPreview" style="background-color:#B91C1C;"></div>
+    </section>
+
+    <!-- RGB Inputs -->
+    <section class="card mt-2">
+      <h2 class="card-title">RGB</h2>
+      <div class="rgb-group">
+        <label class="field">
+          <span>R</span>
+          <input type="number" id="rInput" value="185" min="0" max="255" />
+        </label>
+        <label class="field">
+          <span>G</span>
+          <input type="number" id="gInput" value="28" min="0" max="255" />
+        </label>
+        <label class="field">
+          <span>B</span>
+          <input type="number" id="bInput" value="28" min="0" max="255" />
+        </label>
+      </div>
+    </section>
+
+    <!-- HSL Inputs -->
+    <section class="card mt-2">
+      <h2 class="card-title">HSL</h2>
+      <div class="hsl-group">
+        <label class="field">
+          <span>H°</span>
+          <input type="number" id="hInput" value="0" min="0" max="360" />
+        </label>
+        <label class="field">
+          <span>S%</span>
+          <input type="number" id="sInput" value="74" min="0" max="100" />
+        </label>
+        <label class="field">
+          <span>L%</span>
+          <input type="number" id="lInput" value="42" min="0" max="100" />
+        </label>
+      </div>
+    </section>
+
+    <!-- Copy Formats -->
+    <section class="card mt-2">
+      <h2 class="card-title">Copy formats</h2>
+      <div class="format-row">
+        <span class="format-label">HEX</span>
+        <div class="output text-mono" id="outHex" style="flex:1;">#B91C1C</div>
+        <button class="btn btn-ghost" data-copy-target="#outHex" type="button">Copy</button>
+      </div>
+      <div class="format-row">
+        <span class="format-label">RGB</span>
+        <div class="output text-mono" id="outRgb" style="flex:1;">rgb(185, 28, 28)</div>
+        <button class="btn btn-ghost" data-copy-target="#outRgb" type="button">Copy</button>
+      </div>
+      <div class="format-row">
+        <span class="format-label">HSL</span>
+        <div class="output text-mono" id="outHsl" style="flex:1;">hsl(0, 74%, 42%)</div>
+        <button class="btn btn-ghost" data-copy-target="#outHsl" type="button">Copy</button>
+      </div>
+      <div class="format-row">
+        <span class="format-label">CSS</span>
+        <div class="output text-mono" id="outCss" style="flex:1;">color: #B91C1C;</div>
+        <button class="btn btn-ghost" data-copy-target="#outCss" type="button">Copy</button>
+      </div>
+    </section>
+
+    <!-- Palette Generator -->
+    <section class="card mt-2">
+      <h2 class="card-title">Palette</h2>
+      <div class="palette-section">
+        <span class="text-sm" style="font-weight:600;display:block;margin-bottom:0.5rem;">Shades (darker)</span>
+        <div class="palette-grid" id="shadesGrid"></div>
+      </div>
+      <div class="palette-section">
+        <span class="text-sm" style="font-weight:600;display:block;margin-bottom:0.5rem;">Tints (lighter)</span>
+        <div class="palette-grid" id="tintsGrid"></div>
+      </div>
+    </section>
+
+    <!-- WCAG Contrast Checker -->
+    <section class="card mt-2">
+      <h2 class="card-title">WCAG Contrast Checker</h2>
+      <p class="text-sm text-mute mb-2">Enter a foreground (text) color to check contrast against the selected background color.</p>
+      <div class="grid-2 mb-2">
+        <label class="field">
+          <span>Background</span>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <input type="color" id="contrastBgPicker" value="#B91C1C" style="width:40px;height:40px;border:2px solid var(--line);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" />
+            <input type="text" id="contrastBgHex" value="#B91C1C" maxlength="7" placeholder="#RRGGBB" autocomplete="off" spellcheck="false" />
+          </div>
+        </label>
+        <label class="field">
+          <span>Foreground (text)</span>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <input type="color" id="contrastFgPicker" value="#FFFFFF" style="width:40px;height:40px;border:2px solid var(--line);border-radius:8px;cursor:pointer;padding:2px;flex-shrink:0;" />
+            <input type="text" id="contrastFgHex" value="#FFFFFF" maxlength="7" placeholder="#RRGGBB" autocomplete="off" spellcheck="false" />
+          </div>
+        </label>
+      </div>
+      <div id="contrastResults"></div>
+      <div class="contrast-preview" id="contrastPreview">
+        <div class="preview-normal">The quick brown fox jumps over the lazy dog.</div>
+        <div class="preview-large">Large Text Preview (24px+)</div>
+      </div>
+    </section>
+
+    <!-- Recently Used Colors -->
+    <section class="card mt-2">
+      <h2 class="card-title">Recently used</h2>
+      <div class="recent-grid" id="recentGrid">
+        <span class="empty-recent">No colors yet — pick or convert to start.</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Color Converter"></script>
+  <script>
+    (function () {
+      'use strict';
+      var $ = function (s) { return document.querySelector(s); };
+
+      /* ---------- Elements ---------- */
+      var colorPicker   = $('#colorPicker');
+      var hexInput      = $('#hexInput');
+      var colorPreview  = $('#colorPreview');
+      var rInput        = $('#rInput');
+      var gInput        = $('#gInput');
+      var bInput        = $('#bInput');
+      var hInput        = $('#hInput');
+      var sInput        = $('#sInput');
+      var lInput        = $('#lInput');
+      var outHex        = $('#outHex');
+      var outRgb        = $('#outRgb');
+      var outHsl        = $('#outHsl');
+      var outCss        = $('#outCss');
+      var shadesGrid    = $('#shadesGrid');
+      var tintsGrid     = $('#tintsGrid');
+      var contrastBgPicker = $('#contrastBgPicker');
+      var contrastBgHex    = $('#contrastBgHex');
+      var contrastFgPicker = $('#contrastFgPicker');
+      var contrastFgHex    = $('#contrastFgHex');
+      var contrastResults  = $('#contrastResults');
+      var contrastPreview  = $('#contrastPreview');
+      var recentGrid       = $('#recentGrid');
+      var randomBtn        = $('#randomBtn');
+
+      /* ---------- State ---------- */
+      var currentHex = '#B91C1C';
+      var updating = false; // prevent circular updates
+      var recentColors = [];
+      var RECENT_KEY = 'bayhaqy-color-converter-recent';
+      var RECENT_MAX = 8;
+
+      /* ---------- Color conversion helpers ---------- */
+      function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        if (hex.length !== 6) return null;
+        var r = parseInt(hex.substring(0, 2), 16);
+        var g = parseInt(hex.substring(2, 4), 16);
+        var b = parseInt(hex.substring(4, 6), 16);
+        if (isNaN(r) || isNaN(g) || isNaN(b)) return null;
+        return { r: r, g: g, b: b };
+      }
+
+      function rgbToHex(r, g, b) {
+        return '#' + [r, g, b].map(function (c) {
+          return clamp(Math.round(c), 0, 255).toString(16).padStart(2, '0');
+        }).join('').toUpperCase();
+      }
+
+      function rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+        if (max === min) {
+          h = s = 0;
+        } else {
+          var d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+            case g: h = ((b - r) / d + 2) / 6; break;
+            case b: h = ((r - g) / d + 4) / 6; break;
+          }
+        }
+        return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+      }
+
+      function hslToRgb(h, s, l) {
+        h /= 360; s /= 100; l /= 100;
+        var r, g, b;
+        if (s === 0) {
+          r = g = b = l;
+        } else {
+          function hue2rgb(p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+          }
+          var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+          var p = 2 * l - q;
+          r = hue2rgb(p, q, h + 1/3);
+          g = hue2rgb(p, q, h);
+          b = hue2rgb(p, q, h - 1/3);
+        }
+        return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+      }
+
+      /* ---------- Relative luminance (WCAG 2.x) ---------- */
+      function relativeLuminance(r, g, b) {
+        var rs = r / 255, gs = g / 255, bs = b / 255;
+        rs = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.4);
+        gs = gs <= 0.03928 ? gs / 12.92 : Math.pow((gs + 0.055) / 1.055, 2.4);
+        bs = bs <= 0.03928 ? bs / 12.92 : Math.pow((bs + 0.055) / 1.055, 2.4);
+        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+      }
+
+      function contrastRatio(l1, l2) {
+        var lighter = Math.max(l1, l2);
+        var darker = Math.min(l1, l2);
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+
+      /* ---------- Update all from HEX ---------- */
+      function updateFromHex(hex, source) {
+        if (updating) return;
+        updating = true;
+
+        // Normalize hex
+        hex = hex.trim();
+        if (hex[0] !== '#') hex = '#' + hex;
+        if (hex.length === 4) hex = '#' + hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+
+        var rgb = hexToRgb(hex);
+        if (!rgb) { updating = false; return; }
+
+        currentHex = hex.toUpperCase();
+
+        // Update picker
+        if (source !== 'picker') colorPicker.value = currentHex.length === 7 ? currentHex : '#000000';
+
+        // Update hex input
+        if (source !== 'hex') hexInput.value = currentHex;
+
+        // Update RGB
+        if (source !== 'rgb') {
+          rInput.value = rgb.r;
+          gInput.value = rgb.g;
+          bInput.value = rgb.b;
+        }
+
+        // Update HSL
+        var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        if (source !== 'hsl') {
+          hInput.value = hsl.h;
+          sInput.value = hsl.s;
+          lInput.value = hsl.l;
+        }
+
+        // Preview
+        colorPreview.style.backgroundColor = currentHex;
+
+        // Output formats
+        outHex.textContent = currentHex;
+        outRgb.textContent = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+        outHsl.textContent = 'hsl(' + hsl.h + ', ' + hsl.s + '%, ' + hsl.l + '%)';
+        outCss.textContent = 'color: ' + currentHex + ';';
+
+        // Re-wire copy targets (they point to .textContent which we just updated)
+
+        // Palette
+        generatePalette(hsl);
+
+        // Contrast checker background sync
+        if (source !== 'contrastBg') {
+          contrastBgPicker.value = currentHex.length === 7 ? currentHex : '#000000';
+          contrastBgHex.value = currentHex;
+        }
+        updateContrast();
+
+        // Save to recent
+        addToRecent(currentHex);
+
+        updating = false;
+      }
+
+      /* ---------- Palette ---------- */
+      function generatePalette(hsl) {
+        // Shades: reduce lightness (5 steps)
+        var shadesHtml = '';
+        var shadeSteps = [0.75, 0.6, 0.45, 0.3, 0.15];
+        for (var i = 0; i < shadeSteps.length; i++) {
+          var shadeL = Math.round(hsl.l * shadeSteps[i]);
+          var shadeRgb = hslToRgb(hsl.h, hsl.s, shadeL);
+          var shadeHex = rgbToHex(shadeRgb.r, shadeRgb.g, shadeRgb.b);
+          shadesHtml += '<div class="palette-swatch" style="background-color:' + shadeHex + ';" data-hex="' + shadeHex + '" title="' + shadeHex + '"><span class="swatch-label">' + shadeHex + '</span></div>';
+        }
+        shadesGrid.innerHTML = shadesHtml;
+
+        // Tints: increase lightness (5 steps)
+        var tintsHtml = '';
+        var tintSteps = [1.2, 1.4, 1.6, 1.8, 2.0];
+        for (var j = 0; j < tintSteps.length; j++) {
+          var tintL = Math.min(95, Math.round(hsl.l + (100 - hsl.l) * (tintSteps[j] - 1) / 1.0));
+          var tintRgb = hslToRgb(hsl.h, Math.max(0, hsl.s - j * 5), tintL);
+          var tintHex = rgbToHex(tintRgb.r, tintRgb.g, tintRgb.b);
+          tintsHtml += '<div class="palette-swatch" style="background-color:' + tintHex + ';" data-hex="' + tintHex + '" title="' + tintHex + '"><span class="swatch-label">' + tintHex + '</span></div>';
+        }
+        tintsGrid.innerHTML = tintsHtml;
+
+        // Click on palette swatch to use that color
+        document.querySelectorAll('.palette-swatch').forEach(function (sw) {
+          sw.addEventListener('click', function () {
+            var hex = sw.getAttribute('data-hex');
+            updateFromHex(hex, 'palette');
+            window.showToast('Selected ' + hex);
+          });
+        });
+      }
+
+      /* ---------- Contrast checker ---------- */
+      function updateContrast() {
+        var bgHex = contrastBgHex.value.trim();
+        var fgHex = contrastFgHex.value.trim();
+        if (bgHex[0] !== '#') bgHex = '#' + bgHex;
+        if (fgHex[0] !== '#') fgHex = '#' + fgHex;
+
+        var bgRgb = hexToRgb(bgHex);
+        var fgRgb = hexToRgb(fgHex);
+        if (!bgRgb || !fgRgb) {
+          contrastResults.innerHTML = '<span class="text-sm text-mute">Enter valid HEX colors above.</span>';
+          return;
+        }
+
+        var bgLum = relativeLuminance(bgRgb.r, bgRgb.g, bgRgb.b);
+        var fgLum = relativeLuminance(fgRgb.r, fgRgb.g, fgRgb.b);
+        var ratio = contrastRatio(bgLum, fgLum);
+        var ratioStr = ratio.toFixed(2) + ':1';
+
+        var aaNormal = ratio >= 4.5;
+        var aaLarge = ratio >= 3;
+        var aaaNormal = ratio >= 7;
+
+        function badge(pass) {
+          return pass
+            ? '<span class="pill green" style="font-size:0.7rem;">Pass</span>'
+            : '<span class="pill" style="font-size:0.7rem;background:var(--red-700);color:#fff;">Fail</span>';
+        }
+
+        contrastResults.innerHTML =
+          '<div class="contrast-result"><span class="ratio">' + ratioStr + '</span></div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin-top:0.5rem;">' +
+            '<div class="contrast-result"><span class="text-sm text-mute">AA Normal</span> ' + badge(aaNormal) + '</div>' +
+            '<div class="contrast-result"><span class="text-sm text-mute">AA Large</span> ' + badge(aaLarge) + '</div>' +
+            '<div class="contrast-result"><span class="text-sm text-mute">AAA Normal</span> ' + badge(aaaNormal) + '</div>' +
+          '</div>';
+
+        // Visual preview
+        contrastPreview.style.backgroundColor = bgHex;
+        contrastPreview.style.color = fgHex;
+      }
+
+      /* ---------- Recently used colors ---------- */
+      function loadRecent() {
+        try {
+          var stored = localStorage.getItem(RECENT_KEY);
+          if (stored) recentColors = JSON.parse(stored);
+        } catch (e) { recentColors = []; }
+        renderRecent();
+      }
+
+      function saveRecent() {
+        try { localStorage.setItem(RECENT_KEY, JSON.stringify(recentColors)); } catch (e) {}
+      }
+
+      function addToRecent(hex) {
+        hex = hex.toUpperCase();
+        var idx = recentColors.indexOf(hex);
+        if (idx !== -1) recentColors.splice(idx, 1);
+        recentColors.unshift(hex);
+        if (recentColors.length > RECENT_MAX) recentColors.pop();
+        saveRecent();
+        renderRecent();
+      }
+
+      function renderRecent() {
+        if (recentColors.length === 0) {
+          recentGrid.innerHTML = '<span class="empty-recent">No colors yet — pick or convert to start.</span>';
+          return;
+        }
+        var html = '';
+        for (var i = 0; i < recentColors.length; i++) {
+          html += '<div class="recent-swatch" style="background-color:' + recentColors[i] + ';" data-hex="' + recentColors[i] + '" title="' + recentColors[i] + '"></div>';
+        }
+        recentGrid.innerHTML = html;
+        recentGrid.querySelectorAll('.recent-swatch').forEach(function (sw) {
+          sw.addEventListener('click', function () {
+            updateFromHex(sw.getAttribute('data-hex'), 'recent');
+            window.showToast('Selected ' + sw.getAttribute('data-hex'));
+          });
+        });
+      }
+
+      /* ---------- Random color ---------- */
+      function randomHex() {
+        var hex = '#';
+        for (var i = 0; i < 6; i++) {
+          hex += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+        }
+        return hex;
+      }
+
+      /* ---------- Event listeners ---------- */
+
+      // Color picker
+      colorPicker.addEventListener('input', function () {
+        updateFromHex(colorPicker.value, 'picker');
+      });
+
+      // HEX input
+      hexInput.addEventListener('input', function () {
+        var v = hexInput.value.trim();
+        if (v.length >= 4) {
+          updateFromHex(v, 'hex');
+        }
+      });
+
+      // RGB inputs
+      function onRgbInput() {
+        if (updating) return;
+        var r = clamp(parseInt(rInput.value, 10) || 0, 0, 255);
+        var g = clamp(parseInt(gInput.value, 10) || 0, 0, 255);
+        var b = clamp(parseInt(bInput.value, 10) || 0, 0, 255);
+        var hex = rgbToHex(r, g, b);
+        updateFromHex(hex, 'rgb');
+      }
+      rInput.addEventListener('input', onRgbInput);
+      gInput.addEventListener('input', onRgbInput);
+      bInput.addEventListener('input', onRgbInput);
+
+      // HSL inputs
+      function onHslInput() {
+        if (updating) return;
+        var h = clamp(parseInt(hInput.value, 10) || 0, 0, 360);
+        var s = clamp(parseInt(sInput.value, 10) || 0, 0, 100);
+        var l = clamp(parseInt(lInput.value, 10) || 0, 0, 100);
+        var rgb = hslToRgb(h, s, l);
+        var hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+        updateFromHex(hex, 'hsl');
+      }
+      hInput.addEventListener('input', onHslInput);
+      sInput.addEventListener('input', onHslInput);
+      lInput.addEventListener('input', onHslInput);
+
+      // Contrast checker inputs
+      contrastBgPicker.addEventListener('input', function () {
+        contrastBgHex.value = contrastBgPicker.value.toUpperCase();
+        updateContrast();
+      });
+      contrastBgHex.addEventListener('input', function () {
+        var v = contrastBgHex.value.trim();
+        if (v[0] !== '#') v = '#' + v;
+        if (v.length === 7) {
+          var rgb = hexToRgb(v);
+          if (rgb) contrastBgPicker.value = v;
+        }
+        updateContrast();
+      });
+      contrastFgPicker.addEventListener('input', function () {
+        contrastFgHex.value = contrastFgPicker.value.toUpperCase();
+        updateContrast();
+      });
+      contrastFgHex.addEventListener('input', function () {
+        var v = contrastFgHex.value.trim();
+        if (v[0] !== '#') v = '#' + v;
+        if (v.length === 7) {
+          var rgb = hexToRgb(v);
+          if (rgb) contrastFgPicker.value = v;
+        }
+        updateContrast();
+      });
+
+      // Random button
+      randomBtn.addEventListener('click', function () {
+        var hex = randomHex();
+        updateFromHex(hex, 'random');
+        window.showToast('Random color: ' + hex);
+      });
+
+      /* ---------- Init ---------- */
+      loadRecent();
+      updateFromHex('#B91C1C', 'init');
+    })();
+  </script>
+</body>
+</html>

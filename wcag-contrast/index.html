@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="WCAG Contrast Checker — check color contrast ratios for accessibility compliance (WCAG AA/AAA)." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="WCAG Contrast Checker" />
+  <meta property="og:description" content="Check color contrast ratios for accessibility. Test WCAG AA and AAA compliance." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/wcag-contrast/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/wcag-contrast/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>WCAG Contrast Checker — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    .color-input-group { display: flex; align-items: center; gap: 0.75rem; }
+    .color-input-group input[type="color"] { width: 48px; height: 48px; border: 2px solid var(--line); border-radius: var(--radius-sm); padding: 2px; cursor: pointer; background: none; }
+    .color-input-group input[type="text"] { flex: 1; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: var(--fs-base); }
+    .swap-colors { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); cursor: pointer; transition: all .15s var(--ease); }
+    .swap-colors:hover { border-color: var(--red-700); color: var(--red-700); transform: rotate(180deg); }
+    .swap-colors svg { width: 18px; height: 18px; }
+    .ratio-display { text-align: center; padding: 1.5rem; }
+    .ratio-number { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+    .ratio-label { font-size: var(--fs-sm); color: var(--ink-mute); margin-top: 0.3rem; }
+    .grade-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .grade-item { padding: 0.85rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); text-align: center; }
+    .grade-item .label { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mute); margin-bottom: 0.3rem; }
+    .grade-item .value { font-size: var(--fs-md); font-weight: 700; }
+    .grade-item.pass { border-color: #10B981; background: rgba(16,185,129,0.06); }
+    .grade-item.pass .value { color: #047857; }
+    .grade-item.fail { border-color: var(--red-700); background: var(--red-50); }
+    .grade-item.fail .value { color: var(--red-700); }
+    [data-theme="dark"] .grade-item.pass .value { color: #34D399; }
+    .preview-box { padding: 2rem; border-radius: var(--radius); border: 1px solid var(--line); text-align: center; transition: background .2s, color .2s; }
+    .preview-box .sample-normal { font-size: var(--fs-base); margin-bottom: 0.5rem; }
+    .preview-box .sample-large { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .preview-box .sample-small { font-size: var(--fs-sm); color: inherit; opacity: 0.8; }
+  </style>
+</head>
+<body data-app-name="WCAG Contrast Checker">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Design &amp; Accessibility</p>
+      <h1 class="app-title">WCAG <span class="accent">Contrast Checker</span></h1>
+      <p class="app-subtitle">Check color contrast ratios for accessibility compliance. Test against WCAG 2.x AA and AAA standards for normal and large text.</p>
+    </header>
+
+    <section class="card">
+      <div class="grid-2" style="align-items:end;">
+        <label class="field">
+          <span>Foreground (Text)</span>
+          <div class="color-input-group">
+            <input type="color" id="fgColor" value="#111111" />
+            <input type="text" id="fgHex" value="#111111" maxlength="7" placeholder="#000000" />
+          </div>
+        </label>
+        <label class="field">
+          <span>Background</span>
+          <div class="color-input-group">
+            <input type="color" id="bgColor" value="#ffffff" />
+            <input type="text" id="bgHex" value="#ffffff" maxlength="7" placeholder="#ffffff" />
+          </div>
+        </label>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:0.5rem;">
+        <button class="swap-colors" id="swapBtn" type="button" aria-label="Swap colors">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="ratio-display">
+        <div class="ratio-number" id="ratioNum">21:1</div>
+        <div class="ratio-label">Contrast Ratio</div>
+      </div>
+      <div class="grade-grid mt-2">
+        <div class="grade-item pass" id="aaNormal"><div class="label">AA Normal Text</div><div class="value" id="aaNormalVal">Pass</div><div class="text-xs text-mute">4.5:1 required</div></div>
+        <div class="grade-item pass" id="aaLarge"><div class="label">AA Large Text</div><div class="value" id="aaLargeVal">Pass</div><div class="text-xs text-mute">3:1 required</div></div>
+        <div class="grade-item pass" id="aaaNormal"><div class="label">AAA Normal Text</div><div class="value" id="aaaNormalVal">Pass</div><div class="text-xs text-mute">7:1 required</div></div>
+        <div class="grade-item pass" id="aaaLarge"><div class="label">AAA Large Text</div><div class="value" id="aaaLargeVal">Pass</div><div class="text-xs text-mute">4.5:1 required</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Live Preview</h2>
+      <div class="preview-box" id="previewBox" style="background:#ffffff;color:#111111;">
+        <div class="sample-large">Large Text (18pt+)</div>
+        <div class="sample-normal">Normal body text (14pt) — The quick brown fox jumps over the lazy dog.</div>
+        <div class="sample-small">Small text (12pt) — Pack my box with five dozen liquor jugs.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Quick Presets</h2>
+      <div class="btn-row" style="flex-wrap:wrap;">
+        <button class="btn btn-ghost preset-btn" data-fg="#111111" data-bg="#ffffff">B&amp;W</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#1F2937" data-bg="#F9FAFB">Gray</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#FFFFFF" data-bg="#1E293B">Dark Mode</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#1E40AF" data-bg="#EFF6FF">Blue</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#065F46" data-bg="#ECFDF5">Green</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#991B1B" data-bg="#FEF2F2">Red</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#FFFFFF" data-bg="#B91C1C">Brand</button>
+        <button class="btn btn-ghost preset-btn" data-fg="#7C3AED" data-bg="#F5F3FF">Purple</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="WCAG Contrast Checker"></script>
+  <script>
+  (function () {
+    var fgColor = document.getElementById('fgColor');
+    var fgHex = document.getElementById('fgHex');
+    var bgColor = document.getElementById('bgColor');
+    var bgHex = document.getElementById('bgHex');
+    var previewBox = document.getElementById('previewBox');
+
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+      var r = parseInt(hex.substring(0,2), 16);
+      var g = parseInt(hex.substring(2,4), 16);
+      var b = parseInt(hex.substring(4,6), 16);
+      return [r, g, b];
+    }
+
+    function relativeLuminance(rgb) {
+      var srgb = rgb.map(function (c) {
+        c = c / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+    }
+
+    function contrastRatio(l1, l2) {
+      var lighter = Math.max(l1, l2);
+      var darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function update() {
+      var fg = hexToRgb(fgHex.value);
+      var bg = hexToRgb(bgHex.value);
+      var fgLum = relativeLuminance(fg);
+      var bgLum = relativeLuminance(bg);
+      var ratio = contrastRatio(fgLum, bgLum);
+      var ratioStr = ratio.toFixed(2) + ':1';
+
+      document.getElementById('ratioNum').textContent = ratioStr;
+      document.getElementById('ratioNum').style.color = ratio >= 7 ? '#047857' : ratio >= 4.5 ? '#B45309' : 'var(--red-700)';
+
+      function setGrade(id, valId, required) {
+        var el = document.getElementById(id);
+        var valEl = document.getElementById(valId);
+        var pass = ratio >= required;
+        el.className = 'grade-item ' + (pass ? 'pass' : 'fail');
+        valEl.textContent = pass ? 'Pass' : 'Fail';
+      }
+
+      setGrade('aaNormal', 'aaNormalVal', 4.5);
+      setGrade('aaLarge', 'aaLargeVal', 3);
+      setGrade('aaaNormal', 'aaaNormalVal', 7);
+      setGrade('aaaLarge', 'aaaLargeVal', 4.5);
+
+      previewBox.style.background = bgHex.value;
+      previewBox.style.color = fgHex.value;
+    }
+
+    fgColor.addEventListener('input', function () { fgHex.value = fgColor.value; update(); });
+    bgColor.addEventListener('input', function () { bgHex.value = bgColor.value; update(); });
+    fgHex.addEventListener('input', function () {
+ if (/^#[0-9a-fA-F]{6}$/.test(fgHex.value)) { fgColor.value = fgHex.value; update(); }
+    });
+    bgHex.addEventListener('input', function () {
+      if (/^#[0-9a-fA-F]{6}$/.test(bgHex.value)) { bgColor.value = bgHex.value; update(); }
+    });
+
+    document.getElementById('swapBtn').addEventListener('click', function () {
+      var tmpFg = fgHex.value;
+      fgHex.value = bgHex.value; fgColor.value = bgHex.value;
+      bgHex.value = tmpFg; bgColor.value = tmpFg;
+      update();
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        fgHex.value = btn.getAttribute('data-fg'); fgColor.value = btn.getAttribute('data-fg');
+        bgHex.value = btn.getAttribute('data-bg'); bgColor.value = btn.getAttribute('data-bg');
+        update();
+      });
+    });
+
+    update();
+  })();
+  </script>
+</body>
+</html>

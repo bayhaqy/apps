@@ -7,7 +7,8 @@
   <url><loc>https://bayhaqy.my.id/apps/whois-lookup/</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/ip-finder/</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/subnet-calc/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/url-parser/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/url-parser/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/http-headers/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Security & Crypto -->
   <url><loc>https://bayhaqy.my.id/apps/hash-generator/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/jwt-decoder/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -16,8 +17,10 @@
   <url><loc>https://bayhaqy.my.id/apps/password-vault/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/text-encryptor/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- DevOps & SysAdmin -->
-  <url><loc>https://bayhaqy.my.id/apps/base64-hex/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/timestamp-converter/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/base64-hex/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/timestamp-converter/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/cron-builder/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/number-base/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Files & Documents -->
   <url><loc>https://bayhaqy.my.id/apps/baymerge/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/pdf-anonymizer/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -43,10 +46,17 @@
   <url><loc>https://bayhaqy.my.id/apps/instrument-tuner/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/metronome/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Dev & Design -->
-  <url><loc>https://bayhaqy.my.id/apps/code-formatter/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/text-diff/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/css-playground/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bayhaqy.my.id/apps/qr-studio/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/code-formatter/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/text-diff/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/css-playground/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/qr-studio/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/regex-tester/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/json-formatter/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/markdown-preview/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/case-converter/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/lorem-ipsum/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/color-converter/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bayhaqy.my.id/apps/wcag-contrast/</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Time & Productivity -->
   <url><loc>https://bayhaqy.my.id/apps/timezone-slider/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bayhaqy.my.id/apps/date-calculator/</loc><lastmod>2026-08-10</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JSON Formatter & Validator — beautify, minify, validate, sort keys, and explore JSON with a collapsible tree view. 100% client-side, runs in your browser." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="JSON Formatter & Validator — Bayhaqy Apps" />
+  <meta property="og:description" content="Beautify, minify, validate, sort keys, and explore JSON with a collapsible tree view. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/json-formatter/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/json-formatter/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>JSON Formatter — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    /* ── Textarea ── */
+    #jsonInput {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 180px;
+    }
+
+    /* ── Output area ── */
+    .json-output {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8125rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 1rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 8px;
+      min-height: 120px;
+      max-height: 520px;
+      overflow: auto;
+    }
+    .json-output:empty::before {
+      content: 'Formatted output will appear here\2026';
+      color: var(--ink-mute, #999);
+      font-style: italic;
+    }
+
+    /* ── Syntax colors ── */
+    .syn-key { color: var(--red-700, #B91C1C); font-weight: 600; }
+    .syn-str { color: #16a34a; }
+    .syn-num { color: #d97706; }
+    .syn-bool { color: #2563eb; font-weight: 600; }
+    .syn-null { color: #2563eb; font-style: italic; }
+    .syn-brace { color: var(--ink-mute, #999); }
+
+    /* ── Status bar ── */
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: var(--ink-soft, #555);
+    }
+    .status-bar.error {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: var(--red-700, #B91C1C);
+    }
+    .status-bar.valid {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      background: var(--paper, #fff);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--ink-soft, #555);
+    }
+    .stat-chip strong {
+      color: var(--red-700, #B91C1C);
+      font-weight: 700;
+    }
+
+    /* ── View toggle ── */
+    .view-toggle {
+      display: inline-flex;
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .view-toggle button {
+      padding: 0.375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border: none;
+      background: var(--paper, #fff);
+      color: var(--ink-soft, #555);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .view-toggle button + button {
+      border-left: 1px solid var(--line, #e0e0e0);
+    }
+    .view-toggle button.active {
+      background: var(--red-700, #B91C1C);
+      color: #fff;
+    }
+    .view-toggle button:hover:not(.active) {
+      background: var(--paper-alt, #f8f8f8);
+    }
+
+    /* ── Tree view ── */
+    .tree-container {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      padding: 0.75rem;
+      background: var(--paper-alt, #f8f8f8);
+      border: 1px solid var(--line, #e0e0e0);
+      border-radius: 8px;
+      max-height: 520px;
+      overflow: auto;
+    }
+    .tree-node {
+      position: relative;
+    }
+    .tree-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.375rem;
+      padding: 2px 0;
+      border-radius: 4px;
+      cursor: default;
+    }
+    .tree-row:hover {
+      background: rgba(185, 28, 28, 0.04);
+    }
+    .tree-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 18px;
+      flex-shrink: 0;
+      cursor: pointer;
+      color: var(--ink-mute, #999);
+      font-size: 0.7rem;
+      user-select: none;
+      margin-top: 1px;
+      transition: transform 0.15s;
+    }
+    .tree-toggle.collapsed {
+      transform: rotate(-90deg);
+    }
+    .tree-toggle.leaf {
+      visibility: hidden;
+    }
+    .tree-key {
+      color: var(--red-700, #B91C1C);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .tree-colon {
+      color: var(--ink-mute, #999);
+      margin-right: 0.25rem;
+    }
+    .tree-value {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 320px;
+    }
+    .tree-value.v-string { color: #16a34a; }
+    .tree-value.v-number { color: #d97706; }
+    .tree-value.v-bool { color: #2563eb; font-weight: 600; }
+    .tree-value.v-null { color: #2563eb; font-style: italic; }
+    .tree-value.v-preview { color: var(--ink-mute, #999); font-style: italic; }
+    .tree-type-badge {
+      display: inline-block;
+      padding: 0 0.375rem;
+      font-size: 0.625rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      margin-left: 0.375rem;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .tree-type-badge.t-object { background: #fef3c7; color: #92400e; }
+    .tree-type-badge.t-array { background: #dbeafe; color: #1e40af; }
+    .tree-copy-path {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: var(--ink-mute, #999);
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s, color 0.15s;
+      margin-top: 1px;
+    }
+    .tree-row:hover .tree-copy-path {
+      opacity: 1;
+    }
+    .tree-copy-path:hover {
+      background: var(--red-700, #B91C1C);
+      color: #fff;
+    }
+    .tree-children {
+      padding-left: 1.25rem;
+      border-left: 1px solid var(--line, #e0e0e0);
+      margin-left: 7px;
+    }
+    .tree-children.collapsed {
+      display: none;
+    }
+
+    /* ── Error detail ── */
+    .error-detail {
+      padding: 0.75rem 1rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: var(--red-700, #B91C1C);
+      font-size: 0.8125rem;
+      font-family: 'Courier New', Courier, monospace;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body data-app-name="JSON Formatter">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Developer · Utilities</p>
+      <h1 class="app-title">JSON <span class="accent">Formatter</span></h1>
+      <p class="app-subtitle">
+        Beautify, minify, validate, sort keys, and explore JSON with a collapsible
+        tree view. Everything runs locally in your browser.
+      </p>
+    </header>
+
+    <!-- Input Card -->
+    <section class="card">
+      <div class="flex flex-between mb-1">
+        <h2 class="card-title" style="margin:0;">Input</h2>
+        <button class="btn btn-ghost" id="sampleBtn" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Load sample
+        </button>
+      </div>
+      <label class="field">
+        <span>Paste your JSON here</span>
+        <textarea id="jsonInput" rows="10" placeholder='{"name":"John","age":30,"active":true}' spellcheck="false"></textarea>
+      </label>
+      <div class="btn-row mt-1">
+        <button class="btn btn-primary" id="beautifyBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Beautify
+        </button>
+        <button class="btn btn-ghost" id="minifyBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Minify
+        </button>
+        <button class="btn btn-ghost" id="validateBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Validate
+        </button>
+        <button class="btn btn-ghost" id="sortKeysBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          Sort Keys
+        </button>
+      </div>
+    </section>
+
+    <!-- Status Bar -->
+    <section class="card mt-1" id="statusCard" style="padding:0.5rem 1rem;display:none;">
+      <div class="status-bar" id="statusBar"></div>
+    </section>
+
+    <!-- Error Card -->
+    <section class="card mt-1" id="errorCard" style="display:none;">
+      <h2 class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Error
+      </h2>
+      <div class="error-detail" id="errorDetail"></div>
+    </section>
+
+    <!-- Output Card -->
+    <section class="card mt-1" id="outputCard" style="display:none;">
+      <div class="flex flex-between mb-1">
+        <h2 class="card-title" style="margin:0;">Output</h2>
+        <div class="view-toggle" id="viewToggle">
+          <button type="button" class="active" data-view="formatted">Formatted</button>
+          <button type="button" data-view="tree">Tree View</button>
+        </div>
+      </div>
+
+      <div class="btn-row mb-1">
+        <button class="btn btn-ghost" id="copyBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Output
+        </button>
+        <button class="btn btn-ghost" id="downloadBtn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+      </div>
+
+      <!-- Formatted view -->
+      <div id="formattedView" class="json-output"></div>
+
+      <!-- Tree view -->
+      <div id="treeView" class="tree-container hidden"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="JSON Formatter"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var jsonInput     = $('#jsonInput');
+      var beautifyBtn   = $('#beautifyBtn');
+      var minifyBtn     = $('#minifyBtn');
+      var validateBtn   = $('#validateBtn');
+      var sortKeysBtn   = $('#sortKeysBtn');
+      var sampleBtn     = $('#sampleBtn');
+      var copyBtn       = $('#copyBtn');
+      var downloadBtn   = $('#downloadBtn');
+      var statusCard    = $('#statusCard');
+      var statusBar     = $('#statusBar');
+      var errorCard     = $('#errorCard');
+      var errorDetail   = $('#errorDetail');
+      var outputCard    = $('#outputCard');
+      var formattedView = $('#formattedView');
+      var treeView      = $('#treeView');
+      var viewToggle    = $('#viewToggle');
+
+      var currentParsed = null;
+      var currentOutput = '';
+      var currentView   = 'formatted';
+
+      /* ── Sample JSON ── */
+      var sampleJSON = {
+        "store": {
+          "name": "Bayhaqy Tech Store",
+          "location": { "city": "Jakarta", "country": "Indonesia", "zip": "12345" },
+          "active": true,
+          "rating": 4.8,
+          "book": [
+            {
+              "category": "reference",
+              "author": "Nigel Rees",
+              "title": "Sayings of the Century",
+              "price": 8.95
+            },
+            {
+              "category": "fiction",
+              "author": "Evelyn Waugh",
+              "title": "Sword of Honour",
+              "price": 12.99
+            },
+            {
+              "category": "fiction",
+              "author": "Herman Melville",
+              "title": "Moby Dick",
+              "isbn": "0-553-21311-3",
+              "price": 8.99
+            },
+            {
+              "category": "fiction",
+              "author": "J. R. R. Tolkien",
+              "title": "The Lord of the Rings",
+              "isbn": "0-395-19395-8",
+              "price": 22.99
+            }
+          ],
+          "bicycle": { "color": "red", "price": 19.95 }
+        },
+        "expensive": 10,
+        "tags": ["tech", "books", "indonesia", "e-commerce"],
+        "metadata": null
+      };
+
+      /* ── Helpers ── */
+      function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
+        });
+      }
+
+      function formatBytes(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(2) + ' MB';
+      }
+
+      function countKeys(obj) {
+        var count = 0;
+        if (obj && typeof obj === 'object') {
+          var keys = Array.isArray(obj) ? obj : Object.values(obj);
+          for (var i = 0; i < keys.length; i++) {
+            if (typeof keys[i] === 'object' && keys[i] !== null) {
+              count += countKeys(keys[i]);
+            }
+          }
+          if (!Array.isArray(obj)) {
+            count += Object.keys(obj).length;
+          }
+        }
+        return count;
+      }
+
+      function getDepth(obj) {
+        if (obj && typeof obj === 'object') {
+          var vals = Array.isArray(obj) ? obj : Object.values(obj);
+          var max = 0;
+          for (var i = 0; i < vals.length; i++) {
+            if (typeof vals[i] === 'object' && vals[i] !== null) {
+              var d = getDepth(vals[i]);
+              if (d > max) max = d;
+            }
+          }
+          return max + 1;
+        }
+        return 0;
+      }
+
+      function sortObjectKeys(obj) {
+        if (Array.isArray(obj)) {
+          return obj.map(sortObjectKeys);
+        }
+        if (obj !== null && typeof obj === 'object') {
+          var sorted = {};
+          Object.keys(obj).sort().forEach(function (k) {
+            sorted[k] = sortObjectKeys(obj[k]);
+          });
+          return sorted;
+        }
+        return obj;
+      }
+
+      /* ── Syntax highlighting ── */
+      function highlightJSON(jsonStr) {
+        return jsonStr.replace(/("(?:\\.|[^"\\])*")\s*:/g, '<span class="syn-key">$1</span>:')
+                      .replace(/:(\s*("(?:\\.|[^"\\])*"))/g, ':<span class="syn-str">$1</span>')
+                      .replace(/:\s*(\d+\.?\d*([eE][+-]?\d+)?)/g, ': <span class="syn-num">$1</span>')
+                      .replace(/:\s*(true|false)/g, ': <span class="syn-bool">$1</span>')
+                      .replace(/:\s*(null)/g, ': <span class="syn-null">$1</span>')
+                      .replace(/([\[\]{}])/g, '<span class="syn-brace">$1</span>');
+      }
+
+      /* ── JSON Path builder ── */
+      function buildPath(segments) {
+        var path = '$';
+        for (var i = 0; i < segments.length; i++) {
+          var seg = segments[i];
+          if (seg.type === 'object') {
+            path += '.' + seg.key;
+          } else if (seg.type === 'array') {
+            path += '[' + seg.index + ']';
+          }
+        }
+        return path;
+      }
+
+      /* ── Tree view builder ── */
+      function buildTree(data, pathSegments, isLast) {
+        var frag = document.createDocumentFragment();
+        var node = document.createElement('div');
+        node.className = 'tree-node';
+
+        var row = document.createElement('div');
+        row.className = 'tree-row';
+
+        var type = Array.isArray(data) ? 'array' : (data !== null && typeof data === 'object' ? 'object' : typeof data);
+        var isContainer = (type === 'object' || type === 'array');
+        var keyLabel = '';
+        if (pathSegments.length > 0) {
+          var last = pathSegments[pathSegments.length - 1];
+          if (last.type === 'object') {
+            keyLabel = '<span class="tree-key">' + escapeHtml(last.key) + '</span><span class="tree-colon">:</span> ';
+          } else if (last.type === 'array') {
+            keyLabel = '<span class="tree-key">[' + last.index + ']</span><span class="tree-colon">:</span> ';
+          }
+        }
+
+        var valuePreview = '';
+        var badgeHtml = '';
+        if (type === 'object') {
+          var keys = Object.keys(data);
+          badgeHtml = '<span class="tree-type-badge t-object">{' + keys.length + '}</span>';
+          valuePreview = '<span class="tree-value v-preview">Object</span>';
+        } else if (type === 'array') {
+          badgeHtml = '<span class="tree-type-badge t-array">[' + data.length + ']</span>';
+          valuePreview = '<span class="tree-value v-preview">Array(' + data.length + ')</span>';
+        } else if (type === 'string') {
+          var displayStr = data.length > 60 ? data.slice(0, 60) + '\u2026' : data;
+          valuePreview = '<span class="tree-value v-string">"' + escapeHtml(displayStr) + '"</span>';
+        } else if (type === 'number') {
+          valuePreview = '<span class="tree-value v-number">' + data + '</span>';
+        } else if (type === 'boolean') {
+          valuePreview = '<span class="tree-value v-bool">' + data + '</span>';
+        } else if (type === 'null') {
+          valuePreview = '<span class="tree-value v-null">null</span>';
+        }
+
+        /* Toggle arrow */
+        var toggle = document.createElement('span');
+        toggle.className = 'tree-toggle' + (isContainer ? '' : ' leaf');
+        toggle.textContent = '\u25BC';
+        row.appendChild(toggle);
+
+        /* Key + value */
+        var labelSpan = document.createElement('span');
+        labelSpan.innerHTML = keyLabel + valuePreview + badgeHtml;
+        row.appendChild(labelSpan);
+
+        /* Copy path button */
+        var path = buildPath(pathSegments);
+        var copyPathBtn = document.createElement('button');
+        copyPathBtn.className = 'tree-copy-path';
+        copyPathBtn.type = 'button';
+        copyPathBtn.title = 'Copy JSON path: ' + path;
+        copyPathBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        (function(p) {
+          copyPathBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            copyText(p, copyPathBtn);
+          });
+        })(path);
+        row.appendChild(copyPathBtn);
+
+        node.appendChild(row);
+
+        /* Children */
+        if (isContainer) {
+          var childrenDiv = document.createElement('div');
+          childrenDiv.className = 'tree-children';
+
+          var entries;
+          if (type === 'object') {
+            entries = Object.keys(data).map(function (k) { return { type: 'object', key: k, value: data[k] }; });
+          } else {
+            entries = data.map(function (v, i) { return { type: 'array', index: i, value: v }; });
+          }
+
+          entries.forEach(function (entry, idx) {
+            var childPath = pathSegments.slice();
+            if (entry.type === 'object') {
+              childPath.push({ type: 'object', key: entry.key });
+            } else {
+              childPath.push({ type: 'array', index: entry.index });
+            }
+            var childTree = buildTree(entry.value, childPath, idx === entries.length - 1);
+            childrenDiv.appendChild(childTree);
+          });
+
+          node.appendChild(childrenDiv);
+
+          /* Toggle click */
+          toggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isCollapsed = childrenDiv.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed', isCollapsed);
+          });
+
+          /* Row click also toggles */
+          row.addEventListener('click', function () {
+            var isCollapsed = childrenDiv.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed', isCollapsed);
+          });
+        }
+
+        frag.appendChild(node);
+        return frag;
+      }
+
+      /* ── Parse + process ── */
+      function parseJSON(str) {
+        try {
+          var parsed = JSON.parse(str);
+          return { ok: true, data: parsed };
+        } catch (e) {
+          return { ok: false, error: e };
+        }
+      }
+
+      function getErrorPosition(str, errorMsg) {
+        var posMatch = errorMsg.match(/position\s+(\d+)/i);
+        var colMatch = errorMsg.match(/column\s+(\d+)/i);
+        var lineMatch = errorMsg.match(/line\s+(\d+)/i);
+        var pos = posMatch ? parseInt(posMatch[1], 10) : -1;
+
+        if (pos >= 0 && pos < str.length) {
+          var before = str.slice(0, pos);
+          var lines = before.split('\n');
+          var line = lines.length;
+          var col = lines[lines.length - 1].length + 1;
+          return { line: line, col: col, pos: pos };
+        }
+
+        if (lineMatch || colMatch) {
+          return {
+            line: lineMatch ? parseInt(lineMatch[1], 10) : '?',
+            col: colMatch ? parseInt(colMatch[1], 10) : '?',
+            pos: -1
+          };
+        }
+
+        return { line: '?', col: '?', pos: -1 };
+      }
+
+      function showError(error) {
+        var pos = getErrorPosition(jsonInput.value, error.message);
+        errorCard.style.display = '';
+        errorDetail.innerHTML = escapeHtml(error.message) +
+          '<br><span style="color:#6b7280;">Line ' + pos.line + ', Column ' + pos.col + '</span>';
+        if (pos.pos >= 0) {
+          var snippet = jsonInput.value.slice(Math.max(0, pos.pos - 20), pos.pos + 20);
+          errorDetail.innerHTML += '<br><span style="color:#6b7280;">\u2026' + escapeHtml(snippet) + '\u2026</span>';
+        }
+        statusCard.style.display = 'none';
+        outputCard.style.display = 'none';
+      }
+
+      function updateStatus(data, inputStr) {
+        statusCard.style.display = '';
+        errorCard.style.display = 'none';
+        statusBar.className = 'status-bar valid';
+
+        var bytes = new Blob([inputStr]).size;
+        var keys = countKeys(data);
+        var depth = getDepth(data);
+
+        var html = '<span style="font-weight:600;">\u2714 Valid JSON</span>';
+        html += '<span class="stat-chip"><strong>' + formatBytes(bytes) + '</strong></span>';
+        html += '<span class="stat-chip"><strong>' + keys + '</strong> keys</span>';
+        html += '<span class="stat-chip"><strong>' + depth + '</strong> deep</span>';
+
+        if (Array.isArray(data)) {
+          html += '<span class="stat-chip"><strong>' + data.length + '</strong> items (root array)</span>';
+        } else if (data !== null && typeof data === 'object') {
+          var rootKeys = Object.keys(data);
+          html += '<span class="stat-chip"><strong>' + rootKeys.length + '</strong> root keys</span>';
+        }
+
+        statusBar.innerHTML = html;
+      }
+
+      function showOutput(formatted) {
+        outputCard.style.display = '';
+        currentOutput = formatted;
+        formattedView.innerHTML = highlightJSON(escapeHtml(formatted));
+        renderTree(currentParsed);
+      }
+
+      function renderTree(data) {
+        treeView.innerHTML = '';
+        var tree = buildTree(data, [], true);
+        treeView.appendChild(tree);
+      }
+
+      /* ── Actions ── */
+      function doBeautify() {
+        var raw = jsonInput.value.trim();
+        if (!raw) { showToast('Paste some JSON first'); return; }
+        var result = parseJSON(raw);
+        if (!result.ok) { showError(result.error); return; }
+        currentParsed = result.data;
+        var formatted = JSON.stringify(result.data, null, 2);
+        updateStatus(result.data, formatted);
+        showOutput(formatted);
+        showToast('JSON beautified');
+      }
+
+      function doMinify() {
+        var raw = jsonInput.value.trim();
+        if (!raw) { showToast('Paste some JSON first'); return; }
+        var result = parseJSON(raw);
+        if (!result.ok) { showError(result.error); return; }
+        currentParsed = result.data;
+        var minified = JSON.stringify(result.data);
+        updateStatus(result.data, minified);
+        showOutput(minified);
+        showToast('JSON minified — ' + formatBytes(new Blob([minified]).size));
+      }
+
+      function doValidate() {
+        var raw = jsonInput.value.trim();
+        if (!raw) { showToast('Paste some JSON first'); return; }
+        var result = parseJSON(raw);
+        if (!result.ok) { showError(result.error); return; }
+        currentParsed = result.data;
+        updateStatus(result.data, raw);
+        outputCard.style.display = 'none';
+        showToast('JSON is valid');
+      }
+
+      function doSortKeys() {
+        var raw = jsonInput.value.trim();
+        if (!raw) { showToast('Paste some JSON first'); return; }
+        var result = parseJSON(raw);
+        if (!result.ok) { showError(result.error); return; }
+        currentParsed = sortObjectKeys(result.data);
+        var formatted = JSON.stringify(currentParsed, null, 2);
+        updateStatus(currentParsed, formatted);
+        showOutput(formatted);
+        showToast('Keys sorted alphabetically');
+      }
+
+      /* ── View toggle ── */
+      var toggleBtns = viewToggle.querySelectorAll('button');
+      toggleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          toggleBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          var view = btn.getAttribute('data-view');
+          currentView = view;
+          if (view === 'formatted') {
+            formattedView.classList.remove('hidden');
+            treeView.classList.add('hidden');
+          } else {
+            formattedView.classList.add('hidden');
+            treeView.classList.remove('hidden');
+          }
+        });
+      });
+
+      /* ── Event listeners ── */
+      beautifyBtn.addEventListener('click', doBeautify);
+      minifyBtn.addEventListener('click', doMinify);
+      validateBtn.addEventListener('click', doValidate);
+      sortKeysBtn.addEventListener('click', doSortKeys);
+
+      sampleBtn.addEventListener('click', function () {
+        jsonInput.value = JSON.stringify(sampleJSON, null, 2);
+        doBeautify();
+        showToast('Sample JSON loaded');
+      });
+
+      copyBtn.addEventListener('click', function () {
+        if (!currentOutput) { showToast('Nothing to copy'); return; }
+        copyText(currentOutput, copyBtn);
+      });
+
+      downloadBtn.addEventListener('click', function () {
+        if (!currentOutput) { showToast('Nothing to download'); return; }
+        downloadText('formatted.json', currentOutput);
+      });
+
+      /* ── Drag & drop ── */
+      jsonInput.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        jsonInput.style.borderColor = 'var(--red-700, #B91C1C)';
+      });
+      jsonInput.addEventListener('dragleave', function () {
+        jsonInput.style.borderColor = '';
+      });
+      jsonInput.addEventListener('drop', function (e) {
+        e.preventDefault();
+        jsonInput.style.borderColor = '';
+        var file = e.dataTransfer.files[0];
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function (ev) {
+            jsonInput.value = ev.target.result;
+            doBeautify();
+            showToast('File loaded: ' + file.name);
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      /* ── Paste auto-detect ── */
+      jsonInput.addEventListener('paste', function () {
+        setTimeout(function () {
+          var raw = jsonInput.value.trim();
+          if (raw && (raw[0] === '{' || raw[0] === '[')) {
+            doBeautify();
+          }
+        }, 50);
+      });
+    })();
+  </script>
+</body>
+</html>

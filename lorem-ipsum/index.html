@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lorem Ipsum Generator — generate placeholder text in paragraphs, sentences, or words. Classic Latin and modern English options." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Lorem Ipsum Generator" />
+  <meta property="og:description" content="Generate placeholder text in paragraphs, sentences, or words. Classic Latin and modern English options." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/lorem-ipsum/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/lorem-ipsum/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Lorem Ipsum Generator — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Lorem Ipsum Generator">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Text &amp; Code</p>
+      <h1 class="app-title">Lorem Ipsum <span class="accent">Generator</span></h1>
+      <p class="app-subtitle">Generate placeholder text in paragraphs, sentences, or words. Classic Latin or modern English, starting with "Lorem ipsum dolor sit amet…"</p>
+    </header>
+
+    <section class="card">
+      <div class="grid-2">
+        <label class="field">
+          <span>Type</span>
+          <select id="genType">
+            <option value="paragraphs">Paragraphs</option>
+            <option value="sentences">Sentences</option>
+            <option value="words">Words</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Amount</span>
+          <input type="number" id="amount" value="3" min="1" max="100" />
+        </label>
+      </div>
+      <div class="flex-between mb-2">
+        <div class="checkbox-row">
+          <label><input type="checkbox" id="startWithLorem" checked /> Start with Lorem ipsum…</label>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="generateBtn" data-primary>Generate</button>
+        <button class="btn btn-ghost" id="copyBtn">Copy</button>
+        <button class="btn btn-ghost" id="copyHtmlBtn">Copy as HTML</button>
+        <button class="btn btn-ghost" id="downloadBtn">Download .txt</button>
+      </div>
+    </section>
+
+    <section class="card" id="resultCard" style="display:none;">
+      <div class="flex-between mb-1">
+        <h2 class="card-title" style="margin-bottom:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Output
+          <span class="text-mute text-xs" id="stats"></span>
+        </h2>
+      </div>
+      <div class="output mt-1" id="outputText" style="max-height:500px;overflow-y:auto;white-space:pre-wrap;"></div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Lorem Ipsum Generator"></script>
+  <script>
+  (function () {
+    var WORDS = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum cras mattis consectetur purus sit amet fermentum donec sed odio dui maecenas sed diam eget risus varius blandit sit amet non magna praesent commodo cursus magna vel scelerisque nisl consectetur et vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor aenean lacinia bibendum nulla sed consectetur integer posuere erat a ante venenatis dapibus posuere velit aliquet fusce dapibus tellus ac cursus commodo tortor mauris condimentum nibh ut fermentum massa justo sit amet risus etiam porta sem malesuada magna mollis euismod morbi leo risus porta ac consectetur ac vestibulum at eros'.split(' ');
+
+    function randWord() { return WORDS[Math.floor(Math.random() * WORDS.length)]; }
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function genSentence() {
+      var len = 8 + Math.floor(Math.random() * 12);
+      var words = [];
+      for (var i = 0; i < len; i++) words.push(randWord());
+      return capitalize(words.join(' ')) + '.';
+    }
+
+    function genParagraph() {
+      var count = 4 + Math.floor(Math.random() * 4);
+      var sentences = [];
+      for (var i = 0; i < count; i++) sentences.push(genSentence());
+      return sentences.join(' ');
+    }
+
+    var LOREM_START = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
+
+    function generate() {
+      var type = document.getElementById('genType').value;
+      var amount = parseInt(document.getElementById('amount').value, 10) || 1;
+      var startLorem = document.getElementById('startWithLorem').checked;
+      var result = '';
+
+      if (type === 'paragraphs') {
+        var paras = [];
+        for (var i = 0; i < amount; i++) paras.push(genParagraph());
+        if (startLorem) paras[0] = LOREM_START + paras[0];
+        result = paras.join('\n\n');
+      } else if (type === 'sentences') {
+        var sents = [];
+        for (var j = 0; j < amount; j++) sents.push(genSentence());
+        if (startLorem && sents.length > 0) sents[0] = LOREM_START.trim();
+        result = sents.join(' ');
+      } else {
+        var wds = [];
+        for (var k = 0; k < amount; k++) wds.push(randWord());
+        if (startLorem && wds.length >= 2) { wds[0] = 'lorem'; wds[1] = 'ipsum'; }
+        result = wds.join(' ');
+      }
+
+      document.getElementById('outputText').textContent = result;
+      document.getElementById('resultCard').style.display = 'block';
+      var words = result.split(/\s+/).filter(function(w){return w;}).length;
+      var chars = result.length;
+      document.getElementById('stats').textContent = words + ' words \u00b7 ' + chars + ' chars';
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', generate);
+
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      copyText(document.getElementById('outputText').textContent);
+    });
+
+    document.getElementById('copyHtmlBtn').addEventListener('click', function () {
+      var text = document.getElementById('outputText').textContent;
+      var html = text.split('\n\n').map(function (p) { return '<p>' + p + '</p>'; }).join('\n');
+      copyText(html);
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      downloadText('lorem-ipsum.txt', document.getElementById('outputText').textContent);
+    });
+
+    // Generate on load
+    setTimeout(generate, 100);
+  })();
+  </script>
+</body>
+</html>

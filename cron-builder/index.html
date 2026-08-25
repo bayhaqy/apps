@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Cron Expression Builder & Parser — visually build cron expressions with presets or paste any cron to get a human-readable explanation and next 10 execution times." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Cron Expression Builder & Parser" />
+  <meta property="og:description" content="Visually build cron expressions with dropdowns or paste any cron to get human-readable explanations and next execution times." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/cron-builder/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/cron-builder/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Cron Builder — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    .tabs{display:flex;gap:.25rem;padding:.25rem;background:var(--paper-alt,#f5f5f5);border-radius:8px;border:1px solid var(--line,#e0e0e0)}
+    .tab-btn{flex:1;padding:.5rem 1rem;border:none;background:0 0;color:var(--ink-soft,#555);font-family:inherit;font-size:.875rem;font-weight:600;border-radius:6px;cursor:pointer;transition:all .15s}
+    .tab-btn:hover{color:var(--ink,#111)}
+    .tab-btn.active{background:var(--red-700,#B91C1C);color:#fff;box-shadow:0 1px 3px rgba(185,28,28,.25)}
+    .cron-preview{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--paper-alt,#f5f5f5);border:1px solid var(--line,#e0e0e0);border-radius:8px}
+    .cron-preview .expr{font-family:'Inter',monospace;font-size:1.25rem;font-weight:700;color:var(--red-700,#B91C1C);letter-spacing:.05em;flex:1;word-break:break-all}
+    .field-row{display:grid;grid-template-columns:110px 1fr;gap:.75rem;align-items:center;padding:.625rem 0}
+    .field-row+.field-row{border-top:1px solid var(--line,#e0e0e0)}
+    .field-row>label{font-size:.875rem;font-weight:600;color:var(--ink-soft,#555)}
+    .field-row select,.field-row input[type=text]{width:100%;padding:.5rem .75rem;border:1px solid var(--line,#e0e0e0);border-radius:6px;background:var(--paper,#fff);font-family:inherit;font-size:.875rem;color:var(--ink,#111);box-sizing:border-box}
+    .field-row select:focus,.field-row input[type=text]:focus{outline:none;border-color:var(--red-700,#B91C1C);box-shadow:0 0 0 2px rgba(185,28,28,.1)}
+    .custom-input{display:none;margin-top:.375rem}
+    .custom-input.visible{display:block}
+    .desc-box{padding:.75rem 1rem;background:#fff5f5;border:1px solid #fecaca;border-radius:8px;font-size:.9375rem;color:var(--ink,#111);line-height:1.5}
+    .next-times{list-style:none;padding:0;margin:0}
+    .next-times li{display:flex;justify-content:space-between;align-items:center;padding:.5rem .75rem;font-size:.875rem;border-bottom:1px solid var(--line,#e0e0e0)}
+    .next-times li:last-child{border-bottom:none}
+    .next-times .left{display:flex;align-items:center;flex:1;min-width:0}
+    .next-times .idx{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--paper-alt,#f5f5f5);font-size:.75rem;font-weight:600;color:var(--ink-soft,#555);margin-right:.75rem;flex-shrink:0}
+    .next-times .time{font-family:'Inter',monospace;color:var(--ink,#111);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .next-times .rel{font-size:.75rem;color:var(--ink-mute,#999);white-space:nowrap;margin-left:.5rem;flex-shrink:0}
+    .breakdown-table{width:100%;border-collapse:collapse;font-size:.875rem}
+    .breakdown-table th,.breakdown-table td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--line,#e0e0e0)}
+    .breakdown-table th{font-weight:600;color:var(--ink-soft,#555);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;background:var(--paper-alt,#f5f5f5)}
+    .breakdown-table th:first-child{border-radius:6px 0 0 0}
+    .breakdown-table th:last-child{border-radius:0 6px 0 0}
+    .parse-error{padding:.625rem .875rem;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:var(--red-700,#B91C1C);font-size:.8125rem}
+    @media(max-width:480px){.field-row{grid-template-columns:1fr;gap:.25rem}}
+  </style>
+</head>
+<body data-app-name="Cron Builder">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Developer &middot; Scheduling</p>
+      <h1 class="app-title">Cron <span class="accent">Builder</span></h1>
+      <p class="app-subtitle">Visually build cron expressions with preset dropdowns or paste any cron expression to get a human-readable explanation and the next 10 scheduled execution times.</p>
+    </header>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="builder" type="button">Builder</button>
+      <button class="tab-btn" data-tab="parser" type="button">Parser</button>
+    </div>
+
+    <!-- BUILDER MODE -->
+    <div id="builderMode">
+      <section class="card mt-1">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Expression
+        </h2>
+        <div class="cron-preview">
+          <span class="expr" id="cronExpr">* * * * *</span>
+          <button class="btn btn-ghost" id="copyCronBtn" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+      </section>
+
+      <section class="card mt-1">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Schedule fields
+        </h2>
+
+        <div class="field-row">
+          <label>Minute</label>
+          <div>
+            <select id="minPreset">
+              <option value="*">Every minute</option>
+              <option value="*/5">Every 5 minutes</option>
+              <option value="*/15">Every 15 minutes</option>
+              <option value="*/30">Every 30 minutes</option>
+              <option value="0">At minute 0</option>
+              <option value="30">At minute 30</option>
+              <option value="custom">Custom&hellip;</option>
+            </select>
+            <input class="custom-input" id="minCustom" type="text" placeholder="e.g. 0,15,30,45 or 0-10/2" spellcheck="false" autocapitalize="none" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Hour</label>
+          <div>
+            <select id="hourPreset">
+              <option value="*">Every hour</option>
+              <option value="*/2">Every 2 hours</option>
+              <option value="*/6">Every 6 hours</option>
+              <option value="*/12">Every 12 hours</option>
+              <option value="0">At midnight (0:00)</option>
+              <option value="9">At 9 AM</option>
+              <option value="12">At noon (12:00)</option>
+              <option value="custom">Custom&hellip;</option>
+            </select>
+            <input class="custom-input" id="hourCustom" type="text" placeholder="e.g. 9,12,17 or 9-17/2" spellcheck="false" autocapitalize="none" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Day of Month</label>
+          <div>
+            <select id="domPreset">
+              <option value="*">Every day</option>
+              <option value="1,15">Days 1 and 15</option>
+              <option value="1">On the 1st</option>
+              <option value="1,8,15,22,29">Every 7th day</option>
+              <option value="L">Last day of month</option>
+              <option value="custom">Custom&hellip;</option>
+            </select>
+            <input class="custom-input" id="domCustom" type="text" placeholder="e.g. 1,15 or 1-10" spellcheck="false" autocapitalize="none" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Month</label>
+          <div>
+            <select id="monPreset">
+              <option value="*">Every month</option>
+              <option value="1">January only</option>
+              <option value="1,4,7,10">Every quarter (J,A,O,D)</option>
+              <option value="1,7">January &amp; July</option>
+              <option value="custom">Custom&hellip;</option>
+            </select>
+            <input class="custom-input" id="monCustom" type="text" placeholder="e.g. 1,6,12 or 3-9" spellcheck="false" autocapitalize="none" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Day of Week</label>
+          <div>
+            <select id="dowPreset">
+              <option value="*">Every day</option>
+              <option value="1-5">Weekdays only (Mon&ndash;Fri)</option>
+              <option value="0,6">Weekends only (Sat &amp; Sun)</option>
+              <option value="1">Mondays only</option>
+              <option value="5">Fridays only</option>
+              <option value="custom">Custom&hellip;</option>
+            </select>
+            <input class="custom-input" id="dowCustom" type="text" placeholder="e.g. 1,3,5 or 1-5" spellcheck="false" autocapitalize="none" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-1">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Human-readable
+        </h2>
+        <div class="desc-box" id="builderDesc">Every minute</div>
+      </section>
+
+      <section class="card mt-1">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Next 10 executions
+        </h2>
+        <ul class="next-times" id="builderTimes"></ul>
+      </section>
+    </div>
+
+    <!-- PARSER MODE -->
+    <div id="parserMode" class="hidden">
+      <section class="card mt-1">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Parse cron expression
+        </h2>
+        <label class="field">
+          <span>Cron expression (5 fields)</span>
+          <input type="text" id="parseInput" placeholder="e.g. */15 9-17 * * 1-5" spellcheck="false" autocapitalize="none" />
+        </label>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="parseBtn" type="button">Parse</button>
+        </div>
+      </section>
+
+      <div id="parseError" class="card mt-1" style="display:none"><div class="parse-error" id="parseErrorMsg"></div></div>
+
+      <section class="card mt-1" id="parseDescCard" style="display:none">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Human-readable
+        </h2>
+        <div class="desc-box" id="parseDesc"></div>
+      </section>
+
+      <section class="card mt-1" id="parseBreakdownCard" style="display:none">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          Field breakdown
+        </h2>
+        <div style="overflow-x:auto">
+          <table class="breakdown-table">
+            <thead><tr><th>Field</th><th>Value</th><th>Meaning</th></tr></thead>
+            <tbody id="parseBreakdown"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card mt-1" id="parseTimesCard" style="display:none">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Next 10 executions
+        </h2>
+        <ul class="next-times" id="parseTimes"></ul>
+      </section>
+    </div>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Cron Builder"></script>
+  <script>
+  (function(){
+    var $=function(s){return document.querySelector(s)};
+
+    /* ── Tabs ── */
+    var tabBtns=document.querySelectorAll('.tab-btn');
+    var builderMode=$('#builderMode'),parserMode=$('#parserMode');
+    tabBtns.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        tabBtns.forEach(function(b){b.classList.remove('active')});
+        btn.classList.add('active');
+        if(btn.getAttribute('data-tab')==='builder'){
+          builderMode.classList.remove('hidden');parserMode.classList.add('hidden');
+        }else{
+          parserMode.classList.remove('hidden');builderMode.classList.add('hidden');
+        }
+      });
+    });
+
+    /* ── Builder refs ── */
+    var presets=[
+      {sel:$('#minPreset'),custom:$('#minCustom')},
+      {sel:$('#hourPreset'),custom:$('#hourCustom')},
+      {sel:$('#domPreset'),custom:$('#domCustom')},
+      {sel:$('#monPreset'),custom:$('#monCustom')},
+      {sel:$('#dowPreset'),custom:$('#dowCustom')}
+    ];
+    var cronExpr=$('#cronExpr'),builderDesc=$('#builderDesc'),builderTimes=$('#builderTimes'),copyCronBtn=$('#copyCronBtn');
+
+    /* ── Parser refs ── */
+    var parseInput=$('#parseInput'),parseBtn=$('#parseBtn');
+    var parseError=$('#parseError'),parseErrorMsg=$('#parseErrorMsg');
+    var parseDescCard=$('#parseDescCard'),parseDesc=$('#parseDesc');
+    var parseBreakdownCard=$('#parseBreakdownCard'),parseBreakdown=$('#parseBreakdown');
+    var parseTimesCard=$('#parseTimesCard'),parseTimes=$('#parseTimes');
+
+    /* ── Helpers ── */
+    function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
+    function pad(n){return n<10?'0'+n:''+n}
+
+    var MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var DOW_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var DOW_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    /* ── Expand a single cron field to an array of numbers ── */
+    function expandField(field,min,max){
+      if(field==='*'||field==='?'){
+        var a=[];for(var i=min;i<=max;i++)a.push(i);return a;
+      }
+      if(field==='L'){
+        // We cannot know the last day without context; return full range, caller adjusts.
+        var a=[];for(var i=min;i<=max;i++)a.push(i);return a;
+      }
+      var parts=field.split(',');
+      var result=[];var seen={};
+      for(var p=0;p<parts.length;p++){
+        var part=parts[p].trim();
+        if(!part)continue;
+        var step=1;
+        var slashIdx=part.indexOf('/');
+        if(slashIdx!==-1){
+          step=parseInt(part.slice(slashIdx+1),10);
+          part=part.slice(0,slashIdx);
+          if(isNaN(step)||step<1)step=1;
+        }
+        var rangeMatch=part.match(/^(\d+)-(\d+)$/);
+        if(rangeMatch){
+          var lo=parseInt(rangeMatch[1],10),hi=parseInt(rangeMatch[2],10);
+          if(isNaN(lo)||isNaN(hi))continue;
+          for(var i=lo;i<=hi;i+=step){if(i>=min&&i<=max&&!seen[i]){seen[i]=1;result.push(i);}}
+        }else{
+          var num=parseInt(part,10);
+          if(!isNaN(num)&&num>=min&&num<=max){
+            for(var i=num;i<=max;i+=step){if(!seen[i]){seen[i]=1;result.push(i);}}
+          }
+        }
+      }
+      result.sort(function(a,b){return a-b});
+      return result;
+    }
+
+    /* ── Human-readable description ── */
+    function describeCron(fields){
+      var min=fields[0],hour=fields[1],dom=fields[2],mon=fields[3],dow=fields[4];
+      var parts=[];
+
+      // Minute
+      if(min==='*'){
+        // nothing special
+      }else if(min.indexOf('/')===0||min.indexOf('*/')===0){
+        var step=min.split('/')[1];
+        if(step==='1'){/* skip */}
+        else parts.push('every '+step+' minute'+(parseInt(step,10)>1?'s':''));
+      }else if(min.indexOf(',')!==-1){
+        parts.push('at minute '+min);
+      }else{
+        parts.push('at minute '+min);
+      }
+
+      // Hour
+      if(hour==='*'){
+        // nothing
+      }else if(hour.indexOf('*/')===0){
+        var step=hour.split('/')[1];
+        parts.push('every '+step+' hour'+(parseInt(step,10)>1?'s':''));
+      }else if(hour.indexOf('-')!==-1&&hour.indexOf(',')===-1){
+        var r=hour.split('-');
+        parts.push('between hour '+r[0]+' and '+r[1]);
+      }else{
+        parts.push('at hour '+hour);
+      }
+
+      // Day of month
+      if(dom!=='*'&&dom!=='?'){
+        if(dom==='L')parts.push('on the last day of the month');
+        else parts.push('on day '+dom+' of the month');
+      }
+
+      // Month
+      if(mon!=='*'){
+        var months=mon.split(',').map(function(v){var n=parseInt(v,10);return(!isNaN(n)&&n>=1&&n<=12)?MONTH_NAMES[n-1]:v});
+        parts.push('in '+months.join(', '));
+      }
+
+      // Day of week
+      if(dow!=='*'&&dow!=='?'){
+        if(dow==='1-5')parts.push('on weekdays (Mon–Fri)');
+        else if(dow==='0,6')parts.push('on weekends (Sat & Sun)');
+        else{
+          var days=dow.split(',').map(function(v){
+            if(v.indexOf('-')!==-1){
+              var r=v.split('-');var a=parseInt(r[0],10),b=parseInt(r[1],10);
+              return DOW_NAMES[a]+' to '+DOW_NAMES[b];
+            }
+            var n=parseInt(v,10);return(!isNaN(n)&&n>=0&&n<=6)?DOW_NAMES[n]:v;
+          });
+          parts.push('on '+days.join(', '));
+        }
+      }
+
+      if(parts.length===0)return 'Every minute';
+      // Capitalize first letter
+      var desc=parts.join(', ');
+      return desc.charAt(0).toUpperCase()+desc.slice(1);
+    }
+
+    /* ── Parse 5-field cron string into array ── */
+    function parseCronStr(expr){
+      var parts=expr.trim().split(/\s+/);
+      if(parts.length!==5)return null;
+      // Basic validation: each field should contain only valid cron chars
+      var validRe=/^[\d,\-*\/L?]+$/;
+      for(var i=0;i<5;i++){
+        if(!validRe.test(parts[i]))return null;
+      }
+      return parts;
+    }
+
+    /* ── Calculate next N execution times ── */
+    function getNextExecutions(fields,count){
+      // Expand each field to possible values
+      var mins=expandField(fields[0],0,59);
+      var hours=expandField(fields[1],0,23);
+      // DOM and DOW need special handling: in cron, if both DOM and DOW are restricted,
+      // either one matching triggers execution (OR logic in standard cron).
+      // For simplicity, we treat them as AND when neither is *, and OR when both are restricted.
+      // Actually standard cron uses OR: if both are specified (not *), the job runs when EITHER matches.
+      // We'll implement that.
+      var doms=expandField(fields[2],1,31);
+      var mons=expandField(fields[3],1,12);
+      var dows=expandField(fields[4],0,6);
+
+      var domIsStar=(fields[2]==='*'||fields[2]==='?');
+      var dowIsStar=(fields[4]==='*'||fields[4]==='?');
+
+      var now=new Date();
+      // Start from the next minute
+      var d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),now.getMinutes()+1,0,0);
+
+      var results=[];
+      var maxIter=525960; // ~1 year of minutes
+      var iter=0;
+
+      while(results.length<count&&iter<maxIter){
+        iter++;
+        var m=d.getMinutes(),h=d.getHours(),dom=d.getDate(),mon=d.getMonth()+1,dow=d.getDay();
+
+        if(mins.indexOf(m)===-1){d=new Date(d.getTime()+60000);continue;}
+        if(hours.indexOf(h)===-1){d=new Date(d.getFullYear(),d.getMonth(),d.getDate(),h+1,0,0);continue;}
+        if(mons.indexOf(mon)===-1){d=new Date(d.getFullYear(),mon,1,0,0,0);continue;}
+
+        // DOM/DOW logic
+        var domOk=domIsStar||doms.indexOf(dom)!==-1;
+        var dowOk=dowIsStar||dows.indexOf(dow)!==-1;
+        if(domIsStar&&!dowIsStar){domOk=true;}
+        if(!domIsStar&&dowIsStar){dowOk=true;}
+
+        if(!domOk&&!dowOk){d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1,0,0,0);continue;}
+
+        // Also check if 'L' was used in dom
+        if(fields[2]==='L'){
+          var lastDay=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+          if(dom!==lastDay){d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1,0,0,0);continue;}
+        }
+
+        results.push(new Date(d));
+        d=new Date(d.getTime()+60000);
+      }
+
+      return results;
+    }
+
+    /* ── Relative time ── */
+    function relativeTime(from,to){
+      var diff=Math.floor((to.getTime()-from.getTime())/1000);
+      if(diff<0)diff=0;
+      if(diff<60)return 'in '+diff+'s';
+      if(diff<3600)return 'in '+Math.floor(diff/60)+'m '+(diff%60)+'s';
+      if(diff<86400){var h=Math.floor(diff/3600);var m=Math.floor((diff%3600)/60);return 'in '+h+'h '+m+'m';}
+      var days=Math.floor(diff/86400);var h=Math.floor((diff%86400)/3600);
+      if(days>30){var weeks=Math.floor(days/7);return 'in ~'+weeks+'w';}
+      return 'in '+days+'d '+h+'h';
+    }
+
+    /* ── Render next times list ── */
+    function renderTimes(container,times){
+      var now=new Date();
+      var html='';
+      for(var i=0;i<times.length;i++){
+        var t=times[i];
+        var dateStr=t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());
+        var timeStr=pad(t.getHours())+':'+pad(t.getMinutes());
+        var dowStr=DOW_SHORT[t.getDay()];
+        html+='<li><div class="left"><span class="idx">'+(i+1)+'</span><span class="time">'+dowStr+' '+dateStr+' '+timeStr+'</span></div><span class="rel">'+relativeTime(now,t)+'</span></li>';
+      }
+      container.innerHTML=html;
+    }
+
+    /* ── Builder: get field values ── */
+    function getBuilderFields(){
+      return presets.map(function(p){
+        if(p.sel.value==='custom'){
+          var v=p.custom.value.trim();
+          return v||'*';
+        }
+        return p.sel.value;
+      });
+    }
+
+    /* ── Builder: update everything ── */
+    function updateBuilder(){
+      var fields=getBuilderFields();
+      var expr=fields.join(' ');
+      cronExpr.textContent=expr;
+      builderDesc.textContent=describeCron(fields);
+      var times=getNextExecutions(fields,10);
+      renderTimes(builderTimes,times);
+    }
+
+    /* ── Custom input toggle ── */
+    presets.forEach(function(p){
+      p.sel.addEventListener('change',function(){
+        if(p.sel.value==='custom'){p.custom.classList.add('visible');p.custom.focus();}
+        else{p.custom.classList.remove('visible');}
+        updateBuilder();
+      });
+      p.custom.addEventListener('input',function(){updateBuilder();});
+    });
+
+    /* ── Copy ── */
+    copyCronBtn.addEventListener('click',function(){
+      copyText(cronExpr.textContent,copyCronBtn);
+    });
+
+    /* ── Parser ── */
+    function runParser(){
+      var raw=parseInput.value.trim();
+      parseError.style.display='none';
+      parseDescCard.style.display='none';
+      parseBreakdownCard.style.display='none';
+      parseTimesCard.style.display='none';
+
+      if(!raw)return;
+
+      var fields=parseCronStr(raw);
+      if(!fields){
+        parseError.style.display='block';
+        parseErrorMsg.textContent='Invalid cron expression. Expected 5 space-separated fields (minute hour day-of-month month day-of-week). Each field should contain digits, commas, hyphens, asterisks, slashes, or L/?.';
+        return;
+      }
+
+      // Description
+      parseDesc.textContent=describeCron(fields);
+      parseDescCard.style.display='block';
+
+      // Breakdown
+      var fieldLabels=['Minute','Hour','Day of Month','Month','Day of Week'];
+      var fieldMeanings=function(label,val){
+        if(val==='*')return'Every '+label.toLowerCase();
+        if(val==='L')return'Last '+label.toLowerCase();
+        if(val==='?')return'No specific value (ignored)';
+        if(val.indexOf('*/')===0){var s=val.split('/')[1];return'Every '+s+' '+(label==='Minute'?'minute':label==='Hour'?'hour':label.toLowerCase())+'(s)';}
+        if(val.indexOf('-')!==-1&&val.indexOf(',')===-1){var r=val.split('-');return'From '+r[0]+' to '+r[1];}
+        return 'Specific: '+val;
+      };
+      var bHtml='';
+      for(var i=0;i<5;i++){
+        bHtml+='<tr><td>'+escapeHtml(fieldLabels[i])+'</td><td class="text-mono">'+escapeHtml(fields[i])+'</td><td>'+escapeHtml(fieldMeanings(fieldLabels[i],fields[i]))+'</td></tr>';
+      }
+      parseBreakdown.innerHTML=bHtml;
+      parseBreakdownCard.style.display='block';
+
+      // Next times
+      var times=getNextExecutions(fields,10);
+      if(times.length>0){
+        renderTimes(parseTimes,times);
+        parseTimesCard.style.display='block';
+      }
+    }
+
+    parseBtn.addEventListener('click',runParser);
+    parseInput.addEventListener('keydown',function(e){if(e.key==='Enter')runParser();});
+
+    /* ── Init ── */
+    updateBuilder();
+  })();
+  </script>
+</body>
+</html>

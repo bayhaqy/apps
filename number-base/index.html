@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Number Base Converter — convert between Binary, Octal, Decimal, Hexadecimal, and any custom base (2–36). Supports BigInt for large numbers, bit visualization, and ASCII decoding. 100% client-side." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Number Base Converter — Binary, Octal, Decimal, Hex &amp; Custom Bases" />
+  <meta property="og:description" content="Convert numbers between Binary, Octal, Decimal, Hexadecimal, and custom bases (2–36). BigInt support, bit visualization, ASCII decoding." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/number-base/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/number-base/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Number Base Converter — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+</head>
+<body data-app-name="Number Base Converter">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Developer · Math</p>
+      <h1 class="app-title">Number Base <span class="accent">Converter</span></h1>
+      <p class="app-subtitle">
+        Convert between Binary, Octal, Decimal, Hexadecimal, and any custom base (2–36).
+        Supports BigInt for arbitrarily large numbers, bit visualization, and ASCII decoding.
+      </p>
+    </header>
+
+    <!-- Input Card -->
+    <section class="card">
+      <div class="flex-between mb-2">
+        <span class="pill">Input</span>
+        <span id="errorMsg" class="text-sm" style="color:var(--red-700);"></span>
+      </div>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Number</span>
+          <input type="text" id="numInput" placeholder="e.g. 255" autocomplete="off" spellcheck="false" autocapitalize="none" data-primary />
+        </label>
+        <label class="field">
+          <span>Source base</span>
+          <select id="baseSelect">
+            <option value="2">Binary (2)</option>
+            <option value="8">Octal (8)</option>
+            <option value="10" selected>Decimal (10)</option>
+            <option value="16">Hexadecimal (16)</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="customBaseRow" class="hidden mt-2">
+        <label class="field">
+          <span>Custom base (2–36)</span>
+          <input type="number" id="customBase" min="2" max="36" value="7" />
+        </label>
+      </div>
+
+      <div class="btn-row mt-2">
+        <button class="btn btn-primary" id="convertBtn" type="button" data-primary>Convert</button>
+        <button class="btn btn-ghost" id="swapBtn" type="button">Swap to target</button>
+        <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+      </div>
+    </section>
+
+    <!-- Quick Access -->
+    <section class="card mt-2">
+      <div class="flex-between mb-2">
+        <span class="pill">Quick access</span>
+        <span class="text-xs text-mute">Common values (decimal)</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" type="button" data-quick="255">255</button>
+        <button class="btn btn-ghost" type="button" data-quick="65535">65,535</button>
+        <button class="btn btn-ghost" type="button" data-quick="16777215">16,777,215</button>
+        <button class="btn btn-ghost" type="button" data-quick="4294967295">4,294,967,295</button>
+      </div>
+    </section>
+
+    <!-- Results Grid -->
+    <section class="card mt-2" id="resultsCard">
+      <h2 class="card-title">Conversions</h2>
+      <div class="grid-2">
+        <!-- Binary -->
+        <div>
+          <div class="flex-between mb-1">
+            <span class="text-sm" style="font-weight:600;">Binary (2)</span>
+            <button class="btn btn-ghost" data-copy-target="#outBin" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div class="output text-mono" id="outBin">—</div>
+        </div>
+        <!-- Octal -->
+        <div>
+          <div class="flex-between mb-1">
+            <span class="text-sm" style="font-weight:600;">Octal (8)</span>
+            <button class="btn btn-ghost" data-copy-target="#outOct" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div class="output text-mono" id="outOct">—</div>
+        </div>
+        <!-- Decimal -->
+        <div>
+          <div class="flex-between mb-1">
+            <span class="text-sm" style="font-weight:600;">Decimal (10)</span>
+            <button class="btn btn-ghost" data-copy-target="#outDec" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div class="output text-mono" id="outDec">—</div>
+        </div>
+        <!-- Hex -->
+        <div>
+          <div class="flex-between mb-1">
+            <span class="text-sm" style="font-weight:600;">Hexadecimal (16)</span>
+            <button class="btn btn-ghost" data-copy-target="#outHex" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div class="output text-mono" id="outHex">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Row -->
+    <section class="card mt-2" id="infoCard">
+      <h2 class="card-title">Properties</h2>
+      <div class="grid-3">
+        <div>
+          <span class="text-xs text-mute">ASCII text</span>
+          <div class="output text-mono text-sm" id="outAscii">—</div>
+        </div>
+        <div>
+          <span class="text-xs text-mute">Bit count</span>
+          <div class="output text-mono text-sm" id="outBits">—</div>
+        </div>
+        <div>
+          <span class="text-xs text-mute">Byte count</span>
+          <div class="output text-mono text-sm" id="outBytes">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bit Visualization -->
+    <section class="card mt-2" id="bitVisCard">
+      <div class="flex-between mb-2">
+        <h2 class="card-title" style="margin:0;">Bit visualization</h2>
+        <div class="btn-row" style="margin:0;">
+          <button class="btn btn-ghost" id="groupToggle" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Group by 4</button>
+          <button class="btn btn-ghost" data-copy-target="#bitVisOutput" type="button" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+        </div>
+      </div>
+      <div class="text-mono text-sm" id="bitVisOutput" style="word-break:break-all;line-height:1.8;user-select:all;min-height:1.5em;">
+        —
+      </div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Number Base Converter"></script>
+  <script>
+    (function () {
+      'use strict';
+      var $ = function (s) { return document.querySelector(s); };
+
+      /* ---------- Elements ---------- */
+      var numInput      = $('#numInput');
+      var baseSelect    = $('#baseSelect');
+      var customBaseRow = $('#customBaseRow');
+      var customBaseEl  = $('#customBase');
+      var errorMsg      = $('#errorMsg');
+      var outBin    = $('#outBin');
+      var outOct    = $('#outOct');
+      var outDec    = $('#outDec');
+      var outHex    = $('#outHex');
+      var outAscii  = $('#outAscii');
+      var outBits   = $('#outBits');
+      var outBytes  = $('#outBytes');
+      var bitVisOutput = $('#bitVisOutput');
+      var groupToggle  = $('#groupToggle');
+
+      var groupBy8 = true;
+      var lastBinStr = '';
+
+      /* ---------- Digit set ---------- */
+      var DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+      /* ---------- Helpers ---------- */
+      function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      }
+
+      function setOut(el, text) {
+        if (!text) { el.textContent = '—'; return; }
+        el.textContent = text;
+      }
+
+      function clearAll() {
+        errorMsg.textContent = '';
+        setOut(outBin, '');
+        setOut(outOct, '');
+        setOut(outDec, '');
+        setOut(outHex, '');
+        setOut(outAscii, '');
+        setOut(outBits, '');
+        setOut(outBytes, '');
+        bitVisOutput.textContent = '—';
+        lastBinStr = '';
+      }
+
+      /* ---------- Get current source base ---------- */
+      function getSourceBase() {
+        var v = baseSelect.value;
+        if (v === 'custom') {
+          var b = parseInt(customBaseEl.value, 10);
+          if (isNaN(b) || b < 2 || b > 36) return NaN;
+          return b;
+        }
+        return parseInt(v, 10);
+      }
+
+      /* ---------- Validate input against base ---------- */
+      function validateInput(value, base) {
+        if (!value) return true; // empty is ok
+        var clean = value.trim();
+        if (!clean) return true;
+        if (clean === '-') return true; // just a minus sign
+        var allowed = DIGITS.substring(0, base);
+        var negative = false;
+        if (clean[0] === '-') { negative = true; clean = clean.substring(1); }
+        if (!clean) return true;
+        for (var i = 0; i < clean.length; i++) {
+          if (allowed.indexOf(clean[i].toLowerCase()) === -1) {
+            return 'Invalid digit "' + clean[i] + '" for base ' + base + '. Allowed: ' + allowed.toUpperCase();
+          }
+        }
+        return true;
+      }
+
+      /* ---------- Parse to BigInt ---------- */
+      function parseBigInt(value, base) {
+        var clean = value.trim();
+        if (!clean) return null;
+        var negative = false;
+        if (clean[0] === '-') { negative = true; clean = clean.substring(1); }
+        clean = clean.toLowerCase();
+        if (!clean) return null;
+
+        if (base === 10) {
+          return negative ? -BigInt(clean) : BigInt(clean);
+        }
+
+        // For base 2, 8, 16: use built-in parsing when possible (they handle standard digits)
+        if (base === 16 && /^-?[0-9a-f]+$/.test(clean)) {
+          return negative ? -BigInt('0x' + clean) : BigInt('0x' + clean);
+        }
+        if (base === 8 && /^-?[0-7]+$/.test(clean)) {
+          return negative ? -BigInt('0o' + clean) : BigInt('0o' + clean);
+        }
+        if (base === 2 && /^-?[01]+$/.test(clean)) {
+          return negative ? -BigInt('0b' + clean) : BigInt('0b' + clean);
+        }
+
+        // Generic BigInt parsing for any base
+        var result = 0n;
+        var baseBig = BigInt(base);
+        for (var i = 0; i < clean.length; i++) {
+          var d = DIGITS.indexOf(clean[i]);
+          if (d < 0 || d >= base) return NaN;
+          result = result * baseBig + BigInt(d);
+        }
+        return negative ? -result : result;
+      }
+
+      /* ---------- BigInt to string in given base ---------- */
+      function bigIntToBase(n, base) {
+        if (n < 0n) return '-' + bigIntToBase(-n, base);
+        if (n === 0n) return '0';
+        var baseBig = BigInt(base);
+        var result = '';
+        var num = n;
+        while (num > 0n) {
+          result = DIGITS[Number(num % baseBig)] + result;
+          num = num / baseBig;
+        }
+        return result;
+      }
+
+      /* ---------- Try to decode BigInt as ASCII ---------- */
+      function toAscii(n) {
+        if (n < 0n) return null;
+        if (n === 0n) return 'NUL (0)';
+        if (n > 0xFFFFFFFFFFFFn) return null; // too large for ASCII
+        var bytes = [];
+        var temp = n;
+        while (temp > 0n) {
+          bytes.unshift(Number(temp & 0xFFn));
+          temp = temp >> 8n;
+        }
+        var text = '';
+        var allPrintable = true;
+        for (var i = 0; i < bytes.length; i++) {
+          if (bytes[i] >= 32 && bytes[i] <= 126) {
+            text += String.fromCharCode(bytes[i]);
+          } else {
+            allPrintable = false;
+            text += '\x' + bytes[i].toString(16).toUpperCase().padStart(2, '0');
+          }
+        }
+        if (!allPrintable) text += ' (mixed)';
+        return text;
+      }
+
+      /* ---------- Render bit visualization ---------- */
+      function renderBitVis(binStr) {
+        lastBinStr = binStr;
+        if (!binStr || binStr === '0') {
+          bitVisOutput.innerHTML = '<span style="color:var(--ink-soft);">—</span>';
+          return;
+        }
+        var groupSize = groupBy8 ? 8 : 4;
+        // Pad to multiple of groupSize
+        var padLen = groupSize - (binStr.length % groupSize);
+        if (padLen < groupSize) {
+          binStr = binStr.padStart(binStr.length + padLen, '0');
+        }
+        var html = '';
+        for (var i = 0; i < binStr.length; i++) {
+          if (i > 0 && i % groupSize === 0) html += '<span style="color:var(--line);margin:0 2px;">|</span>';
+          var bit = binStr[i];
+          var color = bit === '1' ? 'var(--red-700)' : 'var(--ink-mute)';
+          html += '<span style="color:' + color + ';font-weight:' + (bit === '1' ? '700' : '400') + ';">' + bit + '</span>';
+        }
+        bitVisOutput.innerHTML = html;
+      }
+
+      /* ---------- Main convert ---------- */
+      function convert() {
+        var value = numInput.value;
+        var base = getSourceBase();
+
+        if (!value.trim()) { clearAll(); return; }
+        if (isNaN(base)) {
+          errorMsg.textContent = 'Custom base must be 2–36.';
+          clearAll(); return;
+        }
+
+        var valid = validateInput(value, base);
+        if (valid !== true) {
+          errorMsg.textContent = valid;
+          clearAll(); return;
+        }
+
+        errorMsg.textContent = '';
+        var n = parseBigInt(value, base);
+
+        if (n === null || n !== n) { // NaN check for BigInt (won't be NaN but parseBigInt can return NaN from Number)
+          errorMsg.textContent = 'Invalid number.';
+          clearAll(); return;
+        }
+
+        // Convert to all bases
+        var binStr = bigIntToBase(n < 0n ? -n : n, 2);
+        setOut(outBin, (n < 0n ? '-' : '') + binStr);
+        setOut(outOct, bigIntToBase(n, 8));
+        setOut(outDec, bigIntToBase(n, 10));
+        setOut(outHex, bigIntToBase(n, 16).toUpperCase());
+
+        // Properties
+        var absBin = binStr;
+        setOut(outBits, absBin.length.toLocaleString() + ' bits');
+        var byteCount = Math.ceil(absBin.length / 8);
+        setOut(outBytes, byteCount.toLocaleString() + (byteCount === 1 ? ' byte' : ' bytes'));
+
+        // ASCII
+        var ascii = toAscii(n < 0n ? -n : n);
+        setOut(outAscii, ascii || '(too large for ASCII)');
+
+        // Bit visualization
+        renderBitVis(absBin);
+      }
+
+      /* ---------- Swap ---------- */
+      function swap() {
+        var decText = outDec.textContent;
+        if (!decText || decText === '—') {
+          window.showToast('Nothing to swap');
+          return;
+        }
+        // Figure out which base was the output the user might want as new source.
+        // Simple approach: swap source base to the current input, put decimal into input,
+        // set base to 10 so user can pick a new target.
+        numInput.value = decText;
+        baseSelect.value = '10';
+        customBaseRow.classList.add('hidden');
+        convert();
+        window.showToast('Swapped — decimal set as input');
+      }
+
+      /* ---------- Event listeners ---------- */
+      numInput.addEventListener('input', convert);
+      baseSelect.addEventListener('change', function () {
+        if (baseSelect.value === 'custom') {
+          customBaseRow.classList.remove('hidden');
+        } else {
+          customBaseRow.classList.add('hidden');
+        }
+        convert();
+      });
+      customBaseEl.addEventListener('input', convert);
+
+      $('#convertBtn').addEventListener('click', convert);
+
+      $('#swapBtn').addEventListener('click', swap);
+
+      $('#clearBtn').addEventListener('click', function () {
+        numInput.value = '';
+        clearAll();
+        numInput.focus();
+        window.showToast('Cleared');
+      });
+
+      groupToggle.addEventListener('click', function () {
+        groupBy8 = !groupBy8;
+        groupToggle.textContent = groupBy8 ? 'Group by 4' : 'Group by 8';
+        if (lastBinStr) renderBitVis(lastBinStr);
+      });
+
+      // Quick access buttons
+      document.querySelectorAll('[data-quick]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var val = btn.getAttribute('data-quick');
+          numInput.value = val;
+          baseSelect.value = '10';
+          customBaseRow.classList.add('hidden');
+          convert();
+          window.showToast('Loaded ' + parseInt(val, 10).toLocaleString());
+        });
+      });
+
+      // Live conversion on paste
+      numInput.addEventListener('paste', function () {
+        setTimeout(convert, 0);
+      });
+
+      // Initial state
+      setTimeout(function () {
+        groupToggle.textContent = 'Group by 4';
+      }, 100);
+    })();
+  </script>
+</body>
+</html>

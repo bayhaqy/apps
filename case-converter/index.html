@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case Converter — convert text between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, and more." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Case Converter — camelCase, snake_case, kebab-case" />
+  <meta property="og:description" content="Convert text between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, and more." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/case-converter/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/case-converter/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Case Converter — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    .convert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem; }
+    .convert-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.75rem 0.5rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink); font-family: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; transition: all .15s var(--ease); text-align: center; gap: 0.2rem; }
+    .convert-btn:hover { border-color: var(--red-700); color: var(--red-700); transform: translateY(-1px); }
+    .convert-btn.active { background: var(--red-700); color: #fff; border-color: var(--red-700); }
+    .convert-btn .example { font-size: var(--fs-xs); font-weight: 400; color: var(--ink-mute); font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .convert-btn.active .example { color: rgba(255,255,255,0.7); }
+    .stat-bar { display: flex; gap: 1rem; font-size: var(--fs-xs); color: var(--ink-mute); }
+  </style>
+</head>
+<body data-app-name="Case Converter">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Text &amp; Code</p>
+      <h1 class="app-title">Case <span class="accent">Converter</span></h1>
+      <p class="app-subtitle">Convert text between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, and more. Smart word boundary detection included.</p>
+    </header>
+
+    <section class="card">
+      <div class="flex-between mb-1">
+        <span class="pill">Input</span>
+        <span class="stat-bar" id="inputStats">0 chars · 0 words</span>
+      </div>
+      <label class="field">
+        <span>Enter your text</span>
+        <textarea id="inputText" rows="5" placeholder="hello world, XML HTTP request..." data-primary></textarea>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Conversion
+      </h2>
+      <div class="convert-grid" id="convertGrid"></div>
+    </section>
+
+    <section class="card" id="resultCard" style="display:none;">
+      <div class="flex-between mb-1">
+        <h2 class="card-title" style="margin-bottom:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span id="resultLabel">Result</span>
+        </h2>
+        <span class="stat-bar" id="outputStats"></span>
+      </div>
+      <div class="output mt-1" id="outputText" data-auto-clear></div>
+      <div class="btn-row mt-2">
+        <button class="btn btn-ghost" data-copy-target="#outputText">Copy</button>
+        <button class="btn btn-ghost" id="swapBtn">Swap to input</button>
+        <button class="btn btn-ghost" id="downloadBtn">Download .txt</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/apps/assets/app-shell.js" data-app-name="Case Converter"></script>
+  <script>
+  (function () {
+    var $ = function (s) { return document.querySelector(s); };
+    var inputText = $('#inputText');
+    var outputText = $('#outputText');
+    var resultCard = $('#resultCard');
+    var resultLabel = $('#resultLabel');
+    var inputStats = $('#inputStats');
+    var outputStats = $('#outputStats');
+    var convertGrid = $('#convertGrid');
+
+    var CASES = [
+      { id: 'camel', name: 'camelCase', example: 'helloWorld' },
+      { id: 'pascal', name: 'PascalCase', example: 'HelloWorld' },
+      { id: 'snake', name: 'snake_case', example: 'hello_world' },
+      { id: 'kebab', name: 'kebab-case', example: 'hello-world' },
+      { id: 'constant', name: 'CONSTANT_CASE', example: 'HELLO_WORLD' },
+      { id: 'dot', name: 'dot.case', example: 'hello.world' },
+      { id: 'path', name: 'path/case', example: 'hello/world' },
+      { id: 'sentence', name: 'Sentence case', example: 'Hello world' },
+      { id: 'title', name: 'Title Case', example: 'Hello World' },
+      { id: 'alternating', name: 'aLtErNaTiNg', example: 'hElLo WoRlD' },
+      { id: 'inverse', name: 'iNVERSE cASE', example: 'HELLO world' },
+      { id: 'slug', name: 'URL Slug', example: 'hello-world' }
+    ];
+
+    // Build buttons
+    convertGrid.innerHTML = CASES.map(function (c) {
+      return '<button class="convert-btn" data-case="' + c.id + '" type="button">' +
+        '<span>' + c.name + '</span><span class="example">' + c.example + '</span></button>';
+    }).join('');
+
+    function countStats(text) {
+      var chars = text.length;
+      var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      return chars + ' chars \u00b7 ' + words + ' words';
+    }
+
+    inputText.addEventListener('input', function () {
+      inputStats.textContent = countStats(inputText.value);
+      detectCase();
+    });
+
+    function detectCase() {
+      var v = inputText.value;
+      if (!v.trim()) { document.querySelectorAll('.convert-btn').forEach(function(b){b.classList.remove('active');}); return; }
+      var detected = null;
+      if (/^[a-z]+([A-Z][a-z]*)*$/.test(v)) detected = 'camel';
+      else if (/^[A-Z][a-z]+([A-Z][a-z]*)*$/.test(v)) detected = 'pascal';
+      else if (/^[a-z][a-z0-9]*(_[a-z0-9]+)*$/.test(v)) detected = 'snake';
+      else if (/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(v)) detected = 'kebab';
+      else if (/^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$/.test(v)) detected = 'constant';
+      else if (/^[a-z][a-z0-9]*(\.[a-z0-9]+)*$/.test(v)) detected = 'dot';
+      else if (/^[a-z][a-z0-9]*(\/[a-z0-9]+)*$/.test(v)) detected = 'path';
+      document.querySelectorAll('.convert-btn').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-case') === detected);
+      });
+    }
+
+    function splitWords(text) {
+      // Split on spaces, hyphens, underscores, dots, slashes
+      var words = text.replace(/([a-z])([A-Z])/g, '$1\n$2')
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1\n$2')
+        .replace(/[\s_\-./\\]+/g, '\n')
+        .split('\n').filter(function (w) { return w.length > 0; });
+      return words;
+    }
+
+    function convert(text, caseId) {
+      var words = splitWords(text);
+      if (words.length === 0) return '';
+      var lower = words.map(function (w) { return w.toLowerCase(); });
+      switch (caseId) {
+        case 'camel':
+          return lower.map(function (w, i) { return i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1); }).join('');
+        case 'pascal':
+          return lower.map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join('');
+        case 'snake':
+          return lower.join('_');
+        case 'kebab':
+          return lower.join('-');
+        case 'constant':
+          return lower.join('_').toUpperCase();
+        case 'dot':
+          return lower.join('.');
+        case 'path':
+          return lower.join('/');
+        case 'sentence':
+          return text.charAt(0).toUpperCase() + text.slice(1).replace(/([.!?]\s+)([a-z])/g, function (m, p, l) { return p + l.toUpperCase(); });
+        case 'title':
+          return lower.map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+        case 'alternating':
+          var result = '';
+          for (var i = 0; i < text.length; i++) {
+            result += i % 2 === 0 ? text[i].toLowerCase() : text[i].toUpperCase();
+          }
+          return result;
+        case 'inverse':
+          var inv = '';
+          for (var j = 0; j < text.length; j++) {
+            inv += text[j] === text[j].toUpperCase() ? text[j].toLowerCase() : text[j].toUpperCase();
+          }
+          return inv;
+        case 'slug':
+          return lower.join('-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        default: return text;
+      }
+    }
+
+    convertGrid.addEventListener('click', function (e) {
+      var btn = e.target.closest('.convert-btn');
+      if (!btn) return;
+      var caseId = btn.getAttribute('data-case');
+      var caseInfo = CASES.find(function (c) { return c.id === caseId; });
+      var text = inputText.value;
+      if (!text.trim()) { showToast('Enter some text first'); return; }
+      var result = convert(text, caseId);
+      resultLabel.textContent = caseInfo ? caseInfo.name : 'Result';
+      outputText.textContent = result;
+      outputStats.textContent = countStats(result);
+      resultCard.style.display = 'block';
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    $('#swapBtn').addEventListener('click', function () {
+      inputText.value = outputText.textContent;
+      inputText.dispatchEvent(new Event('input'));
+      showToast('Swapped to input');
+    });
+
+    $('#downloadBtn').addEventListener('click', function () {
+      downloadText('case-converted.txt', outputText.textContent);
+    });
+  })();
+  </script>
+</body>
+</html>
