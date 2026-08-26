@@ -1,7 +1,7 @@
 {
-  "name": "Bayhaqy Apps — 31 Developer & IT Tools",
+  "name": "Bayhaqy Apps — Many Developer & IT Tools",
   "short_name": "Bayhaqy Apps",
-  "description": "A curated collection of 31 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity boosters.",
+  "description": "A curated collection of many fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity boosters.",
   "start_url": "/apps/",
   "scope": "/apps/",
   "display": "standalone",
