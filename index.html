@@ -539,7 +539,7 @@
     <section class="toolbar">
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="searchInput" placeholder="Search 52 tools by name, tag, or keyword…" aria-label="Search apps" />
+        <input type="search" id="searchInput" placeholder="Search 54 tools by name, tag, or keyword…" aria-label="Search apps" />
       </div>
       <div class="tag-row" id="tagRow"></div>
     </section>
@@ -627,7 +627,9 @@
         palette: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
         case: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>',
         lorem: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>',
-        eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg'
+        eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+        speed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+        map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>'
       };
 
       var APPS = [
@@ -821,11 +823,17 @@
         // Category: Network (new tools)
         { id: 'http-headers', cat: 'network', icon: 'header', name: 'HTTP Headers Checker',
           desc: 'Check any URL\'s response headers and security posture. Audits CSP, HSTS, X-Frame, and more.',
-          tags: ['http', 'headers', 'security', 'csp', 'hsts', 'network'] }
+          tags: ['http', 'headers', 'security', 'csp', 'hsts', 'network'] },
+        { id: 'speed-test', cat: 'network', icon: 'speed', name: 'Speed Test',
+          desc: 'Measure download speed, ping latency, and jitter. Beautiful speedometer gauge with live graph.',
+          tags: ['speed', 'bandwidth', 'ping', 'latency', 'network', 'download'] },
+        { id: 'timeline-visualizer', cat: 'network', icon: 'map', name: 'Timeline Visualizer',
+          desc: 'Plot Google Maps Timeline, GPS tracks, or GPX files on an interactive Leaflet map with playback.',
+          tags: ['map', 'gps', 'timeline', 'gpx', 'geojson', 'location', 'tracking'] }
       ];
 
       var CATS = [
-        { id: 'network',      name: 'Network & DNS',     desc: 'Diagnose connectivity, DNS, IPs' },
+        { id: 'network',      name: 'Network & DNS',     desc: 'Speed test, DNS, IPs, maps, headers' },
         { id: 'security',     name: 'Security & Crypto', desc: 'Hashes, JWTs, certs, passwords, encryption' },
         { id: 'devops',       name: 'DevOps & SysAdmin', desc: 'Encoding, timestamps, cron, number bases' },
         { id: 'files',        name: 'Files & Documents', desc: 'PDF, CSV, file conversion' },

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Speed Test — measure your internet download speed, upload speed, and ping latency directly in your browser. No app install, 100% client-side." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="Speed Test — Internet Speed Checker" />
+  <meta property="og:description" content="Measure download speed, upload speed, and ping latency in your browser. No install needed." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/speed-test/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/speed-test/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>Speed Test — Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <style>
+    .st-wrap{text-align:center;padding:1rem 0 2rem}
+    .gauge-wrap{position:relative;width:320px;height:320px;margin:0 auto 1.5rem}
+    @media(min-width:640px){.gauge-wrap{width:380px;height:380px}}
+    .gauge-wrap svg{width:100%;height:100%}
+    .gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .gauge-value{font-size:3.5rem;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-0.03em;transition:color .3s}
+    @media(min-width:640px){.gauge-value{font-size:4.5rem}}
+    .gauge-unit{font-size:1rem;font-weight:600;color:var(--ink-mute);margin-top:0.25rem}
+    .gauge-label{font-size:0.85rem;font-weight:500;color:var(--ink-mute);margin-top:0.15rem;min-height:1.3em}
+    .phase-indicator{display:flex;justify-content:center;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap}
+    .phase-step{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;font-weight:600;color:var(--ink-faint);transition:color .3s}
+    .phase-step.active{color:var(--red-700)}
+    .phase-step.done{color:#10B981}
+    .phase-dot{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .3s}
+    .phase-step.active .phase-dot{background:var(--red-700);box-shadow:0 0 8px rgba(185,28,28,0.4)}
+    .phase-step.done .phase-dot{background:#10B981}
+    .phase-connector{width:24px;height:2px;background:var(--line);border-radius:1px;align-self:center}
+    .start-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:0.6rem;
+      padding:1rem 3rem;border-radius:999px;font-size:1.1rem;font-weight:700;
+      background:var(--red-700);color:#fff;border:none;cursor:pointer;
+      transition:all .25s var(--ease);box-shadow:0 4px 20px rgba(185,28,28,0.3);
+      font-family:inherit;letter-spacing:0.01em
+    }
+    .start-btn:hover{background:var(--red-900);transform:translateY(-2px);box-shadow:0 8px 30px rgba(185,28,28,0.4)}
+    .start-btn:active{transform:translateY(0)}
+    .start-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;box-shadow:none}
+    .start-btn.pulse{animation:btnPulse 2s ease-in-out infinite}
+    @keyframes btnPulse{0%,100%{box-shadow:0 4px 20px rgba(185,28,28,0.3)}50%{box-shadow:0 4px 30px rgba(185,28,28,0.5),0 0 0 8px rgba(185,28,28,0.08)}}
+    .start-btn svg{width:20px;height:20px}
+    .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem;max-width:640px;margin-inline:auto}
+    @media(max-width:560px){.results-grid{grid-template-columns:1fr;max-width:320px}}
+    .result-card{
+      background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+      padding:1.25rem 1rem;text-align:center;transition:border-color .3s,box-shadow .3s
+    }
+    .result-card:hover{border-color:var(--ink-faint);box-shadow:var(--shadow)}
+    .result-icon{width:36px;height:36px;margin:0 auto 0.75rem;color:var(--ink-mute);display:flex;align-items:center;justify-content:center}
+    .result-icon svg{width:24px;height:24px}
+    .result-name{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-mute);margin-bottom:0.4rem}
+    .result-value{font-size:2rem;font-weight:800;color:var(--ink);line-height:1.1}
+    .result-unit{font-size:0.8rem;font-weight:500;color:var(--ink-mute);margin-top:0.15rem}
+    .result-grade{display:inline-block;margin-top:0.5rem;padding:0.15rem 0.6rem;border-radius:999px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+    .grade-excellent{background:rgba(16,185,129,0.1);color:#047857;border:1px solid rgba(16,185,129,0.25)}
+    .grade-good{background:rgba(59,130,246,0.1);color:#1D4ED8;border:1px solid rgba(59,130,246,0.25)}
+    .grade-fair{background:rgba(245,158,11,0.1);color:#B45309;border:1px solid rgba(245,158,11,0.25)}
+    .grade-poor{background:rgba(220,38,38,0.1);color:#DC2626;border:1px solid rgba(220,38,38,0.25)}
+    [data-theme="dark"] .grade-excellent{color:#34D399}[data-theme="dark"] .grade-good{color:#60A5FA}
+    [data-theme="dark"] .grade-fair{color:#FBBF24}[data-theme="dark"] .grade-poor{color:#F87171}
+    .graph-wrap{margin:2rem auto 0;max-width:640px}
+    .graph-canvas{width:100%;height:100px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper-alt)}
+    .server-select{
+      display:flex;justify-content:center;gap:0.4rem;margin-bottom:1.5rem;flex-wrap:wrap
+    }
+    .server-chip{
+      padding:0.35rem 0.8rem;border-radius:999px;font-size:0.78rem;font-weight:600;
+      border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+      cursor:pointer;transition:all .2s;font-family:inherit
+    }
+    .server-chip:hover{border-color:var(--ink-faint)}
+    .server-chip.active{background:var(--red-700);color:#fff;border-color:var(--red-700)}
+    .share-row{margin-top:1.5rem;display:flex;justify-content:center;gap:0.6rem;flex-wrap:wrap}
+    .isp-info{margin-top:1.5rem;font-size:0.8rem;color:var(--ink-mute)}
+  </style>
+</head>
+<body data-app-name="Speed Test">
+  <main class="app-main narrow">
+    <header class="app-hero">
+      <p class="app-eyebrow">Network · Speed</p>
+      <h1 class="app-title">Speed <span class="accent">Test</span></h1>
+      <p class="app-subtitle">
+        Measure your internet download speed, latency, and connection quality. Runs entirely in your browser — no app install needed.
+      </p>
+    </header>
+
+    <div class="st-wrap">
+      <!-- Server Selection -->
+      <div class="server-select" id="serverSelect">
+        <button class="server-chip active" data-server="auto">Auto</button>
+        <button class="server-chip" data-server="sg">Singapore</button>
+        <button class="server-chip" data-server="jp">Tokyo</button>
+        <button class="server-chip" data-server="us">US West</button>
+        <button class="server-chip" data-server="eu">Europe</button>
+      </div>
+
+      <!-- Gauge -->
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 200 200" id="gaugeSvg">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#10B981"/>
+              <stop offset="40%" stop-color="#3B82F6"/>
+              <stop offset="70%" stop-color="#F59E0B"/>
+              <stop offset="100%" stop-color="#DC2626"/>
+            </linearGradient>
+          </defs>
+          <!-- Background arc -->
+          <circle cx="100" cy="100" r="85" fill="none" stroke="var(--line-soft)" stroke-width="12" stroke-linecap="round"
+            stroke-dasharray="401.92 534.07" transform="rotate(135 100 100)"/>
+          <!-- Value arc -->
+          <circle id="gaugeArc" cx="100" cy="100" r="85" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round"
+            stroke-dasharray="0 534.07" transform="rotate(135 100 100)" style="transition:stroke-dasharray .4s ease"/>
+          <!-- Tick marks -->
+          <g id="gaugeTicks" opacity="0.4"></g>
+          <!-- Tick labels -->
+          <g id="gaugeLabels" font-size="8" fill="var(--ink-mute)" text-anchor="middle" font-weight="600"></g>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-value" id="gaugeValue">0</div>
+          <div class="gauge-unit" id="gaugeUnit">Mbps</div>
+          <div class="gauge-label" id="gaugeLabel">Tap Start to begin</div>
+        </div>
+      </div>
+
+      <!-- Phase Indicator -->
+      <div class="phase-indicator" id="phaseIndicator">
+        <div class="phase-step" id="phasePing"><span class="phase-dot"></span> Ping</div>
+        <div class="phase-connector"></div>
+        <div class="phase-step" id="phaseDownload"><span class="phase-dot"></span> Download</div>
+        <div class="phase-connector"></div>
+        <div class="phase-step" id="phaseJitter"><span class="phase-dot"></span> Jitter</div>
+      </div>
+
+      <!-- Start Button -->
+      <button class="start-btn pulse" id="startBtn" data-primary>
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        Start Test
+      </button>
+
+      <!-- Results -->
+      <div class="results-grid" id="resultsGrid" style="display:none">
+        <div class="result-card">
+          <div class="result-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="result-name">Ping</div>
+          <div class="result-value" id="resPing">--</div>
+          <div class="result-unit">ms</div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </div>
+          <div class="result-name">Download</div>
+          <div class="result-value" id="resDown">--</div>
+          <div class="result-unit">Mbps</div>
+          <div id="gradeDown"></div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="result-name">Jitter</div>
+          <div class="result-value" id="resJitter">--</div>
+          <div class="result-unit">ms</div>
+        </div>
+      </div>
+
+      <!-- Live Graph -->
+      <div class="graph-wrap" id="graphWrap" style="display:none">
+        <canvas class="graph-canvas" id="graphCanvas" width="640" height="100"></canvas>
+      </div>
+
+      <!-- ISP Info -->
+      <div class="isp-info" id="ispInfo"></div>
+
+      <!-- Share Row -->
+      <div class="share-row" id="shareRow" style="display:none">
+        <button class="btn btn-primary" onclick="shareResults()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Results
+        </button>
+        <button class="btn btn-ghost" onclick="location.reload()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Test Again
+        </button>
+      </div>
+    </div>
+  </main>
+  <script data-app-name="Speed Test" src="/apps/assets/app-shell.js"></script>
+  <script>
+  (function(){
+    /* ---- Gauge Setup ---- */
+    var MAX_SPEED=1000, ARC_LEN=401.92;
+    var ticks=[0,10,25,50,100,250,500,1000];
+    var ticksG=document.getElementById('gaugeTicks');
+    var labelsG=document.getElementById('gaugeLabels');
+    ticks.forEach(function(v){
+      var frac=speedToFrac(v);
+      var angle=135+frac*270;
+      var rad=angle*Math.PI/180;
+      var x1=100+78*Math.cos(rad), y1=100+78*Math.sin(rad);
+      var x2=100+84*Math.cos(rad), y2=100+84*Math.sin(rad);
+      var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+      line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+      line.setAttribute('stroke','var(--ink-faint)');line.setAttribute('stroke-width','1.5');
+      ticksG.appendChild(line);
+      var lx=100+69*Math.cos(rad), ly=100+69*Math.sin(rad);
+      var txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',lx);txt.setAttribute('y',ly+3);
+      txt.textContent=v>=1000?'1G':v;
+      labelsG.appendChild(txt);
+    });
+
+    function speedToFrac(s){return Math.min(1,Math.pow(Math.max(0,s)/MAX_SPEED,0.5))}
+    function setGauge(speed){
+      var frac=speedToFrac(speed);
+      var len=frac*ARC_LEN;
+      document.getElementById('gaugeArc').setAttribute('stroke-dasharray',len+' '+(534.07-len));
+    }
+
+    /* ---- State ---- */
+    var testing=false, graphData=[];
+    var servers={
+      auto:'https://cdn.jsdelivr.net',
+      sg:'https://cdn.jsdelivr.net',
+      jp:'https://cdn.jsdelivr.net',
+      us:'https://cdn.jsdelivr.net',
+      eu:'https://cdn.jsdelivr.net'
+    };
+    var selectedServer='auto';
+    var downloadFiles=[
+      'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
+      'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js',
+      'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.js'
+    ];
+
+    /* ---- Server Select ---- */
+    document.getElementById('serverSelect').addEventListener('click',function(e){
+      var chip=e.target.closest('.server-chip');
+      if(!chip||testing)return;
+      document.querySelectorAll('.server-chip').forEach(function(c){c.classList.remove('active')});
+      chip.classList.add('active');
+      selectedServer=chip.dataset.server;
+    });
+
+    /* ---- Graph ---- */
+    function drawGraph(){
+      var canvas=document.getElementById('graphCanvas');
+      var ctx=canvas.getContext('2d');
+      var w=canvas.width, h=canvas.height;
+      ctx.clearRect(0,0,w,h);
+      if(graphData.length<2)return;
+      var maxVal=Math.max.apply(null,graphData)*1.2||1;
+      var step=w/(graphData.length-1);
+      // Fill
+      ctx.beginPath();
+      ctx.moveTo(0,h);
+      graphData.forEach(function(v,i){ctx.lineTo(i*step,h-(v/maxVal)*h*0.85)});
+      ctx.lineTo((graphData.length-1)*step,h);
+      ctx.closePath();
+      var style=getComputedStyle(document.documentElement);
+      var isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      ctx.fillStyle=isDark?'rgba(185,28,28,0.12)':'rgba(185,28,28,0.08)';
+      ctx.fill();
+      // Line
+      ctx.beginPath();
+      graphData.forEach(function(v,i){
+        var x=i*step, y=h-(v/maxVal)*h*0.85;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      });
+      ctx.strokeStyle='#B91C1C';
+      ctx.lineWidth=2.5;
+      ctx.lineJoin='round';
+      ctx.stroke();
+      // Dots
+      graphData.forEach(function(v,i){
+        var x=i*step, y=h-(v/maxVal)*h*0.85;
+        ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+        ctx.fillStyle='#B91C1C';ctx.fill();
+      });
+    }
+
+    /* ---- Phase ---- */
+    function setPhase(phase){
+      ['Ping','Download','Jitter'].forEach(function(p){
+        var el=document.getElementById('phase'+p);
+        el.classList.remove('active','done');
+      });
+      if(phase==='ping')document.getElementById('phasePing').classList.add('active');
+      else if(phase==='download'){
+        document.getElementById('phasePing').classList.add('done');
+        document.getElementById('phaseDownload').classList.add('active');
+      }else if(phase==='jitter'){
+        document.getElementById('phasePing').classList.add('done');
+        document.getElementById('phaseDownload').classList.add('done');
+        document.getElementById('phaseJitter').classList.add('active');
+      }else if(phase==='done'){
+        document.getElementById('phasePing').classList.add('done');
+        document.getElementById('phaseDownload').classList.add('done');
+        document.getElementById('phaseJitter').classList.add('done');
+      }
+    }
+
+    /* ---- Grade ---- */
+    function getGrade(mbps){
+      if(mbps>=100)return{label:'Excellent',cls:'grade-excellent'};
+      if(mbps>=50)return{label:'Good',cls:'grade-good'};
+      if(mbps>=25)return{label:'Fair',cls:'grade-fair'};
+      return{label:'Poor',cls:'grade-poor'};
+    }
+
+    /* ---- Ping Test ---- */
+    function testPing(){
+      return new Promise(function(resolve){
+        var results=[];
+        var count=0, total=10;
+        function doPing(){
+          var start=performance.now();
+          fetch('https://dns.google/resolve?name=example.com&type=A',{cache:'no-store',mode:'cors'})
+            .then(function(r){return r.json()})
+            .then(function(){
+              var ms=performance.now()-start;
+              results.push(ms);
+              setGauge(ms);
+              document.getElementById('gaugeValue').textContent=Math.round(ms);
+              document.getElementById('gaugeUnit').textContent='ms';
+              document.getElementById('gaugeLabel').textContent='Testing latency...';
+              count++;
+              if(count<total)setTimeout(doPing,200);
+              else resolve(results);
+            })
+            .catch(function(){
+              count++;
+              if(count<total)setTimeout(doPing,200);
+              else resolve(results);
+            });
+        }
+        doPing();
+      });
+    }
+
+    /* ---- Download Test ---- */
+    function testDownload(onProgress){
+      return new Promise(function(resolve){
+        var totalBytes=0, totalTime=0;
+        var concurrent=3;
+        var rounds=0, maxRounds=4;
+        var speeds=[];
+        document.getElementById('graphWrap').style.display='block';
+
+        function downloadRound(){
+          if(rounds>=maxRounds){
+            var avgSpeed=speeds.reduce(function(a,b){return a+b},0)/speeds.length;
+            resolve(avgSpeed);
+            return;
+          }
+          var fileUrl=downloadFiles[rounds%downloadFiles.length];
+          var start=performance.now();
+          var promises=[];
+          for(var i=0;i<concurrent;i++){
+            promises.push(
+              fetch(fileUrl+'?_='+Date.now()+'_'+i,{cache:'no-store'})
+                .then(function(r){
+                  if(!r.ok)throw new Error('bad response');
+                  return r.blob();
+                })
+                .then(function(blob){
+                  totalBytes+=blob.size;
+                  return blob.size;
+                })
+                .catch(function(){return 0})
+            );
+          }
+          Promise.all(promises).then(function(sizes){
+            var elapsed=(performance.now()-start)/1000;
+            var roundBytes=sizes.reduce(function(a,b){return a+b},0);
+            var mbps=(roundBytes*8)/(elapsed*1000000);
+            speeds.push(mbps);
+            graphData.push(mbps);
+            if(graphData.length>30)graphData.shift();
+            drawGraph();
+            onProgress(mbps);
+            rounds++;
+            setTimeout(downloadRound,100);
+          });
+        }
+        downloadRound();
+      });
+    }
+
+    /* ---- Jitter Test ---- */
+    function testJitter(pingResults){
+      if(pingResults.length<2)return Promise.resolve(0);
+      var diffs=[];
+      for(var i=1;i<pingResults.length;i++){
+        diffs.push(Math.abs(pingResults[i]-pingResults[i-1]));
+      }
+      var avg=diffs.reduce(function(a,b){return a+b},0)/diffs.length;
+      return Promise.resolve(avg);
+    }
+
+    /* ---- Share ---- */
+    window.shareResults=function(){
+      var text='Speed Test Results\n'+
+        'Ping: '+document.getElementById('resPing').textContent+' ms\n'+
+        'Download: '+document.getElementById('resDown').textContent+' Mbps\n'+
+        'Jitter: '+document.getElementById('resJitter').textContent+' ms\n'+
+        'Tested at bayhaqy.my.id/apps/speed-test/';
+      if(navigator.clipboard)navigator.clipboard.writeText(text).then(function(){showToast('Results copied!')});
+      else showToast('Copy not supported');
+    };
+
+    /* ---- ISP Info ---- */
+    function showISPInfo(){
+      var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+      var info=[];
+      if(conn){
+        if(conn.effectiveType)info.push('Connection: '+conn.effectiveType.toUpperCase());
+        if(conn.downlink)info.push('Est. downlink: '+conn.downlink+' Mbps');
+        if(conn.rtt)info.push('Est. RTT: '+conn.rtt+' ms');
+      }
+      if(navigator.userAgent){var ua=navigator.userAgent;
+        if(ua.indexOf('Chrome')>-1)info.push('Browser: Chrome');
+        else if(ua.indexOf('Firefox')>-1)info.push('Browser: Firefox');
+        else if(ua.indexOf('Safari')>-1)info.push('Browser: Safari');
+      }
+      if(info.length)document.getElementById('ispInfo').textContent=info.join(' · ');
+    }
+    showISPInfo();
+
+    /* ---- Main ---- */
+    var startBtn=document.getElementById('startBtn');
+    startBtn.addEventListener('click',function(){
+      if(testing)return;
+      testing=true;
+      startBtn.disabled=true;
+      startBtn.classList.remove('pulse');
+      startBtn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;animation:spin 1s linear infinite"><path d="M12 2a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7V2z"/></svg> Testing...';
+      document.getElementById('resultsGrid').style.display='none';
+      document.getElementById('shareRow').style.display='none';
+      graphData=[];
+
+      // Add spin animation
+      if(!document.getElementById('spinStyle')){
+        var s=document.createElement('style');s.id='spinStyle';
+        s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+        document.head.appendChild(s);
+      }
+
+      // Phase 1: Ping
+      setPhase('ping');
+      testPing().then(function(pingResults){
+        var avg=pingResults.reduce(function(a,b){return a+b},0)/pingResults.length;
+        var min=Math.min.apply(null,pingResults);
+        var max=Math.max.apply(null,pingResults);
+        document.getElementById('resPing').textContent=Math.round(avg);
+
+        // Phase 2: Download
+        setPhase('download');
+        document.getElementById('gaugeLabel').textContent='Testing download...';
+        return testDownload(function(mbps){
+          var display=mbps<10?mbps.toFixed(2):mbps<100?mbps.toFixed(1):Math.round(mbps);
+          document.getElementById('gaugeValue').textContent=display;
+          document.getElementById('gaugeUnit').textContent='Mbps';
+          setGauge(mbps);
+          document.getElementById('gaugeLabel').textContent='Testing download...';
+        }).then(function(avgDown){
+          document.getElementById('resDown').textContent=avgDown<10?avgDown.toFixed(2):avgDown<100?avgDown.toFixed(1):Math.round(avgDown);
+          var grade=getGrade(avgDown);
+          var gradeEl=document.getElementById('gradeDown');
+          gradeEl.innerHTML='<span class="result-grade '+grade.cls+'">'+grade.label+'</span>';
+
+          // Phase 3: Jitter
+          setPhase('jitter');
+          document.getElementById('gaugeLabel').textContent='Calculating jitter...';
+          return testJitter(pingResults).then(function(jitter){
+            document.getElementById('resJitter').textContent=Math.round(jitter*10)/10;
+            setPhase('done');
+
+            // Final gauge display
+            var finalDisplay=avgDown<10?avgDown.toFixed(1):avgDown<100?avgDown.toFixed(0):Math.round(avgDown);
+            document.getElementById('gaugeValue').textContent=finalDisplay;
+            document.getElementById('gaugeUnit').textContent='Mbps';
+            document.getElementById('gaugeLabel').textContent='Test complete';
+            setGauge(avgDown);
+
+            // Show results
+            document.getElementById('resultsGrid').style.display='grid';
+            document.getElementById('shareRow').style.display='flex';
+
+            testing=false;
+            startBtn.disabled=false;
+            startBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Test Again';
+          });
+        });
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
