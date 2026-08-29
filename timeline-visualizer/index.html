@@ -3,961 +3,1565 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Timeline Visualizer — visualize your Google Maps Timeline on an interactive map. Upload Timeline.json, Records.json or Location History.json and replay your journeys with animated playback. 100% client-side." />
+  <meta name="description" content="Turn your Google Maps Timeline into a smooth animated journey — pink route reveal, moving marker, live date and distance, flight arcs. Upload Timeline.json, Records.json, location-history.json or a Takeout zip. 100% client-side." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="Timeline Visualizer — Map Your Location History" />
-  <meta property="og:description" content="Drop your Google Timeline export and replay your journeys on an animated map. Nothing is uploaded." />
+  <meta property="og:description" content="Drop your Google Timeline export and watch your journey animate on a map. Nothing is uploaded." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/timeline-visualizer/" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/timeline-visualizer/" />
   <link rel="icon" href="/apps/icons/logo.png" />
   <title>Timeline Visualizer — Bayhaqy Apps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260828a" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260829a" />
+  <link rel="stylesheet" href="lib/leaflet.min.css" />
   <style>
-    .tv-layout{display:grid;grid-template-columns:1fr;gap:1.25rem}
-    @media(min-width:980px){.tv-layout{grid-template-columns:350px 1fr}}
-    .sidebar{display:flex;flex-direction:column;gap:.9rem;min-width:0}
-
-    /* ---------- drop zone ---------- */
-    .drop-zone{
-      border:2px dashed var(--line);border-radius:var(--radius-lg);background:var(--paper);
-      padding:1.5rem 1.1rem;text-align:center;cursor:pointer;transition:border-color .25s,background .25s,transform .2s
+    /* ============ tvnet-inspired palette (page scope only; shell untouched) ============ */
+    .tv{
+      --pink:#E90064; --pink-dark:#C50056; --pink-soft:rgba(233,0,100,.08);
+      --pink-ring:rgba(233,0,100,.28); --pink-shadow:0 12px 32px rgba(233,0,100,.32);
+      --tink:#24191D; --tmute:#5C4B52; --beige:#EFEDE6;
     }
-    .drop-zone:hover{border-color:var(--ink-faint)}
-    .drop-zone.drag-over{border-color:var(--red-700);background:rgba(185,28,28,.05);transform:scale(1.01)}
-    .dz-icon{width:42px;height:42px;margin:0 auto .6rem;color:var(--red-700)}
-    .dz-icon svg{width:100%;height:100%}
-    .dz-title{font-size:.92rem;font-weight:700;color:var(--ink);margin-bottom:.3rem}
-    .dz-sub{font-size:.74rem;color:var(--ink-mute);line-height:1.5}
-    .dz-formats{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin-top:.7rem}
-    .fmt-chip{font-size:.62rem;font-weight:700;padding:.14rem .5rem;border-radius:999px;background:var(--paper-alt);border:1px solid var(--line);color:var(--ink-mute)}
 
-    /* ---------- file chip ---------- */
-    .file-chip{
-      display:none;align-items:center;gap:.6rem;background:var(--paper);border:1px solid var(--line);
-      border-radius:var(--radius);padding:.6rem .8rem
+    .tv-layout{display:grid;grid-template-columns:1fr;gap:1.1rem;grid-template-areas:"main" "side"}
+    @media(min-width:1020px){
+      .tv-layout{grid-template-columns:340px 1fr;grid-template-areas:"side main";align-items:start}
     }
-    .file-chip.show{display:flex}
-    .fc-dot{width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0}
-    .fc-meta{min-width:0;flex:1}
-    .fc-name{font-size:.8rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .fc-sub{font-size:.68rem;color:var(--ink-mute)}
-    .fc-clear{border:none;background:var(--paper-alt);color:var(--ink-mute);width:26px;height:26px;border-radius:8px;cursor:pointer;font-size:.9rem;line-height:1;flex-shrink:0}
-    .fc-clear:hover{color:var(--red-700);background:rgba(185,28,28,.08)}
+    .tv-side{grid-area:side;display:flex;flex-direction:column;gap:.9rem;min-width:0}
+    .tv-main{grid-area:main;display:flex;flex-direction:column;gap:.9rem;min-width:0}
 
-    /* ---------- panels ---------- */
-    .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:.9rem}
-    .panel-title{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-faint);margin-bottom:.6rem}
+    /* ============ upload card ============ */
+    .tv-upload{
+      background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:1.05rem .95rem;
+      box-shadow:var(--shadow-sm);transition:box-shadow .25s,transform .25s
+    }
+    .tv-upload.drag-over{box-shadow:0 0 0 3px var(--pink-ring);transform:scale(1.012)}
+    .tv-cta{
+      width:100%;min-height:52px;border:none;border-radius:999px;cursor:pointer;
+      background:var(--pink);color:#fff;font-family:inherit;font-size:.95rem;font-weight:700;letter-spacing:.01em;
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+      box-shadow:var(--pink-shadow);transition:transform .18s var(--ease),box-shadow .25s,background .2s
+    }
+    .tv-cta:hover{background:var(--pink-dark);transform:translateY(-1px)}
+    .tv-cta:active{transform:scale(.985)}
+    .tv-cta svg{width:17px;height:17px}
+    .tv-or{font-size:.78rem;color:var(--ink-mute);text-align:center;margin:.55rem 0 .2rem}
+    .tv-sample{
+      display:block;margin:0 auto;background:none;border:none;cursor:pointer;font-family:inherit;
+      font-size:.82rem;font-weight:700;color:var(--pink);padding:.25rem .4rem;border-radius:8px;transition:background .2s
+    }
+    .tv-sample:hover{background:var(--pink-soft)}
+    .tv-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+    .tv-chip{
+      font-size:.66rem;font-weight:700;color:var(--ink-soft);background:var(--paper);
+      border:1px solid var(--line);border-radius:999px;padding:.32rem .7rem;white-space:nowrap
+    }
+    .tv-chip.dot::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#10B981;margin-right:.38rem;vertical-align:1px}
+    .tv-err{
+      display:none;margin-top:.7rem;font-size:.74rem;line-height:1.55;color:var(--red-700);
+      background:var(--red-50);border:1px solid rgba(185,28,28,.25);border-radius:12px;padding:.6rem .75rem
+    }
+    .tv-err.show{display:block;animation:tvIn .3s var(--ease)}
+    .tv-err b{display:block;margin-bottom:.15rem}
+    .tv-err code{font-size:.68rem;background:rgba(185,28,28,.07);padding:.05rem .3rem;border-radius:5px}
+    @keyframes tvIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 
-    /* ---------- playback ---------- */
-    .play-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
-    .play-btn{
-      width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
-      background:var(--red-700);color:#fff;display:flex;align-items:center;justify-content:center;
-      box-shadow:0 4px 14px rgba(185,28,28,.3);transition:transform .15s,background .2s
+    /* ============ stage ============ */
+    .tv-stage{
+      position:relative;border-radius:24px;overflow:hidden;background:var(--beige);
+      border:1px solid var(--line);box-shadow:0 24px 64px rgba(28,27,28,.14);
+      height:clamp(380px,58vh,560px)
     }
-    .play-btn:hover{transform:scale(1.06)}
-    .play-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-    .play-btn svg{width:17px;height:17px}
-    .play-meta{flex:1;min-width:0}
-    .pm-time{font-size:.78rem;font-weight:800;color:var(--ink);line-height:1.25;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .pm-dist{font-size:.7rem;font-weight:600;color:var(--red-700);font-variant-numeric:tabular-nums;white-space:nowrap}
-    .speed-sel{
-      font-family:inherit;font-size:.72rem;font-weight:700;color:var(--ink-soft);
-      border:1px solid var(--line);border-radius:8px;background:var(--paper-alt);padding:.35rem .3rem;cursor:pointer;
-      flex-shrink:0;width:64px;text-align:center;appearance:auto
-    }
-    .scrubber{width:100%;accent-color:var(--red-700);cursor:pointer}
+    #tvMap{position:absolute;inset:0;background:var(--beige)}
+    #tvMap.tv-light-tiles .leaflet-tile-pane{filter:sepia(.16) saturate(.72) brightness(1.03)}
+    .leaflet-container{font-family:inherit}
+    .leaflet-control-attribution{font-size:.58rem;border-radius:8px 0 0 0}
 
-    /* ---------- day list ---------- */
-    .day-list{max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:.35rem;margin-top:.2rem;padding-right:2px}
-    .day-row{
-      display:flex;align-items:center;gap:.6rem;padding:.5rem .65rem;border-radius:var(--radius-sm);
-      border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s
+    /* floating cards over the map */
+    .tv-titlecard{
+      position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:800;
+      background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:.55rem 1.15rem;
+      text-align:center;box-shadow:0 12px 32px rgba(28,27,28,.16);pointer-events:none;
+      transition:opacity .5s var(--ease),transform .5s var(--ease)
     }
-    .day-row:hover{background:var(--paper-alt)}
-    .day-row.active{background:rgba(185,28,28,.07);border-color:rgba(185,28,28,.25)}
-    .day-date{font-size:.76rem;font-weight:700;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .day-dist{font-size:.7rem;font-weight:700;color:var(--ink-mute);font-variant-numeric:tabular-nums}
-    .day-pts{font-size:.62rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
-    .day-row.active .day-dist{color:var(--red-700)}
+    .tv-titlecard.hide{opacity:0;transform:translateX(-50%) translateY(-8px)}
+    .tt-name{font-size:.8rem;font-weight:800;color:var(--ink);line-height:1.2}
+    .tt-sub{font-size:.66rem;font-weight:600;color:var(--ink-mute);margin-top:.1rem;font-variant-numeric:tabular-nums}
 
-    /* ---------- stats ---------- */
-    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}
-    .stat-tile{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:.7rem .75rem;text-align:center}
-    .stat-val{font-size:1.25rem;font-weight:800;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}
-    .stat-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);margin-top:.2rem}
+    .tv-livecard{
+      position:absolute;left:14px;bottom:14px;z-index:800;pointer-events:none;
+      background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:.6rem .95rem;
+      box-shadow:0 12px 32px rgba(28,27,28,.16);min-width:150px;
+      transition:opacity .5s var(--ease),transform .5s var(--ease)
+    }
+    .tv-livecard.hide{opacity:0;transform:translateY(8px)}
+    .lv-date{font-size:.7rem;font-weight:700;color:var(--ink-mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .lv-dist{font-size:1.35rem;font-weight:900;color:var(--pink);line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 
-    /* ---------- actions & howto ---------- */
-    .actions{display:flex;gap:.5rem;flex-wrap:wrap}
-    .mini-btn{
-      flex:1;font-family:inherit;font-size:.72rem;font-weight:700;color:var(--ink-soft);
-      border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-sm);
-      padding:.5rem .6rem;cursor:pointer;transition:border-color .2s,color .2s;
-      display:inline-flex;align-items:center;justify-content:center;gap:.35rem;white-space:nowrap
+    .tv-stagebtns{position:absolute;right:14px;bottom:14px;z-index:800;display:flex;gap:.45rem}
+    .tv-iconbtn{
+      width:40px;height:40px;border-radius:999px;border:1px solid var(--line);cursor:pointer;
+      background:var(--paper);color:var(--ink-soft);display:flex;align-items:center;justify-content:center;
+      box-shadow:0 8px 24px rgba(28,27,28,.14);transition:transform .18s var(--ease),color .2s,border-color .2s
     }
-    .mini-btn:hover{border-color:var(--ink-faint);color:var(--ink)}
-    .mini-btn svg{width:13px;height:13px}
-    .howto{font-size:.74rem;color:var(--ink-mute);line-height:1.65}
-    .howto summary{cursor:pointer;font-weight:700;color:var(--ink-soft);font-size:.78rem}
-    .howto ol{margin:.5rem 0 0 1.1rem;padding:0}
-    .howto li{margin-bottom:.35rem}
-    .howto a{color:var(--red-700);font-weight:600;text-decoration:none}
-    .howto a:hover{text-decoration:underline}
-    .privacy-note{font-size:.68rem;color:var(--ink-faint);line-height:1.6;text-align:center;padding:0 .5rem}
+    .tv-iconbtn:hover{transform:translateY(-1px);color:var(--pink)}
+    .tv-iconbtn.on{background:var(--pink);border-color:var(--pink);color:#fff}
+    .tv-iconbtn svg{width:16px;height:16px}
 
-    /* ---------- map ---------- */
-    .map-col{min-width:0}
-    .map-container{
-      border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;
-      height:520px;position:relative;background:var(--paper-alt)
+    /* ============ empty hero inside stage ============ */
+    .tv-empty{
+      position:absolute;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;gap:2.5rem;
+      background:
+        radial-gradient(1200px 500px at 85% -10%, rgba(233,0,100,.05), transparent 60%),
+        var(--paper);
+      padding:2rem;transition:opacity .45s var(--ease)
     }
-    @media(max-width:979px){.map-container{height:400px}}
-    #map{width:100%;height:100%;background:var(--paper-alt)}
-    /* dark-mode map: invert raster tiles for a dark basemap without API keys */
-    #map.dark-tiles .leaflet-tile-pane{filter:invert(1) hue-rotate(185deg) brightness(.92) contrast(.9) saturate(.7)}
-    #map.dark-tiles .leaflet-container{background:#1a1a1a}
-    .map-empty{
-      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      background:var(--paper-alt);z-index:500;text-align:center;padding:1.5rem;transition:opacity .4s
-    }
-    .map-empty.hide{opacity:0;pointer-events:none}
-    .me-icon{width:46px;height:46px;color:var(--ink-faint);margin-bottom:.7rem}
-    .me-icon svg{width:100%;height:100%}
-    .me-title{font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.3rem}
-    .me-sub{font-size:.75rem;color:var(--ink-mute);max-width:320px;line-height:1.55}
+    .tv-empty.hide{opacity:0;pointer-events:none}
+    @media(max-width:760px){.tv-empty{flex-direction:column;justify-content:flex-start;gap:1.4rem;padding:1.4rem;overflow:auto}}
+    .tv-empty-left{max-width:430px;width:100%}
+    .te-heading{font-size:1.35rem;font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1.25;margin-bottom:.45rem}
+    .te-heading .hl{color:var(--pink)}
+    .te-sub{font-size:.84rem;color:var(--ink-mute);line-height:1.6;margin-bottom:1.1rem}
+    .te-drophint{font-size:.76rem;color:var(--ink-faint);text-align:center;margin:.5rem 0 .1rem}
+    .te-drophint b{color:var(--ink-mute)}
+    .tv-empty-right{flex-shrink:0}
 
-    .pulse-marker{background:transparent;border:none}
-    .pulse-marker .core{
-      width:14px;height:14px;border-radius:50%;background:var(--red-700);border:2.5px solid #fff;
-      box-shadow:0 1px 6px rgba(0,0,0,.4);position:relative;z-index:2
+    /* phone preview — CSS animation, like the reference site */
+    .phone{
+      width:218px;height:450px;border-radius:34px;border:6px solid #24191D;background:var(--beige);
+      position:relative;overflow:hidden;box-shadow:0 24px 64px rgba(28,27,28,.24);flex-shrink:0
     }
-    .pulse-marker .ring{
-      position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;
-      background:rgba(185,28,28,.35);transform:translate(-50%,-50%);animation:ringPulse 1.6s ease-out infinite
+    .phone::after{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:64px;height:16px;border-radius:999px;background:#24191D;opacity:.92;z-index:5}
+    .phone-grid{position:absolute;inset:0;opacity:.5;
+      background-image:linear-gradient(rgba(36,25,29,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(36,25,29,.05) 1px,transparent 1px);
+      background-size:26px 26px}
+    .phone-path{position:absolute;inset:0;width:100%;height:100%}
+    .phone-path .route{fill:none;stroke:var(--pink);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;
+      animation:phDraw 7s cubic-bezier(.45,.05,.35,1) infinite}
+    .phone-path .routeGhost{fill:none;stroke:var(--pink);opacity:.16;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+    .phone-dot{
+      position:absolute;width:15px;height:15px;border-radius:50%;background:#24191D;border:3.5px solid #fff;
+      box-shadow:0 0 0 3px var(--pink),0 3px 10px rgba(0,0,0,.35);left:0;top:0;z-index:4;
+      offset-rotate:0deg;animation:phMove 7s cubic-bezier(.45,.05,.35,1) infinite
     }
-    @keyframes ringPulse{0%{width:14px;height:14px;opacity:.8}100%{width:52px;height:52px;opacity:0}}
+    @supports not (offset-path: path("M0 0 L1 1")){ .phone-dot{display:none} }
+    @keyframes phDraw{0%{stroke-dashoffset:var(--phlen,520)}58%,86%{stroke-dashoffset:0}100%{stroke-dashoffset:calc(-1 * var(--phlen,520))}}
+    @keyframes phMove{
+      0%{offset-distance:0%;opacity:0}4%{opacity:1}
+      58%,86%{offset-distance:100%;opacity:1}94%{opacity:1}100%{offset-distance:100%;opacity:0}
+    }
+    .phone-mini{
+      position:absolute;top:34px;left:50%;transform:translateX(-50%);z-index:6;white-space:nowrap;
+      background:var(--paper);border-radius:12px;padding:.35rem .8rem;text-align:center;
+      box-shadow:0 8px 24px rgba(28,27,28,.14)
+    }
+    .phone-mini .pm1{font-size:.62rem;font-weight:800;color:var(--ink)}
+    .phone-mini .pm2{font-size:.52rem;font-weight:600;color:var(--ink-mute)}
+    .phone-attr{position:absolute;right:8px;bottom:6px;font-size:.42rem;color:var(--tmute);opacity:.65;z-index:6}
 
-    .leaflet-popup-content{font-family:inherit;font-size:.78rem;line-height:1.5}
-    .popup-name{font-weight:800;font-size:.82rem;margin-bottom:.15rem}
-    .popup-sub{color:#666;font-size:.72rem}
+    /* ============ playbar ============ */
+    .tv-playbar{
+      display:none;align-items:center;gap:.9rem;background:var(--paper);border:1px solid var(--line);
+      border-radius:20px;padding:.75rem 1rem;box-shadow:var(--shadow-sm)
+    }
+    .tv-playbar.show{display:flex;animation:tvIn .35s var(--ease)}
+    .tv-play{
+      width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+      background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;
+      box-shadow:var(--pink-shadow);transition:transform .18s var(--ease),background .2s
+    }
+    .tv-play:hover{transform:scale(1.05)}
+    .tv-play:active{transform:scale(.97)}
+    .tv-play:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .tv-play svg{width:18px;height:18px}
+    .tv-track{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+    .tv-scrub{width:100%;appearance:none;-webkit-appearance:none;height:22px;background:transparent;cursor:pointer;margin:0}
+    .tv-scrub::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,var(--pink) 0%,var(--pink) var(--fill,0%),var(--line) var(--fill,0%))}
+    .tv-scrub::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--pink);margin-top:-6px;box-shadow:0 2px 8px rgba(233,0,100,.35);transition:transform .15s}
+    .tv-scrub::-webkit-slider-thumb:hover{transform:scale(1.15)}
+    .tv-scrub::-moz-range-track{height:6px;border-radius:999px;background:var(--line)}
+    .tv-scrub::-moz-range-progress{height:6px;border-radius:999px;background:var(--pink)}
+    .tv-scrub::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--pink);box-shadow:0 2px 8px rgba(233,0,100,.35)}
+    .tv-times{display:flex;justify-content:space-between;font-size:.64rem;font-weight:700;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+    .tv-speed{display:flex;gap:0;background:var(--paper-alt);border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+    .tv-speed button{
+      border:none;background:transparent;font-family:inherit;font-size:.68rem;font-weight:800;color:var(--ink-mute);
+      padding:.34rem .6rem;border-radius:999px;cursor:pointer;transition:background .2s,color .2s
+    }
+    .tv-speed button:hover{color:var(--ink)}
+    .tv-speed button.on{background:var(--pink);color:#fff;box-shadow:0 2px 8px rgba(233,0,100,.3)}
+
+    /* ============ sidebar panels ============ */
+    .tv-panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:.9rem;box-shadow:var(--shadow-sm)}
+    .tv-ptitle{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:var(--ink-faint);margin-bottom:.6rem}
+
+    .tv-months{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.4rem}
+    .tv-mchip{
+      font-family:inherit;font-size:.68rem;font-weight:800;color:var(--ink-mute);cursor:pointer;
+      background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.32rem .68rem;
+      transition:all .18s var(--ease)
+    }
+    .tv-mchip:hover{border-color:var(--pink);color:var(--pink)}
+    .tv-mchip.on{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 3px 10px rgba(233,0,100,.28)}
+
+    .tv-days{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:.22rem;padding-right:2px}
+    .tv-day{
+      display:flex;align-items:center;gap:.55rem;padding:.48rem .62rem;border-radius:12px;cursor:pointer;
+      border:1px solid transparent;transition:background .15s,border-color .15s,box-shadow .2s
+    }
+    .tv-day:hover{background:var(--pink-soft)}
+    .tv-day.on{background:var(--paper);border-color:transparent;box-shadow:0 0 0 2px var(--pink)}
+    .tv-day-date{font-size:.74rem;font-weight:700;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .tv-day-dist{font-size:.68rem;font-weight:700;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+    .tv-day.on .tv-day-dist{color:var(--pink)}
+
+    .tv-stats{display:none;grid-template-columns:repeat(2,1fr);gap:.55rem}
+    .tv-stats.show{display:grid;animation:tvIn .35s var(--ease)}
+    .tv-stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.68rem .7rem;text-align:center;box-shadow:var(--shadow-sm)}
+    .tv-stat-v{font-size:1.2rem;font-weight:900;color:var(--ink);line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+    .tv-stat-l{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--ink-faint);margin-top:.15rem}
+
+    .tv-actions{display:none;gap:.5rem}
+    .tv-actions.show{display:flex;animation:tvIn .35s var(--ease)}
+    .tv-mini{
+      flex:1;font-family:inherit;font-size:.7rem;font-weight:800;color:var(--ink-soft);cursor:pointer;
+      border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:.5rem .6rem;
+      transition:all .18s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:.35rem;white-space:nowrap
+    }
+    .tv-mini:hover{border-color:var(--pink);color:var(--pink)}
+    .tv-mini svg{width:13px;height:13px}
+
+    .tv-filechip{display:none;align-items:center;gap:.6rem;background:var(--paper-alt);border:1px solid var(--line);border-radius:14px;padding:.55rem .75rem}
+    .tv-filechip.show{display:flex;animation:tvIn .3s var(--ease)}
+    .tfc-dot{width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0}
+    .tfc-name{font-size:.76rem;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .tfc-sub{font-size:.64rem;color:var(--ink-mute)}
+    .tfc-clear{border:none;background:var(--paper);color:var(--ink-mute);width:26px;height:26px;border-radius:999px;cursor:pointer;font-size:.85rem;line-height:1;flex-shrink:0;transition:color .2s}
+    .tfc-clear:hover{color:var(--pink)}
+
+    .tv-howto{font-size:.74rem;color:var(--ink-mute);line-height:1.65}
+    .tv-howto summary{cursor:pointer;font-weight:800;color:var(--ink-soft);font-size:.78rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+    .tv-howto summary::-webkit-details-marker{display:none}
+    .tv-howto summary::after{content:"+";font-size:1rem;color:var(--pink);font-weight:900;transition:transform .25s}
+    .tv-howto[open] summary::after{transform:rotate(45deg)}
+    .tv-howto ol{margin:.55rem 0 0 1.1rem;padding:0}
+    .tv-howto li{margin-bottom:.4rem}
+    .tv-howto a{color:var(--pink);font-weight:700;text-decoration:none}
+    .tv-howto a:hover{text-decoration:underline}
+    .tv-privacy{font-size:.66rem;color:var(--ink-faint);line-height:1.6;text-align:center;padding:0 .4rem}
 
     /* loading overlay */
-    .load-ov{
-      position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;
-      background:rgba(127,127,127,.08);backdrop-filter:blur(2px);z-index:600;gap:.8rem
+    .tv-load{
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.9rem;
+      background:rgba(255,255,255,.72);backdrop-filter:blur(3px);z-index:950
     }
-    .load-ov.show{display:flex}
-    .load-ov .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--red-700);border-radius:50%;animation:spin 1s linear infinite}
-    .load-ov .lt{font-size:.8rem;font-weight:700;color:var(--ink-soft)}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .tv-load.show{display:flex}
+    .tv-load .bar{width:180px;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+    .tv-load .bar i{display:block;height:100%;width:0%;border-radius:999px;background:var(--pink);transition:width .25s var(--ease)}
+    .tv-load .lt{font-size:.8rem;font-weight:800;color:var(--ink-soft)}
+
+    /* map bits */
+    .tv-marker{background:transparent;border:none}
+    .tv-marker .core{
+      width:15px;height:15px;border-radius:50%;background:#24191D;border:3px solid #fff;
+      box-shadow:0 0 0 3px var(--pink),0 3px 12px rgba(0,0,0,.35);position:relative;z-index:2
+    }
+    .tv-marker .ring{
+      position:absolute;left:50%;top:50%;width:15px;height:15px;border-radius:50%;
+      background:rgba(233,0,100,.30);transform:translate(-50%,-50%);animation:tvPulse 1.7s ease-out infinite
+    }
+    @keyframes tvPulse{0%{width:15px;height:15px;opacity:.85}100%{width:58px;height:58px;opacity:0}}
+    .leaflet-popup-content{font-family:inherit;font-size:.76rem;line-height:1.5}
+    .popup-name{font-weight:800;font-size:.8rem;margin-bottom:.15rem}
+    .popup-sub{color:#666;font-size:.7rem}
+
+    @media(prefers-reduced-motion:reduce){
+      .phone-path .route,.phone-dot,.tv-marker .ring{animation-duration:0.001s;animation-iteration-count:1}
+    }
   </style>
 </head>
 <body data-app-name="Timeline Visualizer">
-  <main class="app-main wide">
+  <main class="app-main wide tv">
     <header class="app-hero">
       <p class="app-eyebrow">Location · Privacy</p>
       <h1 class="app-title">Timeline <span class="accent">Visualizer</span></h1>
       <p class="app-subtitle">
-        Drop your Google Maps Timeline export and replay your journeys on an animated map —
-        day by day, with distance stats. Everything is parsed in your browser; nothing is uploaded.
+        Turn your Google Maps Timeline into a smooth animated journey — a pink route that reveals
+        itself behind a moving marker, with live date and distance. Everything is parsed in your
+        browser; nothing is uploaded.
       </p>
     </header>
 
     <div class="tv-layout">
-      <aside class="sidebar">
-        <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Upload timeline file">
-          <div class="dz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-          </div>
-          <div class="dz-title">Drop your timeline file here</div>
-          <div class="dz-sub">or click to browse — from Google Takeout.<br />The whole export .zip works too.</div>
-          <div class="dz-formats">
-            <span class="fmt-chip">Timeline.json</span><span class="fmt-chip">Records.json</span>
-            <span class="fmt-chip">Location History.json</span><span class="fmt-chip">GPX</span><span class="fmt-chip">.zip</span><span class="fmt-chip">.gz</span>
-          </div>
-          <input type="file" id="fileInput" accept=".json,.gpx,.zip,.gz,.xml,.txt" hidden />
-        </div>
+      <!-- ============ MAIN: stage + playbar ============ -->
+      <div class="tv-main">
+        <div class="tv-stage" id="stage">
+          <div id="tvMap"></div>
 
-        <div class="file-chip" id="fileChip">
-          <span class="fc-dot"></span>
-          <div class="fc-meta">
-            <div class="fc-name" id="fcName">—</div>
-            <div class="fc-sub" id="fcSub">—</div>
+          <div class="tv-titlecard hide" id="titleCard">
+            <div class="tt-name" id="ttName">My Journey</div>
+            <div class="tt-sub" id="ttSub">—</div>
           </div>
-          <button class="fc-clear" id="fcClear" type="button" aria-label="Clear data">✕</button>
-        </div>
 
-        <div class="panel" id="playPanel" style="display:none">
-          <div class="panel-title">Playback</div>
-          <div class="play-head">
-            <button class="play-btn" id="playBtn" type="button" aria-label="Play journey" disabled>
-              <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
-              <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          <div class="tv-livecard hide" id="liveCard">
+            <div class="lv-date" id="lvDate">—</div>
+            <div class="lv-dist" id="lvDist">0.0 km</div>
+          </div>
+
+          <div class="tv-stagebtns hide" id="stageBtns">
+            <button class="tv-iconbtn on" id="followBtn" type="button" title="Follow the marker" aria-label="Toggle camera follow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
             </button>
-            <div class="play-meta">
-              <div class="pm-time" id="pmTime">—</div>
-              <div class="pm-dist" id="pmDist">0.0 km</div>
-            </div>
-            <select class="speed-sel" id="speedSel" aria-label="Playback speed">
-              <option value="1">1×</option><option value="4">4×</option>
-              <option value="8" selected>8×</option><option value="32">32×</option>
-            </select>
+            <button class="tv-iconbtn" id="fitBtn" type="button" title="Fit whole journey" aria-label="Fit view">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
           </div>
-          <input type="range" class="scrubber" id="scrubber" min="0" max="1000" value="0" aria-label="Scrub through journey" />
+
+          <!-- empty state (timelinevisualizer.net style) -->
+          <div class="tv-empty" id="tvEmpty">
+            <div class="tv-empty-left">
+              <div class="te-heading">Watch your <span class="hl">journey</span> come alive</div>
+              <div class="te-sub">Your Google Timeline becomes a smooth animation — pink route, moving marker, live distance. Private, free and online; everything happens in your browser.</div>
+              <button class="tv-cta" id="ctaChoose" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Choose Timeline.json
+              </button>
+              <div class="te-drophint">or <b>drop the file here</b> — .zip and .gz work too</div>
+              <button class="tv-sample" id="ctaSample" type="button">Try a sample journey</button>
+              <div class="tv-chips">
+                <span class="tv-chip dot">Files never leave your device</span>
+                <span class="tv-chip">Free</span>
+                <span class="tv-chip">No account</span>
+              </div>
+              <div class="tv-err" id="ctaErr"></div>
+            </div>
+            <div class="tv-empty-right">
+              <div class="phone" aria-hidden="true">
+                <div class="phone-grid"></div>
+                <svg class="phone-path" viewBox="0 0 218 450" preserveAspectRatio="none">
+                  <path class="routeGhost" d="M40 408 C 62 376, 52 342, 86 322 S 152 300, 150 250 C 148 206, 98 194, 104 150 C 108 116, 150 92, 186 64"/>
+                  <path class="route" d="M40 408 C 62 376, 52 342, 86 322 S 152 300, 150 250 C 148 206, 98 194, 104 150 C 108 116, 150 92, 186 64"/>
+                </svg>
+                <div class="phone-dot"></div>
+                <div class="phone-mini"><div class="pm1">My Journey</div><div class="pm2">example loop</div></div>
+                <div class="phone-attr">Tiles © Esri</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tv-load" id="tvLoad">
+            <div class="lt" id="tvLoadTxt">Reading file…</div>
+            <div class="bar"><i id="tvLoadBar"></i></div>
+          </div>
+
+          <input type="file" id="fileInput" accept=".json,.zip,.gz,.gpx,.xml,.txt" hidden />
         </div>
 
-        <div class="panel" id="dayPanel" style="display:none">
-          <div class="panel-title">Days</div>
-          <div class="day-list" id="dayList"></div>
-        </div>
-
-        <div class="stats-grid" id="statsGrid" style="display:none">
-          <div class="stat-tile"><div class="stat-val" id="stTotalDist">0</div><div class="stat-label">Total distance</div></div>
-          <div class="stat-tile"><div class="stat-val" id="stDays">0</div><div class="stat-label">Days</div></div>
-          <div class="stat-tile"><div class="stat-val" id="stPlaces">0</div><div class="stat-label">Places</div></div>
-          <div class="stat-tile"><div class="stat-val" id="stPoints">0</div><div class="stat-label">Points</div></div>
-        </div>
-
-        <div class="actions" id="actionRow" style="display:none">
-          <button class="mini-btn" id="fitBtn" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Fit view
+        <!-- playbar -->
+        <div class="tv-playbar" id="playbar">
+          <button class="tv-play" id="playBtn" type="button" aria-label="Play journey" disabled>
+            <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
+            <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
           </button>
-          <button class="mini-btn" id="exportBtn" type="button">
+          <div class="tv-track">
+            <input type="range" class="tv-scrub" id="scrubber" min="0" max="1000" value="0" aria-label="Scrub through journey" />
+            <div class="tv-times"><span id="tStart">—</span><span id="tEnd">—</span></div>
+          </div>
+          <div class="tv-speed" id="speedGroup" role="group" aria-label="Playback speed">
+            <button type="button" data-spd="1">1×</button>
+            <button type="button" data-spd="4">4×</button>
+            <button type="button" data-spd="8" class="on">8×</button>
+            <button type="button" data-spd="32">32×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SIDE ============ -->
+      <aside class="tv-side">
+        <div class="tv-upload" id="dropZone2">
+          <button class="tv-cta" id="ctaChoose2" type="button" style="min-height:46px;font-size:.85rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Choose Timeline.json
+          </button>
+          <div class="tv-or">or drop it anywhere on this page</div>
+          <div class="tv-err" id="sideErr"></div>
+          <div class="tv-filechip" id="fileChip">
+            <span class="tfc-dot"></span>
+            <div style="min-width:0;flex:1">
+              <div class="tfc-name" id="fcName">—</div>
+              <div class="tfc-sub" id="fcSub">—</div>
+            </div>
+            <button class="tfc-clear" id="fcClear" type="button" aria-label="Clear data">✕</button>
+          </div>
+        </div>
+
+        <div class="tv-panel" id="scopePanel" style="display:none">
+          <div class="tv-ptitle">Period</div>
+          <div class="tv-months" id="monthChips"></div>
+          <div class="tv-days" id="dayList"></div>
+        </div>
+
+        <div class="tv-stats" id="statsGrid">
+          <div class="tv-stat"><div class="tv-stat-v" id="stDist">0</div><div class="tv-stat-l">Total distance</div></div>
+          <div class="tv-stat"><div class="tv-stat-v" id="stDays">0</div><div class="tv-stat-l">Days</div></div>
+          <div class="tv-stat"><div class="tv-stat-v" id="stPlaces">0</div><div class="tv-stat-l">Places</div></div>
+          <div class="tv-stat"><div class="tv-stat-v" id="stPoints">0</div><div class="tv-stat-l">Points</div></div>
+        </div>
+
+        <div class="tv-actions" id="actionRow">
+          <button class="tv-mini" id="exportBtn" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Export GeoJSON
           </button>
+          <button class="tv-mini" id="replayBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Replay journey
+          </button>
         </div>
 
-        <details class="howto">
+        <details class="tv-howto tv-panel">
           <summary>How to export your Timeline</summary>
           <ol>
-            <li>Open <a href="https://takeout.google.com" target="_blank" rel="noopener">takeout.google.com</a> on your phone or desktop, or in Google Maps go to <em>Your data in Maps → Download your Timeline data</em>.</li>
-            <li>Deselect all products, then select <strong>Maps (Timeline)</strong> — or <strong>Location History</strong> for older exports.</li>
-            <li>Export and download the .zip file.</li>
-            <li>Drop the whole .zip here — we find the right file automatically. Or extract it and drop <strong>Timeline.json</strong>, <strong>Records.json</strong> or <strong>Location History.json</strong>.</li>
+            <li>On your phone, open Google Maps → your profile picture → <em>Your data in Maps</em> → <strong>Download your Timeline data</strong>, or export from <a href="https://takeout.google.com" target="_blank" rel="noopener">takeout.google.com</a>.</li>
+            <li>You get a <strong>Timeline.json</strong> (newest), <strong>Records.json</strong>, <strong>location-history.json</strong> (iPhone) or a Takeout .zip — any of them works.</li>
+            <li>Drop the file here. The whole .zip is fine too — we find the right file automatically.</li>
+            <li>Press play and watch your journey animate.</li>
           </ol>
         </details>
 
-        <p class="privacy-note">🔒 100% private — parsing happens entirely in your browser. Your location data never leaves your device.</p>
+        <p class="tv-privacy">100% private — parsing and animation happen entirely in your browser. Your location data never leaves your device.</p>
       </aside>
-
-      <div class="map-col">
-        <div class="map-container">
-          <div id="map"></div>
-          <div class="map-empty" id="mapEmpty">
-            <div class="me-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div class="me-title">Your journeys will appear here</div>
-            <div class="me-sub">Drop a Google Timeline export on the left, then pick a day and press play to watch your route unfold.</div>
-          </div>
-          <div class="load-ov" id="loadOv"><div class="spinner"></div><div class="lt" id="loadTxt">Parsing…</div></div>
-        </div>
-      </div>
     </div>
   </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="lib/leaflet.min.js"></script>
   <script data-app-name="Timeline Visualizer" src="/apps/assets/app-shell.js"></script>
   <script>
   (function () {
-    'use strict';
+  'use strict';
 
-    /* ================= Map ================= */
-    var map = L.map('map', { zoomControl: true, attributionControl: true, worldCopyJump: true }).setView([-2.5, 118], 3);
-    var tileLayer = null;
-    function addTiles() {
-      var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      if (tileLayer) map.removeLayer(tileLayer);
-      document.getElementById('map').classList.toggle('dark-tiles', theme === 'dark');
-      tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-      });
-      tileLayer.addTo(map);
-    }
-    addTiles();
-    document.addEventListener('themechange', addTiles);
+  /* ================= Map (Esri light/dark gray canvas) ================= */
+  var map = L.map('tvMap', { zoomControl: true, attributionControl: true, worldCopyJump: true, zoomSnap: 0.25, wheelPxPerZoomLevel: 90 })
+              .setView([-2.5, 118], 3);
+  var tileLayer = null;
+  function addTiles() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (tileLayer) map.removeLayer(tileLayer);
+    document.getElementById('tvMap').classList.toggle('tv-light-tiles', !dark);
+    tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_' + (dark ? 'Dark' : 'Light') + '_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri — Esri, Maxar, Earthstar Geographics, and the GIS User Community',
+      maxZoom: 19, maxNativeZoom: 16
+    });
+    tileLayer.addTo(map);
+  }
+  addTiles();
+  document.addEventListener('themechange', addTiles);
 
-    /* Layers */
-    var contextLayer = L.layerGroup().addTo(map);   /* faint all-days tracks */
-    var dayLayer = L.layerGroup().addTo(map);       /* selected day tracks + visits */
-    var trailLayer = L.layerGroup().addTo(map);     /* playback revealed trail */
-    var markerLayer = L.layerGroup().addTo(map);    /* playback marker */
+  var contextLayer = L.layerGroup().addTo(map);
+  var dayLayer     = L.layerGroup().addTo(map);
+  var trailLayer   = L.layerGroup().addTo(map);
+  var hotLayer     = L.layerGroup().addTo(map);
+  var markerLayer  = L.layerGroup().addTo(map);
 
-    /* ================= Utilities ================= */
-    var EARTH_R = 6371000;
-    function haversine(a, b) {
-      var rad = Math.PI / 180;
-      var dLat = (b.lat - a.lat) * rad, dLng = (b.lng - a.lng) * rad;
-      var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
-      return 2 * EARTH_R * Math.asin(Math.min(1, Math.sqrt(s)));
+  /* ================= Utilities ================= */
+  var EARTH_R = 6371000;
+  function haversine(a, b) {
+    var rad = Math.PI / 180;
+    var dLat = (b.lat - a.lat) * rad, dLng = (b.lng - a.lng) * rad;
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * EARTH_R * Math.asin(Math.min(1, Math.sqrt(s)));
+  }
+  function parseDeg(str) {
+    if (typeof str !== 'string') return null;
+    var parts = str.replace(/°/g, '').split(',');
+    if (parts.length < 2) return null;
+    var lat = parseFloat(parts[0]), lng = parseFloat(parts[1]);
+    return validLL(lat, lng) ? { lat: lat, lng: lng } : null;
+  }
+  function validLL(lat, lng) {
+    if (isNaN(lat) || isNaN(lng)) return false;
+    if (lat === 0 && lng === 0) return false;
+    return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+  }
+  function e7(v) { return typeof v === 'number' && isFinite(v) ? v / 1e7 : null; }
+  function toDate(v) {
+    if (v == null) return null;
+    if (typeof v === 'number') return new Date(v < 1e12 ? v * 1000 : v);
+    var s = String(v);
+    if (/^\d{10}$/.test(s)) return new Date(parseInt(s, 10) * 1000);
+    if (/^\d{13}$/.test(s)) return new Date(parseInt(s, 10));
+    var d = new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function dayKey(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function fmtKm(m) { return m >= 1000 ? (m / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 }) + ' km' : Math.round(m) + ' m'; }
+  function fmtKmShort(m) { return (m / 1000).toLocaleString('en-US', { maximumFractionDigits: m < 100000 ? 1 : 0 }) + ' km'; }
+  function fmtDur(ms) {
+    var min = Math.round(ms / 60000);
+    if (min < 60) return min + ' min';
+    var h = Math.floor(min / 60);
+    return h + ' h ' + (min % 60) + ' min';
+  }
+  function fmtDateTime(d) {
+    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) +
+      ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  function fmtClock(d) {
+    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) +
+      ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function downsample(arr, max) {
+    if (arr.length <= max) return arr;
+    var step = Math.ceil(arr.length / max), out = [];
+    for (var i = 0; i < arr.length; i += step) out.push(arr[i]);
+    if (out[out.length - 1] !== arr[arr.length - 1]) out.push(arr[arr.length - 1]);
+    return out;
+  }
+  function arcLatlngs(a, b, steps) {
+    var lat1 = a.lat * Math.PI / 180, lng1 = a.lng * Math.PI / 180;
+    var lat2 = b.lat * Math.PI / 180, lng2 = b.lng * Math.PI / 180;
+    var d = 2 * Math.asin(Math.min(1,
+      Math.sqrt(Math.pow(Math.sin((lat2 - lat1) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lng2 - lng1) / 2), 2))));
+    var pts = [];
+    if (Math.abs(d) < 1e-9) return [[a.lat, a.lng], [b.lat, b.lng]];
+    var n = steps || 48;
+    for (var f = 0; f <= n; f++) {
+      var A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
+      var x = A * Math.cos(lat1) * Math.cos(lng1) + B * Math.cos(lat2) * Math.cos(lng2);
+      var y = A * Math.cos(lat1) * Math.sin(lng1) + B * Math.cos(lat2) * Math.sin(lng2);
+      var z = A * Math.sin(lat1) + B * Math.sin(lat2);
+      pts.push([Math.atan2(z, Math.sqrt(x * x + y * y)) * 180 / Math.PI,
+                Math.atan2(y, x) * 180 / Math.PI]);
     }
-    function parseDeg(str) {
-      /* "-6.1934°, 106.8221°" → {lat,lng} */
-      if (typeof str !== 'string') return null;
-      var parts = str.replace(/°/g, '').split(',');
-      if (parts.length < 2) return null;
-      var lat = parseFloat(parts[0]), lng = parseFloat(parts[1]);
-      if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return null;
-      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
-      return { lat: lat, lng: lng };
-    }
-    function e7(v) { return typeof v === 'number' ? v / 1e7 : null; }
-    function toDate(v) {
-      if (v == null) return null;
-      if (typeof v === 'number') return new Date(v < 1e12 ? v : v);
-      var s = String(v);
-      if (/^\d{10,13}$/.test(s)) { var n = parseInt(s, 10); return new Date(n < 1e12 ? n : n); }
-      var d = new Date(s);
-      return isNaN(d.getTime()) ? null : d;
-    }
-    function dayKey(d) {
-      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    }
-    function fmtKm(m) { return m >= 1000 ? (m / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 }) + ' km' : Math.round(m) + ' m'; }
-    function fmtDur(ms) {
-      var min = Math.round(ms / 60000);
-      if (min < 60) return min + ' min';
-      var h = Math.floor(min / 60);
-      return h + ' h ' + (min % 60) + ' min';
-    }
-    function fmtDateTime(d) {
-      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) +
-        ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-    }
-    function fmtShort(d) {
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) +
-        ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-    }
-    function downsample(arr, max) {
-      if (arr.length <= max) return arr;
-      var step = Math.ceil(arr.length / max), out = [];
-      for (var i = 0; i < arr.length; i += step) out.push(arr[i]);
-      if (out[out.length - 1] !== arr[arr.length - 1]) out.push(arr[arr.length - 1]);
-      return out;
-    }
+    return pts;
+  }
 
-    /* ================= Data model ================= */
-    var MODEL = null; /* {days:[{key,date,points,visits,dist,arcs}], totalDist, totalPoints, placeCount} */
-    var fileName = '';
+  /* ================= Data model ================= */
+  var MODEL = null, fileName = '';
+  var FLIGHT_M = 120000; /* hops above this become compressed great-circle arcs */
 
-    function newModel() { return { dayMap: {}, totalDist: 0, totalPoints: 0, places: [] }; }
-    function getDayBucket(m, d) {
-      var k = dayKey(d);
-      if (!m.dayMap[k]) m.dayMap[k] = { key: k, date: new Date(d.getFullYear(), d.getMonth(), d.getDate()), points: [], visits: [], arcs: [] };
-      return m.dayMap[k];
+  function newModel() { return { dayMap: {}, totalDist: 0, totalPoints: 0, places: [] }; }
+  function getDayBucket(m, d) {
+    var k = dayKey(d);
+    if (!m.dayMap[k]) m.dayMap[k] = { key: k, date: new Date(d.getFullYear(), d.getMonth(), d.getDate()), points: [], visits: [], arcs: [] };
+    return m.dayMap[k];
+  }
+  function pushPoint(m, lat, lng, t) {
+    if (lat == null || lng == null) return;
+    lat = +lat; lng = +lng;
+    if (!validLL(lat, lng)) return;
+    var d = (t instanceof Date && !isNaN(t.getTime())) ? t : new Date(NaN);
+    if (isNaN(d.getTime())) d = new Date();
+    var b = getDayBucket(m, d);
+    var last = b.points[b.points.length - 1];
+    if (last && last.lat === lat && last.lng === lng) return;
+    var p = { lat: lat, lng: lng, t: d.getTime() };
+    b.points.push(p);
+    m.totalPoints++;
+    if (last) {
+      var dd = haversine(last, p);
+      if (dd > FLIGHT_M) b.arcs.push([last, p]);
+      else m.totalDist += dd;
     }
-    function pushPoint(m, lat, lng, t) {
-      if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) return;
-      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return;
-      if (lat === 0 && lng === 0) return;
-      var d = t || new Date();
-      var b = getDayBucket(m, d);
-      var last = b.points[b.points.length - 1];
-      if (last && last.lat === lat && last.lng === lng) return;
-      b.points.push({ lat: lat, lng: lng, t: d.getTime() });
-      m.totalPoints++;
-      /* long jumps become dashed great-circle arcs */
-      if (last) {
-        var dd = haversine(last, b.points[b.points.length - 1]);
-        if (dd > 150000) { b.arcs.push([last, b.points[b.points.length - 1]]); }
-        else m.totalDist += dd;
+  }
+  function pushVisit(m, lat, lng, tStart, tEnd, name) {
+    if (!validLL(lat, lng)) return;
+    var d = (tStart instanceof Date && !isNaN(tStart.getTime())) ? tStart : new Date();
+    getDayBucket(m, d).visits.push({ lat: lat, lng: lng, tStart: d.getTime(), tEnd: tEnd ? tEnd.getTime() : null, name: name || '' });
+    m.places.push({ lat: lat, lng: lng, name: name || '' });
+  }
+  function finalizeModel(m) {
+    var days = Object.keys(m.dayMap).sort().map(function (k) {
+      var b = m.dayMap[k];
+      b.points.sort(function (a, c) { return a.t - c.t; });
+      b.visits.sort(function (a, c) { return a.tStart - c.tStart; });
+      var dist = 0;
+      for (var i = 1; i < b.points.length; i++) {
+        var dd = haversine(b.points[i - 1], b.points[i]);
+        if (dd <= FLIGHT_M) dist += dd;
       }
-    }
-    function pushVisit(m, lat, lng, tStart, tEnd, name) {
-      if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) return;
-      if (lat === 0 && lng === 0) return;
-      var d = tStart || new Date();
-      getDayBucket(m, d).visits.push({ lat: lat, lng: lng, tStart: d.getTime(), tEnd: tEnd ? tEnd.getTime() : null, name: name || '' });
-      m.places.push({ lat: lat, lng: lng, name: name || '' });
-    }
-    function finalizeModel(m) {
-      var days = Object.keys(m.dayMap).sort().map(function (k) {
-        var b = m.dayMap[k];
-        b.points.sort(function (a, c) { return a.t - c.t; });
-        b.visits.sort(function (a, c) { return a.tStart - c.tStart; });
-        /* recompute distance cleanly */
-        var dist = 0;
-        for (var i = 1; i < b.points.length; i++) {
-          var dd = haversine(b.points[i - 1], b.points[i]);
-          if (dd <= 150000) dist += dd;
-        }
-        b.dist = dist;
-        return b;
-      }).filter(function (b) { return b.points.length > 1 || b.visits.length; });
-      return { days: days, totalDist: m.totalDist, totalPoints: m.totalPoints, places: m.places };
-    }
+      b.dist = dist;
+      b.month = k.slice(0, 7);
+      return b;
+    }).filter(function (b) { return b.points.length > 1 || b.visits.length; });
+    return { days: days, totalDist: m.totalDist, totalPoints: m.totalPoints, places: m.places };
+  }
 
-    /* ================= Parsers ================= */
-    function parseRecords(json) {
-      var m = newModel(), segs = json.semanticSegments || [];
-      segs.forEach(function (seg) {
-        var tStart = toDate(seg.startTime), tEnd = toDate(seg.endTime);
-        /* timelinePath — degree strings with minute offsets */
-        if (seg.timelinePath && seg.timelinePath.length) {
-          var base = tStart ? tStart.getTime() : null;
-          seg.timelinePath.forEach(function (p) {
-            var ll = parseDeg(p.point);
-            if (!ll) return;
-            var t = base;
-            if (t != null && p.durationMinutesOffset != null) {
-              var off = parseFloat(p.durationMinutesOffset);
-              if (!isNaN(off)) t = base + off * 60000;
-            }
-            pushPoint(m, ll.lat, ll.lng, t != null ? new Date(t) : null);
+  /* ================= Parsers (all known Google formats) ================= */
+  /* New phone export: semanticSegments + rawSignals */
+  function parseSemantic(json) {
+    var m = newModel();
+    var segs = json.semanticSegments || [];
+    segs.forEach(function (seg) {
+      var tStart = toDate(seg.startTime), tEnd = toDate(seg.endTime);
+      if (seg.timelinePath && seg.timelinePath.length) {
+        var base = tStart ? tStart.getTime() : null;
+        seg.timelinePath.forEach(function (p) {
+          var ll = parseDeg(p.point);
+          if (!ll) return;
+          var t = null;
+          if (p.time) t = toDate(p.time);
+          if (!t && base != null) {
+            var off = parseFloat(p.durationMinutesOffsetFromStartTime != null ? p.durationMinutesOffsetFromStartTime : p.durationMinutesOffset);
+            t = !isNaN(off) ? new Date(base + off * 60000) : (base != null ? new Date(base) : null);
+          }
+          pushPoint(m, ll.lat, ll.lng, t);
+        });
+      }
+      var visit = seg.visit;
+      if (visit && visit.topCandidate && visit.topCandidate.placeLocation) {
+        var vll = parseDeg(visit.topCandidate.placeLocation.latLng);
+        if (vll) pushVisit(m, vll.lat, vll.lng, tStart, tEnd,
+          (visit.topCandidate.semanticType === 'HOME' ? 'Home' :
+           visit.topCandidate.semanticType === 'WORK' ? 'Work' :
+           visit.topCandidate.placeId || 'Visited place'));
+        /* some exports attach a simplifiedRawPath to the visit */
+        var srp = visit.simplifiedRawPath && visit.simplifiedRawPath.points;
+        if (srp && srp.length) {
+          srp.forEach(function (p) {
+            var ll = parseDeg(p.latLng);
+            if (ll) pushPoint(m, ll.lat, ll.lng, toDate(p.timestamp));
           });
         }
-        /* visit */
-        if (seg.visit && seg.visit.topCandidate && seg.visit.topCandidate.placeLocation) {
-          var vll = parseDeg(seg.visit.topCandidate.placeLocation.latLng);
-          if (vll) pushVisit(m, vll.lat, vll.lng, tStart, tEnd, seg.visit.topCandidate.placeId || 'Visited place');
-        }
-        /* activity endpoints */
-        if (seg.activity) {
-          var s = seg.activity.start, e = seg.activity.end;
-          if (s && s.latLng) { var sll = parseDeg(s.latLng); if (sll) pushPoint(m, sll.lat, sll.lng, tStart); }
-          if (e && e.latLng) { var ell = parseDeg(e.latLng); if (ell) pushPoint(m, ell.lat, ell.lng, tEnd); }
-        }
-      });
-      /* rawPaths — dense recorded points */
-      var rps = json.rawPaths || [];
-      rps.forEach(function (rp) {
-        var pts = rp.timePath || rp.rawPath || [];
-        pts.forEach(function (p) {
-          var lat = e7(p.latE7), lng = e7(p.lngE7);
-          if (lat == null) return;
-          pushPoint(m, lat, lng, toDate(p.timestamp || p.timestampMs));
-        });
-      });
-      return m;
-    }
-
-    function parseTimeline(json) {
-      var m = newModel(), objs = json.timelineObjects || [];
-      objs.forEach(function (obj) {
-        var seg = obj.activitySegment;
-        if (seg) {
-          var dur = seg.duration || {};
-          var tStart = toDate(dur.startTimestampMs), tEnd = toDate(dur.endTimestampMs);
-          var raw = seg.simplifiedRawPath && seg.simplifiedRawPath.points;
-          if (raw && raw.length) {
-            raw.forEach(function (p) { pushPoint(m, e7(p.latE7), e7(p.lngE7), toDate(p.timestampMs)); });
-          }
-          var tp = seg.timelinePath;
-          if (tp && tp.length) {
-            var base = tStart ? tStart.getTime() : null;
-            tp.forEach(function (p) {
-              var ll = parseDeg(p.point);
-              if (!ll) return;
-              var t = base;
-              if (t != null) {
-                var off = parseFloat(p.durationMinutesOffsetFromStart != null ? p.durationMinutesOffsetFromStart : p.durationMinutesOffset);
-                if (!isNaN(off)) t = base + off * 60000;
-              }
-              pushPoint(m, ll.lat, ll.lng, t != null ? new Date(t) : null);
-            });
-          }
-          if (!raw && (!tp || !tp.length)) {
-            if (seg.startLocation) pushPoint(m, e7(seg.startLocation.latE7), e7(seg.startLocation.lngE7), tStart);
-            if (seg.endLocation) pushPoint(m, e7(seg.endLocation.latE7), e7(seg.endLocation.lngE7), tEnd);
-          }
-        }
-        var pv = obj.placeVisit;
-        if (pv && pv.location) {
-          var loc = pv.location;
-          var coord = loc.coordinate || {};
-          var dur2 = pv.duration || {};
-          pushVisit(m, coord.latitude, coord.longitude, toDate(dur2.startTimestampMs), toDate(dur2.endTimestampMs), loc.name || loc.address || 'Visited place');
-        }
-      });
-      return m;
-    }
-
-    function parseLocationHistory(json) {
-      var m = newModel();
-      var locs = json.locations || [];
-      locs.forEach(function (p) {
-        pushPoint(m, e7(p.latitudeE7), e7(p.longitudeE7), toDate(p.timestampMs || p.timestamp));
-      });
-      return m;
-    }
-
-    function parseGPX(text) {
-      var m = newModel();
-      var doc = new DOMParser().parseFromString(text, 'application/xml');
-      function each(tag, fn) { Array.prototype.forEach.call(doc.getElementsByTagName(tag), fn); }
-      each('trkpt', function (pt) {
-        var lat = parseFloat(pt.getAttribute('lat')), lng = parseFloat(pt.getAttribute('lon'));
-        var tEl = pt.getElementsByTagName('time')[0];
-        pushPoint(m, lat, lng, tEl ? toDate(tEl.textContent) : null);
-      });
-      if (!m.totalPoints) {
-        each('wpt', function (pt) {
-          pushVisit(m, parseFloat(pt.getAttribute('lat')), parseFloat(pt.getAttribute('lon')), null, null, 'Waypoint');
-        });
       }
-      return m;
+      if (seg.activity) {
+        var s = seg.activity.start, e = seg.activity.end, mode = '';
+        if (seg.activity.topCandidate && seg.activity.topCandidate.type) mode = seg.activity.topCandidate.type;
+        if (s && s.latLng) { var sll = parseDeg(s.latLng); if (sll) pushPoint(m, sll.lat, sll.lng, tStart); }
+        if (e && e.latLng) { var ell = parseDeg(e.latLng); if (ell) pushPoint(m, ell.lat, ell.lng, tEnd); }
+        seg.activityMode = mode; /* kept for future use */
+      }
+    });
+    /* rawSignals — raw position readings */
+    var sigs = json.rawSignals || [];
+    for (var i = 0; i < sigs.length && i < 400000; i++) {
+      var sig = sigs[i];
+      if (sig.position && sig.position.LatLng) {
+        var pll = parseDeg(sig.position.LatLng);
+        if (pll) pushPoint(m, pll.lat, pll.lng, toDate(sig.position.timestamp));
+      }
+      if (sig.positionDeltas && sig.positionDeltas.length) {
+        decodeDeltas(sig.positionDeltas).forEach(function (p) { pushPoint(m, p.lat, p.lng, p.t); });
+      }
     }
+    return m;
+  }
+  /* Android Timeline backup: positionDeltas may be absolute E7 values or true deltas. */
+  function decodeDeltas(entries) {
+    function medAbs(arr) {
+      var v = arr.map(function (x) { return Math.abs(x); }).sort(function (a, b) { return a - b; });
+      return v[Math.floor(v.length / 2)] || 0;
+    }
+    var lats = entries.map(function (e) { return e.latE7 | 0; }).filter(function (v) { return v !== 0; });
+    var lngs = entries.map(function (e) { return e.lngE7 | 0; }).filter(function (v) { return v !== 0; });
+    if (!lats.length) return [];
+    var out = [];
+    var looksDelta = medAbs(lats) < 1500000 && medAbs(lngs) < 1500000 && lats.length > 4;
+    if (looksDelta) {
+      var la = lats[0] / 1e7, ln = lngs[0] / 1e7;
+      out.push({ lat: la, lng: ln, t: toDate(entries[0].timestamp || entries[0].positionTimestamp) });
+      var n = Math.min(lats.length, lngs.length);
+      for (var i = 1; i < n; i++) {
+        la += lats[i] / 1e7; ln += lngs[i] / 1e7;
+        if (!validLL(la, ln)) { looksDelta = false; break; }
+        out.push({ lat: la, lng: ln, t: toDate(entries[i].timestamp || entries[i].positionTimestamp) });
+      }
+    }
+    if (!looksDelta) {
+      out = [];
+      for (var j = 0; j < entries.length; j++) {
+        var la2 = e7(entries[j].latE7), ln2 = e7(entries[j].lngE7);
+        if (la2 == null || ln2 == null) continue;
+        if (!validLL(la2, ln2)) continue;
+        out.push({ lat: la2, lng: ln2, t: toDate(entries[j].timestamp || entries[j].positionTimestamp) });
+      }
+    }
+    return out;
+  }
 
-    function parseAnyJSON(json) {
-      if (json.semanticSegments) return parseRecords(json);
-      if (json.timelineObjects) return parseTimeline(json);
-      if (json.locations) return parseLocationHistory(json);
+  /* Old Takeout (Android): timelineObjects[]; iOS: same shape */
+  function parseTimelineObjects(json) {
+    var m = newModel();
+    var objs = json.timelineObjects || [];
+    objs.forEach(function (obj) {
+      var seg = obj.activitySegment;
+      if (seg) {
+        var dur = seg.duration || {};
+        var tStart = toDate(dur.startTimestampMs || dur.startTimestamp), tEnd = toDate(dur.endTimestampMs || dur.endTimestamp);
+        var raw = seg.simplifiedRawPath && seg.simplifiedRawPath.points;
+        if (raw && raw.length) {
+          raw.forEach(function (p) { pushPoint(m, e7(p.latE7), e7(p.lngE7), toDate(p.timestampMs || p.timestamp)); });
+        }
+        var tp = seg.timelinePath;
+        if (tp && tp.length) {
+          var base = tStart ? tStart.getTime() : null;
+          tp.forEach(function (p) {
+            var ll = parseDeg(p.point);
+            if (!ll) return;
+            var t = null;
+            if (p.time) t = toDate(p.time);
+            if (!t && base != null) {
+              var off = parseFloat(p.durationMinutesOffsetFromStart != null ? p.durationMinutesOffsetFromStart :
+                                  (p.durationMinutesOffsetFromStartTime != null ? p.durationMinutesOffsetFromStartTime : p.durationMinutesOffset));
+              t = !isNaN(off) ? new Date(base + off * 60000) : new Date(base);
+            }
+            pushPoint(m, ll.lat, ll.lng, t);
+          });
+        }
+        if (!raw && (!tp || !tp.length)) {
+          if (seg.startLocation) pushPoint(m, e7(seg.startLocation.latE7), e7(seg.startLocation.lngE7), tStart);
+          if (seg.endLocation) pushPoint(m, e7(seg.endLocation.latE7), e7(seg.endLocation.lngE7), tEnd);
+        }
+      }
+      var pv = obj.placeVisit;
+      if (pv && pv.location) {
+        var loc = pv.location, coord = loc.coordinate || {};
+        var dur2 = pv.duration || {};
+        var lat = coord.latitude != null ? coord.latitude : e7(loc.latitudeE7);
+        var lng = coord.longitude != null ? coord.longitude : e7(loc.longitudeE7);
+        pushVisit(m, lat, lng, toDate(dur2.startTimestampMs || dur2.startTimestamp), toDate(dur2.endTimestampMs || dur2.endTimestamp),
+          loc.name || loc.address || 'Visited place');
+      }
+    });
+    return m;
+  }
+
+  /* Oldest: Records.json locations[] */
+  function parseRecords(json) {
+    var m = newModel();
+    var locs = json.locations || [];
+    locs.forEach(function (p) {
+      var lat = p.latitudeE7 != null ? e7(p.latitudeE7) : (p.latitude != null ? +p.latitude : null);
+      var lng = p.longitudeE7 != null ? e7(p.longitudeE7) : (p.longitude != null ? +p.longitude : null);
+      pushPoint(m, lat, lng, toDate(p.timestampMs || p.timestamp));
+    });
+    return m;
+  }
+
+  function parseGPX(text) {
+    var m = newModel();
+    var doc = new DOMParser().parseFromString(text, 'application/xml');
+    function each(tag, fn) { Array.prototype.forEach.call(doc.getElementsByTagName(tag), fn); }
+    each('trkpt', function (pt) {
+      pushPoint(m, parseFloat(pt.getAttribute('lat')), parseFloat(pt.getAttribute('lon')),
+        pt.getElementsByTagName('time')[0] ? toDate(pt.getElementsByTagName('time')[0].textContent) : null);
+    });
+    if (!m.totalPoints) {
+      each('wpt', function (pt) {
+        pushVisit(m, parseFloat(pt.getAttribute('lat')), parseFloat(pt.getAttribute('lon')), null, null, 'Waypoint');
+      });
+    }
+    return m;
+  }
+
+  function parseAnyJSON(json) {
+    if (json && typeof json === 'object') {
+      if (Array.isArray(json.semanticSegments) && json.semanticSegments.length) return parseSemantic(json);
+      if (Array.isArray(json.timelineObjects) && json.timelineObjects.length) return parseTimelineObjects(json);
+      if (Array.isArray(json.locations) && json.locations.length) return parseRecords(json);
+      /* some exports wrap the payload one level deep */
+      var keys = Object.keys(json);
+      for (var i = 0; i < keys.length; i++) {
+        var v = json[keys[i]];
+        if (v && typeof v === 'object' && !Array.isArray(v)) {
+          if (Array.isArray(v.semanticSegments) && v.semanticSegments.length) return parseSemantic(v);
+          if (Array.isArray(v.timelineObjects) && v.timelineObjects.length) return parseTimelineObjects(v);
+          if (Array.isArray(v.locations) && v.locations.length) return parseRecords(v);
+        }
+      }
+      /* new phone export sometimes only has rawSignals */
+      if (Array.isArray(json.rawSignals) && json.rawSignals.length) return parseSemantic(json);
+    }
+    return null;
+  }
+
+  /* ================= File intake ================= */
+  var loadOv = document.getElementById('tvLoad'), loadTxt = document.getElementById('tvLoadTxt'), loadBar = document.getElementById('tvLoadBar');
+  function showLoading(txt, pct) { loadTxt.textContent = txt; if (pct != null) loadBar.style.width = pct + '%'; else loadBar.style.width = '82%'; loadOv.classList.add('show'); }
+  function setProgress(pct) { loadBar.style.width = Math.min(100, Math.round(pct)) + '%'; }
+  function hideLoading() { loadOv.classList.remove('show'); loadBar.style.width = '0%'; }
+
+  var errTimers = {};
+  function showFileError(msg) {
+    var html = '<b>Could not read that file</b>' + msg;
+    ['ctaErr', 'sideErr'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.innerHTML = html;
+      el.classList.add('show');
+      clearTimeout(errTimers[id]);
+      errTimers[id] = setTimeout(function () { el.classList.remove('show'); }, 9000);
+    });
+    window.showToast('Could not read that file', 2500);
+  }
+  function clearErrors() {
+    ['ctaErr', 'sideErr'].forEach(function (id) {
+      clearTimeout(errTimers[id]);
+      document.getElementById(id).classList.remove('show');
+    });
+  }
+
+  function loadJSZip() {
+    return new Promise(function (res, rej) {
+      if (window.JSZip) return res();
+      var s = document.createElement('script');
+      s.src = 'https://unpkg.com/jszip@3.10.1/dist/jszip.min.js';
+      s.onload = res; s.onerror = function () { rej(new Error('ZIP support failed to load — check your connection')); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    clearErrors();
+    var name = file.name.toLowerCase();
+    showLoading('Reading ' + file.name + '…', 6);
+    var p;
+    if (/\.zip$/.test(name)) p = handleZip(file);
+    else if (/\.gz$/.test(name)) p = handleGz(file);
+    else if (file.size > 48 * 1024 * 1024) p = streamScanOrParse(file, false); /* huge Records.json */
+    else p = (file.text ? file.text() : new Promise(function (res, rej) {
+          var r = new FileReader();
+          r.onload = function () { res(r.result); };
+          r.onerror = function () { rej(new Error('Could not read file')); };
+          r.readAsText(file);
+        })).then(function (t) { return { text: t }; });
+    p.then(function (res) {
+      if (res && res.text != null) {
+        showLoading('Parsing…', 92);
+        return new Promise(function (r2) { setTimeout(r2, 30); }).then(function () { return ingestText(res.text, file.name); });
+      }
+      if (res && res.model != null) { /* streamed model */
+        showLoading('Building journey…', 96);
+        return new Promise(function (r2) { setTimeout(r2, 30); }).then(function () { return finishIngest(res.model, file.name); });
+      }
+    }).catch(function (err) {
+      hideLoading();
+      showFileError(escapeHtml(err.message || 'Unknown error while parsing') +
+        '<br>Supported: <code>Timeline.json</code> · <code>Records.json</code> · <code>location-history.json</code> · Takeout <code>.zip</code> · <code>.gz</code> · GPX');
+    });
+  }
+
+  async function handleZip(file) {
+    await loadJSZip();
+    showLoading('Opening zip…', 30);
+    var zip = await JSZip.loadAsync(file);
+    var paths = Object.keys(zip.files).filter(function (p) { return !zip.files[p].dir; });
+    var rank = function (p) {
+      var low = p.toLowerCase();
+      if (/timeline\.json$/.test(low)) return 0;
+      if (/location[-_]?history[^\/]*\.json$/.test(low)) return 1;
+      if (/records\.json$/.test(low)) return 2;
+      if (/semantic location history\/.*20\d\d[_-][a-z]+\.json$/.test(low)) return 3; /* old monthly exports */
+      if (/\.json$/.test(low)) return 9;
+      return 20;
+    };
+    var candidates = paths.filter(function (p) { return rank(p) <= 9; }).sort(function (a, b) { return rank(a) - rank(b); });
+    if (!candidates.length) throw new Error('No Timeline/Records/Location History JSON found inside the zip');
+    /* old monthly exports: merge up to 36 files */
+    var monthly = candidates.filter(function (p) { return rank(p) === 3; });
+    if (monthly.length && rank(candidates[0]) >= 3) {
+      monthly.sort();
+      showLoading('Merging ' + monthly.length + ' monthly files…', 60);
+      var merged = [];
+      for (var i = 0; i < monthly.length; i++) {
+        var txt = await zip.files[monthly[i]].async('string');
+        try {
+          var j = JSON.parse(txt);
+          if (j && j.timelineObjects) merged = merged.concat(j.timelineObjects);
+        } catch (e) { /* skip broken file */ }
+      }
+      if (merged.length) return { text: JSON.stringify({ timelineObjects: merged }) };
+    }
+    var best = candidates[0];
+    showLoading('Extracting ' + best.split('/').pop() + '…', 55);
+    var text = await zip.files[best].async('string');
+    /* sanity probe: if the named file has no known keys, probe other json files */
+    var probe = text.slice(0, 4000);
+    if (!/semanticSegments|timelineObjects|"locations"|rawSignals/.test(probe) && probe.length >= 4000) {
+      for (var k = 0; k < candidates.length && k < 8; k++) {
+        var t2 = await zip.files[candidates[k]].async('string');
+        if (/semanticSegments|timelineObjects|"locations"|rawSignals/.test(t2.slice(0, 4000))) { text = t2; break; }
+      }
+    }
+    return { text: text };
+  }
+
+  /* .gz: decompress fully, then parse as JSON — or regex-scan if gigantic */
+  async function handleGz(file) {
+    if (!('DecompressionStream' in window)) throw new Error('.gz is not supported in this browser');
+    showLoading('Decompressing…', 25);
+    var stream = file.stream().pipeThrough(new DecompressionStream('gzip'));
+    var text = await new Response(stream).text();
+    if (text.length > 48 * 1024 * 1024) return scanBigText(text);
+    return { text: text };
+  }
+
+  /* regex scanner factory — extracts E7 coordinate pairs from huge text */
+  function makeE7Scanner(m) {
+    var tail = '';
+    var RX = /"(?:latitudeE7|latE7)"\s*:\s*(-?\d{5,10})[\s\S]{0,800}?"(?:longitudeE7|lngE7)"\s*:\s*(-?\d{5,11})/g;
+    var RX_TS = /"(?:timestamp|timestampMs|positionTimestamp)"\s*:\s*"([^"]{4,40})"/g;
+    var points = 0;
+    function scan(chunk) {
+      var buf = tail + chunk;
+      tail = '';
+      var mm, count = 0;
+      RX.lastIndex = 0;
+      while ((mm = RX.exec(buf)) !== null) {
+        count++;
+        var lat = parseInt(mm[1], 10) / 1e7, lng = parseInt(mm[2], 10) / 1e7;
+        if (!validLL(lat, lng)) continue;
+        var t = null, ahead = buf.slice(RX.lastIndex, RX.lastIndex + 2600);
+        RX_TS.lastIndex = 0;
+        var tm = RX_TS.exec(ahead);
+        if (!tm) {
+          var behind = buf.slice(Math.max(0, mm.index - 1400), mm.index);
+          RX_TS.lastIndex = 0;
+          var bm, last = null;
+          while ((bm = RX_TS.exec(behind)) !== null) last = bm;
+          tm = last;
+        }
+        if (tm) t = toDate(tm[1]);
+        pushPoint(m, lat, lng, t);
+        points++;
+      }
+      if (count === 0) {
+        var keep = Math.min(buf.length, 65536);
+        tail = buf.slice(buf.length - keep);
+      } else {
+        tail = buf.slice(Math.max(0, RX.lastIndex - 65536));
+      }
+      return points <= 900000;
+    }
+    return { scan: scan, flush: function () { if (tail) scan(tail + ' '); } };
+  }
+
+  /* scan an in-memory giant text in async chunks */
+  async function scanBigText(text) {
+    var m = newModel();
+    var sc = makeE7Scanner(m);
+    var CH = 4 * 1024 * 1024;
+    for (var off = 0; off < text.length; off += CH) {
+      if (!sc.scan(text.slice(off, off + CH))) break;
+      setProgress(10 + (off / text.length) * 78);
+      await new Promise(function (res2) { setTimeout(res2, 0); });
+    }
+    sc.flush();
+    if (!m.totalPoints) throw new Error('No location points found in this file');
+    return { model: finalizeModel(m) };
+  }
+
+  /* streaming scan for very large plain files (>48MB) */
+  async function streamScanOrParse(file, isGz) {
+    if (!file.stream || !window.TextDecoder) throw new Error('Streaming reader not supported in this browser');
+    var m = newModel();
+    var sc = makeE7Scanner(m);
+    var dec = new TextDecoder('utf-8');
+    var stream = file.stream();
+    var reader = stream.getReader();
+    var total = file.size || 0, done = 0, scanned = 0;
+    while (true) {
+      var r = await reader.read();
+      if (r.done) break;
+      done += (r.value && r.value.byteLength) || 0;
+      var text = dec.decode(r.value, { stream: true });
+      if (!sc.scan(text)) break;
+      scanned++;
+      if (total) setProgress(8 + (done / total) * 78);
+      else if (scanned % 50 === 0) showLoading('Scanning…', 40);
+      if (scanned % 12 === 0) await new Promise(function (res2) { setTimeout(res2, 0); }); /* keep UI alive */
+    }
+    sc.flush();
+    if (!m.totalPoints) throw new Error('No location points found in this file');
+    return { model: finalizeModel(m) };
+  }
+
+  function ingestText(text, name) {
+    try {
+      var model = null;
+      if (/\.gpx$/i.test(name) || /^\s*<\?xml/i.test(text) || /<gpx/i.test(text.slice(0, 500))) {
+        model = parseGPX(text);
+      } else {
+        model = parseAnyJSON(JSON.parse(text));
+      }
+      if (!model || (!model.totalPoints && !model.places.length)) {
+        throw new Error('No location data found in this file');
+      }
+      return finishIngest(finalizeModel(model), name);
+    } catch (e) {
+      hideLoading();
+      var msg = /JSON/.test(e.message) ? 'That is not valid JSON — did the export finish downloading?' : escapeHtml(e.message || 'invalid file');
+      showFileError(msg +
+        '<br>Supported: <code>Timeline.json</code> · <code>Records.json</code> · <code>location-history.json</code> · Takeout <code>.zip</code> · <code>.gz</code> · GPX');
       return null;
     }
+  }
 
-    /* ================= File intake ================= */
-    var loadOv = document.getElementById('loadOv'), loadTxt = document.getElementById('loadTxt');
-    function showLoading(txt) { loadTxt.textContent = txt; loadOv.classList.add('show'); }
-    function hideLoading() { loadOv.classList.remove('show'); }
+  function finishIngest(model, name) {
+    hideLoading();
+    MODEL = model;
+    fileName = name;
+    onModelReady();
+    return MODEL;
+  }
+  /* ================= Rendering ================= */
+  var PINK = '#E90064';
+  var currentScope = null;   /* array of day buckets, or null = all */
+  var currentDay = null;     /* selected single day or null */
+  var currentMonth = null;   /* 'YYYY-MM' or null */
+  var contextDrawn = false;
 
-    function loadJSZip() {
-      return new Promise(function (res, rej) {
-        if (window.JSZip) return res();
-        var s = document.createElement('script');
-        s.src = 'https://unpkg.com/jszip@3.10.1/dist/jszip.min.js';
-        s.onload = res; s.onerror = function () { rej(new Error('Could not load ZIP support')); };
-        document.head.appendChild(s);
-      });
+  function scopeBuckets() {
+    if (!MODEL) return [];
+    if (currentDay) return [currentDay];
+    if (currentMonth) return MODEL.days.filter(function (b) { return b.month === currentMonth; });
+    return MODEL.days;
+  }
+
+  function clearLayers() {
+    [contextLayer, dayLayer, trailLayer, hotLayer, markerLayer].forEach(function (lg) { lg.clearLayers(); });
+  }
+
+  function trackLatlngs(points, max) {
+    return downsample(points, max || 900).map(function (p) { return [p.lat, p.lng]; });
+  }
+
+  function drawContext(exceptKey) {
+    contextLayer.clearLayers();
+    if (!MODEL || MODEL.days.length > 120) return;
+    MODEL.days.forEach(function (b) {
+      if (b.key === exceptKey || b.points.length < 2) return;
+      L.polyline(trackLatlngs(b.points, 350), { color: PINK, weight: 1.4, opacity: 0.22 }).addTo(contextLayer);
+    });
+  }
+
+  function visitPopup(v) {
+    var html = '<div class="popup-name">' + escapeHtml(v.name || 'Visited place') + '</div>';
+    if (v.tStart) {
+      var sub = fmtDateTime(new Date(v.tStart));
+      if (v.tEnd && v.tEnd > v.tStart) sub += '<br />Stayed ' + fmtDur(v.tEnd - v.tStart);
+      html += '<div class="popup-sub">' + sub + '</div>';
     }
+    return html;
+  }
 
-    async function readGzip(file) {
-      if (!('DecompressionStream' in window)) throw new Error('.gz is not supported in this browser');
-      var ds = new DecompressionStream('gzip');
-      var stream = file.stream().pipeThrough(ds);
-      return await new Response(stream).text();
-    }
-
-    function handleFile(file) {
-      showLoading('Reading ' + file.name + '…');
-      var name = file.name.toLowerCase();
-      var p;
-      if (/\.zip$/.test(name)) p = handleZip(file);
-      else if (/\.gz$/.test(name)) p = readGzip(file).then(function (t) { return { text: t }; });
-      else p = file.text ? file.text().then(function (t) { return { text: t }; })
-          : new Promise(function (res, rej) {
-              var r = new FileReader();
-              r.onload = function () { res({ text: r.result }); };
-              r.onerror = function () { rej(new Error('Could not read file')); };
-              r.readAsText(file);
-            });
-      p.then(function (res) {
-        showLoading('Parsing…');
-        /* allow UI to paint */
-        return new Promise(function (r2) { setTimeout(r2, 30); }).then(function () { return res; });
-      }).then(function (res) {
-        var model = ingestText(res.text, file.name);
-        hideLoading();
-        if (!model) return; /* ingestText already showed a specific toast */
-      }).catch(function (err) {
-        hideLoading();
-        window.showToast(err.message || 'Failed to parse file');
+  function renderScope() {
+    dayLayer.clearLayers();
+    var buckets = scopeBuckets();
+    buckets.forEach(function (bucket) {
+      bucket.arcs.forEach(function (pair) {
+        L.polyline(arcLatlngs(pair[0], pair[1]), { color: PINK, weight: 2.4, opacity: 0.75, dashArray: '2 9', lineCap: 'round' }).addTo(dayLayer);
       });
-    }
-
-    async function handleZip(file) {
-      await loadJSZip();
-      var zip = await JSZip.loadAsync(file);
-      var candidates = [];
-      Object.keys(zip.files).forEach(function (path) {
-        if (zip.files[path].dir) return;
-        if (/Records\.json$/i.test(path) || /Timeline\.json$/i.test(path) ||
-            /Location[ _]?History(\(.*\))?\.json$/i.test(path) || /location-history\.json$/i.test(path)) {
-          candidates.push(path);
-        }
-      });
-      if (!candidates.length) throw new Error('No Timeline/Records/Location History JSON found inside the zip');
-      /* prefer Records/Timeline over raw Location History; pick the largest */
-      candidates.sort(function (a, b) {
-        var rank = function (p) { return /Records\.json$/i.test(p) ? 0 : /Timeline\.json$/i.test(p) ? 1 : 2; };
-        return rank(a) - rank(b);
-      });
-      var best = candidates[0];
-      var text = await zip.files[best].async('string');
-      return { text: text };
-    }
-
-    function ingestText(text, name) {
-      try {
-        var json = null;
-        if (/\.gpx$/i.test(name) || /^\s*<\?xml/i.test(text) || /<gpx/i.test(text.slice(0, 500))) {
-          json = parseGPX(text);
-        } else {
-          json = parseAnyJSON(JSON.parse(text));
-        }
-        if (!json || (!json.totalPoints && !json.places.length)) { window.showToast('No location data found in this file'); return null; }
-        MODEL = finalizeModel(json);
-        fileName = name;
-        onModelReady();
-        return MODEL;
-      } catch (e) {
-        window.showToast('Failed to parse: ' + (e.message || 'invalid file'));
-        return null;
+      if (bucket.points.length > 1) {
+        L.polyline(trackLatlngs(bucket.points, 1100), { color: PINK, weight: 4, opacity: 0.30, lineCap: 'round', lineJoin: 'round' }).addTo(dayLayer);
       }
-    }
-
-    /* ================= Rendering ================= */
-    var BRAND = '#B91C1C';
-    var currentDay = null;   /* selected day bucket or null = all */
-    var contextDrawn = false;
-
-    function clearLayers() {
-      [contextLayer, dayLayer, trailLayer, markerLayer].forEach(function (lg) { lg.clearLayers(); });
-    }
-
-    function trackLatlngs(points, max) {
-      return downsample(points, max || 800).map(function (p) { return [p.lat, p.lng]; });
-    }
-
-    function drawContext() {
-      contextLayer.clearLayers();
-      if (!MODEL || MODEL.days.length > 120) return; /* too heavy — skip context */
-      MODEL.days.forEach(function (b) {
-        if (b.points.length < 2) return;
-        L.polyline(trackLatlngs(b.points, 400), {
-          color: BRAND, weight: 1.5, opacity: 0.28
-        }).addTo(contextLayer);
+      bucket.visits.slice(0, 200).forEach(function (v) {
+        L.circleMarker([v.lat, v.lng], { radius: 5.5, color: '#fff', weight: 2, fillColor: '#F59E0B', fillOpacity: 1 })
+          .addTo(dayLayer).bindPopup(visitPopup(v));
       });
-    }
+    });
+    fitScope(buckets);
+  }
 
-    function arcLatlngs(a, b) {
-      /* great-circle interpolation, 48 steps */
-      var lat1 = a.lat * Math.PI / 180, lng1 = a.lng * Math.PI / 180;
-      var lat2 = b.lat * Math.PI / 180, lng2 = b.lng * Math.PI / 180;
-      var d = 2 * Math.asin(Math.min(1,
-        Math.sqrt(Math.pow(Math.sin((lat2 - lat1) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lng2 - lng1) / 2), 2))));
-      var pts = [];
-      if (Math.abs(d) < 1e-9) return [[a.lat, a.lng], [b.lat, b.lng]];
-      for (var f = 0; f <= 48; f++) {
-        var A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
-        var x = A * Math.cos(lat1) * Math.cos(lng1) + B * Math.cos(lat2) * Math.cos(lng2);
-        var y = A * Math.cos(lat1) * Math.sin(lng1) + B * Math.cos(lat2) * Math.sin(lng2);
-        var z = A * Math.sin(lat1) + B * Math.sin(lat2);
-        pts.push([Math.atan2(z, Math.sqrt(x * x + y * y)) * 180 / Math.PI,
-                  Math.atan2(y, x) * 180 / Math.PI]);
-      }
-      return pts;
-    }
+  function scopeBounds(buckets) {
+    var all = [];
+    buckets.forEach(function (b) {
+      trackLatlngs(b.points, 700).forEach(function (ll) { all.push(ll); });
+      b.visits.forEach(function (v) { all.push([v.lat, v.lng]); });
+    });
+    return all.length ? L.latLngBounds(all) : null;
+  }
 
-    function visitPopup(v) {
-      var html = '<div class="popup-name">' + escapeHtml(v.name || 'Visited place') + '</div>';
-      if (v.tStart) {
-        var sub = fmtDateTime(new Date(v.tStart));
-        if (v.tEnd && v.tEnd > v.tStart) sub += '<br />Stayed ' + fmtDur(v.tEnd - v.tStart);
-        html += '<div class="popup-sub">' + sub + '</div>';
-      }
-      return html;
-    }
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, function (c) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-      });
-    }
+  function fitScope(buckets) {
+    var bb = scopeBounds(buckets || scopeBuckets());
+    if (!bb) return;
+    if (bb.getNorthEast().equals(bb.getSouthWest())) map.setView(bb.getCenter(), 14);
+    else map.flyToBounds(bb, { padding: [36, 36], duration: 0.9 });
+  }
 
-    function renderDay(b) {
-      dayLayer.clearLayers(); trailLayer.clearLayers(); markerLayer.clearLayers();
-      var buckets = b ? [b] : MODEL.days;
-      buckets.forEach(function (bucket) {
-        /* arcs for long jumps */
-        bucket.arcs.forEach(function (pair) {
-          L.polyline(arcLatlngs(pair[0], pair[1]), {
-            color: BRAND, weight: 2, opacity: 0.55, dashArray: '6 8'
-          }).addTo(dayLayer);
-        });
-        /* full track (dim) */
-        if (bucket.points.length > 1) {
-          L.polyline(trackLatlngs(bucket.points, 900), {
-            color: BRAND, weight: 3.5, opacity: 0.35
-          }).addTo(dayLayer);
-        }
-        /* visits */
-        bucket.visits.slice(0, 150).forEach(function (v) {
-          L.circleMarker([v.lat, v.lng], {
-            radius: 5, color: '#fff', weight: 1.5, fillColor: '#F59E0B', fillOpacity: 1
-          }).addTo(dayLayer).bindPopup(visitPopup(v));
-        });
-      });
-      /* fit bounds */
-      var all = [];
-      buckets.forEach(function (bucket) {
-        trackLatlngs(bucket.points, 900).forEach(function (ll) { all.push(ll); });
-      });
-      if (all.length > 1) map.fitBounds(L.latLngBounds(all).pad(0.12));
-      else if (all.length === 1) map.setView(all[0], 14);
-    }
+  /* ================= Playback engine ================= */
+  var playState = { playing: false, progress: 0, raf: null, lastT: 0, track: null, idx: 0 };
+  var BASE_MPS = 150;
+  var follow = true;
 
-    function fitAll() {
-      if (!MODEL) return;
-      var all = [];
-      MODEL.days.forEach(function (b) {
-        if (b.points.length) all.push([b.points[0].lat, b.points[0].lng]);
-        if (b.points.length > 1) all.push([b.points[b.points.length - 1].lat, b.points[b.points.length - 1].lng]);
-      });
-      if (all.length > 1) map.fitBounds(L.latLngBounds(all).pad(0.1));
-    }
+  var playBtn = document.getElementById('playBtn');
+  var iconPlay = document.getElementById('iconPlay'), iconPause = document.getElementById('iconPause');
+  var lvDate = document.getElementById('lvDate'), lvDist = document.getElementById('lvDist');
+  var scrubber = document.getElementById('scrubber');
 
-    /* ================= Playback ================= */
-    var playState = { playing: false, progress: 0, raf: null, lastT: 0, track: null, cum: null, total: 0, idx: 0 };
-    var playBtn = document.getElementById('playBtn');
-    var iconPlay = document.getElementById('iconPlay'), iconPause = document.getElementById('iconPause');
-    var pmTime = document.getElementById('pmTime'), pmDist = document.getElementById('pmDist');
-    var scrubber = document.getElementById('scrubber');
-    var BASE_MPS = 150; /* meters per second at 1× */
-
-    function buildTrack(b) {
-      var buckets = b ? [b] : MODEL.days;
-      var pts = [];
-      buckets.forEach(function (bucket) {
-        bucket.points.forEach(function (p) { pts.push(p); });
-      });
-      pts.sort(function (a, c) { return a.t - c.t; });
-      var cum = [0];
-      for (var i = 1; i < pts.length; i++) {
+  function buildTrack(buckets) {
+    var pts = [];
+    buckets.forEach(function (b) { b.points.forEach(function (p) { pts.push(p); }); });
+    pts.sort(function (a, c) { return a.t - c.t; });
+    var out = [], cum = [0], total = 0;
+    for (var i = 0; i < pts.length; i++) {
+      if (i > 0) {
         var d = haversine(pts[i - 1], pts[i]);
-        cum.push(cum[i - 1] + Math.min(d, 150000));
+        if (d > FLIGHT_M) {
+          /* flight: draw great-circle arc, compress its video-length */
+          var arc = arcLatlngs(pts[i - 1], pts[i], 40);
+          var videoLen = Math.min(d, FLIGHT_M);
+          for (var k = 1; k < arc.length; k++) {
+            out.push({ lat: arc[k][0], lng: arc[k][1], t: pts[i].t, arc: true });
+            total += videoLen / (arc.length - 1);
+            cum.push(total);
+          }
+          continue;
+        }
+        total += d;
+        cum.push(total);
       }
-      return { pts: pts, cum: cum, total: cum[cum.length - 1] || 0 };
+      out.push(pts[i]);
     }
+    return { pts: out, cum: cum, total: total };
+  }
 
-    function posAt(meters) {
-      var t = playState.track, idx = playState.idx;
-      while (idx < t.cum.length - 1 && t.cum[idx + 1] < meters) idx++;
-      while (idx > 0 && t.cum[idx] > meters) idx--;
-      playState.idx = idx;
-      var p0 = t.pts[idx], p1 = t.pts[Math.min(idx + 1, t.pts.length - 1)];
-      var segLen = t.cum[Math.min(idx + 1, t.cum.length - 1)] - t.cum[idx];
-      var f = segLen > 0 ? Math.min(1, (meters - t.cum[idx]) / segLen) : 0;
-      return {
-        lat: p0.lat + (p1.lat - p0.lat) * f,
-        lng: p0.lng + (p1.lng - p0.lng) * f,
-        t: p0.t + (p1.t - p0.t) * f
-      };
-    }
+  function posAt(meters) {
+    var t = playState.track, idx = playState.idx;
+    while (idx < t.cum.length - 1 && t.cum[idx + 1] < meters) idx++;
+    while (idx > 0 && t.cum[idx] > meters) idx--;
+    playState.idx = idx;
+    var p0 = t.pts[idx], p1 = t.pts[Math.min(idx + 1, t.pts.length - 1)];
+    var segLen = t.cum[Math.min(idx + 1, t.cum.length - 1)] - t.cum[idx];
+    var f = segLen > 0 ? Math.min(1, (meters - t.cum[idx]) / segLen) : 0;
+    return {
+      lat: p0.lat + (p1.lat - p0.lat) * f,
+      lng: p0.lng + (p1.lng - p0.lng) * f,
+      t: p0.t + (p1.t - p0.t) * f
+    };
+  }
 
-    var playMarker = null, trailLine = null, played = [];
-    function ensureMarker() {
-      if (!playMarker) {
-        var icon = L.divIcon({ className: 'pulse-marker', html: '<div class="ring"></div><div class="core"></div>', iconSize: [14, 14], iconAnchor: [7, 7] });
-        playMarker = L.marker([0, 0], { icon: icon, zIndexOffset: 1000 }).addTo(markerLayer);
-        trailLine = L.polyline([], { color: BRAND, weight: 4.5, opacity: 0.95 }).addTo(trailLayer);
-      }
+  var playMarker = null, trailLine = null, hotLine = null;
+  function ensureMarker() {
+    if (!playMarker) {
+      var icon = L.divIcon({ className: 'tv-marker', html: '<div class="ring"></div><div class="core"></div>', iconSize: [15, 15], iconAnchor: [7.5, 7.5] });
+      playMarker = L.marker([0, 0], { icon: icon, zIndexOffset: 1000, interactive: false }).addTo(markerLayer);
+      trailLine = L.polyline([], { color: PINK, weight: 4.5, opacity: 0.34, lineCap: 'round', lineJoin: 'round' }).addTo(trailLayer);
+      hotLine = L.polyline([], { color: PINK, weight: 5.5, opacity: 0.95, lineCap: 'round', lineJoin: 'round' }).addTo(hotLayer);
     }
-    function destroyMarker() {
-      markerLayer.clearLayers(); trailLayer.clearLayers();
-      playMarker = null; trailLine = null; played = [];
-    }
+  }
+  function destroyMarker() {
+    markerLayer.clearLayers(); trailLayer.clearLayers(); hotLayer.clearLayers();
+    playMarker = null; trailLine = null; hotLine = null;
+  }
 
-    function renderPlayback(meters) {
-      var pos = posAt(meters);
-      ensureMarker();
-      playMarker.setLatLng([pos.lat, pos.lng]);
-      var t = playState.track;
-      var showPts = [];
-      for (var i = 0; i <= playState.idx && i < t.pts.length; i++) showPts.push([t.pts[i].lat, t.pts[i].lng]);
-      if (showPts.length) { showPts.push([pos.lat, pos.lng]); trailLine.setLatLngs(showPts); }
-      pmDist.textContent = fmtKm(meters);
-      if (pos.t) pmTime.textContent = fmtShort(new Date(pos.t));
-      scrubber.value = t.total ? Math.round(meters / t.total * 1000) : 0;
-      if (playState.playing && (played.length === 0 || !played._fit)) {
-        map.panTo([pos.lat, pos.lng], { animate: true, duration: 0.4 });
-      }
+  function renderPlayback(meters) {
+    var pos = posAt(meters);
+    ensureMarker();
+    playMarker.setLatLng([pos.lat, pos.lng]);
+    var t = playState.track;
+    var upto = t.pts.slice(0, Math.min(playState.idx + 1, t.pts.length)).map(function (p) { return [p.lat, p.lng]; });
+    upto.push([pos.lat, pos.lng]);
+    var dim = downsample(upto, 1200);
+    trailLine.setLatLngs(dim);
+    var hot = dim.slice(-70);
+    if (hot.length < 2) hot = upto.slice(-70);
+    hotLine.setLatLngs(hot);
+    lvDist.textContent = fmtKmShort(meters);
+    if (pos.t && isFinite(pos.t)) lvDate.textContent = fmtClock(new Date(pos.t));
+    var frac = t.total ? meters / t.total : 0;
+    scrubber.value = Math.round(frac * 1000);
+    scrubber.style.setProperty('--fill', (frac * 100).toFixed(1) + '%');
+    if (playState.playing && follow) {
+      map.setView([pos.lat, pos.lng], map.getZoom(), { animate: false });
     }
+  }
 
-    function playLoop(ts) {
-      if (!playState.playing) return;
-      var dt = (ts - playState.lastT) / 1000;
-      playState.lastT = ts;
-      var mult = parseFloat(document.getElementById('speedSel').value) || 8;
-      playState.progress += BASE_MPS * mult * dt;
-      if (playState.progress >= playState.total) {
-        playState.progress = playState.total;
-        renderPlayback(playState.progress);
-        stopPlayback(true);
-        return;
-      }
+  function playLoop(ts) {
+    if (!playState.playing) return;
+    var dt = Math.min(0.1, (ts - playState.lastT) / 1000);
+    playState.lastT = ts;
+    playState.progress += BASE_MPS * playState.speed * dt;
+    if (playState.progress >= playState.track.total) {
+      playState.progress = playState.track.total;
       renderPlayback(playState.progress);
-      playState.raf = requestAnimationFrame(playLoop);
+      stopPlayback(true);
+      return;
     }
+    renderPlayback(playState.progress);
+    playState.raf = requestAnimationFrame(playLoop);
+  }
 
-    function startPlayback() {
-      if (!playState.track || !playState.total) return;
-      if (playState.progress >= playState.total) playState.progress = 0;
-      playState.playing = true;
-      playState.lastT = performance.now();
-      iconPlay.style.display = 'none'; iconPause.style.display = 'block';
-      playState.raf = requestAnimationFrame(playLoop);
+  function startPlayback() {
+    if (!playState.track || !playState.track.total) return;
+    if (playState.progress >= playState.track.total) { playState.progress = 0; playState.idx = 0; }
+    playState.playing = true;
+    playState.lastT = performance.now();
+    iconPlay.style.display = 'none'; iconPause.style.display = 'block';
+    if (playState.progress === 0) {
+      var p0 = playState.track.pts[0];
+      map.setView([p0.lat, p0.lng], Math.max(map.getZoom(), 13), { animate: true, duration: 0.8 });
     }
-    function stopPlayback(finished) {
-      playState.playing = false;
-      if (playState.raf) cancelAnimationFrame(playState.raf);
-      iconPlay.style.display = 'block'; iconPause.style.display = 'none';
-      if (!finished) pmTime.textContent = pmTime.textContent;
+    playState.raf = requestAnimationFrame(playLoop);
+  }
+  function stopPlayback(finished) {
+    playState.playing = false;
+    if (playState.raf) cancelAnimationFrame(playState.raf);
+    iconPlay.style.display = 'block'; iconPause.style.display = 'none';
+    if (finished) {
+      var bb = scopeBounds(scopeBuckets());
+      if (bb && !bb.getNorthEast().equals(bb.getSouthWest())) map.flyToBounds(bb, { padding: [42, 42], duration: 1.6 });
+      window.showToast('Journey finished — ' + fmtKmShort(playState.track.total), 2600);
     }
-    function resetPlayback() {
-      stopPlayback();
-      destroyMarker();
-      playState.track = null; playState.total = 0; playState.progress = 0; playState.idx = 0;
-      pmTime.textContent = '—'; pmDist.textContent = '0.0 km'; scrubber.value = 0;
+  }
+  function resetPlayback() {
+    stopPlayback();
+    destroyMarker();
+    playState.track = null; playState.progress = 0; playState.idx = 0;
+    scrubber.value = 0; scrubber.style.setProperty('--fill', '0%');
+    lvDist.textContent = '0.0 km'; lvDate.textContent = '—';
+  }
+
+  /* ================= Scope UI (months + days) ================= */
+  var monthChips = document.getElementById('monthChips');
+  var dayListEl = document.getElementById('dayList');
+
+  function scopeLabel() {
+    if (currentDay) return currentDay.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    var buckets = scopeBuckets();
+    if (!buckets.length) return '—';
+    if (currentMonth) {
+      var d0 = buckets[0].date;
+      return d0.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
+    var first = buckets[0].date, last = buckets[buckets.length - 1].date;
+    if (first.getFullYear() === last.getFullYear() && first.getMonth() === last.getMonth())
+      return first.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var a = first.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    var b = last.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return a + ' – ' + b;
+  }
 
-    playBtn.addEventListener('click', function () {
-      if (!playState.track) return;
-      if (playState.playing) stopPlayback();
-      else startPlayback();
-    });
-    scrubber.addEventListener('input', function () {
-      if (!playState.track) return;
-      if (playState.playing) stopPlayback();
-      playState.progress = (scrubber.value / 1000) * playState.total;
-      playState.idx = 0;
-      renderPlayback(playState.progress);
-    });
-    document.getElementById('speedSel').addEventListener('change', function () { /* applies on next frames */ });
+  function updateTitleCard() {
+    document.getElementById('ttName').textContent = fileName || 'My Journey';
+    document.getElementById('ttSub').textContent = scopeLabel();
+  }
 
-    /* ================= Day list ================= */
-    var dayListEl = document.getElementById('dayList');
-    function monthName(d) { return d.toLocaleDateString('en-US', { month: 'short' }); }
-    function renderDayList() {
-      dayListEl.innerHTML = '';
-      var frag = document.createDocumentFragment();
-
-      /* All history row */
-      var allRow = document.createElement('div');
-      allRow.className = 'day-row' + (currentDay === null ? ' active' : '');
-      allRow.innerHTML = '<span class="day-date">All history</span><span class="day-dist">' + fmtKm(MODEL.totalDist) + '</span>';
-      allRow.addEventListener('click', function () { selectDay(null); });
-      frag.appendChild(allRow);
-
-      MODEL.days.forEach(function (b) {
-        var row = document.createElement('div');
-        row.className = 'day-row' + (currentDay === b ? ' active' : '');
-        var label = b.date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-        row.innerHTML = '<span class="day-date">' + label + '</span>' +
-          '<span class="day-dist">' + fmtKm(b.dist) + '</span>' +
-          '<span class="day-pts">' + b.points.length + '</span>';
-        row.addEventListener('click', function () { selectDay(b); });
-        frag.appendChild(row);
+  function renderMonthChips() {
+    monthChips.innerHTML = '';
+    var months = [];
+    MODEL.days.forEach(function (b) { if (months.indexOf(b.month) === -1) months.push(b.month); });
+    months.sort();
+    function chip(label, val) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tv-mchip' + ((currentMonth === val) ? ' on' : '');
+      b.textContent = label;
+      b.addEventListener('click', function () {
+        currentMonth = (currentMonth === val) ? null : val;
+        currentDay = null;
+        renderMonthChips(); renderDayList(); applyScope(false);
       });
-      dayListEl.appendChild(frag);
+      monthChips.appendChild(b);
     }
-
-    function selectDay(b) {
-      currentDay = b;
-      resetPlayback();
-      renderDay(b);
-      var rows = dayListEl.querySelectorAll('.day-row');
-      var idx = 0;
-      if (b) { for (var i = 0; i < MODEL.days.length; i++) { if (MODEL.days[i] === b) { idx = i + 1; break; } } }
-      rows.forEach(function (r, i) { r.classList.toggle('active', i === idx); });
-      var act = dayListEl.querySelector('.day-row.active');
-      if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest' });
-      if (b && b.points.length > 1) {
-        playState.track = buildTrack(b);
-        playState.total = playState.track.total;
-        playState.progress = 0; playState.idx = 0;
-        playBtn.disabled = playState.total <= 0;
-        pmTime.textContent = fmtShort(new Date(b.points[0].t));
-        pmDist.textContent = fmtKm(playState.total);
-      } else if (!b) {
-        playState.track = buildTrack(null);
-        playState.total = playState.track.total;
-        playState.progress = 0; playState.idx = 0;
-        playBtn.disabled = playState.total <= 0;
-        if (playState.track.pts.length) pmTime.textContent = fmtShort(new Date(playState.track.pts[0].t));
-        pmDist.textContent = fmtKm(playState.total);
-      }
-    }
-
-    /* ================= Stats & UI wiring ================= */
-    function onModelReady() {
-      document.getElementById('mapEmpty').classList.add('hide');
-      document.getElementById('fileChip').classList.add('show');
-      document.getElementById('fcName').textContent = fileName;
-      document.getElementById('fcSub').textContent = MODEL.totalPoints.toLocaleString('en-US') + ' points · ' +
-        MODEL.days.length + ' days · ' + MODEL.places.length.toLocaleString('en-US') + ' places';
-      document.getElementById('playPanel').style.display = 'block';
-      document.getElementById('dayPanel').style.display = 'block';
-      document.getElementById('statsGrid').style.display = 'grid';
-      document.getElementById('actionRow').style.display = 'flex';
-
-      document.getElementById('stTotalDist').textContent = (MODEL.totalDist / 1000).toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' km';
-      document.getElementById('stDays').textContent = MODEL.days.length;
-      document.getElementById('stPlaces').textContent = MODEL.places.length.toLocaleString('en-US');
-      document.getElementById('stPoints').textContent = MODEL.totalPoints > 9999
-        ? (MODEL.totalPoints / 1000).toFixed(1) + 'k' : MODEL.totalPoints;
-
-      drawContext();
-      renderDayList();
-      /* default: the busiest day */
-      var busiest = MODEL.days.slice().sort(function (a, b) { return (b.points.length + b.visits.length) - (a.points.length + a.visits.length); })[0];
-      selectDay(busiest || null);
-      window.showToast('Loaded ' + MODEL.totalPoints.toLocaleString('en-US') + ' points across ' + MODEL.days.length + ' days');
-    }
-
-    document.getElementById('fcClear').addEventListener('click', function () {
-      MODEL = null; fileName = ''; currentDay = null;
-      clearLayers(); resetPlayback();
-      document.getElementById('mapEmpty').classList.remove('hide');
-      document.getElementById('fileChip').classList.remove('show');
-      document.getElementById('playPanel').style.display = 'none';
-      document.getElementById('dayPanel').style.display = 'none';
-      document.getElementById('statsGrid').style.display = 'none';
-      document.getElementById('actionRow').style.display = 'none';
+    chip('All', null);
+    months.forEach(function (mm) {
+      var d = new Date(parseInt(mm.slice(0, 4), 10), parseInt(mm.slice(5, 7), 10) - 1, 1);
+      chip(d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }).replace(' ', ' \u2019'), mm);
     });
+  }
 
-    document.getElementById('fitBtn').addEventListener('click', function () {
-      currentDay ? renderDay(currentDay) : fitAll();
-    });
+  function renderDayList() {
+    dayListEl.innerHTML = '';
+    var frag = document.createDocumentFragment();
+    var allRow = document.createElement('div');
+    var allActive = (currentDay === null && currentMonth === null);
+    allRow.className = 'tv-day' + (allActive ? ' on' : '');
+    allRow.innerHTML = '<span class="tv-day-date">All history</span><span class="tv-day-dist">' + fmtKm(MODEL.totalDist) + '</span>';
+    allRow.addEventListener('click', function () { currentDay = null; currentMonth = null; renderMonthChips(); renderDayList(); applyScope(false); });
+    frag.appendChild(allRow);
 
-    document.getElementById('exportBtn').addEventListener('click', function () {
-      if (!MODEL) return;
-      var features = [];
-      MODEL.days.forEach(function (b) {
-        if (b.points.length < 2) return;
-        features.push({
-          type: 'Feature',
-          properties: { date: b.key, distance_meters: Math.round(b.dist), points: b.points.length },
-          geometry: { type: 'LineString', coordinates: b.points.map(function (p) { return [+p.lng.toFixed(6), +p.lat.toFixed(6)]; }) }
-        });
+    var buckets = (currentMonth ? MODEL.days.filter(function (b) { return b.month === currentMonth; }) : MODEL.days);
+    buckets.forEach(function (b) {
+      var row = document.createElement('div');
+      row.className = 'tv-day' + (currentDay === b ? ' on' : '');
+      var label = b.date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      row.innerHTML = '<span class="tv-day-date">' + escapeHtml(label) + '</span>' +
+        '<span class="tv-day-dist">' + fmtKm(b.dist) + '</span>';
+      row.addEventListener('click', function () {
+        currentDay = (currentDay === b) ? null : b;
+        renderMonthChips(); renderDayList(); applyScope(true);
       });
-      MODEL.places.slice(0, 2000).forEach(function (v) {
-        features.push({
-          type: 'Feature',
-          properties: { name: v.name || 'Place' },
-          geometry: { type: 'Point', coordinates: [+v.lng.toFixed(6), +v.lat.toFixed(6)] }
-        });
-      });
-      var gj = JSON.stringify({ type: 'FeatureCollection', features: features });
-      window.downloadText('bayhaqy-timeline-' + new Date().toISOString().slice(0, 10) + '.geojson', gj, 'application/geo+json');
+      frag.appendChild(row);
     });
+    dayListEl.appendChild(frag);
+    var act = dayListEl.querySelector('.tv-day.on');
+    if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest' });
+  }
 
-    /* Drop zone events */
-    var dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
-    dropZone.addEventListener('click', function () { fileInput.click(); });
-    dropZone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
-    dropZone.addEventListener('dragover', function (e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', function () { dropZone.classList.remove('drag-over'); });
-    dropZone.addEventListener('drop', function (e) {
-      e.preventDefault(); dropZone.classList.remove('drag-over');
+  function applyScope(reselectBest) {
+    resetPlayback();
+    renderScope();
+    updateTitleCard();
+    var buckets = scopeBuckets();
+    if (reselectBest !== false) { /* choose default track scope for playback */ }
+    if (buckets.length) {
+      playState.track = buildTrack(buckets);
+      playState.total = playState.track.total;
+      playState.progress = 0; playState.idx = 0;
+      playBtn.disabled = playState.track.total <= 0;
+      document.getElementById('tStart').textContent = playState.track.pts.length ? fmtClock(new Date(playState.track.pts[0].t)) : '—';
+      document.getElementById('tEnd').textContent = playState.track.pts.length ? fmtClock(new Date(playState.track.pts[playState.track.pts.length - 1].t)) : '—';
+      lvDist.textContent = '0.0 km';
+    } else {
+      playState.track = null;
+      playBtn.disabled = true;
+    }
+    contextDrawn = !!currentDay;
+    drawContext(currentDay ? currentDay.key : null);
+  }
+
+  function onModelReady() {
+    document.getElementById('tvEmpty').classList.add('hide');
+    document.getElementById('titleCard').classList.remove('hide');
+    document.getElementById('liveCard').classList.remove('hide');
+    document.getElementById('stageBtns').classList.remove('hide');
+    document.getElementById('playbar').classList.add('show');
+    document.getElementById('scopePanel').style.display = 'block';
+    document.getElementById('statsGrid').classList.add('show');
+    document.getElementById('actionRow').classList.add('show');
+    document.getElementById('fileChip').classList.add('show');
+    document.getElementById('fcName').textContent = fileName;
+    document.getElementById('fcSub').textContent = MODEL.totalPoints.toLocaleString('en-US') + ' points · ' +
+      MODEL.days.length + ' days · ' + MODEL.places.length.toLocaleString('en-US') + ' places';
+
+    document.getElementById('stDist').textContent = fmtKmShort(MODEL.totalDist);
+    document.getElementById('stDays').textContent = MODEL.days.length;
+    document.getElementById('stPlaces').textContent = MODEL.places.length.toLocaleString('en-US');
+    document.getElementById('stPoints').textContent = MODEL.totalPoints > 9999
+      ? (MODEL.totalPoints / 1000).toFixed(1) + 'k' : MODEL.totalPoints.toLocaleString('en-US');
+
+    currentDay = null; currentMonth = null;
+    renderMonthChips();
+    renderDayList();
+    applyScope(false);
+
+    /* default view: the busiest day gets selected, then autoplay like the reference site */
+    var busiest = MODEL.days.slice().sort(function (a, b) {
+      return (b.points.length + b.visits.length) - (a.points.length + a.visits.length);
+    })[0];
+    if (busiest && busiest.points.length > 3) {
+      currentDay = busiest;
+      renderMonthChips(); renderDayList();
+      applyScope(false);
+    }
+    updateTitleCard();
+    window.showToast('Loaded ' + MODEL.totalPoints.toLocaleString('en-US') + ' points across ' + MODEL.days.length + ' days', 2600);
+    setTimeout(function () { if (playState.track && playState.track.total > 0 && !playState.playing) startPlayback(); }, 700);
+  }
+
+  function resetAll() {
+    MODEL = null; fileName = ''; currentDay = null; currentMonth = null;
+    clearLayers(); resetPlayback();
+    document.getElementById('tvEmpty').classList.remove('hide');
+    document.getElementById('titleCard').classList.add('hide');
+    document.getElementById('liveCard').classList.add('hide');
+    document.getElementById('stageBtns').classList.add('hide');
+    document.getElementById('playbar').classList.remove('show');
+    document.getElementById('scopePanel').style.display = 'none';
+    document.getElementById('statsGrid').classList.remove('show');
+    document.getElementById('actionRow').classList.remove('show');
+    document.getElementById('fileChip').classList.remove('show');
+    map.setView([-2.5, 118], 3);
+  }
+
+  /* ================= Sample journey (demo data, generated locally) ================= */
+  function seedRnd(seed) {
+    var s = seed | 0;
+    return function () {
+      s = (s * 1664525 + 1013904223) | 0;
+      return ((s >>> 8) & 0xFFFFFF) / 0xFFFFFF;
+    };
+  }
+  function addLeg(m, from, to, t, speedMps, rnd, stepM) {
+    var d = haversine(from, to);
+    var n = Math.max(2, Math.round(d / (stepM || 220)));
+    for (var i = 1; i <= n; i++) {
+      var f = i / n;
+      var jl = (rnd() - 0.5) * 0.00055, jg = (rnd() - 0.5) * 0.00055;
+      var lat = from.lat + (to.lat - from.lat) * f + jl;
+      var lng = from.lng + (to.lng - from.lng) * f + jg;
+      t += ((d / n) / speedMps) * 1000;
+      pushPoint(m, lat, lng, new Date(t));
+    }
+    return t;
+  }
+  function buildSample() {
+    var m = newModel();
+    var rnd = seedRnd(20260829);
+    var now = new Date();
+    var day1 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2, 8, 0, 0).getTime();
+    var day2 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 8, 30, 0).getTime();
+
+    /* Day 1 — Jakarta */
+    var monas = { lat: -6.1754, lng: 106.8272 };
+    var hi = { lat: -6.1949, lng: 106.8230 };
+    var kota = { lat: -6.1352, lng: 106.8133 };
+    var gading = { lat: -6.1580, lng: 106.9055 };
+    var ancol = { lat: -6.1218, lng: 106.8378 };
+    var cgk = { lat: -6.1256, lng: 106.6558 };
+    var dps = { lat: -8.7482, lng: 115.1675 };
+    var t = day1;
+    pushVisit(m, monas.lat, monas.lng, new Date(t), new Date(t + 55 * 60000), 'Monas');
+    t += 55 * 60000;
+    t = addLeg(m, monas, hi, t, 9, rnd);
+    pushVisit(m, hi.lat, hi.lng, new Date(t), new Date(t + 40 * 60000), 'Breakfast · Sarinah');
+    t += 40 * 60000;
+    t = addLeg(m, hi, kota, t, 8.5, rnd);
+    pushVisit(m, kota.lat, kota.lng, new Date(t), new Date(t + 90 * 60000), 'Kota Tua');
+    t += 90 * 60000;
+    t = addLeg(m, kota, gading, t, 11, rnd);
+    pushVisit(m, gading.lat, gading.lng, new Date(t), new Date(t + 75 * 60000), 'Lunch · Kelapa Gading');
+    t += 75 * 60000;
+    t = addLeg(m, gading, ancol, t, 9.5, rnd);
+    pushVisit(m, ancol.lat, ancol.lng, new Date(t), new Date(t + 120 * 60000), 'Ancol');
+    t += 120 * 60000;
+    t = addLeg(m, ancol, cgk, t, 10, rnd);
+    pushVisit(m, cgk.lat, cgk.lng, new Date(t), new Date(t + 80 * 60000), 'Soekarno–Hatta Airport');
+    t += 80 * 60000;
+    pushPoint(m, cgk.lat, cgk.lng, new Date(t));
+
+    /* Day 2 — Bali (the CGK-DPS gap becomes a flight arc) */
+    var ubud = { lat: -8.5069, lng: 115.2625 };
+    var kuta = { lat: -8.7176, lng: 115.1686 };
+    var uluwatu = { lat: -8.8150, lng: 115.0888 };
+    var sanur = { lat: -8.6918, lng: 115.2626 };
+    t = day2;
+    pushPoint(m, dps.lat, dps.lng, new Date(t));
+    pushVisit(m, dps.lat, dps.lng, new Date(t), new Date(t + 50 * 60000), 'Ngurah Rai Airport');
+    t += 50 * 60000;
+    t = addLeg(m, dps, ubud, t, 10.5, rnd, 160);
+    pushVisit(m, ubud.lat, ubud.lng, new Date(t), new Date(t + 110 * 60000), 'Ubud Palace');
+    t += 110 * 60000;
+    t = addLeg(m, ubud, sanur, t, 10, rnd, 160);
+    pushVisit(m, sanur.lat, sanur.lng, new Date(t), new Date(t + 60 * 60000), 'Sanur Beach');
+    t += 60 * 60000;
+    t = addLeg(m, sanur, kuta, t, 9, rnd, 160);
+    t = addLeg(m, kuta, uluwatu, t, 9.5, rnd, 160);
+    pushVisit(m, uluwatu.lat, uluwatu.lng, new Date(t), new Date(t + 80 * 60000), 'Uluwatu Temple');
+    t += 80 * 60000;
+    t = addLeg(m, uluwatu, kuta, t, 9.5, rnd, 160);
+    return finalizeModel(m);
+  }
+
+  /* ================= Wiring ================= */
+  var dropTargets = [document.getElementById('stage'), document.getElementById('dropZone2')];
+  var fileInput = document.getElementById('fileInput');
+  function openPicker() { fileInput.click(); }
+  document.getElementById('ctaChoose').addEventListener('click', openPicker);
+  document.getElementById('ctaChoose2').addEventListener('click', openPicker);
+  document.getElementById('ctaSample').addEventListener('click', function () {
+    clearErrors();
+    showLoading('Preparing sample…', 70);
+    setTimeout(function () {
+      fileName = 'Sample journey (demo)';
+      finishIngest(buildSample(), fileName);
+    }, 120);
+  });
+  dropTargets.forEach(function (el) {
+    el.addEventListener('dragover', function (e) { e.preventDefault(); el.classList.add('drag-over'); });
+    el.addEventListener('dragleave', function () { el.classList.remove('drag-over'); });
+    el.addEventListener('drop', function (e) {
+      e.preventDefault();
+      dropTargets.forEach(function (x) { x.classList.remove('drag-over'); });
       if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
     });
-    fileInput.addEventListener('change', function () {
-      if (fileInput.files.length) handleFile(fileInput.files[0]);
-      fileInput.value = '';
-    });
+  });
+  /* also allow dropping anywhere */
+  window.addEventListener('dragover', function (e) { e.preventDefault(); });
+  window.addEventListener('drop', function (e) {
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+      e.preventDefault();
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  document.getElementById('fcClear').addEventListener('click', resetAll);
 
-    window.addEventListener('resize', function () { map.invalidateSize(); });
+  playBtn.addEventListener('click', function () {
+    if (!playState.track) return;
+    if (playState.playing) stopPlayback();
+    else startPlayback();
+  });
+  scrubber.addEventListener('input', function () {
+    if (!playState.track) return;
+    if (playState.playing) stopPlayback();
+    playState.progress = (scrubber.value / 1000) * playState.track.total;
+    playState.idx = 0;
+    renderPlayback(playState.progress);
+  });
+  document.getElementById('speedGroup').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    playState.speed = parseFloat(b.getAttribute('data-spd')) || 8;
+    Array.prototype.forEach.call(this.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+  });
+  playState.speed = 8;
+
+  document.getElementById('followBtn').addEventListener('click', function () {
+    follow = !follow;
+    this.classList.toggle('on', follow);
+  });
+  document.getElementById('fitBtn').addEventListener('click', function () { fitScope(); });
+  document.getElementById('replayBtn').addEventListener('click', function () {
+    if (!playState.track) return;
+    playState.progress = 0; playState.idx = 0;
+    renderPlayback(0);
+    startPlayback();
+  });
+  document.getElementById('exportBtn').addEventListener('click', function () {
+    if (!MODEL) return;
+    var features = [];
+    MODEL.days.forEach(function (b) {
+      if (b.points.length < 2) return;
+      features.push({
+        type: 'Feature',
+        properties: { date: b.key, distance_meters: Math.round(b.dist), points: b.points.length },
+        geometry: { type: 'LineString', coordinates: b.points.map(function (p) { return [+p.lng.toFixed(6), +p.lat.toFixed(6)]; }) }
+      });
+    });
+    MODEL.places.slice(0, 2000).forEach(function (v) {
+      features.push({
+        type: 'Feature',
+        properties: { name: v.name || 'Place' },
+        geometry: { type: 'Point', coordinates: [+v.lng.toFixed(6), +v.lat.toFixed(6)] }
+      });
+    });
+    window.downloadText('timeline-' + new Date().toISOString().slice(0, 10) + '.geojson',
+      JSON.stringify({ type: 'FeatureCollection', features: features }), 'application/geo+json');
+  });
+
+  window.addEventListener('resize', function () { map.invalidateSize(); });
+
+  /* phone preview: align the dot to the real path geometry */
+  (function () {
+    var p = document.querySelector('.phone-path .route');
+    var dot = document.querySelector('.phone-dot');
+    if (p && dot && CSS.supports('offset-path', 'path("M0 0 L1 1")')) {
+      try {
+        var len = Math.ceil(p.getTotalLength());
+        var d = p.getAttribute('d');
+        dot.style.offsetPath = 'path("' + d + '")';
+        p.style.setProperty('--phlen', len);
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+      } catch (e) { dot.style.display = 'none'; }
+    }
   })();
+
+  })();
+
   </script>
 </body>
 </html>
