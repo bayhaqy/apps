@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="IP Location Finder — auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive map powered by ipwho.is & ipapi.co + Leaflet/OpenStreetMap." />
+  <meta name="description" content="IP Location Finder — auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive map. Triple-provider fallback: ipwho.is, ipapi.co & geojs.io + Leaflet/OpenStreetMap." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="IP Location Finder — GeoIP Tracker" />
   <meta property="og:description" content="Auto-detect your IP or look up any IPv4/IPv6 to see country, city, coordinates, ISP, and ASN on an interactive OpenStreetMap." />
@@ -16,6 +16,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/apps/assets/theme.css?v=20260818a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ezLr+/xwB6U5jfnxkM4A3C8q6XwA=" crossorigin="" />
+  <style>
+    .ip-copy{display:inline-flex;align-items:center;gap:.35rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink-soft);border-radius:999px;padding:.3rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .18s}
+    .ip-copy:hover{border-color:var(--red-700);color:var(--red-700)}
+    .ip-flag{font-size:1.5em;line-height:1;margin-right:.15rem}
+    .ip-flag.flag-emoji{font-family:'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif;font-size:1.35rem;}
+    .ip-status{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--ink-mute);margin:.55rem 0 0;min-height:1.2em}
+    .ip-status .spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--red-700);border-radius:99px;animation:ipspin .8s linear infinite;display:none}
+    .ip-status.loading .spin{display:block}
+    @keyframes ipspin{to{transform:rotate(360deg)}}
+    .ip-quick{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
+    .ip-chip{border:1px solid var(--line);background:var(--paper-alt);color:var(--ink-mute);border-radius:999px;padding:.25rem .7rem;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+    .ip-chip:hover{border-color:var(--red-700);color:var(--red-700)}
+    .data td.k{width:38%;color:var(--ink-mute);font-size:.8rem;padding:.42rem .6rem;border-bottom:1px solid var(--line-soft);vertical-align:top}
+    .data td.v{font-weight:600;font-size:.85rem;padding:.42rem .6rem;border-bottom:1px solid var(--line-soft);word-break:break-word}
+  </style>
 </head>
 <body data-app-name="IP Location">
   <main class="app-main">
@@ -24,9 +39,11 @@
       <h1 class="app-title">IP <span class="accent">Location Finder</span></h1>
       <p class="app-subtitle">
         Auto-detect your public IP on load, or look up any IPv4 / IPv6 to see country, city, GPS
-        coordinates, ISP, and ASN on an interactive OpenStreetMap. Powered by ipwho.is &amp; ipapi.co.
-        <strong>Tip:</strong> mobile-carrier, VPN, or Cloudflare IPs often resolve to the carrier
-        core / exit node city — not your physical location. This is a known IP-geolocation limit.
+        coordinates, ISP, and ASN on an interactive OpenStreetMap. Three providers with automatic
+        fallback (ipwho.is → ipapi.co → geojs.io) so lookups keep working even when one provider is
+        rate-limited. <strong>Tip:</strong> mobile-carrier, VPN, or Cloudflare IPs often resolve to
+        the carrier core / exit node city — not your physical location. This is a known
+        IP-geolocation limit.
       </p>
     </header>
 
@@ -44,6 +61,13 @@
         <button class="btn btn-ghost" id="meBtn" type="button">My IP</button>
         <button class="btn btn-ghost" id="sampleBtn" type="button">Try sample</button>
       </div>
+      <div class="ip-status" id="ipStatus"><span class="spin"></span><span id="ipStatusTxt"></span></div>
+      <div class="ip-quick">
+        <button class="ip-chip" data-ip="8.8.8.8">8.8.8.8 · Google</button>
+        <button class="ip-chip" data-ip="1.1.1.1">1.1.1.1 · Cloudflare</button>
+        <button class="ip-chip" data-ip="208.67.222.222">208.67.222.222 · OpenDNS</button>
+        <button class="ip-chip" data-ip="2606:4700:4700::1111">IPv6 sample</button>
+      </div>
     </section>
 
     <section class="card" id="errorCard" style="display:none;">
@@ -52,13 +76,16 @@
         Error
       </h2>
       <p id="errorMsg" class="text-mono text-sm"></p>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="retryBtn" type="button">Retry</button>
+      </div>
     </section>
 
     <section class="grid-2" style="margin-top:1.25rem;">
       <section class="card" id="infoCard" style="display:none;">
         <h2 class="card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Details
+          Details <span class="text-xs text-mute" id="srcNote"></span>
         </h2>
         <table class="data" id="infoTable"></table>
       </section>
@@ -81,57 +108,94 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     (function () {
+      'use strict';
       var $ = function (s) { return document.querySelector(s); };
       var ipInput = $('#ipInput');
       var lookupBtn = $('#lookupBtn');
       var meBtn = $('#meBtn');
       var sampleBtn = $('#sampleBtn');
+      var retryBtn = $('#retryBtn');
       var errorCard = $('#errorCard');
       var errorMsg = $('#errorMsg');
       var infoCard = $('#infoCard');
       var infoTable = $('#infoTable');
       var mapCard = $('#mapCard');
       var mapEl = $('#map');
-      var map = null, marker = null;
+      var statusEl = $('#ipStatus');
+      var statusTxt = $('#ipStatusTxt');
+      var map = null, marker = null, lastQuery = '';
+      var currentData = null;
 
+      function setStatus(msg, loading) {
+        statusTxt.textContent = msg || '';
+        statusEl.classList.toggle('loading', !!loading);
+      }
       function showError(msg) {
         infoCard.style.display = 'none';
         mapCard.style.display = 'none';
         errorCard.style.display = 'block';
         errorMsg.textContent = msg;
+        setStatus('', false);
       }
       function clearOutput() {
         errorCard.style.display = 'none';
         infoCard.style.display = 'none';
         mapCard.style.display = 'none';
       }
-
-      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
-
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
       function row(k, v) {
-        return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v">' + escapeHtml(v) + '</td></tr>';
+        return '<tr><td class="k">' + escapeHtml(k) + '</td><td class="v">' + (v == null ? '—' : v) + '</td></tr>';
+      }
+      function flagEmoji(cc) {
+        if (!cc || !/^[A-Za-z]{2}$/.test(cc)) return '';
+        return String.fromCodePoint.apply(null, cc.toUpperCase().split('').map(function (c) { return 0x1F1E6 + c.charCodeAt(0) - 65; }));
       }
 
-      function showInfo(data) {
-        infoCard.style.display = 'block';
-        var rows = '';
-        rows += row('IP', data.ip || data.query || '—');
-        rows += row('Country', (data.country_name || data.country || '—') + (data.country_code ? ' (' + data.country_code + ')' : ''));
-        rows += row('Region', data.region || data.regionName || '—');
-        rows += row('City', data.city || '—');
-        rows += row('Postal', data.postal || data.zip || '—');
-        rows += row('Latitude', data.latitude || data.lat || '—');
-        rows += row('Longitude', data.longitude || data.lon || '—');
-        rows += row('Timezone', data.timezone || '—');
-        rows += row('ISP', data.org || data.isp || '—');
-        rows += row('ASN', data.asn || (data.as ? (data.as || '—') : '—'));
-        infoTable.innerHTML = '<tbody>' + rows + '</tbody>';
+      function fetchTimeout(url, ms) {
+        var ctrl = new AbortController();
+        var t = setTimeout(function () { ctrl.abort(); }, ms || 8000);
+        return fetch(url, { signal: ctrl.signal, cache: 'no-store' }).finally(function () { clearTimeout(t); });
+      }
 
-        var lat = parseFloat(data.latitude || data.lat);
-        var lon = parseFloat(data.longitude || data.lon);
-        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      function showInfo(data, source) {
+        currentData = data;
+        infoCard.style.display = 'block';
+        var cc = data.country_code || '';
+        var flag = flagEmoji(cc);
+        var ip = data.ip || data.query || '—';
+        var copyBtn = '<button class="ip-copy" id="copyIpBtn" type="button">Copy IP</button>';
+        var rows = '';
+        rows += row('IP', '<span class="ip-flag flag-emoji">' + flag + '</span>' + escapeHtml(ip) + ' &nbsp;' + copyBtn);
+        rows += row('Country', escapeHtml((data.country_name || data.country || '—') + (cc ? ' (' + cc + ')' : '')));
+        rows += row('Region', escapeHtml(data.region || data.regionName || '—'));
+        rows += row('City', escapeHtml(data.city || '—'));
+        rows += row('Postal', escapeHtml(data.postal || data.zip || '—'));
+        rows += row('Latitude', escapeHtml(data.latitude != null ? data.latitude : (data.lat || '—')));
+        rows += row('Longitude', escapeHtml(data.longitude != null ? data.longitude : (data.lon || '—')));
+        rows += row('Timezone', escapeHtml(data.timezone || '—'));
+        rows += row('ISP', escapeHtml(data.org || data.isp || data.organization || '—'));
+        rows += row('ASN', escapeHtml(data.asn || data.as || '—'));
+        infoTable.innerHTML = '<tbody>' + rows + '</tbody>';
+        $('#srcNote').textContent = '· via ' + source;
+        var copyBtnEl = $('#copyIpBtn');
+        if (copyBtnEl) {
+          copyBtnEl.addEventListener('click', function () {
+            var txt = data.ip || data.query || '';
+            if (navigator.clipboard) navigator.clipboard.writeText(txt);
+            else {
+              var ta = document.createElement('textarea');
+              ta.value = txt; document.body.appendChild(ta); ta.select();
+              try { document.execCommand('copy'); } catch (e) {}
+              ta.remove();
+            }
+            copyBtnEl.textContent = 'Copied!';
+            setTimeout(function () { copyBtnEl.textContent = 'Copy IP'; }, 1500);
+          });
+        }
+        var lat = parseFloat(data.latitude != null ? data.latitude : data.lat);
+        var lon = parseFloat(data.longitude != null ? data.longitude : data.lon);
+        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180 && (lat !== 0 || lon !== 0)) {
           mapCard.style.display = 'block';
-          // Wait for layout to settle before initializing the map.
           setTimeout(function () { ensureMap(lat, lon, data); }, 60);
         } else {
           mapCard.style.display = 'none';
@@ -139,14 +203,12 @@
       }
 
       function ensureMap(lat, lon, data) {
-        // Leaflet expects [LAT, LON] — never reversed. Validate bounds to prevent
-        // the marker ending up in the Atlantic (0,0) if the API returns null coords.
         if (!isFinite(lat) || !isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
           mapCard.style.display = 'none';
           return;
         }
         var popupHtml =
-          '<div style="font-weight:700;margin-bottom:2px;">' + escapeHtml(data.ip || data.query || '—') + '</div>' +
+          '<div style="font-weight:700;margin-bottom:2px;">' + escapeHtml(flagEmoji(data.country_code)) + ' ' + escapeHtml(data.ip || data.query || '—') + '</div>' +
           '<div>' + escapeHtml(data.city || '—') + (data.region ? ', ' + escapeHtml(data.region) : '') + '</div>' +
           '<div>' + escapeHtml(data.country_name || data.country || '—') + (data.country_code ? ' (' + escapeHtml(data.country_code) + ')' : '') + '</div>' +
           '<div class="text-mute text-xs" style="margin-top:4px">' +
@@ -160,24 +222,20 @@
             zoomControl: true,
             attributionControl: true
           }).setView([lat, lon], 11);
-          // Primary: CARTO Positron (light, fast, well-attributed, HTTPS by default).
           var primary = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             subdomains: 'abcd',
             maxZoom: 20,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
           });
-          // Fallback: OSM standard tiles (in case CARTO is rate-limited/unavailable).
           var fallback = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             subdomains: 'abc',
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           });
           primary.on('tileerror', function () {
-            // If the primary provider starts returning errors, swap to OSM fallback.
             if (map.hasLayer(primary)) {
               map.removeLayer(primary);
               fallback.addTo(map);
-              // Re-add marker on top.
               if (marker) marker.addTo(map);
             }
           });
@@ -188,75 +246,106 @@
           marker.setLatLng([lat, lon]).bindPopup(popupHtml).openPopup();
           map.setView([lat, lon], 11);
         }
-        // Invalidate size after the container is visible — needed because the
-        // mapCard starts as display:none and Leaflet computes tile positions
-        // based on the container's current pixel size.
         setTimeout(function () { if (map) { map.invalidateSize(); } }, 120);
         setTimeout(function () { if (map) { map.invalidateSize(); } }, 400);
+      }
+
+      function normalizeWhoIs(d) {
+        return {
+          ip: d.ip, country_name: d.country, country_code: d.country_code, region: d.region,
+          city: d.city, postal: d.postal, latitude: d.latitude, longitude: d.longitude,
+          timezone: d.timezone ? d.timezone.id : null,
+          org: d.connection ? (d.connection.isp || d.connection.org) : null,
+          asn: d.connection ? (d.connection.asn ? 'AS' + d.connection.asn + (d.connection.org ? ' · ' + d.connection.org : '') : null) : null
+        };
+      }
+      function normalizeIpapi(d) {
+        if (!d.ip && d.query) d.ip = d.query;
+        return d;
+      }
+      function normalizeGeojs(d) {
+        return {
+          ip: d.ip, country_name: d.country, country_code: d.country_code,
+          region: d.region, city: d.city,
+          latitude: parseFloat(d.latitude), longitude: parseFloat(d.longitude),
+          timezone: d.timezone, org: d.organization_name,
+          asn: d.asn ? 'AS' + d.asn : null
+        };
       }
 
       async function lookup(ip) {
         clearOutput();
         lookupBtn.disabled = true;
-        lookupBtn.textContent = 'Looking up…';
-        var lastErr = null;
+        lookupBtn.setAttribute('aria-busy', 'true');
+        var label = ip ? ('Looking up ' + ip + '…') : 'Detecting your IP…';
+        setStatus(label, true);
+        lookupBtn.querySelector('svg').style.display = 'none';
+        lookupBtn.lastChild.textContent = 'Looking up…';
+        lastQuery = ip;
+        var errors = [];
+        var providers = [
+          {
+            name: 'ipwho.is',
+            url: ip ? 'https://ipwho.is/' + encodeURIComponent(ip) : 'https://ipwho.is/',
+            norm: normalizeWhoIs,
+            check: function (d) { if (d && d.success === false) throw new Error(d.message || 'invalid'); return !!d.ip; }
+          },
+          {
+            name: 'ipapi.co',
+            url: ip ? 'https://ipapi.co/' + encodeURIComponent(ip) + '/json/' : 'https://ipapi.co/json/',
+            norm: normalizeIpapi,
+            check: function (d) { if (!d || d.error) throw new Error((d && d.reason) || 'invalid'); return !!d.ip; }
+          },
+          {
+            name: 'geojs.io',
+            url: ip ? 'https://get.geojs.io/v1/ip/geo/' + encodeURIComponent(ip) + '.json' : 'https://get.geojs.io/v1/ip/geo.json',
+            norm: normalizeGeojs,
+            check: function (d) { return !!(d && d.ip); }
+          }
+        ];
         try {
-          // Try ipapi.co first (HTTPS, CORS-friendly, has ASN).
-          try {
-            var url1 = ip ? ('https://ipapi.co/' + encodeURIComponent(ip) + '/json/') : 'https://ipapi.co/json/';
-            var res1 = await fetch(url1);
-            if (res1.ok) {
-              var data1 = await res1.json();
-              if (!data1 || data1.error) throw new Error(data1 && data1.reason || 'Lookup failed');
-              if (!data1.ip && data1.query) data1.ip = data1.query;
-              showInfo(data1);
+          for (var i = 0; i < providers.length; i++) {
+            var pv = providers[i];
+            if (i > 0) setStatus(('Retrying via ' + pv.name + '…'), true);
+            try {
+              var res = await fetchTimeout(pv.url, 8000);
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              var data = await res.json();
+              pv.check(data);
+              var norm = pv.norm(data);
+              if (!norm || !norm.ip) throw new Error('empty response');
+              showInfo(norm, pv.name);
+              setStatus('', false);
               return;
+            } catch (err) {
+              errors.push(pv.name + ': ' + (err && err.name === 'AbortError' ? 'timeout' : (err && err.message) || err));
             }
-            throw new Error('ipapi.co returned HTTP ' + res1.status);
-          } catch (err) { lastErr = err; }
-
-          // Fallback to ipwho.is (HTTPS, CORS-friendly, free, has ASN).
-          try {
-            var url2 = ip ? ('https://ipwho.is/' + encodeURIComponent(ip)) : 'https://ipwho.is/';
-            var res2 = await fetch(url2);
-            if (res2.ok) {
-              var data2 = await res2.json();
-              if (data2 && data2.success === false) throw new Error(data2.message || 'Lookup failed');
-              var normalized = {
-                ip: data2.ip,
-                country_name: data2.country,
-                country_code: data2.country_code,
-                region: data2.region,
-                city: data2.city,
-                postal: data2.postal,
-                latitude: data2.latitude,
-                longitude: data2.longitude,
-                timezone: data2.timezone ? data2.timezone.id : null,
-                org: data2.connection ? (data2.connection.isp || data2.connection.org) : null,
-                asn: data2.connection ? data2.connection.asn : null
-              };
-              showInfo(normalized);
-              return;
-            }
-            throw new Error('ipwho.is returned HTTP ' + res2.status);
-          } catch (err) { lastErr = err; }
-
-          showError('Lookup failed via both ipapi.co and ipwho.is. Last error: ' + (lastErr && lastErr.message ? lastErr.message : lastErr) + '. Please retry in a moment.');
+          }
+          showError('Lookup failed on all three providers.\n' + errors.join(' · ') + '\n\nIf you are offline or behind a strict firewall/VPN, try again in a moment.');
         } finally {
           lookupBtn.disabled = false;
-          lookupBtn.textContent = 'Look up';
+          lookupBtn.removeAttribute('aria-busy');
+          lookupBtn.querySelector('svg').style.display = '';
+          lookupBtn.lastChild.textContent = 'Look up';
         }
       }
 
       lookupBtn.addEventListener('click', function () { lookup(ipInput.value.trim()); });
       ipInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') lookup(ipInput.value.trim()); });
       meBtn.addEventListener('click', function () { ipInput.value = ''; lookup(''); });
+      retryBtn.addEventListener('click', function () { lookup(lastQuery); });
+      var sampleChips = document.querySelectorAll('.ip-chip');
+      Array.prototype.forEach.call(sampleChips, function (chip) {
+        chip.addEventListener('click', function () {
+          ipInput.value = chip.getAttribute('data-ip');
+          lookup(chip.getAttribute('data-ip'));
+        });
+      });
       var samples = ['8.8.8.8', '1.1.1.1', '208.67.222.222', '9.9.9.9', '4.2.2.2'];
       sampleBtn.addEventListener('click', function () {
         var p = samples[Math.floor(Math.random() * samples.length)];
         ipInput.value = p; lookup(p);
       });
-
       // Auto-detect own IP on first load.
       setTimeout(function () { lookup(''); }, 200);
     })();
