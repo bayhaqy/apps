@@ -56,7 +56,7 @@
 
     /* ---------- stage (map panel) ---------- */
     .tv-stage{position:relative;border-radius:22px;overflow:hidden;background:var(--tvnavy-deep);box-shadow:0 18px 44px -18px rgba(15,36,64,.55);min-height:430px}
-    #tvMap{position:absolute;inset:0;background:#0f2440}
+    #tvMap{position:absolute;inset:0;background:#0f2440;z-index:1;isolation:isolate}
     .tv-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;color:#cdd7e4;text-align:center;padding:1.4rem;z-index:5;
       background:radial-gradient(120% 120% at 20% 0%,#1a365d 0%,#0f2440 60%,#0a1a30 100%)}
     .tv-empty.hidden{display:none}
@@ -158,13 +158,6 @@
     .tv-land{margin-top:2.6rem;display:flex;flex-direction:column;gap:2.4rem}
     .tv-land h2{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 .3rem}
     .tv-land .lead{color:var(--ink-mute);font-size:.92rem;margin:0 0 1.2rem;max-width:640px}
-    .tv-featgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem}
-    .tv-feat{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1.1rem 1rem;box-shadow:var(--shadow-sm);transition:transform .25s var(--ease),box-shadow .25s}
-    .tv-feat:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-    .tv-feat .fic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:.65rem;background:var(--red-50);color:var(--tvpink)}
-    .tv-feat .fic svg{width:20px;height:20px}
-    .tv-feat h3{font-size:.95rem;margin:0 0 .3rem}
-    .tv-feat p{font-size:.8rem;color:var(--ink-mute);margin:0;line-height:1.55}
     .tv-guide-tabs{display:flex;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap}
     .tv-gtab{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:.5rem 1.05rem;font-size:.82rem;font-weight:700;color:var(--ink-soft);cursor:pointer;transition:all .18s}
     .tv-gtab.on{background:var(--tvnavy);border-color:var(--tvnavy);color:#fff}
@@ -181,15 +174,6 @@
     .tv-faqs summary::after{content:"+";font-size:1.15rem;color:var(--tvpink);font-weight:800;transition:transform .25s}
     .tv-faqs details[open] summary::after{transform:rotate(45deg)}
     .tv-faqs .a{padding:0 1rem .9rem;font-size:.82rem;color:var(--ink-mute);line-height:1.6}
-    .tv-ctaband{background:linear-gradient(135deg,#1a365d,#0f2440);border-radius:22px;padding:1.6rem 1.4rem;color:#fff;text-align:center}
-    .tv-ctaband h2{color:#fff;margin:0 0 .35rem;font-size:1.35rem}
-    .tv-ctaband p{color:#b9c7d9;font-size:.88rem;margin:0 0 1rem}
-    .tv-ctaband .row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
-    .tv-ctaband button{min-height:46px;border-radius:999px;padding:0 1.3rem;font-weight:700;font-size:.86rem;cursor:pointer;transition:transform .18s}
-    .tv-ctaband .b1{border:none;background:var(--tvpink);color:#fff;box-shadow:0 10px 26px rgba(233,0,100,.4)}
-    .tv-ctaband .b2{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff}
-    .tv-ctaband button:hover{transform:translateY(-2px)}
-
     .tv-spin{animation:tvspin 1s linear infinite}@keyframes tvspin{to{transform:rotate(360deg)}}
     @media(max-width:560px){
       .tv-hud .pill{min-width:78px;padding:.38rem .55rem}
@@ -283,10 +267,17 @@
             <button class="tv-opt" data-cam="close" type="button">Close-up</button>
           </div>
           <div class="tv-optgrid" style="margin-top:.45rem">
+            <button class="tv-opt on" data-road="car" type="button">Follow roads · Car</button>
+            <button class="tv-opt" data-road="bike" type="button">Follow roads · Bike</button>
+            <button class="tv-opt" data-road="foot" type="button">Follow roads · Walk</button>
+            <button class="tv-opt" data-road="off" type="button">Straight lines</button>
+          </div>
+          <div class="tv-optgrid" style="margin-top:.45rem">
             <button class="tv-opt on" data-style="light" type="button">Light</button>
             <button class="tv-opt" data-style="dark" type="button">Dark</button>
-            <button class="tv-opt" data-style="night" type="button">Night</button>
+            <button class="tv-opt" data-style="satellite" type="button">Satellite</button>
             <button class="tv-opt" data-style="terrain" type="button">Terrain</button>
+            <button class="tv-opt" data-style="night" type="button">Night</button>
           </div>
           <div class="tv-optgrid" style="margin-top:.45rem">
             <button class="tv-opt on" data-color="classic" type="button"><span class="sw" style="background:#E90064"></span>Classic</button>
@@ -398,7 +389,7 @@
           <div class="tv-consent" id="tvConsent">
             <div class="tv-consent-box">
               <h4>Before loading the map</h4>
-              <p>Your Timeline file is <b>never uploaded</b>. The map provider receives tile requests for the areas shown in your journey, along with normal network information such as your IP address — this may reveal places in your Timeline to the map provider. Place names shown on stops may be looked up from OpenStreetMap.</p>
+              <p>Your Timeline file is <b>never uploaded</b>. The map provider receives tile requests for the areas shown in your journey, along with normal network information such as your IP address. With <b>Follow roads</b> enabled (default), simplified route points are also sent to a free public routing service (OSRM) so the line snaps to real roads — pick <b>Straight lines</b> under Route path for a fully on-device render. Place names shown on stops may be looked up from OpenStreetMap.</p>
               <button class="btn-allow" id="btnConsent" type="button">I understand and want to load the map</button>
               <span class="btn-pol">Processed locally · bayhaqy.my.id</span>
             </div>
@@ -418,7 +409,6 @@
           <div class="tv-stagebtns" id="stageBtns">
             <button class="tv-sbtn" id="followBtn" type="button">Toggle camera follow</button>
             <button class="tv-sbtn" id="fitBtn" type="button">Fit view</button>
-            <button class="tv-sbtn" id="speedBtn" type="button">Speed: 1×</button>
           </div>
 
           <div class="tv-ctrl" id="playbar">
@@ -436,6 +426,16 @@
               <button class="tv-chip" data-ccam="steady" type="button">Follow</button>
               <button class="tv-chip" data-ccam="dynamic" type="button">Dynamic</button>
               <button class="tv-chip" data-ccam="close" type="button">Close</button>
+            </div>
+            <div class="tv-cams">
+              <span class="cl">Playback speed</span>
+              <button class="tv-chip" data-spd="0.5" type="button">0.5×</button>
+              <button class="tv-chip on" data-spd="1" type="button">1×</button>
+              <button class="tv-chip" data-spd="2" type="button">2×</button>
+              <button class="tv-chip" data-spd="4" type="button">4×</button>
+              <button class="tv-chip" data-spd="8" type="button">8×</button>
+              <button class="tv-chip" data-spd="16" type="button">16×</button>
+              <button class="tv-chip" data-spd="32" type="button">32×</button>
             </div>
           </div>
         </section>
@@ -456,33 +456,6 @@
 
     <!-- ============ LANDING: features / guide / faq / cta ============ -->
     <div class="tv-land">
-      <section id="tvWhy">
-        <h2>Why Use Timeline Visualizer?</h2>
-        <p class="lead">Everything runs on your device — the same core experience as the popular timeline tools, tuned for bayhaqy.my.id.</p>
-        <div class="tv-featgrid">
-          <div class="tv-feat">
-            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-            <h3>Private by design</h3>
-            <p>Your Timeline file is parsed locally in your browser. Nothing is uploaded to our servers — only map tile requests go to the map provider.</p>
-          </div>
-          <div class="tv-feat">
-            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-            <h3>Free &amp; unlimited</h3>
-            <p>Preview the animation and export your video for free — no account, no watermark, no per-video payment, no subscription.</p>
-          </div>
-          <div class="tv-feat">
-            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-            <h3>Works on phone &amp; desktop</h3>
-            <p>Export on your phone, create the video in Safari or Chrome. Portrait, square and landscape formats included.</p>
-          </div>
-          <div class="tv-feat">
-            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11v9a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-9"/><path d="M2 10l10-7 10 7"/></svg></div>
-            <h3>Shareable video output</h3>
-            <p>MP4 (or WebM fallback) ready for Instagram, TikTok, YouTube, or messaging apps. Preview before you export.</p>
-          </div>
-        </div>
-      </section>
-
       <section id="tvGuide">
         <h2>Export Your Timeline First</h2>
         <p class="lead">Choose your platform for step-by-step instructions on getting your Timeline data from Google Maps.</p>
@@ -528,7 +501,7 @@
         <div class="tv-faqs">
           <details>
             <summary>Is my location data uploaded?</summary>
-            <div class="a">No. Timeline Visualizer reads your file locally in your browser. Map tiles are fetched from the map provider, which may receive coordinates for areas shown in your journey. Your raw file never leaves your device.</div>
+            <div class="a">No. Timeline Visualizer reads your file locally in your browser. Map tiles are fetched from the map provider, which may receive coordinates for areas shown in your journey. With "Follow roads" enabled, simplified route points are also sent to the free OSRM routing service to snap the line to real roads — choose Route path → "Straight lines" to avoid that. Your raw file never leaves your device.</div>
           </details>
           <details>
             <summary>Which file formats are supported?</summary>
@@ -553,14 +526,6 @@
         </div>
       </section>
 
-      <section class="tv-ctaband">
-        <h2>Ready to visualize your timeline?</h2>
-        <p>Try the demo journey first — no file needed — or upload your own Timeline export.</p>
-        <div class="row">
-          <button class="b1" id="ctaStart" type="button">Create your video</button>
-          <button class="b2" id="ctaDemo" type="button">Try demo</button>
-        </div>
-      </section>
     </div>
   </main>
 
@@ -606,6 +571,7 @@
       baseLayer: null,
       routeLayer: null, ghostLayer: null, marker: null, stopLayer: null,
       playing: false, t: 0, speed: 1, previewDur: 30,
+      road: 'car', trips: [], tripAt: [], roadQueue: null, roadCache: {},
       cam: 'steady', style: 'light', color: 'classic', markerStyle: 'dot',
       unit: 'auto', look: '',
       camZoom: 12, fitBounds: null,
@@ -619,10 +585,11 @@
       lime: { a: '#A3E635', b: '#22D3EE', glow: 'rgba(163,230,53,.45)' }
     };
     var STYLES = {
-      light: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', sub: 'abcd', max: 20 },
-      dark: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', sub: 'abcd', max: 20 },
-      night: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', sub: 'abcd', max: 20, cls: 'tv-night' },
-      terrain: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> · SRTM · <a href="https://opentopomap.org">OpenTopoMap</a>', sub: 'abc', max: 17 }
+      light: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', sub: 'abc', max: 19 },
+      dark: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attr: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom', sub: 'a', max: 16 },
+      satellite: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics', sub: 'a', max: 19 },
+      night: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attr: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom', sub: 'a', max: 16, cls: 'tv-night' },
+      terrain: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · SRTM · <a href="https://opentopomap.org">OpenTopoMap</a>', sub: 'abc', max: 17 }
     };
     var MAX_PREVIEW_PTS = 5000;
 
@@ -830,6 +797,7 @@
       if (!S.map) return;
       if (S.baseLayer) S.map.removeLayer(S.baseLayer);
       S.baseLayer = L.tileLayer(st.url, { attribution: st.attr, subdomains: st.sub, maxZoom: st.max }).addTo(S.map);
+      try { S.map.setMaxZoom(st.max); } catch (e) {}
       var c = S.map.getContainer();
       c.classList.remove('tv-night');
       if (st.cls) c.classList.add(st.cls);
@@ -856,6 +824,7 @@
       var latlngs = S.pts.map(function (p) { return [p.lat, p.lon]; });
       L.polyline(latlngs, { color: '#000', weight: 7, opacity: 0.12, lineCap: 'round' }).addTo(S.ghostLayer);
       L.polyline(latlngs, { color: COLORS[S.color].a, weight: 4, opacity: 0.35, lineCap: 'round' }).addTo(S.ghostLayer);
+      computeTrips();
       // places (max 40)
       var lim = S.places.slice(0, 40);
       lim.forEach(function (pl) {
@@ -931,20 +900,24 @@
     function drawProgress(tNorm) {
       if (!S.map || S.pts.length < 2) return;
       var idx = idxAtT(tNorm);
+      ensureRoadNear(idx);
       if (revealLayer) { S.map.removeLayer(revealLayer); }
       revealLayer = L.layerGroup();
-      var from = Math.max(0, idx - 120); // draw recent window for perf; ghost shows the rest
-      var chunk = 6;
+      var path = revealPath(idx);
       var C = COLORS[S.color];
-      for (var i = from; i < idx; i += chunk) {
-        var j = Math.min(idx, i + chunk);
-        var f = j / (S.pts.length - 1);
-        var col = lerpColor(C.a, C.b, f);
-        L.polyline(S.pts.slice(i, j + 1).map(function (p) { return [p.lat, p.lon]; }),
-          { color: col, weight: 5.5, opacity: 0.98, lineCap: 'round' }).addTo(revealLayer);
+      if (path.length >= 2) {
+        L.polyline(path, { color: C.glow, weight: 9.5, opacity: 0.3, lineCap: 'round' }).addTo(revealLayer);
+        var chunk = Math.max(2, Math.round(path.length / 36));
+        for (var i = 0; i < path.length - 1; i += chunk) {
+          var j = Math.min(path.length - 1, i + chunk);
+          var f = (j + 1) / path.length;
+          L.polyline(path.slice(i, j + 1),
+            { color: lerpColor(C.a, C.b, f), weight: 5.5, opacity: 0.98, lineCap: 'round' }).addTo(revealLayer);
+        }
       }
       revealLayer.addTo(S.map);
-      var p = S.pts[idx];
+      var tip = path.length ? path[path.length - 1] : null;
+      var p = tip ? { lat: tip[0], lon: tip[1], t: S.pts[idx].t } : S.pts[idx];
       if (!S.marker && S.markerStyle !== 'none') makeMarker();
       if (S.marker) {
         S.marker.setLatLng([p.lat, p.lon]);
@@ -985,6 +958,155 @@
       var y = Math.sin(dLo) * Math.cos(p2.lat * Math.PI / 180);
       var x = Math.cos(p1.lat * Math.PI / 180) * Math.sin(p2.lat * Math.PI / 180) - Math.sin(p1.lat * Math.PI / 180) * Math.cos(p2.lat * Math.PI / 180) * Math.cos(dLo);
       return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+    }
+
+    /* =================== road-following (OSRM, free & keyless) =================== */
+    var OSRM_BASE = {
+      car: ['https://router.project-osrm.org/route/v1/driving/', 'https://routing.openstreetmap.de/routed-car/route/v1/driving/'],
+      bike: ['https://routing.openstreetmap.de/routed-bike/route/v1/driving/'],
+      foot: ['https://routing.openstreetmap.de/routed-foot/route/v1/driving/']
+    };
+    function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+    function computeTrips() {
+      S.trips = []; S.tripAt = new Array(S.pts.length).fill(null);
+      if (S.pts.length < 6) return;
+      var a = 0;
+      for (var i = 1; i < S.pts.length; i++) {
+        var dt = S.pts[i].t - S.pts[i - 1].t;
+        var dd = hav(S.pts[i - 1].lat, S.pts[i - 1].lon, S.pts[i].lat, S.pts[i].lon);
+        if (dt > 30 * 60000 || (dd > 6000 && dt > 5 * 60000)) { pushTrip(a, i - 1); a = i; }
+      }
+      pushTrip(a, S.pts.length - 1);
+    }
+    function pushTrip(a, b) {
+      if (b - a < 5) return;
+      var anchors = buildAnchors(a, b);
+      if (!anchors || anchors.length < 2) return;
+      var tr = { a: a, b: b, key: 't' + a + '_' + b, anchors: anchors, road: null, anchorRoad: null, pending: false, failed: false };
+      S.trips.push(tr);
+      for (var i = a; i <= b; i++) S.tripAt[i] = tr;
+    }
+    function buildAnchors(a, b) {
+      var minD = 45, out = [];
+      while (minD < 200000) {
+        out = [a];
+        var last = S.pts[a];
+        for (var i = a + 1; i < b; i++) {
+          if (hav(last.lat, last.lon, S.pts[i].lat, S.pts[i].lon) >= minD) { out.push(i); last = S.pts[i]; }
+        }
+        out.push(b);
+        if (out.length <= 80) break;
+        minD *= 1.9;
+      }
+      return out.map(function (ai) { return { ai: ai, lat: S.pts[ai].lat, lon: S.pts[ai].lon }; });
+    }
+    function osrmCall(base, anchors) {
+      var ctrl = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 9000) : null;
+      var url = base + anchors.map(function (p) { return p.lon.toFixed(5) + ',' + p.lat.toFixed(5); }).join(';') + '?overview=full&geometries=geojson';
+      return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (j && j.code === 'Ok' && j.routes && j.routes[0] && j.routes[0].geometry && j.routes[0].geometry.coordinates) {
+            return j.routes[0].geometry.coordinates.map(function (c) { return { lat: c[1], lon: c[0] }; });
+          }
+          return null;
+        })
+        .catch(function () { return null; })
+        .then(function (x) { if (timer) clearTimeout(timer); return x; });
+    }
+    function roadCacheKey(tr) {
+      return S.road + '|' + tr.anchors.map(function (p) { return p.lat.toFixed(3) + ',' + p.lon.toFixed(3); }).join(';');
+    }
+    function fetchRoad(tr) {
+      if (S.road === 'off' || !tr || tr.road || tr.failed || tr.pending) return;
+      var ck = roadCacheKey(tr);
+      if (S.roadCache[ck]) { applyRoad(tr, S.roadCache[ck].geo, S.roadCache[ck].ar); return; }
+      tr.pending = true;
+      S.roadQueue = (S.roadQueue || Promise.resolve()).then(function () { return delay(280); }).then(function () {
+        if (S.road === 'off') { tr.pending = false; return; }
+        var bases = OSRM_BASE[S.road] || [];
+        var chain = Promise.resolve(null);
+        bases.forEach(function (b) { chain = chain.then(function (prev) { return prev || osrmCall(b, tr.anchors); }); });
+        return chain.then(function (geo) {
+          tr.pending = false;
+          if (geo && geo.length > 3) {
+            var ar = mapAnchors(tr, geo);
+            S.roadCache[ck] = { geo: geo, ar: ar };
+            applyRoad(tr, geo, ar);
+          } else {
+            tr.failed = true;
+          }
+        });
+      });
+    }
+    function mapAnchors(tr, road) {
+      var out = [], vi = 0;
+      tr.anchors.forEach(function (an) {
+        var best = vi, bd = Infinity;
+        for (var i = vi; i < road.length; i++) {
+          var dl = road[i].lat - an.lat, dg = road[i].lon - an.lon;
+          var d = dl * dl + dg * dg;
+          if (d < bd) { bd = d; best = i; }
+          if (i - vi > 500) break;
+        }
+        out.push(best); vi = best;
+      });
+      return out;
+    }
+    function applyRoad(tr, geo, ar) {
+      tr.road = geo; tr.anchorRoad = ar;
+      if (!S.exporting) drawProgress(S.t);
+    }
+    function ensureRoadNear(idx) {
+      if (S.road === 'off' || !S.trips.length) return;
+      var req = 0;
+      for (var t = 0; t < S.trips.length; t++) {
+        var tr = S.trips[t];
+        if (tr.b < idx - 400 || tr.a > idx + 12000) continue;
+        if (!tr.road && !tr.failed && !tr.pending) { fetchRoad(tr); req++; }
+        if (req >= 6) break;
+      }
+    }
+    function roadPos(tr, rel) {
+      var an = tr.anchors, ar = tr.anchorRoad, k = 0;
+      while (k < an.length - 2 && an[k + 1].ai - tr.a <= rel) k++;
+      var a1 = an[k].ai - tr.a, a2 = an[k + 1].ai - tr.a;
+      var f = a2 > a1 ? clamp((rel - a1) / (a2 - a1), 0, 1) : 0;
+      var tv = ar[k] + (ar[k + 1] - ar[k]) * f;
+      var i0 = Math.floor(tv), fr = tv - i0;
+      var p0 = tr.road[Math.min(i0, tr.road.length - 1)];
+      var p1 = tr.road[Math.min(i0 + 1, tr.road.length - 1)];
+      return [p0.lat + (p1.lat - p0.lat) * fr, p0.lon + (p1.lon - p0.lon) * fr];
+    }
+    function revealPath(idx) {
+      var n = S.pts.length;
+      if (idx < 1) idx = Math.min(1, n - 1);
+      var from = Math.max(0, idx - 320);
+      var out = [];
+      if (S.road === 'off' || !S.trips.length) {
+        for (var i0 = from; i0 <= idx; i0++) out.push([S.pts[i0].lat, S.pts[i0].lon]);
+        return out;
+      }
+      var i = from;
+      while (i <= idx) {
+        var tr = S.tripAt[i];
+        if (tr && tr.road && tr.anchorRoad) {
+          var end = Math.min(idx, tr.b);
+          for (var j = Math.max(i, tr.a); j <= end; j++) out.push(roadPos(tr, j - tr.a));
+          i = end + 1;
+        } else {
+          out.push([S.pts[i].lat, S.pts[i].lon]);
+          i++;
+        }
+      }
+      if (out.length > 900) {
+        var step = Math.ceil(out.length / 900), th = [];
+        for (var q = 0; q < out.length; q += step) th.push(out[q]);
+        if (th[th.length - 1] !== out[out.length - 1]) th.push(out[out.length - 1]);
+        out = th;
+      }
+      return out;
     }
 
     /* =================== animation loop =================== */
@@ -1156,6 +1278,9 @@
       }
 
       try {
+        // 0. warm up road geometry along the journey
+        for (var rf = 0; rf <= 4; rf++) ensureRoadNear(Math.floor((S.pts.length - 1) * rf / 4));
+        await delay(1300);
         // 1. preload tiles along the camera path
         var N = Math.min(fps * dur, 3600);
         var needed = {}, frames = [];
@@ -1164,7 +1289,8 @@
           var cs = camStateAt(tN, W, H);
           frames.push(cs);
           var scale = 2; // @2x tiles for crispness when res>=720
-          var zf = clamp(cs.z, 2, (S.style === 'terrain' ? 16 : 18));
+          var zcap = { light: 18, dark: 15, night: 15, satellite: 17, terrain: 16 }[S.style] || 18;
+          var zf = clamp(cs.z, 2, zcap);
           var zr = Math.round(zf);
           var cxp = mercX(cs.lon, zr), cyp = mercY(cs.lat, zr);
           var halfW = W / 2 / scale, halfH = H / 2 / scale;
@@ -1280,20 +1406,26 @@
       }
       // route
       var idx = cs.idx;
-      var from = Math.max(0, idx - 150);
+      ensureRoadNear(idx);
+      var epath = revealPath(idx);
+      if (epath.length < 2) {
+        epath = [];
+        for (var e0 = Math.max(0, idx - 150); e0 <= idx; e0++) epath.push([S.pts[e0].lat, S.pts[e0].lon]);
+      }
       cx.lineCap = 'round'; cx.lineJoin = 'round';
+      var echunk = Math.max(2, Math.round(epath.length / 48));
       for (var pass = 0; pass < 2; pass++) {
         cx.lineWidth = pass === 0 ? 13 * (W / 720) : 6.5 * (W / 720);
         cx.globalAlpha = pass === 0 ? 0.35 : 1;
-        for (var i = from; i < idx; i += 4) {
-          var j = Math.min(idx, i + 4);
-          var f = j / (S.pts.length - 1);
+        for (var i = 0; i < epath.length - 1; i += echunk) {
+          var j = Math.min(epath.length - 1, i + echunk);
+          var f = (j + 1) / epath.length;
           cx.strokeStyle = pass === 0 ? C.glow : lerpColor(C.a, C.b, f);
           cx.beginPath();
-          var pA = projectPt(S.pts[i], zr, cxp, cyp, W, H, scale);
+          var pA = projectPt({ lat: epath[i][0], lon: epath[i][1] }, zr, cxp, cyp, W, H, scale);
           cx.moveTo(pA.x, pA.y);
           for (var k2 = i + 1; k2 <= j; k2++) {
-            var pB = projectPt(S.pts[k2], zr, cxp, cyp, W, H, scale);
+            var pB = projectPt({ lat: epath[k2][0], lon: epath[k2][1] }, zr, cxp, cyp, W, H, scale);
             cx.lineTo(pB.x, pB.y);
           }
           cx.stroke();
@@ -1301,7 +1433,8 @@
       }
       cx.globalAlpha = 1;
       // marker
-      var tip = projectPt(S.pts[idx], zr, cxp, cyp, W, H, scale);
+      var etip = epath.length ? epath[epath.length - 1] : [S.pts[idx].lat, S.pts[idx].lon];
+      var tip = projectPt({ lat: etip[0], lon: etip[1] }, zr, cxp, cyp, W, H, scale);
       if (S.markerStyle !== 'none') {
         var mr = 9 * (W / 720);
         if (S.markerStyle === 'pulse') {
@@ -1506,8 +1639,6 @@
         useData(smp, 'Sample journey');
       }
       $('#ctaSample').addEventListener('click', trySample);
-      $('#ctaDemo').addEventListener('click', function () { trySample(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-      $('#ctaStart').addEventListener('click', function () { $('#ctaChoose').click(); });
       // journey inputs
       $('#tvTitle').addEventListener('input', function () {
         S.title = this.value.trim();
@@ -1557,6 +1688,11 @@
       bindGroup('.tv-opt[data-style]', 'style', function () { setStyle(S.style); });
       bindGroup('.tv-opt[data-color]', 'color', function () { rebuildRoute(); makeMarker(); drawProgress(S.t); });
       bindGroup('.tv-opt[data-marker]', 'marker', function () { makeMarker(); drawProgress(S.t); });
+      bindGroup('.tv-opt[data-road]', 'road', function () {
+        S.trips.forEach(function (tr) { tr.road = null; tr.anchorRoad = null; tr.failed = false; tr.pending = false; });
+        ensureRoadNear(idxAtT(S.t));
+        drawProgress(S.t);
+      });
       function syncCamChips() {
         $$('.tv-chip[data-ccam]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-ccam') === S.cam); });
       }
@@ -1609,9 +1745,11 @@
         setPlaying(false);
         seek(this.value / 1000);
       });
-      $('#speedBtn').addEventListener('click', function () {
-        S.speed = S.speed === 1 ? 2 : (S.speed === 2 ? 4 : 1);
-        this.textContent = 'Speed: ' + S.speed + '×';
+      $$('.tv-chip[data-spd]').forEach(function (c) {
+        c.addEventListener('click', function () {
+          S.speed = parseFloat(c.getAttribute('data-spd')) || 1;
+          $$('.tv-chip[data-spd]').forEach(function (x) { x.classList.toggle('on', x === c); });
+        });
       });
       $('#followBtn').addEventListener('click', function () {
         S.cam = S.cam === 'fit' ? 'steady' : 'fit';
