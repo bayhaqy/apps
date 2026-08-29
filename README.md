@@ -1,6 +1,6 @@
 # Bayhaqy Apps
 
-> A curated collection of **31 fast, private, browser-based tools** for developers, IT pros, and creators.
+> A curated collection of **52 fast, private, browser-based tools** for developers, IT pros, and creators.
 > Network diagnostics, security utilities, DevOps helpers, and productivity boosters — all running
 > entirely in your browser, no installs, no accounts, no tracking.
 
@@ -14,11 +14,11 @@
 - 🔒 **Private** — your data never leaves your machine. All processing is client-side.
 - 🆓 **Free** — no paywalls, no premium tiers, no ads inside the tools.
 - 📱 **Installable** — add to home screen on iOS or install the APK on Android.
-- 🎨 **Consistent** — one shared theme (red / black / white) across all 31 tools.
+- 🎨 **Consistent** — one shared theme (red / black / white) across all 52 tools.
 
 ---
 
-## The 31 tools
+## The 52 tools
 
 ### 🌐 Network & DNS
 
@@ -124,7 +124,7 @@ apps/
 ├── manifest.json           # PWA manifest
 ├── service-worker.js       # Cache-first static, network-first HTML
 ├── ads.txt                 # Google AdSense publisher ID
-├── sitemap.xml             # 23 URLs (landing + 31 apps + get-app)
+├── sitemap.xml             # 23 URLs (landing + 52 apps + get-app)
 ├── apk-source/             # TWA wrapper source for building the APK
 ├── bayhaqy-apps.apk        # Pre-built APK (placeholder — see apk-source/README.md)
 ├── dns-lookup/             # App 1
