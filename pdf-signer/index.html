@@ -2,7 +2,16 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PDF Signer — Draw or Stamp Your Signature" />
+  <meta name="twitter:description" content="Draw a signature with mouse/finger or upload a stamp PNG. Drag and place onto any PDF page." />
+  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="Achmad Bayhaqy" />
   <title>PDF Signer · Bayhaqy Apps</title>
   <meta name="description" content="Sign PDFs with a drawn signature or uploaded stamp image. Drag, resize, and place precisely. 100% client-side via pdf-lib + signature_pad." />
   <meta name="keywords" content="pdf sign, signature, stamp, pdf-lib, signature_pad" />
@@ -12,7 +21,7 @@
   <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png" />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/pdf-signer/" />
   <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
-  <link rel="stylesheet" href="/apps/assets/theme.css" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260831a" />
   <script src="/apps/lib/pdf-lib.min.js"></script>
   <script src="/apps/lib/signature_pad.min.js"></script>
   <script src="/apps/lib/pdfjs.min.js"></script>
@@ -91,6 +100,96 @@
     .info { font-size: var(--fs-xs); color: var(--ink-faint); margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); }
     .info kbd { background: var(--line-soft); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); font-family: monospace; font-size: 0.85em; }
   </style>
+  <!-- AdSense: verifikasi kepemilikan situs -->
+  <meta name="google-adsense-account" content="ca-pub-6391433517652109" />
+
+  <!-- Analytics: Google Analytics 4 (gtag.js, sama seperti blog) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8GJ1M5ZLZS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8GJ1M5ZLZS');
+  </script>
+
+  <!-- Analytics: Microsoft Clarity (sama seperti blog) -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jgxsse2i1y");
+  </script>
+
+  <!-- AdSense: lazy-load pada scroll pertama (pola blog) + fallback 4 detik -->
+  <script>
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6391433517652109';
+        document.head.appendChild(s);
+      }
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAds, { once: true, passive: true });
+      setTimeout(loadAds, 4000);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+[
+  {
+    "@type": "BreadcrumbList",
+    "@id": "https://bayhaqy.my.id/apps/pdf-signer/#breadcrumb",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Bayhaqy Apps",
+        "item": "https://bayhaqy.my.id/apps/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "PDF Signer · Bayhaqy Apps",
+        "item": "https://bayhaqy.my.id/apps/pdf-signer/"
+      }
+    ]
+  },
+  {
+    "@type": "WebApplication",
+    "@id": "https://bayhaqy.my.id/apps/pdf-signer/#app",
+    "name": "PDF Signer · Bayhaqy Apps",
+    "url": "https://bayhaqy.my.id/apps/pdf-signer/",
+    "description": "Sign PDFs with a drawn signature or uploaded stamp image. Drag, resize, and place precisely. 100% client-side via pdf-lib + signature_pad.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "isPartOf": {
+      "@id": "https://bayhaqy.my.id/apps/#website"
+    }
+  }
+]
+  </script>
 </head>
 <body>
   <main class="app-main">
@@ -186,7 +285,14 @@
     </div>
   </main>
 
-  <script src="/apps/assets/app-shell.js" data-app-name="PDF Signer"></script>
+  <!-- AdSense display unit -->
+<section class="ad-wrap" aria-label="Advertisement">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6391433517652109" data-ad-slot="2762790866" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</section>
+
+
+  <script src="/apps/assets/app-shell.js?v=20260831a" data-app-name="PDF Signer"></script>
   <script>
     'use strict';
     // Configure pdfjs to use our self-hosted worker.

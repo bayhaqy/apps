@@ -578,3 +578,38 @@ pre.code .tok-num { color: #B45309; }
   overflow: hidden;
   background: var(--paper-alt);
 }
+
+/* ---------- Ad slot & Support (v20260831a) ---------- */
+.ad-wrap {
+  max-width: var(--container);
+  margin: 1.5rem auto;
+  padding-inline: 1.5rem;
+  text-align: center;
+  min-height: 100px;
+}
+.support-section {
+  border-top: 1px solid var(--line);
+  background: var(--paper-alt);
+  padding: 2.5rem 0;
+}
+.support-inner {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  text-align: center;
+}
+.support-inner h2 { font-size: 1.4rem; margin: 0 0 0.5rem; color: var(--ink); }
+.support-inner p { color: var(--ink-soft); max-width: 640px; margin: 0 auto 1.25rem; font-size: 0.95rem; }
+.support-buttons { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.support-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border-radius: 999px; padding: 0.7rem 1.4rem;
+  font-weight: 700; font-size: 0.9rem; text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.support-btn:hover { transform: translateY(-2px); }
+.support-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.support-paypal { background: #0070BA; color: #FFFFFF; }
+.support-paypal:hover { color: #FFFFFF; box-shadow: 0 6px 16px rgba(0, 112, 186, 0.35); }
+.support-bmc { background: #FFDD00; color: #0D0C22; }
+.support-bmc:hover { color: #0D0C22; box-shadow: 0 6px 16px rgba(255, 221, 0, 0.45); }

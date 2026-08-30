@@ -49,7 +49,7 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260810a" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260831a" />
   <style>
     /* Landing-page-specific styles layered on top of theme.css */
     .apps-hero {
@@ -488,6 +488,424 @@
 
     /* Landing footer (reuses .app-footer from theme.css) */
   </style>
+  <!-- AdSense: verifikasi kepemilikan situs -->
+  <meta name="google-adsense-account" content="ca-pub-6391433517652109" />
+
+  <!-- Analytics: Google Analytics 4 (gtag.js, sama seperti blog) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8GJ1M5ZLZS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8GJ1M5ZLZS');
+  </script>
+
+  <!-- Analytics: Microsoft Clarity (sama seperti blog) -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jgxsse2i1y");
+  </script>
+
+  <!-- AdSense: lazy-load pada scroll pertama (pola blog) + fallback 4 detik -->
+  <script>
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6391433517652109';
+        document.head.appendChild(s);
+      }
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAds, { once: true, passive: true });
+      setTimeout(loadAds, 4000);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bayhaqy.my.id/apps/#website",
+      "url": "https://bayhaqy.my.id/apps/",
+      "name": "Bayhaqy Apps",
+      "description": "Bayhaqy Apps — a curated collection of 52 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools.",
+      "publisher": {
+        "@id": "https://bayhaqy.my.id/apps/#person"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bayhaqy.my.id/apps/#person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://bayhaqy.my.id/apps/#collectionpage",
+      "url": "https://bayhaqy.my.id/apps/",
+      "name": "Bayhaqy Apps — 52 Browser-Based Developer & IT Tools",
+      "isPartOf": {
+        "@id": "https://bayhaqy.my.id/apps/#website"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://bayhaqy.my.id/apps/#tools",
+      "name": "All tools",
+      "numberOfItems": 56,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "AI Context Packer — Combine Files into AI-Ready Markdown",
+          "url": "https://bayhaqy.my.id/apps/ai-context-packer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "API Documentation",
+          "url": "https://bayhaqy.my.id/apps/api/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Base64 & Hex Encoder",
+          "url": "https://bayhaqy.my.id/apps/base64-hex/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "BayMerge — PDF Merger",
+          "url": "https://bayhaqy.my.id/apps/baymerge/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Background Remover · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/bg-remover/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Markdown to Carousel Generator — Social Media Slides from Text",
+          "url": "https://bayhaqy.my.id/apps/carousel-generator/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Case Converter",
+          "url": "https://bayhaqy.my.id/apps/case-converter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "Certificate Decoder",
+          "url": "https://bayhaqy.my.id/apps/cert-decoder/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "name": "Code Formatter & Beautifier",
+          "url": "https://bayhaqy.my.id/apps/code-formatter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "name": "Color Converter",
+          "url": "https://bayhaqy.my.id/apps/color-converter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "name": "Unit & Currency Converter",
+          "url": "https://bayhaqy.my.id/apps/converter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "name": "Cron Builder",
+          "url": "https://bayhaqy.my.id/apps/cron-builder/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "name": "CSS Grid & Flexbox Playground — Live Layout Builder",
+          "url": "https://bayhaqy.my.id/apps/css-playground/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "name": "CSV / Excel Formatter & JSON Converter — Clean Data Locally",
+          "url": "https://bayhaqy.my.id/apps/csv-formatter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "name": "Advanced Date & Age Calculator",
+          "url": "https://bayhaqy.my.id/apps/date-calculator/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "name": "DNS Lookup",
+          "url": "https://bayhaqy.my.id/apps/dns-lookup/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 17,
+          "name": "File to PDF Converter · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/file-to-pdf/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 18,
+          "name": "Get the App",
+          "url": "https://bayhaqy.my.id/apps/get-app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "name": "Hash Generator",
+          "url": "https://bayhaqy.my.id/apps/hash-generator/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "name": "HTTP Headers Checker",
+          "url": "https://bayhaqy.my.id/apps/http-headers/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 21,
+          "name": "Bulk Image Optimizer & WebP Converter — Compress Images Locally",
+          "url": "https://bayhaqy.my.id/apps/image-optimizer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 22,
+          "name": "Instrument Tuner · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/instrument-tuner/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 23,
+          "name": "IP Location Finder",
+          "url": "https://bayhaqy.my.id/apps/ip-finder/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 24,
+          "name": "JSON Formatter",
+          "url": "https://bayhaqy.my.id/apps/json-formatter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 25,
+          "name": "JWT Decoder",
+          "url": "https://bayhaqy.my.id/apps/jwt-decoder/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 26,
+          "name": "Link-in-Bio Builder — Free Linktree Alternative (Self-Hosted)",
+          "url": "https://bayhaqy.my.id/apps/link-in-bio/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 27,
+          "name": "Loan, Mortgage & Interest Calculator",
+          "url": "https://bayhaqy.my.id/apps/loan-calculator/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 28,
+          "name": "Lorem Ipsum Generator",
+          "url": "https://bayhaqy.my.id/apps/lorem-ipsum/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 29,
+          "name": "Markdown Preview",
+          "url": "https://bayhaqy.my.id/apps/markdown-preview/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 30,
+          "name": "Metronome & Tap Tempo · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/metronome/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 31,
+          "name": "Number Base Converter",
+          "url": "https://bayhaqy.my.id/apps/number-base/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 32,
+          "name": "Local OCR Text Extractor — Image to Text Browser-based (Indonesian & English)",
+          "url": "https://bayhaqy.my.id/apps/ocr-extractor/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 33,
+          "name": "Password Strength & Generator",
+          "url": "https://bayhaqy.my.id/apps/password-tools/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 34,
+          "name": "Password Vault — Local Encrypted Password Manager & Generator",
+          "url": "https://bayhaqy.my.id/apps/password-vault/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 35,
+          "name": "PDF Annotator & Highlighter · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/pdf-annotator/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 36,
+          "name": "PDF Anonymizer & Redactor — Black Out Sensitive Data in PDFs Locally",
+          "url": "https://bayhaqy.my.id/apps/pdf-anonymizer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 37,
+          "name": "PDF Page Organizer · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/pdf-organizer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 38,
+          "name": "PDF Text Extractor & Redactor · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/pdf-redactor/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 39,
+          "name": "PDF Signer · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/pdf-signer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 40,
+          "name": "PDF Watermark & Page Numbers · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/pdf-watermark/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 41,
+          "name": "Pomodoro + Ambient Sound Studio",
+          "url": "https://bayhaqy.my.id/apps/pomodoro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 42,
+          "name": "AI Prompt Formatter — Build Professional Mega-Prompts",
+          "url": "https://bayhaqy.my.id/apps/prompt-formatter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 43,
+          "name": "QR Code Studio — Generate & Scan QR Codes In Your Browser",
+          "url": "https://bayhaqy.my.id/apps/qr-studio/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 44,
+          "name": "Regex Tester",
+          "url": "https://bayhaqy.my.id/apps/regex-tester/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 45,
+          "name": "Speed Test",
+          "url": "https://bayhaqy.my.id/apps/speed-test/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 46,
+          "name": "Subnet Calculator",
+          "url": "https://bayhaqy.my.id/apps/subnet-calc/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 47,
+          "name": "Text Diff Checker & Clean Utility",
+          "url": "https://bayhaqy.my.id/apps/text-diff/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 48,
+          "name": "Text Encryptor · Bayhaqy Apps",
+          "url": "https://bayhaqy.my.id/apps/text-encryptor/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 49,
+          "name": "Anti-AI Text Humanizer — Clean AI-Style Text Patterns",
+          "url": "https://bayhaqy.my.id/apps/text-humanizer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 50,
+          "name": "Timeline Visualizer",
+          "url": "https://bayhaqy.my.id/apps/timeline-visualizer/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 51,
+          "name": "Unix Timestamp Converter",
+          "url": "https://bayhaqy.my.id/apps/timestamp-converter/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 52,
+          "name": "Timezone & Meeting Slider — Pick a Time Across Cities",
+          "url": "https://bayhaqy.my.id/apps/timezone-slider/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 53,
+          "name": "URL Parser & HTTP Header Checker",
+          "url": "https://bayhaqy.my.id/apps/url-parser/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 54,
+          "name": "Audio Waveform Video Maker — Animated Waveform for TikTok/Reels/Shorts",
+          "url": "https://bayhaqy.my.id/apps/waveform-maker/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 55,
+          "name": "WCAG Contrast Checker",
+          "url": "https://bayhaqy.my.id/apps/wcag-contrast/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 56,
+          "name": "WHOIS Lookup",
+          "url": "https://bayhaqy.my.id/apps/whois-lookup/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <!-- Header -->
@@ -535,6 +953,12 @@
       </div>
     </section>
 
+    <!-- AdSense display unit -->
+    <section class="ad-wrap" aria-label="Advertisement">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6391433517652109" data-ad-slot="2762790866" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </section>
+
     <!-- Search + filters -->
     <section class="toolbar">
       <div class="search-wrap">
@@ -557,10 +981,39 @@
     <section class="apps-section" id="apps"></section>
   </main>
 
+  <!-- AdSense display unit -->
+  <section class="ad-wrap" aria-label="Advertisement">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6391433517652109" data-ad-slot="2762790866" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </section>
+
+  <!-- Support / Donasi -->
+  <section class="support-section" id="support">
+    <div class="support-inner">
+      <h2>Support Bayhaqy Apps</h2>
+      <p>Every tool is free, runs 100% in your browser, and collects none of your data. If Bayhaqy Apps saves you time, a small donation helps keep the hosting online and the new tools coming.</p>
+      <div class="support-buttons">
+        <a class="support-btn support-paypal" href="https://paypal.me/bayhaqy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Donate with PayPal
+        </a>
+        <a class="support-btn support-bmc" href="https://buymeacoffee.com/bayhaqy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          Buy Me a Coffee
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer (reuses .app-footer from theme.css) -->
   <footer class="app-footer">
     <div class="app-footer-inner">
       <span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>
+      <span class="links">
+        <a href="https://blog.bayhaqy.my.id/">Blog</a>
+        <a href="https://paypal.me/bayhaqy" target="_blank" rel="noopener">Donate via PayPal</a>
+        <a href="https://buymeacoffee.com/bayhaqy" target="_blank" rel="noopener">Buy Me a Coffee</a>
+      </span>
     </div>
   </footer>
 

@@ -93,6 +93,10 @@
     footer.innerHTML =
       '<div class="app-footer-inner">' +
         '<span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>' +
+        '<span class="links">' +
+          '<a href="https://paypal.me/bayhaqy" target="_blank" rel="noopener">Donate via PayPal</a>' +
+          '<a href="https://buymeacoffee.com/bayhaqy" target="_blank" rel="noopener">Buy Me a Coffee</a>' +
+        '</span>' +
       '</div>';
     document.body.appendChild(footer);
 

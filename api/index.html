@@ -2,7 +2,18 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/api/" />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API Documentation — Apps by Achmad Bayhaqy" />
+  <meta name="twitter:description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting." />
+  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="Achmad Bayhaqy" />
   <title>API Documentation — Apps by Achmad Bayhaqy</title>
   <meta name="description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230F172A'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='48' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
@@ -82,8 +93,107 @@
     @media(max-width:640px){
       .playground .grid-2{grid-template-columns:1fr}
     }
+
+    /* Footer donasi & ad slot (injected) */
+    .ad-wrap{max-width:1100px;margin:1.5rem auto;padding:0 1.5rem;text-align:center;min-height:100px}
+    .app-footer{background:var(--code-bg);color:var(--muted);padding:2rem 0;margin-top:3rem}
+    .app-footer-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem}
+    .app-footer .copy{font-size:.85rem}
+    .app-footer .links{display:flex;gap:1rem;font-size:.85rem;flex-wrap:wrap}
+    .app-footer a{color:#E2E8F0;text-decoration:none}
+    .app-footer a:hover{color:var(--accent)}
   </style>
   <script>(function(){var t=localStorage.getItem('apps-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <!-- AdSense: verifikasi kepemilikan situs -->
+  <meta name="google-adsense-account" content="ca-pub-6391433517652109" />
+
+  <!-- Analytics: Google Analytics 4 (gtag.js, sama seperti blog) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8GJ1M5ZLZS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8GJ1M5ZLZS');
+  </script>
+
+  <!-- Analytics: Microsoft Clarity (sama seperti blog) -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jgxsse2i1y");
+  </script>
+
+  <!-- AdSense: lazy-load pada scroll pertama (pola blog) + fallback 4 detik -->
+  <script>
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6391433517652109';
+        document.head.appendChild(s);
+      }
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAds, { once: true, passive: true });
+      setTimeout(loadAds, 4000);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+[
+  {
+    "@type": "BreadcrumbList",
+    "@id": "https://bayhaqy.my.id/apps/api/#breadcrumb",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Bayhaqy Apps",
+        "item": "https://bayhaqy.my.id/apps/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "API Documentation",
+        "item": "https://bayhaqy.my.id/apps/api/"
+      }
+    ]
+  },
+  {
+    "@type": "WebApplication",
+    "@id": "https://bayhaqy.my.id/apps/api/#app",
+    "name": "API Documentation",
+    "url": "https://bayhaqy.my.id/apps/api/",
+    "description": "Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "isPartOf": {
+      "@id": "https://bayhaqy.my.id/apps/#website"
+    }
+  }
+]
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -232,6 +342,23 @@ curl <span class="s">"https://your-worker.workers.dev/api/code-formatter?languag
 
     <p class="footer-note">Built by <a href="https://bayhaqy.my.id/" style="color:var(--accent);text-decoration:none">Achmad Bayhaqy</a> · <a href="https://github.com/bayhaqy/apps" style="color:var(--accent);text-decoration:none">Source on GitHub</a> · MIT licensed</p>
   </main>
+
+  <!-- AdSense display unit -->
+<section class="ad-wrap" aria-label="Advertisement">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6391433517652109" data-ad-slot="2762790866" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</section>
+
+  <footer class="app-footer">
+    <div class="app-footer-inner">
+      <span class="copy">© 2026 Achmad Bayhaqy · <a href="/apps/">Bayhaqy Apps</a></span>
+      <span class="links">
+        <a href="https://paypal.me/bayhaqy" target="_blank" rel="noopener">Donate via PayPal</a>
+        <a href="https://buymeacoffee.com/bayhaqy" target="_blank" rel="noopener">Buy Me a Coffee</a>
+      </span>
+    </div>
+  </footer>
+
 
   <script>
     // Live playground implementation
