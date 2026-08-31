@@ -801,6 +801,52 @@
     });
   }
 
+  function parseFrontmatter(md) {
+    var out = { meta: {}, body: md };
+    var m = md.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+    if (!m) return out;
+    m[1].split(/\r?\n/).forEach(function (line) {
+      var kv = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+      if (kv) out.meta[kv[1].toLowerCase()] = (kv[2] || '').replace(/^['"]|['"]$/g, '').trim();
+    });
+    out.body = md.slice(m[0].length);
+    return out;
+  }
+
+  function srcEkky(articleUrl) {
+    // ekky.dev reader API — server-side proxy with caching, returns
+    // markdown + frontmatter. No CORS, so it goes through raw relays.
+    var api = 'https://ekky.dev/api/medium/?url=' + encodeURIComponent(articleUrl);
+    return relayFetch(api, 25000, { noJina: true }).then(function (r) {
+      if (r.text.indexOf('---') !== 0) throw new Error('respons bukan format reader');
+      var fm = parseFrontmatter(r.text);
+      var words = fm.body.split(/\s+/).filter(Boolean).length;
+      if (words < 120) throw new Error('konten pendek (' + words + ' kata)');
+      var rt = (fm.meta.readingtime || '').match(/\d+/);
+      return finish({
+        html: mdToHtml(fm.body),
+        meta: {
+          title: fm.meta.title || '',
+          author: (fm.meta.author || '').replace(/^By\s+/i, ''),
+          published: fm.meta.date || '',
+          siteName: 'Medium (via ekky.dev)',
+          description: fm.meta.subtitle || '',
+          readingTime: rt ? rt[0] : ''
+        },
+        via: 'ekky.dev reader',
+        viaUrl: articleUrl
+      });
+    });
+  }
+
+  function withRetry(fn, n, delayMs) {
+    n = n || 2; delayMs = delayMs || 1500;
+    return fn().catch(function (e) {
+      if (n <= 1) throw e;
+      return new Promise(function (res) { setTimeout(res, delayMs); }).then(function () { return withRetry(fn, n - 1, delayMs); });
+    });
+  }
+
   function srcWayback(articleUrl) {
     var av = 'https://archive.org/wayback/available?url=' + encodeURIComponent(articleUrl);
     var getAvail = function () {
@@ -920,17 +966,19 @@
         throw err;
       });
     };
-    // Wave 1 (race): first sufficient result wins
+    // Wave 1 (race): three fast paths, each with 1 retry — freedium mirror
+    // and the ekky reader API are occasionally busy, a retry usually wins.
     var w1 = [];
-    if (pm.postId) w1.push(wrap('1a Medium JSON API (' + pm.postId + ')', function () { return srcJsonApi(pm.postId); }));
-    w1.push(wrap(pm.postId ? '1b Freedium mirror (render relay)' : '1 Freedium mirror (render relay)', function () { return srcFreedium(originalUrl); }));
+    w1.push(wrap('Freedium mirror', function () { return withRetry(function () { return srcFreedium(originalUrl); }, 2, 2000); }));
+    w1.push(wrap('ekky.dev reader', function () { return withRetry(function () { return srcEkky(originalUrl); }, 2, 2000); }));
+    if (pm.postId) w1.push(wrap('Medium API', function () { return srcJsonApi(pm.postId); }));
     // Wave 2 (sequential fallbacks)
     var rest = [
-      function () { return wrap('2 Medium page HTML + state scan', function () { return srcPageState(pm.url); }); },
-      function () { return wrap('3 Medium RSS feed', function () { return srcFeed(originalUrl, pm); }); },
-      function () { return wrap('4 Freedium (raw relays / legacy)', function () { return srcFreediumRaw(originalUrl); }); },
-      function () { return wrap('5 Wayback Machine', function () { return srcWayback(originalUrl); }); },
-      function () { return wrap('6 r.jina.ai reader', function () { return srcJina(originalUrl); }); }
+      function () { return wrap('Page scan', function () { return srcPageState(pm.url); }); },
+      function () { return wrap('RSS feed', function () { return srcFeed(originalUrl, pm); }); },
+      function () { return wrap('Freedium (backup)', function () { return srcFreediumRaw(originalUrl); }); },
+      function () { return wrap('Wayback Machine', function () { return srcWayback(originalUrl); }); },
+      function () { return wrap('Text reader', function () { return srcJina(originalUrl); }); }
     ];
     return raceSufficient(w1).catch(function () {
       var p = Promise.reject();
@@ -1007,6 +1055,10 @@
     $('#emptyState').hidden = true;
     $('#resultCard').hidden = false;
     $('#lowWarn').hidden = !(r.len < 200);
+    // clean default view: title + content only — details/tabs via the (i) button
+    $('#rMeta').hidden = true;
+    $('#outTabs').hidden = true;
+    switchOutputTab('reader');
 
     var m = r.meta || {};
     $('#rTitle').textContent = m.title || '(untitled page)';
@@ -1195,6 +1247,32 @@
       logReset();
       $('#btnFetch').click();
     });
+
+    $('#btnDetails').addEventListener('click', function () {
+      var m = $('#rMeta'), t = $('#outTabs');
+      m.hidden = !m.hidden; t.hidden = !t.hidden;
+      this.setAttribute('aria-pressed', String(!m.hidden));
+    });
+    $('#btnFull').addEventListener('click', function () {
+      var card = $('#resultCard');
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen().catch(function () {});
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      } else if (card.requestFullscreen) {
+        card.requestFullscreen().catch(function () { status('Full screen tidak didukung browser ini.', true); });
+      } else if (card.webkitRequestFullscreen) {
+        card.webkitRequestFullscreen();
+      } else {
+        status('Full screen tidak didukung browser ini.', true);
+      }
+    });
+    var syncFsAd = function () {
+      var card = $('#resultCard');
+      var on = (document.fullscreenElement === card) || (document.webkitFullscreenElement === card);
+      document.body.classList.toggle('hce-fs', !!on);
+    };
+    document.addEventListener('fullscreenchange', syncFsAd);
+    document.addEventListener('webkitfullscreenchange', syncFsAd);
 
     var drop = $('#dropZone'), fi = $('#fileInput');
     function loadFile(f) {

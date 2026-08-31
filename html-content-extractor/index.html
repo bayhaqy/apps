@@ -9,14 +9,14 @@
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="HTML Content Extractor — Read Medium Articles Without Paywall" />
-  <meta name="twitter:description" content="Bypass the Medium paywall: get the full member-only article via the Medium JSON API, Freedium mirror, RSS, Wayback and more — read clean, export Markdown/HTML/text. 100% client-side." />
+  <meta name="twitter:description" content="Bypass the Medium paywall: paste the article URL and read the full member-only text — clean reader view, fullscreen, Markdown/HTML/text export. 100% client-side." />
   <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="description" content="Read Medium member-only articles without a subscription. Multi-source paywall bypass (Medium JSON API, Freedium mirror via JS-render relay, RSS, page state, Wayback, r.jina.ai) plus clean reader view, Markdown, plain-text and HTML export. 100% client-side — successor of bayhaqy/HTML-Content-Extractor (Google-Cache method, retired when Google dropped web cache in 2024)." />
+  <meta name="description" content="Read Medium member-only articles without a subscription — paste the URL and read the full text. Automatic multi-source fallback, clean reader view, fullscreen mode, Markdown/HTML/text export. 100% client-side, successor of bayhaqy/HTML-Content-Extractor." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="HTML Content Extractor — Read Medium Articles Without Paywall" />
-  <meta property="og:description" content="Bypass the Medium paywall with a multi-source chain: JSON API and Freedium mirror racing first, then page state, RSS feed, Wayback Machine, r.jina.ai. Clean reader view + Markdown/HTML/text export. 100% client-side." />
+  <meta property="og:description" content="Bypass the Medium paywall — paste the article URL and read the full member-only text. Clean reader view, fullscreen mode, Markdown/HTML/text export. 100% client-side." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/html-content-extractor/" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/html-content-extractor/" />
   <link rel="icon" href="/apps/icons/logo.png" />
@@ -81,6 +81,16 @@
     .hce-warn svg{width:16px;height:16px;flex-shrink:0;margin-top:.1rem}
 
     .hce-titlebar{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem;margin-bottom:.55rem}
+    .hce-tools{display:flex;gap:.35rem;flex-shrink:0}
+    .hce-tool{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);cursor:pointer;transition:all .15s}
+    .hce-tool:hover{border-color:var(--red-700);color:var(--red-700)}
+    .hce-tool svg{width:16px;height:16px}
+    #resultCard:fullscreen{overflow-y:auto;padding:clamp(1rem,4vw,3rem);border-radius:0}
+    #resultCard:fullscreen .hce-article{max-width:46rem;margin-inline:auto;font-size:1.05rem;max-height:none}
+    #resultCard:fullscreen .hce-titlebar{max-width:46rem;margin-inline:auto}
+    #resultCard:fullscreen .hce-meta,#resultCard:fullscreen .hce-tabs2,#resultCard:fullscreen .hce-panel{max-width:46rem;margin-inline:auto}
+    /* hide the ad unit while reading fullscreen — responsive slot errors out with width=0 mid-transition */
+    body.hce-fs .ad-wrap{display:none !important}
     .hce-titlebar h2{margin:0;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.3;min-width:0;overflow-wrap:anywhere}
     .hce-badge{flex-shrink:0;font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--red-700);background:var(--red-50);border:1px solid rgba(185,28,28,.18);border-radius:999px;padding:.25rem .6rem}
     .hce-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 .8rem}
@@ -105,7 +115,7 @@
     .hce-pre{margin:0;background:var(--line-soft);border:1px solid var(--line);border-radius:10px;padding:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-break:break-word;max-height:62vh;overflow:auto}
 
     /* ---------- reader view typography ---------- */
-    .hce-article{max-width:72ch;line-height:1.75;font-size:.95rem;color:var(--ink);max-height:68vh;overflow:auto;padding-right:.4rem}
+    .hce-article{max-width:72ch;line-height:1.75;font-size:.95rem;color:var(--ink);max-height:68vh;overflow:auto;padding-right:.4rem;margin-inline:auto}
     .hce-article>*:first-child{margin-top:0}
     .hce-article h1,.hce-article h2{font-size:1.3rem;line-height:1.3;margin:1.6em 0 .55em;letter-spacing:-.015em}
     .hce-article h3{font-size:1.12rem;margin:1.5em 0 .5em}
@@ -235,7 +245,7 @@
     "@id": "https://bayhaqy.my.id/apps/html-content-extractor/#app",
     "name": "HTML Content Extractor",
     "url": "https://bayhaqy.my.id/apps/html-content-extractor/",
-    "description": "Read Medium member-only articles without a subscription. Multi-source paywall bypass — Medium JSON API and Freedium mirror race first, then page-state scan, RSS feed, Wayback Machine, r.jina.ai — with clean reader view, Markdown, plain-text and clean-HTML export. 100% client-side, successor of the original bayhaqy/HTML-Content-Extractor Google-Cache tool.",
+    "description": "Read Medium member-only articles without a subscription — paste the URL and read the full text. Automatic multi-source fallback with clean reader view, fullscreen mode and Markdown/plain-text/HTML export. 100% client-side, successor of the original bayhaqy/HTML-Content-Extractor Google-Cache tool.",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
@@ -267,14 +277,9 @@
       <p class="app-eyebrow">Medium paywall bypass · Multi-source · Reader · Markdown · 100% client-side</p>
       <h1 class="app-title">HTML Content <span class="accent">Extractor</span></h1>
       <p class="app-subtitle">
-        Read <strong>member-only Medium articles without a subscription</strong> — the web successor of the
-        original <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">HTML-Content-Extractor</a>
-        (the Google-Cache trick, retired when Google dropped web cache in 2024). One click races the two fastest sources first
-        — <strong>Medium JSON API ∥ Freedium mirror</strong> (fetched through a JS-render relay, because the mirror is a
-        client-side app that raw proxies cannot see) — then falls back in order:
-        <strong>page state → RSS feed → Freedium raw → Wayback Machine → r.jina.ai</strong>, then shows the full
-        article in a clean reader view with <strong>Markdown, plain text and clean HTML</strong> export. Non-Medium pages work
-        too via paste / generic fetch.
+        Read <strong>member-only Medium articles without a subscription</strong>. Paste the article URL,
+        press the button, read the full text. Export to Markdown or plain text if you need it — everything
+        runs in your browser.
       </p>
     </header>
 
@@ -293,7 +298,7 @@
             <label class="hce-row">Engine
               <select id="modeSel" aria-label="Fetch engine">
                 <option value="auto" selected>Auto (Medium URL → bypass)</option>
-                <option value="medium">Medium paywall bypass (7 sources)</option>
+                <option value="medium">Medium paywall bypass (8 sources)</option>
                 <option value="generic">Generic web page (relay fetch)</option>
               </select>
             </label>
@@ -304,7 +309,7 @@
             </button>
             <button type="button" class="hce-btn-ghost" id="btnSampleUrl">Try a sample member-only Medium URL</button>
             <ol class="hce-log" id="hceLog" hidden></ol>
-            <p class="hce-hint">The bypass chain fetches through free public CORS transports — r.jina.ai (JS-render relay) → allorigins → codetabs → cors.lol — and public readers. No login, nothing stored. If every automatic source fails, one-click external services appear below.</p>
+            <p class="hce-hint">Free public services are used to fetch the article. If one is busy, the next one is tried automatically.</p>
           </div>
 
           <div class="hce-src" id="src-html" hidden>
@@ -367,11 +372,21 @@
         <section class="hce-card" id="resultCard" hidden>
           <div class="hce-titlebar">
             <h2 id="rTitle">—</h2>
-            <span class="hce-badge" id="rPlatform"></span>
+            <div class="hce-tools">
+              <button type="button" class="hce-tool" id="btnDetails" title="Details &amp; export" aria-label="Details and export">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              </button>
+              <button type="button" class="hce-tool" id="btnFull" title="Full screen" aria-label="Toggle full screen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              </button>
+            </div>
           </div>
-          <div class="hce-chips" id="rChips"></div>
+          <div class="hce-meta" id="rMeta" hidden>
+            <span class="hce-badge" id="rPlatform"></span>
+            <div class="hce-chips" id="rChips"></div>
+          </div>
 
-          <div class="hce-tabs2" id="outTabs" role="tablist" aria-label="Output format">
+          <div class="hce-tabs2" id="outTabs" hidden role="tablist" aria-label="Output format">
             <button type="button" class="on" data-out="reader">Reader</button>
             <button type="button" data-out="md">Markdown</button>
             <button type="button" data-out="text">Plain text</button>
@@ -435,13 +450,13 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <p class="t">No article loaded yet</p>
           <p class="s">Paste a Medium URL and hit <b>Bypass paywall &amp; read</b> — or paste raw HTML for any other site. Full reader view, Markdown, plain text, clean HTML, images and links. Nothing leaves your browser.</p>
-          <p class="hce-credit">Modern successor of <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">bayhaqy/HTML-Content-Extractor</a> — as written up in <a href="https://blog.bayhaqy.my.id/2023/11/medium-without-paywall.html" target="_blank" rel="noopener">“Tips Mengatasi Paywall di Medium”</a>. The old Google-Cache source is retired; this version uses seven live sources led by the Freedium mirror.</p>
+          <p class="hce-credit">Successor of <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">bayhaqy/HTML-Content-Extractor</a> · tip from <a href="https://blog.bayhaqy.my.id/2023/11/medium-without-paywall.html" target="_blank" rel="noopener">“Tips Mengatasi Paywall di Medium”</a></p>
         </section>
 
         <section class="hce-card" id="extPanel" hidden>
           <h3>All automatic sources failed — try 1-click externals</h3>
           <div class="hce-extbtns"></div>
-          <p class="hce-hint">Or open the article in your browser, press <b>Ctrl+U</b> (view source) → select all → copy → switch to the <b>Paste HTML</b> tab. The saved source often contains the full text even when the page blurs it.</p>
+          <p class="hce-hint">Or open the article, press <b>Ctrl+U</b> to view its source, copy everything, then use the <b>Paste HTML</b> tab.</p>
         </section>
       </div>
     </div>
@@ -458,6 +473,6 @@
   <script src="lib/turndown.js"></script>
   <script src="lib/turndown-plugin-gfm.js"></script>
   <script src="/apps/assets/app-shell.js?v=20260831c" data-app-name="HTML Content Extractor"></script>
-  <script src="lib/app.js?v=20260831e"></script>
+  <script src="lib/app.js?v=20260831f"></script>
 </body>
 </html>
