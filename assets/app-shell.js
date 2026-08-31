@@ -56,8 +56,10 @@
 
     // Minimal i18n for the few UI strings on apps/games
     var UI = {
-      en: { nav_portfolio: 'Portfolio', switch_lang: 'Switch to Indonesian', toggle_theme: 'Toggle dark mode' },
-      id: { nav_portfolio: 'Portofolio', switch_lang: 'Ganti ke Inggris', toggle_theme: 'Ganti mode gelap' }
+      en: { nav_portfolio: 'Portfolio', switch_lang: 'Switch to Indonesian', toggle_theme: 'Toggle dark mode',
+            footer_views: 'views', footer_contribute: 'Found a bug? Contribute on GitHub' },
+      id: { nav_portfolio: 'Portofolio', switch_lang: 'Ganti ke Inggris', toggle_theme: 'Ganti mode gelap',
+            footer_views: 'kali dibuka', footer_contribute: 'Ada bug? Kontribusi di GitHub' }
     };
     var curLang = (function () {
       try { var s = localStorage.getItem('bayhaqy-apps-lang'); if (s === 'en' || s === 'id') return s; } catch (e) {}
@@ -75,9 +77,51 @@
       var tt = document.getElementById('themeToggle');
       if (tt) tt.setAttribute('aria-label', t.toggle_theme);
       document.documentElement.setAttribute('lang', curLang === 'id' ? 'id' : 'en');
+      if (typeof renderFooterMeta === 'function') renderFooterMeta();
     }
     applyShellI18n();
+    // ---------- Footer meta: per-app views counter + contribute link ----------
+    var viewsVal = null;
+    function renderFooterMeta() {
+      var meta = document.getElementById('footerMeta');
+      if (!meta) return;
+      var t = UI[curLang] || UI.en;
+      var parts = [];
+      if (viewsVal !== null) {
+        parts.push('<span class="views">' +
+          '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' +
+          viewsVal.toLocaleString('en-US') + ' ' + t.footer_views + '</span>');
+      }
+      var issueUrl = 'https://github.com/bayhaqy/apps/issues/new' +
+        '?template=bug-report.md' +
+        '&title=' + encodeURIComponent('[' + appName + '] Bug report or improvement') +
+        '&body=' + encodeURIComponent('Tool: ' + appName + '\nURL: ' + location.href + '\n\nDescribe the bug or your improvement idea:\n');
+      parts.push('<a class="contribute" href="' + issueUrl + '" target="_blank" rel="noopener">' + t.footer_contribute + '</a>');
+      meta.innerHTML = parts.join('<span class="sep">·</span>');
+    }
+
+    // Traffic counter — Abacus public counter (no cookies, no PII).
+    // Key = tool slug: last path segment, or its parent when the URL ends in index.html.
+    (function () {
+      var segs = location.pathname.split('/').filter(Boolean);
+      if (segs.length && segs[segs.length - 1] === 'index.html') segs.pop();
+      var slug = segs.length ? segs[segs.length - 1] : '';
+      if (!slug || slug === 'apps') return;
+      try {
+        fetch('https://abacus.jasoncameron.dev/hit/bayhaqy-apps/' + encodeURIComponent(slug))
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (d && typeof d.value === 'number') { viewsVal = d.value; renderFooterMeta(); }
+          })
+          .catch(function () {});
+      } catch (e) {}
+    })();
+
+
+
+
     var ltBtn = document.getElementById('langToggle');
+
     if (ltBtn) {
       ltBtn.addEventListener('click', function () {
         curLang = curLang === 'en' ? 'id' : 'en';
@@ -87,14 +131,18 @@
       });
     }
 
-    // Footer: logo + copyright (no "Bayhaqy Apps" text).
+    // Footer: copyright + meta row (views counter + contribute link).
     var footer = document.createElement('footer');
     footer.className = 'app-footer';
     footer.innerHTML =
       '<div class="app-footer-inner">' +
         '<span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>' +
+        '<span class="footer-meta" id="footerMeta"></span>' +
       '</div>';
     document.body.appendChild(footer);
+
+    // Render the contribute link immediately; views are merged in when the fetch returns.
+    renderFooterMeta();
 
     // Set document title if app name provided.
     if (appName && appName !== 'App' && document.title.indexOf(appName) === -1) {

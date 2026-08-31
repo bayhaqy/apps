@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://bayhaqy.my.id/apps/api/" />
+  <meta property="og:title" content="API Documentation — Apps by Achmad Bayhaqy" />
+  <meta property="og:description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/api/" />
+  <meta property="og:title" content="API Documentation — Apps by Achmad Bayhaqy" />
+  <meta property="og:description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/api/" />
+  <meta property="og:title" content="API Documentation — Apps by Achmad Bayhaqy" />
+  <meta property="og:description" content="Public, no-token JavaScript API for all Bayhaqy Apps. Import the modules and call them directly, or deploy as a Cloudflare Worker for a REST API with rate limiting." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/api/" />
   <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Bayhaqy Apps" />
@@ -100,6 +109,11 @@
     .app-footer-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem}
     .app-footer .copy{font-size:.85rem}
     .app-footer .links{display:flex;gap:1rem;font-size:.85rem;flex-wrap:wrap}
+    .footer-meta{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;font-size:.85rem}
+    .footer-meta .views{display:inline-flex;align-items:center;gap:.35rem;opacity:.85}
+    .footer-meta a{color:#E2E8F0;text-decoration:underline;text-underline-offset:2px;opacity:.85}
+    .footer-meta a:hover{color:var(--accent);opacity:1}
+    .footer-meta .sep{opacity:.5}
     .app-footer a{color:#E2E8F0;text-decoration:none}
     .app-footer a:hover{color:var(--accent)}
   </style>
@@ -352,8 +366,29 @@ curl <span class="s">"https://your-worker.workers.dev/api/code-formatter?languag
   <footer class="app-footer">
     <div class="app-footer-inner">
       <span class="copy">© 2026 Achmad Bayhaqy · <a href="/apps/">Bayhaqy Apps</a></span>
+      <span class="footer-meta" id="footerMeta"></span>
     </div>
   </footer>
+  <script>
+    (function () {
+      var meta = document.getElementById('footerMeta');
+      if (!meta) return;
+      var issueUrl = 'https://github.com/bayhaqy/apps/issues/new?template=bug-report.md' +
+        '&title=' + encodeURIComponent('[API Docs] Bug report or improvement') +
+        '&body=' + encodeURIComponent('Tool: API Documentation\nURL: ' + location.href + '\n\nDescribe the bug or your improvement idea:\n');
+      meta.innerHTML = '<a href="' + issueUrl + '" target="_blank" rel="noopener">Found a bug? Contribute on GitHub</a>';
+      try {
+        fetch('https://abacus.jasoncameron.dev/hit/bayhaqy-apps/api')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (d && typeof d.value === 'number') {
+              meta.insertAdjacentHTML('afterbegin', '<span class="views">' + d.value.toLocaleString('en-US') + ' views</span><span class="sep">·</span>');
+            }
+          })
+          .catch(function () {});
+      } catch (e) {}
+    })();
+  </script>
 
 
   <script>

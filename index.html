@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Bayhaqy Apps — a curated collection of 52 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
+  <meta name="description" content="Bayhaqy Apps — your all-in-one Swiss Army knife: 54 fast, private, browser-based tools for network, security, PDF, AI, media, calculators, and everyday tasks. No installs, no sign-ups, no tracking." />
   <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="keywords" content="Bayhaqy Apps, web tools, developer tools, network tools, security tools, DevOps, DNS lookup, IP finder, subnet calculator, JWT decoder, password generator, hash generator, certificate decoder, base64 encoder, Unix timestamp" />
+  <meta name="keywords" content="Bayhaqy Apps, swiss army knife, all-in-one toolbox, free online tools, browser tools, web tools, developer tools, network tools, security tools, pdf tools, ai tools, image tools, calculators, DNS lookup, IP finder, subnet calculator, JWT decoder, password generator, hash generator, QR code" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#B91C1C" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Bayhaqy Apps — 52 Browser-Based Developer & IT Tools" />
-  <meta property="og:description" content="A curated collection of fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools." />
+  <meta property="og:title" content="Bayhaqy Apps — The All-in-One Swiss Army Knife of Web Tools" />
+  <meta property="og:description" content="54 fast, private, browser-based tools — network, security, PDF, AI, media, calculators, and more. One toolbox for developers, IT pros, students, and creators. No installs, no sign-ups." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/" />
   <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
   <meta property="og:site_name" content="Bayhaqy Apps" />
@@ -21,8 +21,8 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Bayhaqy Apps — 52 Browser-Based Tools" />
-  <meta name="twitter:description" content="Fast, private, browser-based tools for developers, IT pros, and creators." />
+  <meta name="twitter:title" content="Bayhaqy Apps — All-in-One Swiss Army Knife of Web Tools" />
+  <meta name="twitter:description" content="54 fast, private, browser-based tools for everyone — network, security, PDF, AI, media, calculators. No installs, no sign-ups." />
   <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
 
   <link rel="icon" type="image/png" href="/apps/icons/logo.png" />
@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <title>Bayhaqy Apps — 52 Browser-Based Developer &amp; IT Tools</title>
+  <title>Bayhaqy Apps — All-in-One Swiss Army Knife of 54 Browser Tools</title>
 
   <!-- Prevent theme flash -->
   <script>
@@ -49,7 +49,7 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260831a" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260831c" />
   <style>
     /* Landing-page-specific styles layered on top of theme.css */
     .apps-hero {
@@ -378,6 +378,36 @@
     .request-card h3 { font-size: var(--fs-sm); margin: 0 0 0.25rem; color: inherit; }
     .request-card p { font-size: var(--fs-xs); margin: 0; color: inherit; }
 
+    .request-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    .request-section h2 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+    .request-section .request-lead { font-size: var(--fs-sm); color: var(--ink-mute); margin: 0 0 1.25rem; max-width: 720px; }
+    .request-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      max-width: 780px;
+    }
+    .request-cards .request-card { padding: 1.75rem 1.5rem; background: var(--paper-alt, transparent); }
+    .request-cards .request-card h3 { font-size: var(--fs-md, 1rem); color: var(--ink); }
+
+    .footer-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: var(--fs-sm);
+      color: var(--ink-mute);
+    }
+    .footer-meta .views { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .footer-meta .views svg { width: 14px; height: 14px; opacity: 0.7; }
+    .footer-meta a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+    .footer-meta a:hover { color: var(--red-700); }
+    .footer-meta .sep { opacity: 0.5; }
+
     .empty-state {
       text-align: center;
       padding: 3rem 1rem;
@@ -537,7 +567,7 @@
       "@id": "https://bayhaqy.my.id/apps/#website",
       "url": "https://bayhaqy.my.id/apps/",
       "name": "Bayhaqy Apps",
-      "description": "Bayhaqy Apps — a curated collection of 52 fast, private, browser-based tools for developers, IT pros, and creators. Network diagnostics, security utilities, DevOps helpers, and productivity tools.",
+      "description": "Bayhaqy Apps — your all-in-one Swiss Army knife: 54 fast, private, browser-based tools for network, security, PDF, AI, media, calculators, and everyday tasks. No installs, no sign-ups, no tracking.",
       "publisher": {
         "@id": "https://bayhaqy.my.id/apps/#person"
       },
@@ -553,29 +583,24 @@
       "@type": "CollectionPage",
       "@id": "https://bayhaqy.my.id/apps/#collectionpage",
       "url": "https://bayhaqy.my.id/apps/",
-      "name": "Bayhaqy Apps — 52 Browser-Based Developer & IT Tools",
+      "name": "Bayhaqy Apps — The All-in-One Swiss Army Knife of Web Tools",
       "isPartOf": {
         "@id": "https://bayhaqy.my.id/apps/#website"
       },
-      "inLanguage": "en"
+      "inLanguage": "en",
+      "description": "An all-in-one collection of 54 browser-based tools for everyone: network diagnostics, security, PDF, AI, media, calculators, and everyday utilities."
     },
     {
       "@type": "ItemList",
       "@id": "https://bayhaqy.my.id/apps/#tools",
       "name": "All tools",
-      "numberOfItems": 56,
+      "numberOfItems": 54,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "name": "AI Context Packer — Combine Files into AI-Ready Markdown",
           "url": "https://bayhaqy.my.id/apps/ai-context-packer/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "API Documentation",
-          "url": "https://bayhaqy.my.id/apps/api/"
         },
         {
           "@type": "ListItem",
@@ -666,12 +691,6 @@
           "position": 17,
           "name": "File to PDF Converter · Bayhaqy Apps",
           "url": "https://bayhaqy.my.id/apps/file-to-pdf/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 18,
-          "name": "Get the App",
-          "url": "https://bayhaqy.my.id/apps/get-app/"
         },
         {
           "@type": "ListItem",
@@ -923,20 +942,21 @@
     <section class="apps-hero">
       <div class="apps-hero-inner">
         <div class="hero-content">
-          <p class="hero-eyebrow">Browser-based tools · No sign-up</p>
+          <p class="hero-eyebrow">Browser-based · No sign-up · No tracking</p>
           <h1 class="hero-title">
-            Developer &amp; IT tools<br />
-            that just <span class="accent">work</span>.
+            Your Swiss Army knife<br />
+            of web <span class="accent">tools</span>.
           </h1>
           <p class="hero-sub">
-            A curated collection of 52 fast, private tools for developers, IT pros, and creators.
-            Network diagnostics, security utilities, DevOps helpers, and productivity boosters —
-            all running entirely in your browser, no installs, no accounts, no tracking.
+            An all-in-one collection of 54 fast, private tools for everyone — network diagnostics,
+            security, PDF, AI, media, calculators, and everyday utilities. Built for developers,
+            IT pros, students, and creators, handy for anyone. All in your browser:
+            no installs, no accounts, no tracking.
           </p>
           <div class="hero-actions">
             <a href="#apps" class="btn btn-primary">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              Browse all 52 tools
+              Browse all 54 tools
             </a>
             <a href="/apps/bayhaqy-apps.apk" download="bayhaqy-apps.apk" class="btn btn-ghost">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -944,8 +964,8 @@
             </a>
           </div>
           <ul class="hero-stats">
-            <li class="stat"><span class="num">52</span><span class="lbl">Live tools</span></li>
-            <li class="stat"><span class="num">12</span><span class="lbl">Categories</span></li>
+            <li class="stat"><span class="num">54</span><span class="lbl">Live tools</span></li>
+            <li class="stat"><span class="num">8</span><span class="lbl">Categories</span></li>
             <li class="stat"><span class="num">0</span><span class="lbl">Sign-ups</span></li>
             <li class="stat"><span class="num">100%</span><span class="lbl">Free</span></li>
           </ul>
@@ -1005,12 +1025,51 @@
     </div>
   </section>
 
+  <!-- Request / Contribute (moved to the very bottom, before footer) -->
+  <section class="request-section" id="contribute">
+    <div class="request-inner">
+      <h2>Request or contribute a tool</h2>
+      <p>Missing a tool you need? Found an error, or have an idea to make a tool better? Bayhaqy Apps is built in the open — every request, bug report, and contribution makes the collection better for everyone.</p>
+      <div class="request-cards">
+        <a class="request-card" href="https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <h3>Request a new tool</h3><p>Missing something? Tell us what to build next.</p>
+        </a>
+        <a class="request-card" href="https://github.com/bayhaqy/apps/issues/new?template=bug-report.md" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <h3>Report an issue or improve a tool</h3><p>Found an error? Suggest a fix or improvement — contributions are welcome.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer (reuses .app-footer from theme.css) -->
   <footer class="app-footer">
     <div class="app-footer-inner">
       <span class="copy">© 2026 Achmad Bayhaqy. All rights reserved.</span>
+      <span class="footer-meta" id="footerMeta"></span>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      // Total views counter — Abacus public counter (no cookies, no PII).
+      var el = document.getElementById('footerMeta');
+      if (!el) return;
+      var EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      el.innerHTML = '<a href="https://github.com/bayhaqy/apps/issues/new?template=bug-report.md" target="_blank" rel="noopener">Found a bug? Contribute on GitHub</a>';
+      try {
+        fetch('https://abacus.jasoncameron.dev/hit/bayhaqy-apps/home')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (d && typeof d.value === 'number') {
+              el.insertAdjacentHTML('afterbegin', '<span class="views">' + EYE + d.value.toLocaleString('en-US') + ' total views</span><span class="sep">·</span>');
+            }
+          })
+          .catch(function () {});
+      } catch (e) {}
+    })();
+  </script>
 
   <script>
     (function () {
@@ -1113,21 +1172,21 @@
           tags: ['ssl', 'cert', 'x509', 'pem', 'security'] },
 
         // Category: DevOps & SysAdmin
-        { id: 'base64-hex', cat: 'devops', icon: 'base64', name: 'Base64 & Hex Encoder',
+        { id: 'base64-hex', cat: 'dev', icon: 'base64', name: 'Base64 & Hex Encoder',
           desc: 'Convert text ⇄ Base64 ⇄ Hex, inspect files as Base64 or hex dumps.',
           tags: ['base64', 'hex', 'encoding', 'devops'] },
-        { id: 'timestamp-converter', cat: 'devops', icon: 'timestamp', name: 'Timestamp Converter',
+        { id: 'timestamp-converter', cat: 'dev', icon: 'timestamp', name: 'Timestamp Converter',
           desc: 'Unix epoch seconds/ms ⇄ human dates in local, UTC, ISO, and relative formats.',
           tags: ['unix', 'epoch', 'time', 'date', 'devops'] },
 
         // Category: Files & Documents
-        { id: 'baymerge', cat: 'files', icon: 'pdf', name: 'BayMerge',
+        { id: 'baymerge', cat: 'docs', icon: 'pdf', name: 'BayMerge',
           desc: 'Combine multiple PDF files into one. Reorder, preview, and merge entirely in your browser.',
           tags: ['pdf', 'merge', 'files'] },
-        { id: 'pdf-anonymizer', cat: 'files', icon: 'pdf', name: 'PDF Anonymizer',
+        { id: 'pdf-anonymizer', cat: 'docs', icon: 'pdf', name: 'PDF Anonymizer',
           desc: 'Redact sensitive text (names, emails, phone numbers, IDs) in PDFs before sharing.',
           tags: ['pdf', 'redact', 'privacy', 'files'] },
-        { id: 'csv-formatter', cat: 'files', icon: 'csv', name: 'CSV Formatter',
+        { id: 'csv-formatter', cat: 'docs', icon: 'csv', name: 'CSV Formatter',
           desc: 'Clean CSV/Excel data, convert to JSON, sort, filter, and deduplicate rows.',
           tags: ['csv', 'excel', 'json', 'data', 'files'] },
 
@@ -1163,29 +1222,29 @@
         { id: 'text-diff', cat: 'dev', icon: 'diff', name: 'Text Diff',
           desc: 'Compare two text snippets side-by-side with highlighted additions and deletions.',
           tags: ['diff', 'compare', 'text', 'dev'] },
-        { id: 'css-playground', cat: 'dev', icon: 'css', name: 'CSS Playground',
+        { id: 'css-playground', cat: 'design', icon: 'css', name: 'CSS Playground',
           desc: 'Visual builder for CSS Grid and Flexbox layouts. Live preview as you tweak.',
           tags: ['css', 'grid', 'flexbox', 'design'] },
-        { id: 'qr-studio', cat: 'dev', icon: 'qr', name: 'QR Studio',
+        { id: 'qr-studio', cat: 'design', icon: 'qr', name: 'QR Studio',
           desc: 'Generate custom QR codes with logos, colors, and scan tracking. Scan via camera.',
           tags: ['qr', 'qr-code', 'scan'] },
 
         // Category: Time & Productivity
-        { id: 'timezone-slider', cat: 'productivity', icon: 'clock', name: 'Timezone Slider',
+        { id: 'timezone-slider', cat: 'utility', icon: 'clock', name: 'Timezone Slider',
           desc: 'Find a meeting time that works across multiple timezones with a visual slider.',
           tags: ['timezone', 'meeting', 'time', 'productive'] },
-        { id: 'date-calculator', cat: 'productivity', icon: 'calendar', name: 'Date Calculator',
+        { id: 'date-calculator', cat: 'utility', icon: 'calendar', name: 'Date Calculator',
           desc: 'Calculate date differences, add/subtract days, and compute age from birthdate.',
           tags: ['date', 'calendar', 'age', 'diff'] },
-        { id: 'pomodoro', cat: 'productivity', icon: 'pomodoro', name: 'Pomodoro Tracker',
+        { id: 'pomodoro', cat: 'utility', icon: 'pomodoro', name: 'Pomodoro Tracker',
           desc: 'Focus timer with ambient sound studio. Tracks daily sessions and streaks.',
           tags: ['pomodoro', 'focus', 'timer', 'ambient'] },
 
         // Category: Math & Finance
-        { id: 'loan-calculator', cat: 'finance', icon: 'money', name: 'Loan Calculator',
+        { id: 'loan-calculator', cat: 'utility', icon: 'money', name: 'Loan Calculator',
           desc: 'Mortgage, auto, and personal loan calculator with amortization schedule and charts.',
           tags: ['loan', 'mortgage', 'interest', 'finance'] },
-        { id: 'converter', cat: 'finance', icon: 'convert', name: 'Unit & Currency Converter',
+        { id: 'converter', cat: 'utility', icon: 'convert', name: 'Unit & Currency Converter',
           desc: 'Convert length, mass, temperature, and 30+ currencies with cached rates.',
           tags: ['convert', 'currency', 'units', 'finance'] },
 
@@ -1195,24 +1254,24 @@
           tags: ['password', 'vault', 'aes', 'encrypt'] },
 
         // Category: Brand
-        { id: 'link-in-bio', cat: 'brand', icon: 'link', name: 'Link-in-Bio Builder',
+        { id: 'link-in-bio', cat: 'media', icon: 'link', name: 'Link-in-Bio Builder',
           desc: 'Create a Linktree-style page with avatar, links, themes, and analytics.',
           tags: ['linktree', 'bio', 'social', 'brand'] },
 
         // Category: PDF Editor (new)
-        { id: 'pdf-signer', cat: 'pdf', icon: 'pdf', name: 'PDF Signer & Stamp',
+        { id: 'pdf-signer', cat: 'docs', icon: 'pdf', name: 'PDF Signer & Stamp',
           desc: 'Draw a signature with mouse/finger or upload a stamp image. Drag, resize, and place on any page.',
           tags: ['pdf', 'sign', 'signature', 'stamp', 'pdf-lib'] },
-        { id: 'pdf-annotator', cat: 'pdf', icon: 'pdf', name: 'PDF Annotator & Highlighter',
+        { id: 'pdf-annotator', cat: 'docs', icon: 'pdf', name: 'PDF Annotator & Highlighter',
           desc: 'Highlight text passages and add colored text annotations. Export the marked-up PDF.',
           tags: ['pdf', 'annotate', 'highlight', 'note', 'pdf-lib'] },
-        { id: 'pdf-organizer', cat: 'pdf', icon: 'pdf', name: 'PDF Page Organizer',
+        { id: 'pdf-organizer', cat: 'docs', icon: 'pdf', name: 'PDF Page Organizer',
           desc: 'Delete, rotate, and reorder PDF pages visually with drag-and-drop thumbnails.',
           tags: ['pdf', 'organize', 'reorder', 'rotate', 'delete'] },
-        { id: 'pdf-redactor', cat: 'pdf', icon: 'pdf', name: 'PDF Redactor',
+        { id: 'pdf-redactor', cat: 'docs', icon: 'pdf', name: 'PDF Redactor',
           desc: 'Extract text and permanently redact emails, phones, NIK, cards, IBAN with black boxes.',
           tags: ['pdf', 'redact', 'extract', 'pii', 'regex'] },
-        { id: 'pdf-watermark', cat: 'pdf', icon: 'pdf', name: 'PDF Watermark & Page Numbers',
+        { id: 'pdf-watermark', cat: 'docs', icon: 'pdf', name: 'PDF Watermark & Page Numbers',
           desc: 'Add diagonal text watermarks (CONFIDENTIAL, DRAFT) and automatic page numbers.',
           tags: ['pdf', 'watermark', 'page numbers', 'stamp'] },
 
@@ -1220,15 +1279,15 @@
         { id: 'bg-remover', cat: 'media', icon: 'image', name: 'AI Background Remover',
           desc: 'Remove image backgrounds 100% locally via Transformers.js + WebGPU. No upload, no quota.',
           tags: ['image', 'ai', 'webgpu', 'remove bg', 'transformers'] },
-        { id: 'file-to-pdf', cat: 'files', icon: 'pdf', name: 'File-to-PDF Converter',
+        { id: 'file-to-pdf', cat: 'docs', icon: 'pdf', name: 'File-to-PDF Converter',
           desc: 'Convert images (JPG, PNG, WebP) and text files into a single PDF. Reorder, set page size.',
           tags: ['pdf', 'convert', 'jpg', 'png', 'image to pdf'] },
 
         // Category: Music Utilities (new)
-        { id: 'instrument-tuner', cat: 'music', icon: 'audio', name: 'Instrument Tuner',
+        { id: 'instrument-tuner', cat: 'media', icon: 'audio', name: 'Instrument Tuner',
           desc: 'Chromatic tuner using your microphone. Real-time pitch detection via FFT for guitar, bass, violin.',
           tags: ['tuner', 'guitar', 'music', 'pitch', 'fft', 'microphone'] },
-        { id: 'metronome', cat: 'music', icon: 'audio', name: 'Metronome & Tap Tempo',
+        { id: 'metronome', cat: 'media', icon: 'audio', name: 'Metronome & Tap Tempo',
           desc: 'Precision metronome with microsecond timing. Tap tempo, time signatures, accented downbeats.',
           tags: ['metronome', 'bpm', 'tap tempo', 'music', 'rhythm'] },
 
@@ -1253,18 +1312,18 @@
         { id: 'lorem-ipsum', cat: 'dev', icon: 'lorem', name: 'Lorem Ipsum Generator',
           desc: 'Generate placeholder text in paragraphs, sentences, or words. Classic Latin or modern English.',
           tags: ['lorem', 'placeholder', 'text', 'generator', 'dev'] },
-        { id: 'color-converter', cat: 'dev', icon: 'palette', name: 'Color Converter & Palette',
+        { id: 'color-converter', cat: 'design', icon: 'palette', name: 'Color Converter & Palette',
           desc: 'Convert HEX, RGB, HSL colors. Generate palettes, check WCAG contrast, and save recent colors.',
           tags: ['color', 'hex', 'rgb', 'hsl', 'palette', 'design'] },
-        { id: 'wcag-contrast', cat: 'dev', icon: 'eye', name: 'WCAG Contrast Checker',
+        { id: 'wcag-contrast', cat: 'design', icon: 'eye', name: 'WCAG Contrast Checker',
           desc: 'Check color contrast ratios for accessibility compliance. Test WCAG AA and AAA standards.',
           tags: ['wcag', 'contrast', 'a11y', 'accessibility', 'design'] },
 
         // Category: DevOps (new tools)
-        { id: 'cron-builder', cat: 'devops', icon: 'cron', name: 'Cron Builder',
+        { id: 'cron-builder', cat: 'dev', icon: 'cron', name: 'Cron Builder',
           desc: 'Build and parse cron expressions visually. See human-readable descriptions and next 10 run times.',
           tags: ['cron', 'schedule', 'devops', 'timer', 'unix'] },
-        { id: 'number-base', cat: 'devops', icon: 'base', name: 'Number Base Converter',
+        { id: 'number-base', cat: 'dev', icon: 'base', name: 'Number Base Converter',
           desc: 'Convert between Binary, Octal, Decimal, and Hex. BigInt support, bit visualization, ASCII decode.',
           tags: ['binary', 'hex', 'decimal', 'octal', 'convert', 'devops'] },
 
@@ -1275,24 +1334,20 @@
         { id: 'speed-test', cat: 'network', icon: 'speed', name: 'Speed Test',
           desc: 'Measure download speed, ping latency, and jitter. Beautiful speedometer gauge with live graph.',
           tags: ['speed', 'bandwidth', 'ping', 'latency', 'network', 'download'] },
-        { id: 'timeline-visualizer', cat: 'network', icon: 'map', name: 'Timeline Visualizer',
+        { id: 'timeline-visualizer', cat: 'utility', icon: 'map', name: 'Timeline Visualizer',
           desc: 'Plot Google Maps Timeline, GPS tracks, or GPX files on an interactive Leaflet map with playback.',
           tags: ['map', 'gps', 'timeline', 'gpx', 'geojson', 'location', 'tracking'] }
       ];
 
       var CATS = [
-        { id: 'network',      name: 'Network & DNS',     desc: 'Speed test, DNS, IPs, maps, headers' },
-        { id: 'security',     name: 'Security & Crypto', desc: 'Hashes, JWTs, certs, passwords, encryption' },
-        { id: 'devops',       name: 'DevOps & SysAdmin', desc: 'Encoding, timestamps, cron, number bases' },
-        { id: 'files',        name: 'Files & Documents', desc: 'PDF, CSV, file conversion' },
-        { id: 'pdf',          name: 'PDF Editor',        desc: 'Sign, annotate, redact, watermark, organize' },
-        { id: 'ai',           name: 'AI & Text',         desc: 'Prompt tools, OCR, humanizer' },
-        { id: 'media',        name: 'Media',             desc: 'Images, audio, AI background remover' },
-        { id: 'music',        name: 'Music Utilities',   desc: 'Tuner, metronome, tap tempo' },
-        { id: 'dev',          name: 'Dev & Design',      desc: 'Code, diff, CSS, regex, JSON, color, accessibility' },
-        { id: 'productivity', name: 'Productivity',      desc: 'Time, dates, focus' },
-        { id: 'finance',      name: 'Math & Finance',    desc: 'Loans, currency, units' },
-        { id: 'brand',        name: 'Brand',             desc: 'Link-in-bio, social' }
+        { id: 'network', name: 'Network & Internet',  desc: 'DNS, WHOIS, IPs, subnets, headers, speed test' },
+        { id: 'security', name: 'Security & Privacy', desc: 'Hashes, JWTs, certs, passwords, encryption' },
+        { id: 'dev',      name: 'Developer Tools',    desc: 'Code, JSON, regex, encoding, timestamps, cron' },
+        { id: 'design',   name: 'Design & Front-end', desc: 'CSS, colors, contrast, QR codes' },
+        { id: 'docs',     name: 'PDF & Documents',    desc: 'Merge, sign, annotate, redact, watermark, convert' },
+        { id: 'ai',       name: 'AI & OCR',           desc: 'Prompt tools, humanizer, context packing, OCR' },
+        { id: 'media',    name: 'Media & Creator',    desc: 'Images, audio, video, social bio pages' },
+        { id: 'utility',  name: 'Everyday Utilities', desc: 'Time, dates, focus, loans, units, GPS maps' }
       ];
 
       // ---------- State ----------
@@ -1424,10 +1479,6 @@
             '</div>' +
             '<div class="apps-grid">' +
               apps.map(appCard).join('') +
-              // Request-a-tool card at the end of the first category.
-              (c.id === 'network' ? '<a class="request-card" href="https://github.com/bayhaqy/apps/issues/new?labels=tool-request&template=tool-request.md" target="_blank" rel="noopener">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-                '<h3>Request a tool</h3><p>Missing something? Tell us.</p></a>' : '') +
             '</div>' +
           '</div>';
         });
