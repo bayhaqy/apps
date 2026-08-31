@@ -4,13 +4,21 @@
    inspired by bayhaqy/HTML-Content-Extractor (Google-Cache method, now
    retired — Google removed web cache in 2024).
    Source chain (auto, first sufficient result wins):
-     1. Medium JSON API   medium.com/p/{id}?format=json   (via CORS relay)
-     2. Medium page HTML  Apollo/__NEXT_DATA__ state scan (via CORS relay)
-     3. Medium RSS feed   medium.com/feed/{pub|@user}     (via CORS relay)
-     4. Freedium          freedium.cfd/{url}              (via CORS relay)
-     5. Wayback Machine   archive.org availability API    (direct + relay)
-     6. r.jina.ai reader  r.jina.ai/{url}                 (direct, CORS)
-     7. External panel    Freedium / archive.today / Wayback (1-click)
+     Wave 1 (race, fastest sufficient result wins):
+       1a. Medium JSON API     medium.com/p/{id}?format=json  (raw CORS relays)
+       1b. Freedium mirror     freedium-mirror.cfd/{url} via r.jina.ai
+           JS-render transport — freedium-mirror is a SvelteKit CSR app:
+           raw relays return empty skeletons, only a rendering transport
+           sees the full article. jina sends CORS headers (preflight allows
+           the x-respond-with header), so the browser can call it directly.
+     Wave 2 (sequential):
+       2. Medium page HTML  Apollo/__NEXT_DATA__ state scan (all transports)
+       3. Medium RSS feed   medium.com/feed/{pub|@user}     (raw CORS relays)
+       4. Freedium mirror   via raw relays (works again if mirror restores
+           SSR) + legacy freedium.cfd via render transport
+       5. Wayback Machine   archive.org availability API    (direct + relay)
+       6. r.jina.ai reader  r.jina.ai/{url} markdown        (direct, CORS)
+       7. External panel    Freedium mirror / archive.today / Wayback (1-click)
    Plus: paste-HTML / file mode with the generic multi-platform engine
    (platform presets + Mozilla Readability fallback).
    ================================================================= */
@@ -67,6 +75,7 @@
     hashnode:  { label: 'Hashnode',     roots: ['.post-content', '.blog-content', 'article'] },
     ghost:     { label: 'Ghost',        roots: ['.gh-content', '.post-content', '.content', 'article'] },
     news:      { label: 'News / Magz',  roots: ['[itemprop="articleBody"]', '.article-body', '.story-body', '.article__body', '.c-article-body', '.article-content', 'article'] },
+    freedium:  { label: 'Freedium',     roots: ['.article-page-container', 'main', 'article'] },
     generic:   { label: 'Readability',  roots: [] }
   };
   var JUNK_STRUCTURAL =
@@ -405,31 +414,61 @@
   /* =============== [B] MEDIUM BYPASS CHAIN =============== */
   var MEDIUM_HOST_RE = /(^|\.)(medium\.com|miro\.medium\.com)$/;
   var RESERVED_SEG = ['p', 'm', 'me', 'tag', 'feed', 'about', 'jobs', 'stories', 'new-story', 'plan', 'topics', 'archive'];
+  /* Transport pool (free public CORS transports, tried in order):
+     - jina           r.jina.ai/{url} + x-respond-with: html → JS-rendered full
+                      HTML with native CORS (preflight allows the header).
+                      The ONLY transport that executes client-side JS —
+                      freedium-mirror is SvelteKit CSR (raw relays get empty
+                      skeleton shells).
+     - allorigins     raw passthrough proxy
+     - allorigins-get same service, JSON-wrapped endpoint (separate rate bucket)
+     - codetabs       raw passthrough proxy
+     - corslol        raw passthrough proxy                              */
   var RELAYS = [
-    { name: 'allorigins', make: function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); } },
-    { name: 'codetabs',   make: function (u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); } }
+    { name: 'jina',           make: function (u) { return 'https://r.jina.ai/' + u; }, headers: function () { return { 'x-respond-with': 'html' }; }, timeout: 45000 },
+    { name: 'allorigins',     make: function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); }, timeout: 20000 },
+    { name: 'allorigins-get', make: function (u) { return 'https://api.allorigins.win/get?url=' + encodeURIComponent(u); }, unwrap: true, timeout: 20000 },
+    { name: 'codetabs',       make: function (u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); }, timeout: 20000 },
+    { name: 'corslol',        make: function (u) { return 'https://api.cors.lol/?url=' + encodeURIComponent(u); }, timeout: 20000 }
   ];
 
-  function relayFetch(url, timeout) {
-    // try each relay in order; resolve with {text, relay}
-    timeout = timeout || 25000;
+  function relayFetch(url, timeout, opts) {
+    // try each transport in order; resolve with {text, relay}
+    opts = opts || {};
+    var pool = RELAYS.filter(function (r) {
+      if (opts.noJina && r.name === 'jina') return false;
+      if (opts.onlyJina && r.name !== 'jina') return false;
+      return true;
+    });
     var idx = 0, lastErr = '';
     return new Promise(function (resolve, reject) {
       function attempt() {
-        if (idx >= RELAYS.length) { reject(new Error('semua relay gagal (' + lastErr + ')')); return; }
-        var relay = RELAYS[idx++];
+        if (idx >= pool.length) { reject(new Error('semua relay gagal (' + lastErr + ')')); return; }
+        var relay = pool[idx++];
+        var t = timeout || relay.timeout || 25000;
         var ctrl = new AbortController();
-        var to = setTimeout(function () { ctrl.abort(); }, timeout);
-        fetch(relay.make(url), { signal: ctrl.signal })
+        var to = setTimeout(function () { ctrl.abort(); }, t);
+        fetch(relay.make(url), { signal: ctrl.signal, headers: relay.headers ? relay.headers() : {} })
           .then(function (r) {
-            clearTimeout(to);
-            if (!r.ok) throw new Error('HTTP ' + r.status);
+            if (!r.ok) {
+              var m = 'HTTP ' + r.status;
+              if (r.status === 429) m += ' (batas rate relay)';
+              throw new Error(m);
+            }
             return r.text();
           })
-          .then(function (t) { clearTimeout(to); resolve({ text: t || '', relay: relay.name }); })
+          .then(function (raw) {
+            var text = raw || '';
+            if (relay.unwrap) {
+              try { text = JSON.parse(text).contents || ''; } catch (e2) { throw new Error('unwrap JSON gagal'); }
+            }
+            if (!text) throw new Error('respons kosong');
+            clearTimeout(to);
+            resolve({ text: text, relay: relay.name });
+          })
           .catch(function (err) {
             clearTimeout(to);
-            var m = err && err.name === 'AbortError' ? 'timeout ' + (timeout / 1000) + 's' : (err && err.message) || 'gagal';
+            var m = err && err.name === 'AbortError' ? 'timeout ' + (t / 1000) + 's' : (err && err.message) || 'gagal';
             lastErr = relay.name + ': ' + m;
             attempt();
           });
@@ -618,7 +657,7 @@
 
   /* ---- sources ---- */
   function srcJsonApi(postId) {
-    return relayFetch('https://medium.com/p/' + postId + '?format=json')
+    return relayFetch('https://medium.com/p/' + postId + '?format=json', 12000, { noJina: true })
       .then(function (r) {
         var j = JSON.parse(stripJsonPrefix(r.text));
         var payload = j && j.payload;
@@ -657,7 +696,7 @@
 
   function srcFeed(articleUrl, pm) {
     if (!pm.feedUrl) return Promise.reject(new Error('tidak ada kandidat feed (custom domain / URL tak dikenal)'));
-    return relayFetch(pm.feedUrl).then(function (r) {
+    return relayFetch(pm.feedUrl, 20000, { noJina: true }).then(function (r) {
       var doc = new DOMParser().parseFromString(r.text, 'text/xml');
       if (doc.querySelector('parsererror')) throw new Error('feed tidak valid');
       var items = doc.getElementsByTagName('item');
@@ -687,24 +726,90 @@
     });
   }
 
-  function srcFreedium(articleUrl) {
-    return relayFetch('https://freedium.cfd/' + articleUrl, 40000).then(function (r) {
-      if (!r.text || r.text.length < 1000) throw new Error('Freedium merespons tanpa konten');
-      var ex = extract(r.text, articleUrl, 'auto', readOpts());
-      if (wordCount(ex.root) < 120) throw new Error('Freedium terbaca tapi konten pendek');
-      if (!ex.meta.title) {
-        var m = r.text.match(/<title>([^<]+)<\/title>/i);
-        if (m) ex.meta.title = m[1].replace(/\s*\|\s*by\s+.*$/i, '').trim();
+  function freediumExtract(pageUrl, text, articleUrl, viaLabel) {
+    // pre-clean: freedium-mirror (SvelteKit) renders skeleton placeholders
+    var pre = parseHTML(text);
+    var sk = pre.querySelectorAll('[data-slot="skeleton"]');
+    for (var i = 0; i < sk.length; i++) if (sk[i].parentNode) sk[i].parentNode.removeChild(sk[i]);
+    // IMPORTANT: base = freedium page URL (images are relative /img/medium/...)
+    var ex = extract(pre.documentElement.outerHTML, pageUrl, 'freedium', readOpts());
+    var words = wordCount(ex.root);
+    if (words < 120) throw new Error('konten pendek (' + words + ' kata) — mirror belum merender');
+    // harvest title/author/date from the freedium article header (generic
+    // junk-removal drops <header> from the extracted root)
+    var h1 = pre.querySelector('article h1, main h1, h1');
+    if (h1 && h1.textContent.trim()) ex.meta.title = h1.textContent.trim();
+    var aHead = pre.querySelector('article header, main header');
+    if (aHead) {
+      var ps = aHead.querySelectorAll('p');
+      for (var j = 0; j < ps.length; j++) {
+        var tx = (ps[j].textContent || '').trim();
+        if (/^By\s+/i.test(tx) && !ex.meta.author) ex.meta.author = tx.replace(/^By\s+/i, '').trim();
+        else if (!ex.meta.published && /\d{4}/.test(tx) && tx.length < 40) ex.meta.published = tx;
       }
-      ex.via = 'Freedium (' + r.relay + ')';
-      ex.viaUrl = articleUrl;
-      return ex;
+    }
+    if (!ex.meta.title) {
+      var m = text.match(/<title>([^<]+)<\/title>/i);
+      if (m) ex.meta.title = m[1].trim();
+    }
+    if (ex.meta.title) ex.meta.title = ex.meta.title.replace(/\s*[-|]\s*Freedium.*$/i, '').trim();
+    // extract() may have inserted an H1 from the raw <title> before cleanup
+    var rootH1 = ex.root.querySelector('h1');
+    if (rootH1 && ex.meta.title) rootH1.textContent = ex.meta.title;
+    ex.via = 'Freedium (' + viaLabel + ')';
+    ex.viaUrl = articleUrl;
+    return ex;
+  }
+
+  var FREEDIUM_MIRROR = 'https://freedium-mirror.cfd/';
+  var FREEDIUM_LEGACY = 'https://freedium.cfd/';
+
+  function srcFreedium(articleUrl) {
+    // Wave-1 fast path: alive mirror × JS-render transport (the only one
+    // that sees freedium-mirror's client-rendered content)
+    var pageUrl = FREEDIUM_MIRROR + articleUrl;
+    return relayFetch(pageUrl, null, { onlyJina: true }).then(function (r) {
+      return freediumExtract(pageUrl, r.text, articleUrl, 'mirror · render relay ' + r.relay);
+    });
+  }
+
+  function srcFreediumRaw(articleUrl) {
+    // Wave-2 backup: raw relays on the mirror (wins only if the mirror
+    // restores server-side rendering) + legacy freedium.cfd via render relay
+    var attempts = [
+      { host: FREEDIUM_MIRROR, opts: {} },
+      { host: FREEDIUM_LEGACY, opts: { onlyJina: true } }
+    ];
+    var idx = 0, lastErr = '';
+    return new Promise(function (resolve, reject) {
+      function attempt() {
+        if (idx >= attempts.length) { reject(new Error(lastErr || 'Freedium tidak tersedia')); return; }
+        var a = attempts[idx++];
+        var pageUrl = a.host + articleUrl;
+        relayFetch(pageUrl, null, a.opts)
+          .then(function (r) {
+            var label = (a.host === FREEDIUM_MIRROR ? 'mirror · ' : 'legacy · ') + r.relay;
+            return freediumExtract(pageUrl, r.text, articleUrl, label);
+          })
+          .then(resolve)
+          .catch(function (err) {
+            lastErr = (a.host === FREEDIUM_MIRROR ? 'mirror' : 'legacy') + ': ' + ((err && err.message) || 'gagal');
+            attempt();
+          });
+      }
+      attempt();
     });
   }
 
   function srcWayback(articleUrl) {
     var av = 'https://archive.org/wayback/available?url=' + encodeURIComponent(articleUrl);
-    return fetch(av).then(function (r) { return r.json(); }).then(function (j) {
+    var getAvail = function () {
+      return fetch(av).then(function (r) { return r.json(); })
+        .catch(function () { // availability API sometimes lacks CORS — retry via raw relay
+          return relayFetch(av, 15000, { noJina: true }).then(function (r) { return JSON.parse(r.text); });
+        });
+    };
+    return getAvail().then(function (j) {
       var snap = j && j.archived_snapshots && j.archived_snapshots.closest;
       if (!snap || !snap.url || String(snap.status) !== '200') throw new Error('tidak ada snapshot Wayback');
       var snapUrl = snap.url.replace(/^http:/, 'https:');
@@ -732,9 +837,13 @@
   function srcJina(articleUrl) {
     return fetch('https://r.jina.ai/' + articleUrl, {
       headers: { 'Accept': 'text/plain' },
-      signal: (function () { var c = new AbortController(); setTimeout(function () { c.abort(); }, 35000); return c.signal; })()
+      signal: (function () { var c = new AbortController(); setTimeout(function () { c.abort(); }, 45000); return c.signal; })()
     }).then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
+      if (!r.ok) {
+        var m = 'HTTP ' + r.status;
+        if (r.status === 429) m += ' (batas rate)';
+        throw new Error(m);
+      }
       return r.text();
     }).then(function (md) {
       if (!md || md.length < 500 || md.indexOf('###') === -1 && md.indexOf('\n') === -1) throw new Error('jina tidak memberi markdown');
@@ -792,38 +901,59 @@
         status('Berhasil: ' + res.via + ' — ' + (res.words || 0).toLocaleString('en-US') + ' kata.', false, true);
       })
       .catch(function (err) {
-        status('Semua sumber otomatis gagal: ' + (err && err.message ? err.message : err), true, true);
+        var msg = err && err.message ? err.message : String(err);
+        if (/batas rate|429/i.test(msg)) msg += ' — layanan publik gratis sedang limit, tunggu ±1 menit lalu coba lagi.';
+        status('Semua sumber otomatis gagal: ' + msg, true, true);
         showExtPanel(url);
       })
       .then(function () { $('#btnFetch').disabled = false; });
   }
 
   function chainFor(pm, originalUrl) {
-    var steps = [];
-    var push = function (label, fn) {
-      steps.push(function () {
-        var done = logStart(label);
-        return fn().then(function (res) {
-          done((res.words || wordCount(res.root)).toLocaleString('en-US') + ' kata');
-          return res;
-        }, function (err) {
-          done(null, (err && err.message ? err.message : 'gagal').slice(0, 90));
-          throw err;
-        });
+    var wrap = function (label, fn) {
+      var done = logStart(label);
+      return fn().then(function (res) {
+        done((res.words || wordCount(res.root)).toLocaleString('en-US') + ' kata');
+        return res;
+      }, function (err) {
+        done(null, (err && err.message ? err.message : 'gagal').slice(0, 90));
+        throw err;
       });
     };
-    if (pm.postId) {
-      push('1/6 Medium JSON API (' + pm.postId + ')', function () { return srcJsonApi(pm.postId); });
-    }
-    push((pm.postId ? '2' : '1') + '/6 Medium page HTML + state scan', function () { return srcPageState(pm.url); });
-    push((pm.postId ? '3' : '2') + '/6 Medium RSS feed', function () { return srcFeed(originalUrl, pm); });
-    push((pm.postId ? '4' : '3') + '/6 Freedium', function () { return srcFreedium(originalUrl); });
-    push((pm.postId ? '5' : '4') + '/6 Wayback Machine', function () { return srcWayback(originalUrl); });
-    push((pm.postId ? '6' : '5') + '/6 r.jina.ai reader', function () { return srcJina(originalUrl); });
+    // Wave 1 (race): first sufficient result wins
+    var w1 = [];
+    if (pm.postId) w1.push(wrap('1a Medium JSON API (' + pm.postId + ')', function () { return srcJsonApi(pm.postId); }));
+    w1.push(wrap(pm.postId ? '1b Freedium mirror (render relay)' : '1 Freedium mirror (render relay)', function () { return srcFreedium(originalUrl); }));
+    // Wave 2 (sequential fallbacks)
+    var rest = [
+      function () { return wrap('2 Medium page HTML + state scan', function () { return srcPageState(pm.url); }); },
+      function () { return wrap('3 Medium RSS feed', function () { return srcFeed(originalUrl, pm); }); },
+      function () { return wrap('4 Freedium (raw relays / legacy)', function () { return srcFreediumRaw(originalUrl); }); },
+      function () { return wrap('5 Wayback Machine', function () { return srcWayback(originalUrl); }); },
+      function () { return wrap('6 r.jina.ai reader', function () { return srcJina(originalUrl); }); }
+    ];
+    return raceSufficient(w1).catch(function () {
+      var p = Promise.reject();
+      rest.forEach(function (s) { p = p.catch(function () { return s(); }); });
+      return p;
+    });
+  }
 
-    var p = Promise.reject();
-    steps.forEach(function (s) { p = p.catch(function () { return s(); }); });
-    return p;
+  function raceSufficient(list) {
+    // resolve with the FIRST fulfilled promise; reject only when all fail
+    return new Promise(function (resolve, reject) {
+      var left = list.length, fails = [];
+      if (!left) { reject(new Error('tidak ada kandidat sumber')); return; }
+      list.forEach(function (it) {
+        it.then(function (v) {
+          if (left > 0) { left = 0; resolve(v); }
+        }, function (e) {
+          if (left <= 0) return;
+          fails.push((e && e.message) || 'gagal');
+          if (fails.length === list.length) { left = 0; reject(new Error(fails.join(' | '))); }
+        });
+      });
+    });
   }
 
   function showExtPanel(url) {
@@ -832,7 +962,8 @@
     p.hidden = false;
     var enc = encodeURIComponent(url);
     var links = [
-      ['Freedium', 'https://freedium.cfd/' + url],
+      ['Freedium mirror', 'https://freedium-mirror.cfd/' + url],
+      ['Freedium legacy', 'https://freedium.cfd/' + url],
       ['archive.today', 'https://archive.ph/newest/' + enc],
       ['Wayback Machine', 'https://web.archive.org/web/2/' + enc],
       ['r.jina.ai', 'https://r.jina.ai/' + url]

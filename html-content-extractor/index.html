@@ -9,14 +9,14 @@
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="HTML Content Extractor — Read Medium Articles Without Paywall" />
-  <meta name="twitter:description" content="Bypass the Medium paywall: get the full member-only article via the Medium JSON API, RSS, Freedium, Wayback and more — read clean, export Markdown/HTML/text. 100% client-side." />
+  <meta name="twitter:description" content="Bypass the Medium paywall: get the full member-only article via the Medium JSON API, Freedium mirror, RSS, Wayback and more — read clean, export Markdown/HTML/text. 100% client-side." />
   <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="author" content="Achmad Bayhaqy" />
-  <meta name="description" content="Read Medium member-only articles without a subscription. Multi-source paywall bypass (Medium JSON API, RSS, page state, Freedium, Wayback, r.jina.ai) plus clean reader view, Markdown, plain-text and HTML export. 100% client-side — successor of bayhaqy/HTML-Content-Extractor (Google-Cache method, retired when Google dropped web cache in 2024)." />
+  <meta name="description" content="Read Medium member-only articles without a subscription. Multi-source paywall bypass (Medium JSON API, Freedium mirror via JS-render relay, RSS, page state, Wayback, r.jina.ai) plus clean reader view, Markdown, plain-text and HTML export. 100% client-side — successor of bayhaqy/HTML-Content-Extractor (Google-Cache method, retired when Google dropped web cache in 2024)." />
   <meta name="theme-color" content="#B91C1C" />
   <meta property="og:title" content="HTML Content Extractor — Read Medium Articles Without Paywall" />
-  <meta property="og:description" content="Bypass the Medium paywall with a multi-source chain: JSON API, RSS feed, page state, Freedium, Wayback Machine, r.jina.ai. Clean reader view + Markdown/HTML/text export. 100% client-side." />
+  <meta property="og:description" content="Bypass the Medium paywall with a multi-source chain: JSON API and Freedium mirror racing first, then page state, RSS feed, Wayback Machine, r.jina.ai. Clean reader view + Markdown/HTML/text export. 100% client-side." />
   <meta property="og:url" content="https://bayhaqy.my.id/apps/html-content-extractor/" />
   <link rel="canonical" href="https://bayhaqy.my.id/apps/html-content-extractor/" />
   <link rel="icon" href="/apps/icons/logo.png" />
@@ -235,7 +235,7 @@
     "@id": "https://bayhaqy.my.id/apps/html-content-extractor/#app",
     "name": "HTML Content Extractor",
     "url": "https://bayhaqy.my.id/apps/html-content-extractor/",
-    "description": "Read Medium member-only articles without a subscription. Multi-source paywall bypass — Medium JSON API, RSS feed, page-state scan, Freedium, Wayback Machine, r.jina.ai — with clean reader view, Markdown, plain-text and clean-HTML export. 100% client-side, successor of the original bayhaqy/HTML-Content-Extractor Google-Cache tool.",
+    "description": "Read Medium member-only articles without a subscription. Multi-source paywall bypass — Medium JSON API and Freedium mirror race first, then page-state scan, RSS feed, Wayback Machine, r.jina.ai — with clean reader view, Markdown, plain-text and clean-HTML export. 100% client-side, successor of the original bayhaqy/HTML-Content-Extractor Google-Cache tool.",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
@@ -269,8 +269,10 @@
       <p class="app-subtitle">
         Read <strong>member-only Medium articles without a subscription</strong> — the web successor of the
         original <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">HTML-Content-Extractor</a>
-        (the Google-Cache trick, retired when Google dropped web cache in 2024). One click tries six sources in order:
-        <strong>Medium JSON API → page state → RSS feed → Freedium → Wayback Machine → r.jina.ai</strong>, then shows the full
+        (the Google-Cache trick, retired when Google dropped web cache in 2024). One click races the two fastest sources first
+        — <strong>Medium JSON API ∥ Freedium mirror</strong> (fetched through a JS-render relay, because the mirror is a
+        client-side app that raw proxies cannot see) — then falls back in order:
+        <strong>page state → RSS feed → Freedium raw → Wayback Machine → r.jina.ai</strong>, then shows the full
         article in a clean reader view with <strong>Markdown, plain text and clean HTML</strong> export. Non-Medium pages work
         too via paste / generic fetch.
       </p>
@@ -291,7 +293,7 @@
             <label class="hce-row">Engine
               <select id="modeSel" aria-label="Fetch engine">
                 <option value="auto" selected>Auto (Medium URL → bypass)</option>
-                <option value="medium">Medium paywall bypass (6 sources)</option>
+                <option value="medium">Medium paywall bypass (7 sources)</option>
                 <option value="generic">Generic web page (relay fetch)</option>
               </select>
             </label>
@@ -302,7 +304,7 @@
             </button>
             <button type="button" class="hce-btn-ghost" id="btnSampleUrl">Try a sample member-only Medium URL</button>
             <ol class="hce-log" id="hceLog" hidden></ol>
-            <p class="hce-hint">The bypass chain fetches through free public CORS relays (allorigins → codetabs) and public readers — no login, nothing stored. If every automatic source fails, one-click external services appear below.</p>
+            <p class="hce-hint">The bypass chain fetches through free public CORS transports — r.jina.ai (JS-render relay) → allorigins → codetabs → cors.lol — and public readers. No login, nothing stored. If every automatic source fails, one-click external services appear below.</p>
           </div>
 
           <div class="hce-src" id="src-html" hidden>
@@ -433,7 +435,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <p class="t">No article loaded yet</p>
           <p class="s">Paste a Medium URL and hit <b>Bypass paywall &amp; read</b> — or paste raw HTML for any other site. Full reader view, Markdown, plain text, clean HTML, images and links. Nothing leaves your browser.</p>
-          <p class="hce-credit">Modern successor of <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">bayhaqy/HTML-Content-Extractor</a> — as written up in <a href="https://blog.bayhaqy.my.id/2023/11/medium-without-paywall.html" target="_blank" rel="noopener">“Tips Mengatasi Paywall di Medium”</a>. The old Google-Cache source is retired; this version uses six live sources.</p>
+          <p class="hce-credit">Modern successor of <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">bayhaqy/HTML-Content-Extractor</a> — as written up in <a href="https://blog.bayhaqy.my.id/2023/11/medium-without-paywall.html" target="_blank" rel="noopener">“Tips Mengatasi Paywall di Medium”</a>. The old Google-Cache source is retired; this version uses seven live sources led by the Freedium mirror.</p>
         </section>
 
         <section class="hce-card" id="extPanel" hidden>
@@ -456,6 +458,6 @@
   <script src="lib/turndown.js"></script>
   <script src="lib/turndown-plugin-gfm.js"></script>
   <script src="/apps/assets/app-shell.js?v=20260831c" data-app-name="HTML Content Extractor"></script>
-  <script src="lib/app.js?v=20260831d"></script>
+  <script src="lib/app.js?v=20260831e"></script>
 </body>
 </html>
