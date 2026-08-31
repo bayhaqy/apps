@@ -1,6 +1,6 @@
 # Bayhaqy Apps
 
-> **Your Swiss Army knife of web tools** — an all-in-one collection of **54 fast, private,
+> **Your Swiss Army knife of web tools** — an all-in-one collection of **55 fast, private,
 > browser-based tools** across 8 categories: network, security, developer, design, PDF, AI,
 > media, and everyday utilities.
 >
@@ -19,14 +19,14 @@
 - 🧰 **All-in-one** — one toolbox for everything: network diagnostics, PDF editing, AI helpers,
   image tools, calculators, and more. No need to hunt for a different website per task.
 - 📱 **Installable** — add to home screen on iOS or install the APK on Android.
-- 🎨 **Consistent** — one shared theme (red / black / white) across all 54 tools.
+- 🎨 **Consistent** — one shared theme (red / black / white) across all 55 tools.
 - 👁️ **Transparent traffic stats** — every page shows its public view counter.
 - 🤝 **Contribution-friendly** — every tool page links directly to "report a bug or suggest
   an improvement" on GitHub.
 
 ---
 
-## The 54 tools (8 categories)
+## The 55 tools (8 categories)
 
 ### 🌐 Network & Internet
 
@@ -64,6 +64,7 @@
 | [**Regex Tester**](https://bayhaqy.my.id/apps/regex-tester/) | Real-time regex testing with match highlighting, capture groups, and a cheat sheet. |
 | [**JSON Formatter**](https://bayhaqy.my.id/apps/json-formatter/) | Beautify, minify, validate JSON with tree view and JSON path finder. |
 | [**Markdown Preview**](https://bayhaqy.my.id/apps/markdown-preview/) | Live markdown editor with real-time preview, toolbar, and HTML export. |
+| [**HTML Content Extractor**](https://bayhaqy.my.id/apps/html-content-extractor/) | Extract clean article content from any URL or raw HTML — Medium, WordPress, Blogger, Substack, Dev.to, news sites. Reader view, Markdown/plain text/HTML export, metadata, word count & reading time. |
 | [**Case Converter**](https://bayhaqy.my.id/apps/case-converter/) | camelCase, snake_case, kebab-case, PascalCase, CONSTANT_CASE, and more. |
 | [**Lorem Ipsum Generator**](https://bayhaqy.my.id/apps/lorem-ipsum/) | Placeholder text in paragraphs, sentences, or words. Classic Latin or modern English. |
 
@@ -128,10 +129,10 @@
 
 ### SEO
 - Unique `<title>`, meta description, canonical URL, robots, Open Graph, and Twitter Card
-  on **every page** (landing + 54 tools + get-app + API docs).
+  on **every page** (landing + 55 tools + get-app + API docs).
 - JSON-LD structured data: `WebSite` + `Person` + `CollectionPage` + `ItemList` on the
   landing page; `BreadcrumbList` + `WebApplication` on every tool page.
-- [`sitemap.xml`](sitemap.xml) with 57 URLs, [`robots.txt`](robots.txt), and root
+- [`sitemap.xml`](sitemap.xml) with 58 URLs, [`robots.txt`](robots.txt), and root
   [`ads.txt`](ads.txt) for AdSense.
 
 ### Analytics
@@ -194,7 +195,7 @@ keep the stale cached copy.
 
 ```
 apps/
-├── index.html              # Landing page (hero, search, filter, 54 tools in 8 categories)
+├── index.html              # Landing page (hero, search, filter, 55 tools in 8 categories)
 ├── get-app/                # Mobile app download page (APK + iOS PWA)
 ├── api/                    # API documentation page
 ├── assets/
@@ -206,14 +207,14 @@ apps/
 ├── service-worker.js       # Cache-first static, network-first HTML
 ├── ads.txt                 # Google AdSense publisher ID
 ├── robots.txt              # Crawler rules
-├── sitemap.xml             # 57 URLs (landing + 54 tools + get-app + api)
+├── sitemap.xml             # 58 URLs (landing + 55 tools + get-app + api)
 ├── apk-source/             # TWA wrapper source for building the APK
 ├── bayhaqy-apps.apk        # Pre-built APK (placeholder — see apk-source/README.md)
-└── <tool-slug>/index.html  # 54 tool pages, one folder per tool
+└── <tool-slug>/index.html  # 55 tool pages, one folder per tool
 ```
 
 Tool folders: `dns-lookup`, `whois-lookup`, `ip-finder`, `subnet-calc`, `url-parser`,
-`http-headers`, `speed-test`, `hash-generator`, `jwt-decoder`, `password-tools`,
+`http-headers`, `speed-test`, `hash-generator`, `html-content-extractor`, `jwt-decoder`, `password-tools`,
 `password-vault`, `cert-decoder`, `text-encryptor`, `base64-hex`, `timestamp-converter`,
 `cron-builder`, `number-base`, `code-formatter`, `text-diff`, `regex-tester`,
 `json-formatter`, `markdown-preview`, `case-converter`, `lorem-ipsum`, `css-playground`,

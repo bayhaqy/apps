@@ -3,7 +3,7 @@
    This keeps the app snappy on repeat visits while ensuring users always see the
    latest tool versions when online.
 */
-var CACHE_VERSION = 'apps-v6-2026-08-31';
+var CACHE_VERSION = 'apps-v7-2026-08-31';
 var APP_SHELL = [
   '/apps/',
   '/apps/index.html',

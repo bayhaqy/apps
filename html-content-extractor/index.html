@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bayhaqy Apps" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="HTML Content Extractor — Clean Reader View, Markdown & Metadata" />
+  <meta name="twitter:description" content="Extract clean article content from any URL or raw HTML — Medium, WordPress, Blogger, Substack, Dev.to, news sites. Markdown & HTML export. 100% client-side." />
+  <meta name="twitter:image" content="https://bayhaqy.my.id/apps/icons/og-image.png?v=2" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="Achmad Bayhaqy" />
+  <meta name="description" content="Extract clean, readable article content from any URL or raw HTML — Medium, WordPress, Blogger, Substack, Dev.to, Hashnode, Ghost and news sites. Reader view plus Markdown, plain-text and clean-HTML export with metadata, word count, images and reading time. 100% client-side." />
+  <meta name="theme-color" content="#B91C1C" />
+  <meta property="og:title" content="HTML Content Extractor — Clean Reader View, Markdown & Metadata" />
+  <meta property="og:description" content="Extract clean article content from any web page — not just Medium. Reader view, Markdown, plain text & clean HTML with metadata and reading stats. 100% client-side." />
+  <meta property="og:url" content="https://bayhaqy.my.id/apps/html-content-extractor/" />
+  <link rel="canonical" href="https://bayhaqy.my.id/apps/html-content-extractor/" />
+  <link rel="icon" href="/apps/icons/logo.png" />
+  <title>HTML Content Extractor — Clean Reader View, Markdown & Metadata · Bayhaqy Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/apps/assets/theme.css?v=20260831c" />
+  <style>
+    /* ================= HTML Content Extractor (shell untouched) ================= */
+    .hce{--hce-ok:#15803d;--hce-warn:#b45309}
+    .hce [hidden]{display:none!important}
+    .hce-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:1020px){.hce-grid{grid-template-columns:370px 1fr;align-items:start}}
+    .hce-side,.hce-maincol{display:flex;flex-direction:column;gap:1rem;min-width:0}
+
+    /* ---------- cards ---------- */
+    .hce-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1rem;box-shadow:var(--shadow-sm)}
+    .hce-card>h3{margin:0 0 .7rem;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);font-weight:800}
+
+    /* ---------- segmented tabs ---------- */
+    .hce-tabs{display:flex;background:var(--line-soft);border-radius:10px;padding:3px;gap:3px;margin-bottom:.8rem}
+    .hce-tabs button{flex:1;border:none;background:transparent;color:var(--ink-soft);font-family:inherit;font-size:.78rem;font-weight:700;padding:.45rem .3rem;border-radius:8px;cursor:pointer;transition:all .15s var(--ease)}
+    .hce-tabs button:hover{color:var(--ink)}
+    .hce-tabs button.on{background:var(--paper);color:var(--red-700);box-shadow:0 1px 4px rgba(0,0,0,.09)}
+
+    .hce-src{display:flex;flex-direction:column;gap:.6rem}
+    .hce-src input[type=url],.hce-src textarea{width:100%;font-family:inherit;font-size:.86rem;color:var(--ink);background:var(--paper-alt,var(--paper));border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem;outline:none;transition:border-color .15s,box-shadow .15s}
+    .hce-src input[type=url]:focus,.hce-src textarea:focus{border-color:var(--red-700);box-shadow:0 0 0 3px rgba(185,28,28,.1)}
+    .hce-src textarea{resize:vertical;min-height:130px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;line-height:1.5}
+    .hce-hint{font-size:.73rem;color:var(--ink-mute);line-height:1.5;margin:.1rem 0 0}
+    .hce-hint b{color:var(--ink-soft)}
+
+    .hce-btn{width:100%;min-height:44px;border:none;border-radius:10px;cursor:pointer;background:var(--red-700);color:#fff;font-family:inherit;font-size:.88rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;transition:background .15s,transform .12s}
+    .hce-btn:hover{background:#991b1b}
+    .hce-btn:active{transform:scale(.99)}
+    .hce-btn:disabled{opacity:.55;cursor:progress}
+    .hce-btn svg{width:16px;height:16px;flex-shrink:0}
+    .hce-btn-ghost{width:100%;min-height:38px;border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--ink-soft);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;transition:all .15s}
+    .hce-btn-ghost:hover{border-color:var(--red-700);color:var(--red-700)}
+
+    .hce-status{display:none;font-size:.76rem;color:var(--ink-mute);background:var(--line-soft);border-radius:8px;padding:.5rem .6rem;line-height:1.45;margin:.6rem 0 0;word-break:break-word}
+    .hce-status.show{display:block}
+    .hce-status.err{color:#991b1b;background:var(--red-50);border:1px solid rgba(185,28,28,.2)}
+
+    /* ---------- dropzone ---------- */
+    .hce-drop{border:1.5px dashed var(--line);border-radius:12px;padding:1.4rem 1rem;text-align:center;color:var(--ink-mute);font-size:.8rem;cursor:pointer;transition:all .15s}
+    .hce-drop:hover,.hce-drop.over{border-color:var(--red-700);color:var(--red-700);background:rgba(185,28,28,.03)}
+    .hce-drop svg{width:26px;height:26px;display:block;margin:0 auto .4rem}
+    .hce-drop b{color:inherit}
+
+    /* ---------- options ---------- */
+    .hce-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin:0 0 .55rem;font-size:.82rem;color:var(--ink-soft);font-weight:600}
+    .hce-row select{font-family:inherit;font-size:.8rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:.35rem .45rem;max-width:60%;outline:none}
+    .hce-opts{display:grid;grid-template-columns:1fr 1fr;gap:.35rem .6rem;margin:.2rem 0 .7rem}
+    .hce-opt{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--ink-soft);cursor:pointer;user-select:none}
+    .hce-opt input{accent-color:var(--red-700);width:15px;height:15px;margin:0}
+
+    /* ---------- result ---------- */
+    .hce-warn{display:flex;gap:.5rem;align-items:flex-start;font-size:.8rem;color:var(--hce-warn);background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:.65rem .75rem;line-height:1.45}
+    [data-theme=dark] .hce-warn{background:rgba(180,83,9,.12);border-color:rgba(180,83,9,.4);color:#fbbf24}
+    .hce-warn svg{width:16px;height:16px;flex-shrink:0;margin-top:.1rem}
+
+    .hce-titlebar{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem;margin-bottom:.55rem}
+    .hce-titlebar h2{margin:0;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.3;min-width:0;overflow-wrap:anywhere}
+    .hce-badge{flex-shrink:0;font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--red-700);background:var(--red-50);border:1px solid rgba(185,28,28,.18);border-radius:999px;padding:.25rem .6rem}
+    .hce-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 .8rem}
+    .hce-chip{font-size:.7rem;font-weight:600;color:var(--ink-soft);background:var(--line-soft);border-radius:999px;padding:.28rem .6rem;display:inline-flex;align-items:center;gap:.3rem}
+    .hce-chip b{color:var(--ink);font-weight:700}
+    .hce-chip svg{width:12px;height:12px;opacity:.7}
+
+    .hce-tabs2{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);padding-bottom:0;margin-bottom:.85rem}
+    .hce-tabs2 button{border:none;background:transparent;color:var(--ink-mute);font-family:inherit;font-size:.75rem;font-weight:700;padding:.5rem .65rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+    .hce-tabs2 button:hover{color:var(--ink)}
+    .hce-tabs2 button.on{color:var(--red-700);border-bottom-color:var(--red-700)}
+    .hce-tabs2 button .n{font-size:.62rem;opacity:.75;margin-left:.15rem}
+
+    .hce-panel[hidden]{display:none}
+    .hce-prehead{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
+    .hce-prehead span:first-child{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute)}
+    .hce-actions{display:flex;gap:.4rem}
+    .hce-act{display:inline-flex;align-items:center;gap:.3rem;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);font-family:inherit;font-size:.72rem;font-weight:700;border-radius:8px;padding:.35rem .6rem;cursor:pointer;transition:all .15s}
+    .hce-act:hover{border-color:var(--red-700);color:var(--red-700)}
+    .hce-act svg{width:13px;height:13px}
+
+    .hce-pre{margin:0;background:var(--line-soft);border:1px solid var(--line);border-radius:10px;padding:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-break:break-word;max-height:62vh;overflow:auto}
+
+    /* ---------- reader view typography ---------- */
+    .hce-article{max-width:72ch;line-height:1.75;font-size:.95rem;color:var(--ink);max-height:68vh;overflow:auto;padding-right:.4rem}
+    .hce-article>*:first-child{margin-top:0}
+    .hce-article h1,.hce-article h2{font-size:1.3rem;line-height:1.3;margin:1.6em 0 .55em;letter-spacing:-.015em}
+    .hce-article h3{font-size:1.12rem;margin:1.5em 0 .5em}
+    .hce-article h4,.hce-article h5,.hce-article h6{font-size:1rem;margin:1.3em 0 .45em}
+    .hce-article p{margin:0 0 1.05em}
+    .hce-article a{color:var(--red-700);text-decoration:underline;text-underline-offset:2px}
+    .hce-article img{max-width:100%;height:auto;border-radius:10px;margin:.4em 0}
+    .hce-article figure{margin:1.2em 0}
+    .hce-article figcaption{font-size:.78rem;color:var(--ink-mute);margin-top:.4em;text-align:center}
+    .hce-article blockquote{margin:1.2em 0;padding:.2em 0 .2em 1.1em;border-left:3px solid var(--red-700);color:var(--ink-soft)}
+    .hce-article ul,.hce-article ol{margin:0 0 1.05em;padding-left:1.5em}
+    .hce-article ul{list-style:disc}
+    .hce-article ol{list-style:decimal}
+    .hce-article li{margin-bottom:.35em}
+    .hce-article pre{background:var(--line-soft);border:1px solid var(--line);border-radius:10px;padding:.85rem;overflow:auto;font-size:.8rem;line-height:1.55;margin:0 0 1.05em}
+    .hce-article code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;background:var(--line-soft);border-radius:4px;padding:.1em .35em}
+    .hce-article pre code{background:transparent;padding:0}
+    .hce-article table{width:100%;border-collapse:collapse;margin:0 0 1.05em;font-size:.84rem;display:block;overflow-x:auto}
+    .hce-article th,.hce-article td{border:1px solid var(--line);padding:.45em .6em;text-align:left}
+    .hce-article th{background:var(--line-soft);font-weight:700}
+    .hce-article hr{border:none;border-top:1px solid var(--line);margin:1.8em 0}
+
+    /* ---------- metadata table ---------- */
+    .hce-meta{width:100%;border-collapse:collapse;font-size:.8rem}
+    .hce-meta th{width:160px;text-align:left;vertical-align:top;padding:.45rem .6rem .45rem 0;color:var(--ink-mute);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line-soft)}
+    .hce-meta td{padding:.45rem 0;color:var(--ink);border-bottom:1px solid var(--line-soft);word-break:break-word;line-height:1.5}
+
+    /* ---------- images & links lists ---------- */
+    .hce-list{display:flex;flex-direction:column;gap:.4rem;max-height:62vh;overflow:auto}
+    .hce-item{display:flex;align-items:center;gap:.6rem;border:1px solid var(--line);border-radius:10px;padding:.5rem .6rem;font-size:.76rem;color:var(--ink-soft);transition:border-color .15s}
+    .hce-item:hover{border-color:var(--red-700)}
+    .hce-item img{width:52px;height:40px;object-fit:cover;border-radius:6px;background:var(--line-soft);flex-shrink:0}
+    .hce-item .u{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:left}
+    .hce-item .u a{color:var(--ink);text-decoration:none;font-weight:600}
+    .hce-item .u a:hover{color:var(--red-700)}
+    .hce-item .alt{font-size:.68rem;color:var(--ink-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .hce-item .cp{flex-shrink:0;border:none;background:transparent;color:var(--ink-mute);cursor:pointer;padding:.25rem;border-radius:6px;line-height:0}
+    .hce-item .cp:hover{color:var(--red-700)}
+    .hce-item .cp svg{width:14px;height:14px}
+
+    /* ---------- empty state ---------- */
+    .hce-empty{border:1.5px dashed var(--line);border-radius:16px;padding:2.4rem 1.4rem;text-align:center;color:var(--ink-mute)}
+    .hce-empty svg{width:44px;height:44px;margin:0 auto .6rem;color:var(--red-700);opacity:.55}
+    .hce-empty .t{font-size:.95rem;font-weight:700;color:var(--ink-soft);margin:0 0 .3rem}
+    .hce-empty .s{font-size:.8rem;max-width:46ch;margin:0 auto;line-height:1.6}
+    .hce-credit{font-size:.72rem;color:var(--ink-mute);margin-top:.7rem}
+    .hce-credit a{color:var(--red-700);font-weight:600;text-decoration:none}
+    .hce-credit a:hover{text-decoration:underline}
+  </style>
+  <!-- AdSense: verifikasi kepemilikan situs -->
+  <meta name="google-adsense-account" content="ca-pub-6391433517652109" />
+
+  <!-- Analytics: Google Analytics 4 (gtag.js, sama seperti blog) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8GJ1M5ZLZS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8GJ1M5ZLZS');
+  </script>
+
+  <!-- Analytics: Microsoft Clarity (sama seperti blog) -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "jgxsse2i1y");
+  </script>
+
+  <!-- AdSense: lazy-load pada scroll pertama (pola blog) + fallback 4 detik -->
+  <script>
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6391433517652109';
+        document.head.appendChild(s);
+      }
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAds, { once: true, passive: true });
+      setTimeout(loadAds, 4000);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+[
+  {
+    "@type": "BreadcrumbList",
+    "@id": "https://bayhaqy.my.id/apps/html-content-extractor/#breadcrumb",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Bayhaqy Apps",
+        "item": "https://bayhaqy.my.id/apps/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "HTML Content Extractor",
+        "item": "https://bayhaqy.my.id/apps/html-content-extractor/"
+      }
+    ]
+  },
+  {
+    "@type": "WebApplication",
+    "@id": "https://bayhaqy.my.id/apps/html-content-extractor/#app",
+    "name": "HTML Content Extractor",
+    "url": "https://bayhaqy.my.id/apps/html-content-extractor/",
+    "description": "Extract clean, readable article content from any URL or raw HTML — Medium, WordPress, Blogger, Substack, Dev.to, Hashnode, Ghost and news sites. Reader view plus Markdown, plain-text and clean-HTML export with metadata, word count, images and reading time. 100% client-side.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Achmad Bayhaqy",
+      "url": "https://bayhaqy.my.id/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "isPartOf": {
+      "@id": "https://bayhaqy.my.id/apps/#website"
+    }
+  }
+]
+  </script>
+</head>
+<body data-app-name="HTML Content Extractor">
+  <main class="app-main wide hce">
+    <header class="app-hero">
+      <p class="app-eyebrow">Web content · Reader mode · Markdown · 100% client-side</p>
+      <h1 class="app-title">HTML Content <span class="accent">Extractor</span></h1>
+      <p class="app-subtitle">
+        Pull clean, readable article content out of any web page — <strong>Medium, WordPress, Blogger,
+        Substack, Dev.to, Hashnode, Ghost, news sites</strong> and beyond, not just Medium. Paste raw HTML,
+        upload a saved page, or fetch a URL through a public relay. Get a distraction-free reader view plus
+        <strong>Markdown, plain text and clean HTML</strong> export, with metadata, word count and reading time.
+      </p>
+    </header>
+
+    <div class="hce-grid">
+      <!-- ============ SIDE: source + options ============ -->
+      <div class="hce-side">
+        <section class="hce-card">
+          <h3>Source</h3>
+          <div class="hce-tabs" role="tablist" aria-label="Input method">
+            <button type="button" class="on" data-src="url">Fetch URL</button>
+            <button type="button" data-src="html">Paste HTML</button>
+            <button type="button" data-src="file">Upload file</button>
+          </div>
+
+          <div class="hce-src" id="src-url">
+            <input type="url" id="urlInput" placeholder="https://example.com/some-article" spellcheck="false" autocomplete="off" />
+            <button type="button" class="hce-btn" id="btnFetch">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+              Fetch &amp; Extract
+            </button>
+            <p class="hce-hint">URL fetching goes through free public CORS relays (allorigins → codetabs). Many sites allow it; some block relays. If nothing comes back, open the page, press <b>Ctrl+U</b>, copy all and use <b>Paste HTML</b> — always works.</p>
+          </div>
+
+          <div class="hce-src" id="src-html" hidden>
+            <textarea id="htmlInput" data-primary spellcheck="false" placeholder="&lt;html&gt; … paste the page source here … &lt;/html&gt;"></textarea>
+            <button type="button" class="hce-btn" id="btnParse" data-primary>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Extract content
+            </button>
+          </div>
+
+          <div class="hce-src" id="src-file" hidden>
+            <div class="hce-drop" id="dropZone" role="button" tabindex="0" aria-label="Choose or drop an HTML file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Drop a <b>.html</b> / <b>.htm</b> / <b>.txt</b> file here<br />or click to choose
+            </div>
+            <input type="file" id="fileInput" accept=".html,.htm,.txt,text/html,text/plain" hidden />
+          </div>
+
+          <p class="hce-status" id="status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="hce-card">
+          <h3>Engine &amp; options</h3>
+          <label class="hce-row">Platform preset
+            <select id="platformSel" aria-label="Platform preset">
+              <option value="auto" selected>Auto-detect</option>
+              <option value="medium">Medium</option>
+              <option value="wordpress">WordPress</option>
+              <option value="blogger">Blogger / Blogspot</option>
+              <option value="substack">Substack</option>
+              <option value="devto">Dev.to</option>
+              <option value="hashnode">Hashnode</option>
+              <option value="ghost">Ghost</option>
+              <option value="news">News / Magazine</option>
+              <option value="generic">Generic (Readability only)</option>
+            </select>
+          </label>
+          <div class="hce-opts">
+            <label class="hce-opt"><input type="checkbox" id="optImages" checked /> Include images</label>
+            <label class="hce-opt"><input type="checkbox" id="optLinks" checked /> Keep links</label>
+            <label class="hce-opt"><input type="checkbox" id="optTables" checked /> Keep tables</label>
+            <label class="hce-opt"><input type="checkbox" id="optEmbeds" checked /> Remove embeds</label>
+          </div>
+          <button type="button" class="hce-btn-ghost" id="btnSample">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Try a sample messy page
+          </button>
+          <p class="hce-hint">Auto mode applies site-specific rules per platform, then falls back to the <b>Firefox Reader View algorithm</b> (Mozilla Readability) — whichever extracts more text wins.</p>
+          <p class="hce-hint">Everything runs locally in your browser. No page content is ever uploaded anywhere.</p>
+        </section>
+      </div>
+
+      <!-- ============ MAIN: result ============ -->
+      <div class="hce-maincol">
+        <div class="hce-warn" id="lowWarn" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Extracted text looks very short — the page may be JavaScript-rendered or paywalled. Try another platform preset, or paste the raw HTML (<b>Ctrl+U</b> → copy → paste).</span>
+        </div>
+
+        <section class="hce-card" id="resultCard" hidden>
+          <div class="hce-titlebar">
+            <h2 id="rTitle">—</h2>
+            <span class="hce-badge" id="rPlatform"></span>
+          </div>
+          <div class="hce-chips" id="rChips"></div>
+
+          <div class="hce-tabs2" id="outTabs" role="tablist" aria-label="Output format">
+            <button type="button" class="on" data-out="reader">Reader</button>
+            <button type="button" data-out="md">Markdown</button>
+            <button type="button" data-out="text">Plain text</button>
+            <button type="button" data-out="html">HTML</button>
+            <button type="button" data-out="meta">Metadata</button>
+            <button type="button" data-out="imgs">Images<span class="n" id="nImgs"></span></button>
+            <button type="button" data-out="links">Links<span class="n" id="nLinks"></span></button>
+          </div>
+
+          <div class="hce-panel" id="p-reader">
+            <div class="hce-article" id="readerView"></div>
+          </div>
+
+          <div class="hce-panel" id="p-md" hidden>
+            <div class="hce-prehead">
+              <span>Markdown</span>
+              <span class="hce-actions">
+                <button type="button" class="hce-act" id="copyMd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+                <button type="button" class="hce-act" id="dlMd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>.md</button>
+              </span>
+            </div>
+            <pre class="hce-pre" id="mdOut"></pre>
+          </div>
+
+          <div class="hce-panel" id="p-text" hidden>
+            <div class="hce-prehead">
+              <span>Plain text</span>
+              <span class="hce-actions">
+                <button type="button" class="hce-act" id="copyText2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+                <button type="button" class="hce-act" id="dlText"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>.txt</button>
+              </span>
+            </div>
+            <pre class="hce-pre" id="textOut"></pre>
+          </div>
+
+          <div class="hce-panel" id="p-html" hidden>
+            <div class="hce-prehead">
+              <span>Clean HTML</span>
+              <span class="hce-actions">
+                <button type="button" class="hce-act" id="copyHtml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+                <button type="button" class="hce-act" id="dlHtml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>.html</button>
+              </span>
+            </div>
+            <pre class="hce-pre" id="htmlOut"></pre>
+          </div>
+
+          <div class="hce-panel" id="p-meta" hidden>
+            <table class="hce-meta" id="metaTable"></table>
+          </div>
+
+          <div class="hce-panel" id="p-imgs" hidden>
+            <div class="hce-list" id="imgList"></div>
+          </div>
+
+          <div class="hce-panel" id="p-links" hidden>
+            <div class="hce-list" id="linkList"></div>
+          </div>
+        </section>
+
+        <section class="hce-empty" id="emptyState">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <p class="t">Nothing extracted yet</p>
+          <p class="s">Fetch a URL, paste raw HTML, or upload a saved page — then get a clean reader view, Markdown, plain text, clean HTML, metadata, images and links. Nothing leaves your browser.</p>
+          <p class="hce-credit">Inspired by the original <a href="https://github.com/bayhaqy/HTML-Content-Extractor" target="_blank" rel="noopener">bayhaqy/HTML-Content-Extractor</a> project — now multi-platform &amp; fully client-side.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- AdSense display unit -->
+<section class="ad-wrap" aria-label="Advertisement">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6391433517652109" data-ad-slot="2762790866" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</section>
+
+  <script src="lib/Readability.js"></script>
+  <script src="lib/Readability-readerable.js"></script>
+  <script src="lib/turndown.js"></script>
+  <script src="lib/turndown-plugin-gfm.js"></script>
+  <script src="/apps/assets/app-shell.js?v=20260831c" data-app-name="HTML Content Extractor"></script>
+  <script src="lib/app.js"></script>
+</body>
+</html>
