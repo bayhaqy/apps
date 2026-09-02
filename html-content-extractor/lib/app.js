@@ -443,7 +443,7 @@
     var idx = 0, lastErr = '';
     return new Promise(function (resolve, reject) {
       function attempt() {
-        if (idx >= pool.length) { reject(new Error('semua relay gagal (' + lastErr + ')')); return; }
+        if (idx >= pool.length) { reject(new Error('all relays failed (' + lastErr + ')')); return; }
         var relay = pool[idx++];
         var t = timeout || relay.timeout || 25000;
         var ctrl = new AbortController();
@@ -460,16 +460,16 @@
           .then(function (raw) {
             var text = raw || '';
             if (relay.unwrap) {
-              try { text = JSON.parse(text).contents || ''; } catch (e2) { throw new Error('unwrap JSON gagal'); }
+              try { text = JSON.parse(text).contents || ''; } catch (e2) { throw new Error('JSON unwrap failed'); }
             }
-            if (!text) throw new Error('respons kosong');
+            if (!text) throw new Error('empty response');
             clearTimeout(to);
             resolve({ text: text, relay: relay.name });
           })
           .catch(function (err) {
             clearTimeout(to);
-            var m = err && err.name === 'AbortError' ? 'timeout ' + (t / 1000) + 's' : (err && err.message) || 'gagal';
-            lastErr = relay.name + ': ' + m;
+            var m = err && err.name === 'AbortError' ? 'timeout ' + (t / 1000) + 's' : (err && err.message) || 'failed';
+            lastErr = m;
             attempt();
           });
       }
@@ -532,7 +532,7 @@
   function jsonToArticle(value, refs) {
     refs = refs || {};
     var bm = (value && value.content && value.content.bodyModel) || (value && value.bodyModel);
-    if (!bm || !bm.paragraphs || !bm.paragraphs.length) throw new Error('bodyModel tidak ditemukan');
+    if (!bm || !bm.paragraphs || !bm.paragraphs.length) throw new Error('bodyModel not found');
     var paras = bm.paragraphs;
     var users = refs.User || {};
     var images = refs.Image || {};
@@ -651,7 +651,7 @@
       if (textLen(empties[i]) === 0 && !empties[i].querySelector('img,a')) empties[i].parentNode.removeChild(empties[i]);
     }
     var len = textLen(root), words = wordCount(root);
-    if (words < 120) throw new Error('konten terlalu pendek (' + words + ' kata) — dianggap gagal');
+    if (words < 120) throw new Error('content too short (' + words + ' words) — treated as failed');
     return { root: root, meta: src.meta, platform: 'medium', via: src.via, viaUrl: src.viaUrl, len: len, words: words };
   }
 
@@ -661,7 +661,7 @@
       .then(function (r) {
         var j = JSON.parse(stripJsonPrefix(r.text));
         var payload = j && j.payload;
-        if (!payload || !payload.value) throw new Error('payload.value kosong');
+        if (!payload || !payload.value) throw new Error('payload.value is empty');
         var art = jsonToArticle(payload.value, payload.references);
         return finish({
           html: art.html,
@@ -674,7 +674,7 @@
 
   function srcPageState(articleUrl) {
     return relayFetch(articleUrl, 35000).then(function (r) {
-      if (!r.text || r.text.length < 500) throw new Error('HTML kosong');
+      if (!r.text || r.text.length < 500) throw new Error('empty HTML');
       var f = jsonFromScriptTags(r.text);
       if (f && f.bodyModel) {
         var art = jsonToArticle({ content: { bodyModel: f.bodyModel } }, f.refs);
@@ -695,10 +695,10 @@
   }
 
   function srcFeed(articleUrl, pm) {
-    if (!pm.feedUrl) return Promise.reject(new Error('tidak ada kandidat feed (custom domain / URL tak dikenal)'));
+    if (!pm.feedUrl) return Promise.reject(new Error('no feed candidate (custom domain / unknown URL)'));
     return relayFetch(pm.feedUrl, 20000, { noJina: true }).then(function (r) {
       var doc = new DOMParser().parseFromString(r.text, 'text/xml');
-      if (doc.querySelector('parsererror')) throw new Error('feed tidak valid');
+      if (doc.querySelector('parsererror')) throw new Error('invalid feed');
       var items = doc.getElementsByTagName('item');
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
@@ -709,7 +709,7 @@
         if (!hit) continue;
         var ce = it.getElementsByTagName('content:encoded');
         var content = ce && ce.length ? ce[0].textContent : '';
-        if (!content || content.length < 600) throw new Error('feed hanya snippet — artikel member-only tidak disertakan Medium di RSS');
+        if (!content || content.length < 600) throw new Error('feed contains only a snippet — member-only articles are not included in the RSS');
         var title = '', author = '', pubDate = '';
         var tEls = it.getElementsByTagName('title'); if (tEls.length) title = tEls[0].textContent;
         var aEls = it.getElementsByTagName('dc:creator'); if (aEls.length) author = aEls[0].textContent;
@@ -717,12 +717,12 @@
         var d = pubDate ? new Date(pubDate) : null;
         return finish({
           html: content,
-          meta: { title: title, author: author, published: d && !isNaN(d) ? d.toISOString() : '', siteName: 'Medium RSS', description: '' },
+          meta: { title: title, author: author, published: d && !isNaN(d) ? d.toISOString() : '', siteName: 'Medium', description: '' },
           via: 'Medium RSS feed (' + r.relay + ')',
           viaUrl: articleUrl
         });
       }
-      throw new Error('artikel tidak ada di 10 entri terakhir feed');
+      throw new Error('article not found in the last 10 feed entries');
     });
   }
 
@@ -734,7 +734,7 @@
     // IMPORTANT: base = freedium page URL (images are relative /img/medium/...)
     var ex = extract(pre.documentElement.outerHTML, pageUrl, 'freedium', readOpts());
     var words = wordCount(ex.root);
-    if (words < 120) throw new Error('konten pendek (' + words + ' kata) — mirror belum merender');
+    if (words < 120) throw new Error('content not fully rendered yet');
     // harvest title/author/date from the freedium article header (generic
     // junk-removal drops <header> from the extracted root)
     var h1 = pre.querySelector('article h1, main h1, h1');
@@ -783,7 +783,7 @@
     var idx = 0, lastErr = '';
     return new Promise(function (resolve, reject) {
       function attempt() {
-        if (idx >= attempts.length) { reject(new Error(lastErr || 'Freedium tidak tersedia')); return; }
+        if (idx >= attempts.length) { reject(new Error(lastErr || 'route unavailable')); return; }
         var a = attempts[idx++];
         var pageUrl = a.host + articleUrl;
         relayFetch(pageUrl, null, a.opts)
@@ -793,7 +793,7 @@
           })
           .then(resolve)
           .catch(function (err) {
-            lastErr = (a.host === FREEDIUM_MIRROR ? 'mirror' : 'legacy') + ': ' + ((err && err.message) || 'gagal');
+            lastErr = 'route: ' + ((err && err.message) || 'failed');
             attempt();
           });
       }
@@ -818,10 +818,10 @@
     // markdown + frontmatter. No CORS, so it goes through raw relays.
     var api = 'https://ekky.dev/api/medium/?url=' + encodeURIComponent(articleUrl);
     return relayFetch(api, 25000, { noJina: true }).then(function (r) {
-      if (r.text.indexOf('---') !== 0) throw new Error('respons bukan format reader');
+      if (r.text.indexOf('---') !== 0) throw new Error('unexpected reader format');
       var fm = parseFrontmatter(r.text);
       var words = fm.body.split(/\s+/).filter(Boolean).length;
-      if (words < 120) throw new Error('konten pendek (' + words + ' kata)');
+      if (words < 120) throw new Error('content too short');
       var rt = (fm.meta.readingtime || '').match(/\d+/);
       return finish({
         html: mdToHtml(fm.body),
@@ -829,7 +829,7 @@
           title: fm.meta.title || '',
           author: (fm.meta.author || '').replace(/^By\s+/i, ''),
           published: fm.meta.date || '',
-          siteName: 'Medium (via ekky.dev)',
+          siteName: 'Medium',
           description: fm.meta.subtitle || '',
           readingTime: rt ? rt[0] : ''
         },
@@ -857,10 +857,10 @@
     };
     return getAvail().then(function (j) {
       var snap = j && j.archived_snapshots && j.archived_snapshots.closest;
-      if (!snap || !snap.url || String(snap.status) !== '200') throw new Error('tidak ada snapshot Wayback');
+      if (!snap || !snap.url || String(snap.status) !== '200') throw new Error('no snapshot available');
       var snapUrl = snap.url.replace(/^http:/, 'https:');
       return relayFetch(snapUrl, 40000).then(function (r) {
-        if (!r.text || r.text.length < 1000) throw new Error('snapshot kosong');
+        if (!r.text || r.text.length < 1000) throw new Error('empty snapshot');
         var html = r.text;
         var ex = extract(html, snapUrl, 'auto', readOpts());
         // wayback toolbar ids
@@ -887,19 +887,19 @@
     }).then(function (r) {
       if (!r.ok) {
         var m = 'HTTP ' + r.status;
-        if (r.status === 429) m += ' (batas rate)';
+        if (r.status === 429) m += ' (rate limited)';
         throw new Error(m);
       }
       return r.text();
     }).then(function (md) {
-      if (!md || md.length < 500 || md.indexOf('###') === -1 && md.indexOf('\n') === -1) throw new Error('jina tidak memberi markdown');
+      if (!md || md.length < 500 || md.indexOf('###') === -1 && md.indexOf('\n') === -1) throw new Error('reader returned no content');
       var t1 = md.match(/^Title:\s*(.+)$/m);
       var body = md.replace(/^Title:.*$/m, '').replace(/^URL Source:.*$/m, '').replace(/^Markdown Content:\s*/m, '');
       var words = body.split(/\s+/).filter(Boolean).length;
-      if (words < 120) throw new Error('jina konten pendek (' + words + ' kata)');
+      if (words < 120) throw new Error('content too short');
       return finish({
         html: mdToHtml(body),
-        meta: { title: t1 ? t1[1].trim() : '', author: '', published: '', siteName: 'Medium (via r.jina.ai)', description: '' },
+        meta: { title: t1 ? t1[1].trim() : '', author: '', published: '', siteName: 'Medium', description: '' },
         via: 'r.jina.ai reader',
         viaUrl: articleUrl
       });
@@ -916,7 +916,7 @@
         var og = doc.querySelector('meta[property="og:url"]');
         cand = og ? og.getAttribute('content') : '';
       }
-      if (!cand || !/medium\.com/.test(cand)) throw new Error('canonical bukan Medium');
+      if (!cand || !/medium\.com/.test(cand)) throw new Error('canonical is not a Medium post');
       return cand;
     });
   }
@@ -924,14 +924,14 @@
   /* ---- orchestrator ---- */
   function runChain(url) {
     var pm = parseMediumUrl(url);
-    if (!pm) { status('URL tidak valid.', true, true); return; }
+    if (!pm) { status('Invalid URL.', true, true); return; }
     logReset();
     status('', false, true);
 
     var promise;
     if (!pm.isMedium && !pm.postId) {
       // custom domain → resolve canonical first
-      var l1 = logStart('Custom domain — cari canonical Medium');
+      var l1 = logStart('Custom domain — resolving canonical URL');
       promise = srcCanonical(url).then(function (mediumUrl) {
         l1('→ ' + mediumUrl);
         return chainFor(parseMediumUrl(mediumUrl) || pm, mediumUrl);
@@ -943,13 +943,16 @@
       .then(function (res) {
         state.result = res;
         state.baseUrl = url;
+        // normalize bypass results: always label Medium + compute word count
+        res.platform = 'medium';
+        if ((!res.words || res.words < 1) && res.root) res.words = wordCount(res.root);
         render();
-        status('Berhasil: ' + res.via + ' — ' + (res.words || 0).toLocaleString('en-US') + ' kata.', false, true);
+        status('Successful processing with total words: ' + (res.words || 0).toLocaleString('en-US') + '.', false, true);
       })
       .catch(function (err) {
         var msg = err && err.message ? err.message : String(err);
-        if (/batas rate|429/i.test(msg)) msg += ' — layanan publik gratis sedang limit, tunggu ±1 menit lalu coba lagi.';
-        status('Semua sumber otomatis gagal: ' + msg, true, true);
+        if (/rate|429/i.test(msg)) msg += ' — free public services are rate-limited; wait about a minute and try again.';
+        status('All automatic sources failed: ' + msg, true, true);
         showExtPanel(url);
       })
       .then(function () { $('#btnFetch').disabled = false; });
@@ -959,26 +962,26 @@
     var wrap = function (label, fn) {
       var done = logStart(label);
       return fn().then(function (res) {
-        done((res.words || wordCount(res.root)).toLocaleString('en-US') + ' kata');
+        done((res.words || wordCount(res.root)).toLocaleString('en-US') + ' words');
         return res;
       }, function (err) {
-        done(null, (err && err.message ? err.message : 'gagal').slice(0, 90));
+        done(null, (err && err.message ? err.message : 'failed').slice(0, 90));
         throw err;
       });
     };
     // Wave 1 (race): three fast paths, each with 1 retry — freedium mirror
     // and the ekky reader API are occasionally busy, a retry usually wins.
     var w1 = [];
-    w1.push(wrap('Freedium mirror', function () { return withRetry(function () { return srcFreedium(originalUrl); }, 2, 2000); }));
-    w1.push(wrap('ekky.dev reader', function () { return withRetry(function () { return srcEkky(originalUrl); }, 2, 2000); }));
-    if (pm.postId) w1.push(wrap('Medium API', function () { return srcJsonApi(pm.postId); }));
+    w1.push(wrap('Source 1', function () { return withRetry(function () { return srcFreedium(originalUrl); }, 2, 2000); }));
+    w1.push(wrap('Source 2', function () { return withRetry(function () { return srcEkky(originalUrl); }, 2, 2000); }));
+    if (pm.postId) w1.push(wrap('Source 3', function () { return srcJsonApi(pm.postId); }));
     // Wave 2 (sequential fallbacks)
     var rest = [
-      function () { return wrap('Page scan', function () { return srcPageState(pm.url); }); },
-      function () { return wrap('RSS feed', function () { return srcFeed(originalUrl, pm); }); },
-      function () { return wrap('Freedium (backup)', function () { return srcFreediumRaw(originalUrl); }); },
-      function () { return wrap('Wayback Machine', function () { return srcWayback(originalUrl); }); },
-      function () { return wrap('Text reader', function () { return srcJina(originalUrl); }); }
+      function () { return wrap('Source 4', function () { return srcPageState(pm.url); }); },
+      function () { return wrap('Source 5', function () { return srcFeed(originalUrl, pm); }); },
+      function () { return wrap('Source 6', function () { return srcFreediumRaw(originalUrl); }); },
+      function () { return wrap('Source 7', function () { return srcWayback(originalUrl); }); },
+      function () { return wrap('Source 8', function () { return srcJina(originalUrl); }); }
     ];
     return raceSufficient(w1).catch(function () {
       var p = Promise.reject();
@@ -991,13 +994,13 @@
     // resolve with the FIRST fulfilled promise; reject only when all fail
     return new Promise(function (resolve, reject) {
       var left = list.length, fails = [];
-      if (!left) { reject(new Error('tidak ada kandidat sumber')); return; }
+      if (!left) { reject(new Error('no source candidates')); return; }
       list.forEach(function (it) {
         it.then(function (v) {
           if (left > 0) { left = 0; resolve(v); }
         }, function (e) {
           if (left <= 0) return;
-          fails.push((e && e.message) || 'gagal');
+          fails.push((e && e.message) || 'failed');
           if (fails.length === list.length) { left = 0; reject(new Error(fails.join(' | '))); }
         });
       });
@@ -1062,7 +1065,7 @@
 
     var m = r.meta || {};
     $('#rTitle').textContent = m.title || '(untitled page)';
-    $('#rPlatform').textContent = r.via;
+    $('#rPlatform').textContent = r.platform === 'medium' ? 'Medium' : 'Extracted';
     var host = '';
     try { host = state.baseUrl ? new URL(state.baseUrl).hostname : ''; } catch (e) {}
 
@@ -1092,14 +1095,14 @@
     var rows = [
       ['Title', m.title], ['Description', m.description], ['Author', m.author],
       ['Published', m.published], ['Site name', m.siteName],
-      ['Source page', state.baseUrl], ['Fetched via', r.via + (r.viaUrl && r.viaUrl !== state.baseUrl ? ' — ' + r.viaUrl : '')],
+      ['Source page', state.baseUrl],
       ['Reading time', m.readingTime ? m.readingTime + ' min' : ''],
       ['Tags', (m.tags || []).join(', ')]
     ];
     $('#metaTable').innerHTML = rows.map(function (row) {
       if (!row[1]) return '';
       var v = esc(row[1]);
-      if (row[0] === 'Source page' || row[0] === 'Fetched via') {
+      if (row[0] === 'Source page') {
         var urlPart = row[1].match(/https?:\/\/\S+/);
         if (urlPart) v = esc(row[1].replace(urlPart[0], '')) + ' <a href="' + esc(urlPart[0]) + '" target="_blank" rel="noopener">' + esc(urlPart[0]) + '</a>';
       }
@@ -1137,17 +1140,17 @@
 
   /* ---------------- generic mode (non-Medium URL) ---------------- */
   function runGeneric(url) {
-    var done = logStart('Generic fetch via CORS relay');
+    var done = logStart('Generic fetch');
     relayFetch(url, 30000).then(function (r) {
-      if (!r.text || r.text.length < 400 || r.text.indexOf('<') === -1) throw new Error('relay tidak mengembalikan HTML');
-      done((r.text.length / 1024).toFixed(0) + ' KB via ' + r.relay);
+      if (!r.text || r.text.length < 400 || r.text.indexOf('<') === -1) throw new Error('relay did not return HTML');
+      done((r.text.length / 1024).toFixed(0) + ' KB');
       state.result = extract(r.text, url, $('#platformSel').value, readOpts());
       state.baseUrl = url;
       render();
-      status('Extracted ' + state.result.len.toLocaleString('en-US') + ' chars via ' + state.result.via + '.');
+      status('Extracted ' + state.result.len.toLocaleString('en-US') + ' characters.');
     }).catch(function (err) {
-      done(null, (err && err.message ? err.message : 'gagal').slice(0, 90));
-      status('Fetch gagal: ' + (err && err.message ? err.message : err) + ' — buka halamannya, Ctrl+U, salin semua lalu pakai tab Tempel HTML.', true, true);
+      done(null, (err && err.message ? err.message : 'failed').slice(0, 90));
+      status('Fetch failed: ' + (err && err.message ? err.message : err) + ' — open the page, press Ctrl+U, copy everything, then use the Paste HTML tab.', true, true);
     }).then(function () { $('#btnFetch').disabled = false; });
   }
 
@@ -1216,15 +1219,15 @@
 
     $('#btnParse').addEventListener('click', function () {
       var html = $('#htmlInput').value;
-      if (!html.trim()) { status('Tempel dulu HTML halaman — atau klik contoh halaman berantakan.', true); return; }
+      if (!html.trim()) { status('Paste the page HTML first — or click the messy page sample.', true); return; }
       logReset();
       statusHide();
       try {
         state.result = extract(html, '', $('#platformSel').value, readOpts());
         state.baseUrl = '';
         render();
-        status('Diekstrak ' + state.result.len.toLocaleString('en-US') + ' karakter via ' + state.result.via + '.');
-      } catch (e) { status('Ekstraksi gagal: ' + (e && e.message ? e.message : e), true, true); }
+        status('Extracted ' + state.result.len.toLocaleString('en-US') + ' characters.');
+      } catch (e) { status('Extraction failed: ' + (e && e.message ? e.message : e), true, true); }
     });
 
     $('#btnFetch').addEventListener('click', function () {
@@ -1259,11 +1262,11 @@
         if (document.exitFullscreen) document.exitFullscreen().catch(function () {});
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
       } else if (card.requestFullscreen) {
-        card.requestFullscreen().catch(function () { status('Full screen tidak didukung browser ini.', true); });
+        card.requestFullscreen().catch(function () { status('Fullscreen is not supported in this browser.', true); });
       } else if (card.webkitRequestFullscreen) {
         card.webkitRequestFullscreen();
       } else {
-        status('Full screen tidak didukung browser ini.', true);
+        status('Fullscreen is not supported in this browser.', true);
       }
     });
     var syncFsAd = function () {
@@ -1277,10 +1280,10 @@
     var drop = $('#dropZone'), fi = $('#fileInput');
     function loadFile(f) {
       if (!f) return;
-      status('Membaca ' + f.name + ' (' + (f.size / 1024).toFixed(1) + ' KB)…', false, true);
+      status('Reading ' + f.name + ' (' + (f.size / 1024).toFixed(1) + ' KB)…', false, true);
       var fr = new FileReader();
-      fr.onload = function () { logReset(); statusHide(); state.result = extract(String(fr.result), '', $('#platformSel').value, readOpts()); state.baseUrl = ''; render(); status('Diekstrak dari file via ' + state.result.via + '.'); };
-      fr.onerror = function () { status('File tidak bisa dibaca.', true, true); };
+      fr.onload = function () { logReset(); statusHide(); state.result = extract(String(fr.result), '', $('#platformSel').value, readOpts()); state.baseUrl = ''; render(); status('Extracted from file.'); };
+      fr.onerror = function () { status('The file could not be read.', true, true); };
       fr.readAsText(f);
     }
     drop.addEventListener('click', function () { fi.click(); });
@@ -1298,7 +1301,7 @@
       state.result = extract(SAMPLE, 'https://example-daily.example/tech/swiss-army-web-tools', $('#platformSel').value, readOpts());
       state.baseUrl = '';
       render();
-      status('Contoh halaman berantakan diekstrak via ' + state.result.via + '.');
+      status('Sample page extracted.');
     });
 
     function copy(txt, btn) {
